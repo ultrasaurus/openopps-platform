@@ -251,7 +251,7 @@ Here's an example using `export`:
 [openopps_theme_repo]: https://github.com/18F/open-opportunities-theme "Open Opportunities Theme"
 
 Note: the tests don't currently pass when the theme is installed since it
-also changes configuration.  
+also changes configuration.
 
 #### Clone the git repository.
 
@@ -304,6 +304,7 @@ Run the tests (all should pass)
 
 Run the server (watch client files, compiling if needed)
 
+    export SAILS_SECRET='RANDOM_BITS_FOR_SAILS_SESSIONS_ID'
     npm run watch
 
 
