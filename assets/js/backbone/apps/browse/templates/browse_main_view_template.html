@@ -41,19 +41,21 @@
       </div>
     </div>
 
-    <div class="box">
-      <div class="border-bottom box-pad-lr">
-        <h2>Agency Filters</h2>
-      </div>
-      <div class="box-pad-t">
-        <div class="box-pad-lr">
-          <label id="js-restrict-task-filter">
-            <input class="restrict-participation" type="checkbox" name="restrict">
-            Restrict to <%- agencyName %> agency
-          </label>
+    <% if (agencyName) { %>
+      <div class="box">
+        <div class="border-bottom box-pad-lr">
+          <h2>Agency Filters</h2>
+        </div>
+        <div class="box-pad-t">
+          <div class="box-pad-lr">
+            <label id="js-restrict-task-filter">
+              <input class="restrict-participation" type="checkbox" name="restrict">
+              Restrict to <%- agencyName %> agency
+            </label>
+          </div>
         </div>
       </div>
-    </div>
+    <% } %>
   </div>
 
   <% } %>

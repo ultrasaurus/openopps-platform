@@ -36,7 +36,7 @@ var BrowseMainView = Backbone.View.extend({
       JSON.parse(options.queryParams.filters) :
       options.target === 'profiles' ? {} : { state: 'open' };
 
-    this.userAgency = (typeof(window.cache.currentUser) === 'object') ? window.cache.currentUser.agency : {};
+    this.userAgency = window.cache.currentUser ? window.cache.currentUser.agency : {};
     this.initAgencyFilter();
 
     window.foo = this;
