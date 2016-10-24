@@ -300,11 +300,13 @@ Now you are ready to rock!
 
 Run the tests (all should pass)
 
+    export VCAP_APPLICATION='{ "uris": [ "openopps-test.18f.gov" ] }'
     npm test
 
 Run the server (watch client files, compiling if needed)
 
     export SAILS_SECRET='RANDOM_BITS_FOR_SAILS_SESSIONS_ID'
+    export VCAP_APPLICATION='{ "uris": [ "openopps-test.18f.gov" ] }'
     npm run watch
 
 
