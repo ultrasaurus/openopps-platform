@@ -26,6 +26,20 @@
  *
  */
 
+/**
+  * Get origin URIs for CORs configuration
+  * @return { string } - A string comprised of comma-delimited URIs for the CORS configuration.
+  */
+function getOriginUris () {
+  var cfenv = require( 'cfenv' );
+  var appenv = cfenv.getAppEnv();
+  var uris = appenv.app.uris;
+  uris = uris.map( function ( uri ) {
+    return 'https://' + uri;
+  } );
+  return uris.join( ',' );
+}
+
 module.exports.cors = {
 
   /***************************************************************************
@@ -37,7 +51,7 @@ module.exports.cors = {
   *                                                                          *
   ***************************************************************************/
 
-  // allRoutes: false,
+  allRoutes: true,
 
   /***************************************************************************
   *                                                                          *
@@ -47,7 +61,7 @@ module.exports.cors = {
   *                                                                          *
   ***************************************************************************/
 
-  // origin: '*',
+  origin: getOriginUris(),
 
   /***************************************************************************
   *                                                                          *
