@@ -35,7 +35,35 @@ var BrowseMainView = Backbone.View.extend({
     this.filters = options.queryParams.filters ?
       JSON.parse(options.queryParams.filters) :
       options.target === 'profiles' ? {} : { state: 'open' };
+
+    this.userAgency = window.cache.currentUser ? window.cache.currentUser.agency : {};
+    this.initAgencyFilter();
+
     window.foo = this;
+  },
+
+  isAgencyChecked: function() {
+    return !!$( '#js-restrict-task-filter input:checked' ).length;
+  },
+
+  initAgencyFilter: function() {
+    this.agency = { data: {} };
+    if (this.options.queryParams.agency) {
+      // TODO: ideally we would be able to query the API for agencies
+      // and look up the name via the abbreviation. This is basically
+      // a hack to determine whether the current user's agency matches
+      // the abbreviation passed in the query string.
+      this.agency.data.abbr = this.options.queryParams.agency;
+      if (this.userAgency.name &&
+          this.userAgency.name.indexOf('(' + this.agency.data.abbr + ')') >= 0) {
+        this.agency.data.name = this.userAgency.name;
+      } else {
+        this.agency.data.name = this.agency.data.abbr;
+      }
+      this.filter( undefined, undefined, this.agency );
+    } else if (this.isAgencyChecked()) {
+      this.agency.data = this.userAgency;
+    }
   },
 
   render: function() {
@@ -47,7 +75,8 @@ var BrowseMainView = Backbone.View.extend({
         placeholder: target === 'tasks' ?
           "I'm looking for opportunities by name, " + i18n.t("tag.agency") + ", skill, topic, description..." : target === 'projects' ?
           "I'm looking for working groups by name, " + i18n.t("tag.agency") + ", skill, topic, description..." : target === 'profiles' ?
-          "I'm looking for people by name, title,  " + i18n.t("tag.agency") + ", location..." : "I'm looking for..."
+          "I'm looking for people by name, title,  " + i18n.t("tag.agency") + ", location..." : "I'm looking for...",
+        agencyName: (!(_.isEmpty(this.agency.data)) ? this.agency.data.name : this.userAgency.name)
       };
     this.rendered = _.template(BrowseMainTemplate)(options);
     this.$el.html(this.rendered);
@@ -61,6 +90,8 @@ var BrowseMainView = Backbone.View.extend({
         $('#stateFilters [value="' + state + '"]').prop('checked', true);
       });
 
+    $('#js-restrict-task-filter [name="restrict"]').prop('checked', !(_.isEmpty(this.agency.data)));
+
     // Allow chaining.
     return this;
   },
@@ -71,20 +102,20 @@ var BrowseMainView = Backbone.View.extend({
   },
 
   stateFilter: function(event) {
-    var isAgencyChecked = !!$( '#js-restrict-task-filter input:checked' ).length;
     var states = _($('#stateFilters input:checked')).pluck('value');
-    if ( isAgencyChecked ) {
-      this.filter( undefined, { state: states }, { data: window.cache.currentUser.agency } );
+    if ( this.isAgencyChecked() ) {
+      this.filter( undefined, { state: states }, this.agency );
     } else {
-      this.filter(undefined, { state: states });
+      this.filter(undefined, { state: states }, { data: {} });
     }
   },
 
   agencyFilter: function ( event ) {
     var isChecked = event.target.checked;
     var states = _( $( '#stateFilters input:checked' ) ).pluck( 'value' );
+    this.initAgencyFilter();
     if ( isChecked ) {
-      this.filter( undefined, { state: states }, { data: window.cache.currentUser.agency } );
+      this.filter( undefined, { state: states }, this.agency );
     } else {
       this.stateFilter();
     }
@@ -95,8 +126,10 @@ var BrowseMainView = Backbone.View.extend({
 
     if (typeof term !== 'undefined') this.term = term;
     if (typeof filters !== 'undefined') this.filters = filters;
+    if (typeof agency !== 'undefined') this.agency = agency;
     term = this.term;
     filters = this.filters;
+    agency = this.agency;
     /**
      * TODO: There are three separate filters happening here on the same dataset.
      * There should not be three separate filters. The following code is used throughout
@@ -182,7 +215,7 @@ var BrowseMainView = Backbone.View.extend({
 function filterTaskByAgency ( agency, task ) {
   var getAbbr = _.property( 'abbr' );
 
-  if ( _.isUndefined( agency ) ) {
+  if ( _.isEmpty( agency.data ) ) {
     return task;
   }
 
