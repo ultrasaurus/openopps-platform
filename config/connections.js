@@ -67,4 +67,21 @@ if (dbURL) {
   module.exports.models = {
     connection: 'postgresql'
   };
+
+  // It looks like the code expects development instances to
+  // not define a DATABASE_URL--or at least, if one is
+  // defined, we get a mysterious "A hook (`orm`) failed to load!"
+  // error w/ no traceback when running 'grunt db:migrate:up'.
+  //
+  // However, we need to use DATABASE_URL under docker, and
+  // the following code seems to make things work similarly to
+  // the way things work when DATABASE_URL isn't defined, as
+  // far as I can tell. Sails is confusing me. -AV
+
+  if (process.env.RUNNING_IN_DOCKER_FOR_DEVELOPMENT) {
+    module.exports.connections['local'] = {
+      adapter: 'sails-disk'
+    };
+    module.exports.models.connection = 'local';
+  }
 }
