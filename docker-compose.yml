@@ -16,12 +16,11 @@ services:
     environment:
       - PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/app/node_modules/.bin
       - DATABASE_URL=postgres://midas@db/midas
-      - DATASTORE=local
+      - DATASTORE=postgresql
       - LOG_LEVEL=silly
       - PORT=3000
       - SAILS_SECRET=just_for_testing_yo
       - 'VCAP_APPLICATION={ "uris": [ "openopps-test.18f.gov" ] }'
-      - RUNNING_IN_DOCKER_FOR_DEVELOPMENT=yup
   db:
     image: postgres:9.3
     volumes:
