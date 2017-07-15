@@ -111,10 +111,10 @@
   "scripts": {
     "preinstall": "if [ \"$THEME\" ]; then rm -rf _theme; git clone $THEME _theme; npm run import --openopps-platform:dir=_theme; fi",
     "import": "cp -v $npm_package_config_dir/exclude.txt exclude.txt | true && rsync -av --exclude-from=exclude.txt $npm_package_config_dir/* .",
-    "postinstall": "npm run migrate && npm run uswds && node --version && pwd && ls",
+    "postinstall": "npm run build && npm run uswds && node --version && pwd && ls",
     "init": "node ./tools/init.js",
     "demo": "node ./tools/demo.js",
-    "build": "npm run browserify",
+    "build": "grunt browserify:browserify",
     "migrate": "grunt db:migrate:up",
     "check-migrate": "$npm_package_config_grunt db:migrate:up --dry-run | perl -ne 's/.*Processed migration (.*)/\\x1b[41m[WARNING] Pending Migration: \\1\\x1b[0m (Run `npm run migrate`)/ && print'",
     "start": "node app.js",
@@ -139,7 +139,7 @@
   "bugs": "https://github.com/18F/openopps-platform/issues",
   "license": "CC0-1.0",
   "engines": {
-    "node": "6.10",
-    "npm": "3.8.9"
+    "node": "6.11.1",
+    "npm": "3.10.10"
   }
 }
