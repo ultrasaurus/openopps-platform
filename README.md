@@ -16,10 +16,7 @@ OpenOpps is the open source platform that supports the Open Opportunities progra
 
 Here’s how Open Opportunities works: You come up with a great idea that would help your workplace, but you and your coworkers don’t have the skills to execute it. Rather than bringing in a contractor, you can post your project idea to Open Opportunities, where other people within your organization can see it and then work on it, if they’d like.
 
-<!-- responsive video embed -->
-<div class='embed-container'><iframe src='https://www.youtube-nocookie.com/embed/2FelzCR7pLk?rel=0&amp;showinfo=0' frameborder='0' allowfullscreen></iframe></div>
-<!-- end video embed -->
-[Open Opportunities Testimonial from DigitalGov Search Manager](https://www.youtube.com/watch?v=2FelzCR7pLk&feature=youtu.be)
+Video: [Open Opportunities Testimonial from DigitalGov Search Manager](https://www.youtube.com/watch?v=2FelzCR7pLk&feature=youtu.be)
 
 Open Opportunities can benefit all organizations, but it’s especially useful for those with distributed teams and whose employees have diverse skill sets.  Using Open Opportunities, you and your colleagues can work on projects together, get to know each other better, and develop skills you don’t use as often as you’d like.
 
