@@ -28,13 +28,14 @@ var FS = {
     prefix: process.env.S3_PREFIX || 'uploads',
   },
 
-}
+};
 
 // If running in Cloud Foundry with an S3 credential service available
 if (s3Creds) {
   AWS.config.update({
     accessKeyId: s3Creds.access_key_id,
     secretAccessKey: s3Creds.secret_access_key,
+    region: s3Creds.region,
   });
   FS.s3.bucket = s3Creds.bucket;
   FS.s3.prefix = 'openopps-uploads';

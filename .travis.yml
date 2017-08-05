@@ -1,7 +1,7 @@
 sudo: true
 language: node_js
 node_js:
-  - "4.2.2"
+  - "6.11.1"
 services:
   - postgresql
 addons:
