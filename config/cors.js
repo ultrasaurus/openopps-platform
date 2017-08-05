@@ -34,10 +34,14 @@ function getOriginUris () {
   var cfenv = require( 'cfenv' );
   var appenv = cfenv.getAppEnv();
   var uris = appenv.app.uris;
-  uris = uris.map( function ( uri ) {
-    return 'https://' + uri;
-  } );
-  return uris.join( ',' );
+  if ( uris ) {
+    uris = uris.map( function ( uri ) {
+      return 'https://' + uri;
+    } );
+    return uris.join( ',' );
+  } else {
+    return '*';
+  }
 }
 
 module.exports.cors = {
