@@ -134,9 +134,9 @@
   "main": "app.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/18F/openopps-platform.git"
+    "url": "https://github.com/openopps/openopps-platform.git"
   },
-  "bugs": "https://github.com/18F/openopps-platform/issues",
+  "bugs": "https://github.com/openopps/openopps-platform/issues",
   "license": "CC0-1.0",
   "engines": {
     "node": "6.11.1",
