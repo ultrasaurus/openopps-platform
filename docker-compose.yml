@@ -21,6 +21,7 @@ services:
       - PORT=3000
       - SAILS_SECRET=just_for_testing_yo
       - 'VCAP_APPLICATION={ "uris": [ "openopps-test.18f.gov" ] }'
+  # README: Initialize the database so that Sails can connect to it.
   init_db:
     build:
       dockerfile: Dockerfile
