@@ -122,6 +122,8 @@
     "jshint": "find assets/js/backbone -name \\*js -exec ./node_modules/jshint/bin/jshint {} \\;",
     "cover": "istanbul cover ./node_modules/mocha/bin/_mocha -- test/bootstrap.test.js test/integration/**/*.test.js",
     "debug": "node debug app.js",
+    "docker:up": "docker-compose up -d db init_db app",
+    "docker:down": "docker-compose down",
     "watch": "npm run watch:server & npm run watch:client",
     "watch:server": "nodemon --ignore .git/ --ignore assets/app --ignore .tmp/ --ignore node_modules/ app.js",
     "watch:client": "npm run watch:client:js",
