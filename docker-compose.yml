@@ -16,24 +16,31 @@ services:
       - 3000:3000
     links:
       - db
+      - mail
+    networks:
+      - servicesNetwork
     environment:
       - PATH=/app/node_modules/.bin:$PATH
       - DATABASE_URL=postgres://midas@db/midas
       - DATASTORE=postgresql
       - LOG_LEVEL=silly
       - PORT=3000
-      - EMAIL_SYSTEM_ADDRESS='docker@openopps.local'
-      - EMAIL_HOST='smtp.fake.com'
+      - EMAIL_SYSTEM_ADDRESS=docker@openopps.local
+      - EMAIL_HOST=smtp.fake.com
       - EMAIL_SSL=false
+      - EMAIL_IGNORE_TLS=true
       - EMAIL_PORT=25
       - SAILS_SECRET=just_for_testing_yo
       - 'VCAP_APPLICATION={ "uris": [ "openopps-test.18f.gov" ] }'
     depends_on:
       - db
+      - mail
       - migrate_db
       - init_db
   # README: Migrate the database so that npm run init can write to it.
   migrate_db:
+    networks:
+      - servicesNetwork
     build:
       dockerfile: Dockerfile
       context: .
@@ -61,6 +68,8 @@ services:
           - smtp.fake.com
   # README: Initialize the database so that Sails can connect to it.
   init_db:
+    networks:
+      - servicesNetwork
     build:
       dockerfile: Dockerfile
       context: .
@@ -83,6 +92,8 @@ services:
       - db
       - migrate_db
   db:
+    networks:
+      - servicesNetwork
     image: postgres:9.3
     volumes:
       - pgdata:/var/lib/postgresql/data/

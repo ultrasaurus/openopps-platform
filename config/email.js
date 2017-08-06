@@ -26,7 +26,7 @@ module.exports = {
       pass              : process.env.EMAIL_PASS || ''
     },
     // ignore server support for STARTTLS (defaults to false)
-    ignoreTLS           : false,
+    ignoreTLS           : process.env.EMAIL_IGNORE_TLS || false,
     // output client and server messages to console
     debug               : false,
     pool                : true,
