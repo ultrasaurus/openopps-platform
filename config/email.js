@@ -17,9 +17,9 @@ module.exports = {
     // remote SMTP host
     host                : process.env.EMAIL_HOST || '',
     // true to use SSL connections
-    secure              : true,
+    secure              : process.env.EMAIL_SSL || true,
     // 25 (non-secure) or 465 (secure)
-    port                : 465,
+    port                : process.env.EMAIL_PORT || 465,
     // username and password settings for secure connections
     auth                : {
       user              : process.env.EMAIL_USER || '',
