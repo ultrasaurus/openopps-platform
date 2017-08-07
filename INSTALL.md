@@ -40,7 +40,7 @@ up the database and the application.
 npm run docker:up
 ```
 
-Making any changes to the server side, you'll need to restart the app container.
+You can also restart the app container.
 
 ```sh
 npm run docker:restart
@@ -51,8 +51,11 @@ When you're down with local development, spin down all the containers.
 npm run docker:down
 ```
 
-Your local code run in the Docker container. You can modify the code locally and
-stop and start the server to see changes.
+Your local code is now running in the Docker container with Mailcatcher for
+reviewing Notifications.
+
+For the application: http://localhost:3000/
+For the mail server: http://localhost:8025/
 
 ## Step by Step Installation from Source
 The following installation steps for Mac, Linux, and Windows can be used for setting up a development or production environment manually.
