@@ -33,51 +33,29 @@ Installation
 
 ### Docker for Development
 
-After installing docker, as above, you can use it for development, by syncing a local directory with the virtual container.
+After installing Docker and Docker Compose, run the following command to bring
+up the database and the application.
 
-First, grab the code and clone onto your local machine.
-
-```
-git clone git@github.com:18F/openopps-platform.git docker-openopps
-cd docker-openopps
+```sh
+npm run docker:up
 ```
 
-Note: I've created a different directory name to remind myself that this code
-that will run in Docker.  I will be configuring this and installing modules for
-the Docker environment, which is different than my local machine.
+You can also restart the app container.
 
-Run Kitematic, and choose menu `File` > `Open Docker Command-Line Terminal`
-
-Then on the command-line:
-
-```
-docker login
-docker pull 18fgsa/open-opps
-docker run -Pti  -v `pwd`:/usr/src/app --entrypoint=/bin/bash --name local-opps 18fgsa/open-opps
+```sh
+npm run docker:restart
 ```
 
-Every once in a while, there's a timeout when executing this command multiple
-times.  If that happens, resetting the environment can fix it:
-
-```
-docker-machine restart default  # Restart environment
-eval $(docker-machine env default)  # Refresh environment settings
+When you're down with local development, spin down all the containers.
+```sh
+npm run docker:down
 ```
 
-Now, with your Docker machine running and synced to your local directory,
-run the following commands in the interactive terminal (which runs them
-in the Docker machine):
+Your local code is now running in the Docker container with Mailcatcher for
+reviewing Notifications.
 
-```
-npm i -g npm@3
-npm install -g node-gyp@3.3.1 grunt-cli@0.1.13
-npm install
-npm run init
-npm start
-```
-
-Now you can see your local code run in the Docker container.  You can modify
-the code locally and stop and start the server to see changes.
+For the application: http://localhost:3000/
+For the mail server: http://localhost:8025/
 
 ## Step by Step Installation from Source
 The following installation steps for Mac, Linux, and Windows can be used for setting up a development or production environment manually.
