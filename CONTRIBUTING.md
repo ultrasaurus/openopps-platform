@@ -1,6 +1,6 @@
 ## Contributing
 
-We aspire to create a welcoming environment for collaboration on this project.  To that end, we follow the [Code for America Code of Conduct](https://github.com/codeforamerica/codeofconduct) and ask that all contributors do the same. 
+We aspire to create a welcoming environment for collaboration on this project.  To that end, we follow the [Code for America Code of Conduct](https://github.com/codeforamerica/codeofconduct) and ask that all contributors do the same.
 
 Note: Open Opps has a defined [governance model](GOVERNANCE.md) to assist with managing the project.  
 
@@ -100,7 +100,7 @@ When working in the development environment, be sure to install the project spec
 
 ### <a name="code-style"></a> Code Style
 
-Generally try to follow the [Google Javascript Style Guide](http://google-styleguide.googlecode.com/svn/trunk/javascriptguide.xml).  Spaces should be used instead of tabs, and the tab width should be set to 2 spaces.  No spaces at the end of lines.
+Generally try to follow the [Google Javascript Style Guide](https://google.github.io/styleguide/jsguide.html).  Spaces should be used instead of tabs, and the tab width should be set to 2 spaces.  No spaces at the end of lines.
 
 ### <a name="commit-messages"></a> Commit Messages
 
