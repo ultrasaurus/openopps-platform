@@ -258,8 +258,9 @@ var TaskEditFormView = Backbone.View.extend({
         restrict    : this.model.get( 'restrict' ),
       };
 
-      modelData.restrict.projectNetwork = view.$(  '#task-restrict-agency'  ).prop( 'checked' );
-
+      if (this.agency) {
+        modelData.restrict.projectNetwork = view.$(  '#task-restrict-agency'  ).prop( 'checked' );
+      }
 
       // README: Check if draft is being saved or if this is a submission.
       // If the state isn't a draft and it isn't simply being saved, then it will
