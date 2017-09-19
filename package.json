@@ -112,12 +112,9 @@
     "dir": "."
   },
   "scripts": {
-    "preinstall": "npm install fs-extra git-clone run-script-os && node install-theme && npm run import --openopps-platform:dir=_theme",
+    "preinstall": "npm install fs-extra git-clone && node install-theme && npm run import --openopps-platform:dir=_theme",
     "import": "node import-theme $npm_package_config_dir",
-    "postinstall": "npm run build && npm run uswds && node --version && npm run details",
-    "details": "node node_modules/run-script-os",
-    "details:darwin:linux": "pwd && ls",
-    "details:win32": "cd && dir",
+    "postinstall": "npm run build && npm run uswds",
     "init": "node ./tools/init.js",
     "demo": "node ./tools/demo.js",
     "build": "grunt browserify:browserify",
