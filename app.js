@@ -35,8 +35,7 @@
 // no matter where we actually lift from.
 process.chdir(__dirname);
 
-// Ensure a "sails" can be located:
-(function() {
+var runSails = () => {
   var sails;
   try {
     sails = require('sails');
@@ -49,7 +48,6 @@ process.chdir(__dirname);
     console.error('but if it doesn\'t, the app will run with the global sails instead!');
     return;
   }
-
   // Try to get `rc` dependency
   var rc;
   try {
@@ -65,8 +63,26 @@ process.chdir(__dirname);
       rc = function () { return {}; };
     }
   }
-
-
   // Start server
   sails.lift(rc('sails'));
+}
+
+var runKoa = () => {
+  var koa;
+  try {
+    koa = require('koa');
+  } catch (e) {
+    console.error('To run an app using `node app.js koa`, you usually need to have a version of `koa` installed in the same directory as your app.');
+    console.error('To do that, run `npm install koa`');
+    return;
+  }
+}
+
+// Ensure a "sails" can be located:
+(function() {
+  if((process.argv[2] || '').toLowerCase() == 'koa') {
+      runKoa();
+  } else {
+    runSails();
+  }
 })();
