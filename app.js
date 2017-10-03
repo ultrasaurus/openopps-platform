@@ -67,21 +67,20 @@ var runSails = () => {
   sails.lift(rc('sails'));
 }
 
-var runKoa = () => {
-  var koa;
-  try {
-    koa = require('koa');
-  } catch (e) {
-    console.error('To run an app using `node app.js koa`, you usually need to have a version of `koa` installed in the same directory as your app.');
-    console.error('To do that, run `npm install koa`');
-    return;
-  }
-}
-
 // Ensure a "sails" can be located:
 (function() {
   if((process.argv[2] || '').toLowerCase() == 'koa') {
-      runKoa();
+      try {
+        require('./app-koa')();
+      } catch (e) {
+        console.log('\nError starting app\n');
+        console.log(e);
+        if(e.message.match("Cannot find module")) {
+          var module = e.message.split("Cannot find module ")[1];
+          console.log("\nTo fix the error please try running `npm install " + module.replace(/\'/g, "") + "`")
+        }
+        return;
+      }
   } else {
     runSails();
   }
