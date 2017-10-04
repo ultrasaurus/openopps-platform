@@ -72,6 +72,7 @@ module.exports = function() {
 
   // load our features (i.e. our api controllers)
   app.use(feature('opportunity'));
+  app.use(feature('user'));
 
   // finally if nothing else matched load main/index.ejs
   app.use(async function(ctx) {
