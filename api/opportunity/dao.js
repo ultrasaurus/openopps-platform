@@ -18,6 +18,11 @@ const volunteerQuery = "select volunteer.id, volunteer.\"userId\", midas_user.na
   "join midas_user on midas_user.id = volunteer.\"userId\" " +
   "where volunteer.\"taskId\" = ?";
 
+const commentsQuery = "select @comment.*, @user.* " +
+  "from @comment comment " +
+  "join @midas_user \"user\" on \"user\".id = comment.\"userId\" " +
+  "where comment.\"taskId\" = ?";
+
 const options = {
    task: {
     fetch: {
@@ -35,6 +40,18 @@ const options = {
       midas_user: [ 'deletedAt', 'passwordAttempts', 'isAdmin', 'isAgencyAdmin', 'disabled' ],
       agency: [ 'deletedAt' ]
     }
+  },
+  comment: {
+    fetch: {
+      user: ''
+    },
+    exclude: {
+      comment: [ 'deletedAt' ],
+      user: [
+        'title', 'bio', 'photoId', 'isAdmin', 'disabled', 'passwordAttempts',
+        'createdAt', 'updatedAt', 'deletedAt', 'completedTasks', 'isAgencyAdmin'
+      ]
+    }
   }
 };
 
@@ -51,6 +68,13 @@ const clean = {
     var cleaned = _.pickBy(record, _.identity)
     cleaned.agency = _.pickBy(cleaned.agency, _.identity)
     return cleaned;
+  },
+  comments: function(records) {
+    return records.map(function(record) {
+      var cleaned = _.pickBy(record, _.identity);
+      cleaned.user = _.pickBy(cleaned.user, _.identity);
+      return cleaned;
+    });
   }
 }
 
@@ -60,10 +84,12 @@ module.exports = function(db) {
     User: dao({ db: db, table: 'midas_user' }),
     TagEntity: dao({ db: db, table: 'tagentity' }),
     Volunteer: dao({ db: db, table: 'volunteer' }),
+    Comment: dao({ db: db, table: 'comment' }),
     query: {
       task: taskQuery,
       user: userQuery,
-      volunteer: volunteerQuery
+      volunteer: volunteerQuery,
+      comments: commentsQuery
     },
     options: options,
     clean: clean

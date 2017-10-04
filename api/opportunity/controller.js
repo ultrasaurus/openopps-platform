@@ -7,10 +7,14 @@ var router = new Router();
 
 router.get('/api/task', async (ctx, next) => {
   ctx.body = await service.list();
-})
+});
 
 router.get('/api/task/:id', async (ctx, next) => {
   ctx.body = await service.findById(ctx.params.id);
-})
+});
+
+router.get('/api/comment/findAllBytaskId/:id', async (ctx, next) => {
+  ctx.body = await service.commentsByTaskId(ctx.params.id);
+});
 
 module.exports = router.routes();
