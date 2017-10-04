@@ -16,7 +16,13 @@ async function list() {
   return await dao.Task.query(dao.query.task, {}, dao.options.task);
 }
 
+async function commentsByTaskId(id) {
+  var comments = await dao.Comment.query(dao.query.comments, id, dao.options.comment);
+  return { comments: dao.clean.comments(comments) };
+}
+
 module.exports = {
   findById: findById,
-  list: list
+  list: list,
+  commentsByTaskId: commentsByTaskId
 };
