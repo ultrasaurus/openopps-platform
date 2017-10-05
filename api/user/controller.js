@@ -14,7 +14,22 @@ router.get('/api/user/:id', async (ctx, next) => {
   })
 
 router.get('/api/user/photo/:id', async (ctx, next) => {
-  //ctx.body = await service.findById(ctx.params.id);
+  var user = await service.findOne(ctx.params.id);
+  if (!user) {
+    ctx.redirect('/images/default-user-icon-profile.png');
+  }
+  if (user.photoId) {
+    ctx.status = 307;
+    ctx.redirect('/api/upload/get/' + user.photoId);
+  }
+  else if (user.photoUrl) {
+    ctx.status = 307;
+    ctx.redirect(user.photoUrl);
+  }
+  else {
+    ctx.status = 307;
+    ctx.redirect('/images/default-user-icon-profile.png');
+  } 
 })
 
 module.exports = router.routes();
