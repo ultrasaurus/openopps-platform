@@ -1,4 +1,4 @@
-const log = require('blue-ox')('app:opportunity');
+const log = require('blue-ox')('app:user');
 const Router = require('koa-router');
 const _ = require('lodash');
 const service = require('./service');
@@ -10,8 +10,12 @@ router.get('/api/user/all', async (ctx, next) => {
 })
 
 router.get('/api/user/:id', async (ctx, next) => {
-    //ctx.body = await service.list();
-  })
+  ctx.body = await service.getProfile(ctx.params.id);
+})
+
+router.get('/api/user/activities/:id', async (ctx, next) => {
+  ctx.body = await service.getActivities(ctx.params.id);
+})
 
 router.get('/api/user/photo/:id', async (ctx, next) => {
   var user = await service.findOne(ctx.params.id);
