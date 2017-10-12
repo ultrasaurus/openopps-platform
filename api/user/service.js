@@ -9,6 +9,14 @@ async function findOne (id) {
   return await dao.User.findOne('id = ?', id);
 }
 
+async function findOneByUsername (username, done) {
+  await dao.User.find('username = ?', username).then(users => {
+    done(null, users[0]);
+  }).catch(err => {
+    done(err);
+  });
+}
+
 async function getProfile (id) {
   var profile = await findOne(id);
   profile.badges = await dao.Badge.find('"user" = ?', id);
@@ -17,7 +25,7 @@ async function getProfile (id) {
 }
 
 async function getActivities (id) {
-  return { 
+  return {
     tasks: {
       created: dao.clean.activity(await dao.Task.find('"userId" = ?', id)),
       volunteered: (await dao.Task.db.query(dao.query.completed, id)).rows,
@@ -28,6 +36,7 @@ async function getActivities (id) {
 module.exports = {
   list: list,
   findOne: findOne,
+  findOneByUsername: findOneByUsername,
   getProfile: getProfile,
   getActivities: getActivities,
 };

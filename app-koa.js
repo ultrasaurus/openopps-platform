@@ -4,9 +4,18 @@ const render = require('koa-ejs');
 const sass = require('koa-sass');
 const serve = require('koa-static');
 const path = require('path');
+const session = require('koa-session');
+const bodyparser = require('koa-bodyparser');
+const passport = require('koa-passport');
+const flash = require('koa-better-flash');
+const _ = require('lodash');
 
-module.exports = function() {
-  // Set up logging
+module.exports = function () {
+  // load configs
+  global.openopps = {};
+  _.extend(openopps, require('./config/settings/auth'));
+
+  // configure logging
   blueox.beGlobal();
   blueox.useColor = true;
   blueox.level('info');
@@ -17,23 +26,39 @@ module.exports = function() {
 
   const app = new koa();
 
+  // configure session
+  app.proxy = true;
+  app.keys = ['your-session-secret'];
+  app.use(session({}, app));
+
+  // initialize flash
+  app.use(flash());
+
+  // initialize body parser
+  app.use(bodyparser());
+
+  // initialize authentication
+  require(path.join(__dirname, 'api/auth/passport'));
+  app.use(passport.initialize());
+  app.use(passport.session());
+
   // for rendering .ejs views
   render(app, {
     root: path.join(__dirname, 'views'),
     layout: 'layout',
     viewExt: 'ejs',
     cache: false,
-    debug: false
+    debug: false,
   });
 
   // easy loading of a feature
-  feature = function(name) {
+  feature = function (name) {
     return require(path.join(__dirname, 'api', name, 'controller'));
-  }
+  };
 
-  // Log our request
+  // log request to console
   app.use(async (ctx, next) => {
-    var start = Date.now(), str = ctx.method + ' ' + ctx.protocol + '://' + ctx.host + ctx.path + (!!ctx.querystring ? '?' + ctx.querystring : '') + '\n';
+    var start = Date.now(), str = ctx.method + ' ' + ctx.protocol + '://' + ctx.host + ctx.path + (ctx.querystring ? '?' + ctx.querystring : '') + '\n';
     str += 'from ' + ctx.ip;
     try {
       await next();
@@ -42,7 +67,7 @@ module.exports = function() {
     } catch (e) {
       str += ' -- took ' + qlog.color('warn', (Date.now() - start) + 'ms');
       str += ' and failed -- ' + qlog.color('error', ctx.status) + ': ';
-      if (!!e.stack) {
+      if (e.stack) {
         str += e.message + '\n';
         str += e.stack;
       } else {
@@ -52,7 +77,7 @@ module.exports = function() {
     }
   });
 
-  // check to see if open opportunities is running
+  // allow external services to see if open opportunities is running
   app.use(async (ctx, next) => {
     if (ctx.path === '/server/status') {
       ctx.body = '{"ok":10}';
@@ -64,35 +89,35 @@ module.exports = function() {
   // compile our .scss files if not already done so
   app.use(sass({
     src:  __dirname + '/assets',
-    dest: __dirname + '/assets'
+    dest: __dirname + '/assets',
   }));
 
   // serve our static resource files
   app.use(serve(__dirname + '/assets'));
 
-  // load our features (i.e. our api controllers)
-  app.use(feature('opportunity'));
-  app.use(feature('user'));
-  app.use(feature('autocomplete'));
-
-  // finally if nothing else matched load main/index.ejs
-  app.use(async function(ctx) {
+  // load main/index.ejs unless api request
+  app.use(async function (ctx, next) {
     // Throw 404 for undefined api routes
-    if(ctx.path.match("^/api/.*")) {
-        ctx.status = 404;
-        ctx.body = 'not found';
+    if(ctx.path.match('^/api/.*')) {
+      await next();
     } else {
       var data = {
-        systemName: "Midas",
+        systemName: 'Midas',
         draftAdminOnly: true,
-        version: "0.14.4",
+        version: '0.14.4',
         alert: null,
-        user: null
+        user: ctx.state.user || null,
       };
       await ctx.render('main/index', data);
     }
   });
 
+  // load our features (i.e. our api controllers)
+  app.use(feature('auth'));
+  app.use(feature('opportunity'));
+  app.use(feature('user'));
+  app.use(feature('autocomplete'));
+
   app.listen(3000);
   console.log('App running on port 3000');
-}
+};
