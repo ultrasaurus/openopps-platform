@@ -11,8 +11,8 @@ const tagQuery = 'select tags.* ' +
   'inner join tagentity_users__user_tags user_tags on tags.id = user_tags.tagentity_users ' +
   'where user_tags.user_tags = ?';
 
-const taskCompletedQuery = 'select task.* ' +
-  'from task join volunteer on task.id = volunteer."taskId" ' +
+const taskCompletedQuery = 'select distinct task.* ' +
+  'from task inner join volunteer on task.id = volunteer."taskId" ' +
   'where volunteer."userId" = ?';
 
 const options = {
