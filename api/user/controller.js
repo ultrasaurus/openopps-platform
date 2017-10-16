@@ -7,21 +7,28 @@ const service = require('./service');
 var router = new Router();
 
 router.get('/api/user/all', async (ctx, next) => {
-  ctx.body = await service.list();
+  if(ctx.isAuthenticated()) {
+    ctx.body = await service.list();
+  } else {
+    ctx.status = 401;
+  }
 });
 
 router.get('/api/user', async (ctx, next) => {
-  if(ctx.state.user) {
+  if(ctx.isAuthenticated()) {
     ctx.body = ctx.state.user;
   } else {
     ctx.status = 401;
-    ctx.body = { message: 'not logged in'};
   }
 });
 
 router.get('/api/user/:id', async (ctx, next) => {
-  console.log('getting profile for user', ctx.params.id);
-  ctx.body = await service.getProfile(ctx.params.id);
+  if(ctx.isAuthenticated()) {
+    console.log('getting profile for user', ctx.params.id);
+    ctx.body = await service.getProfile(ctx.params.id);
+  } else {
+    ctx.status = 401;
+  }
 });
 
 router.get('/api/user/username/:username', async (ctx, next) => {

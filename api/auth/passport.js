@@ -14,6 +14,21 @@ function validatePassword (password, hash) {
   return bcrypt.compareSync(password, hash);
 }
 
+async function fetchUser (id) {
+  return await dao.User.query(dao.query.user, id, dao.options.user).then(async results => {
+    var user = results[0];
+    if(user) {
+      user.isOwner = true;
+      user.badges = await dao.Badge.find('"user" = ?', user.id, dao.options.badge);
+      user = dao.clean.user(user);
+    }
+    return user;
+  }).catch(err => {
+    log.info('Fetch user error', err);
+    return null;
+  });
+}
+
 async function fetchPassport (user, protocol) {
   return (await dao.Passport.find('"user" = ? and protocol = ? and "deletedAt" is null', user, protocol))[0];
 }
@@ -23,12 +38,9 @@ passport.serializeUser(function (user, done) {
 });
 
 passport.deserializeUser(async function (id, done) {
-  await dao.User.findOne('id = ?', id).then(user => {
-    done(null, user);
-  }).catch(err => {
-    log.info('passport deserialize user error', id, err);
-    done(null, null);
-  });
+  var user = await fetchUser(id);
+  log.info('deserializeUser: ', user);
+  done(null, user);
 });
 
 passport.use(new LocalStrategy(localStrategyOptions, async (username, password, done) => {

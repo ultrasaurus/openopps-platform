@@ -1,5 +1,5 @@
 const _ = require('lodash');
-var dao = require('postgres-gen-dao');
+const dao = require('postgres-gen-dao');
 
 const taskQuery = 'select @task.*, @tags.*, @owner.id, @owner.name ' +
   'from @task task ' +
