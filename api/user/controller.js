@@ -24,8 +24,11 @@ router.get('/api/user', async (ctx, next) => {
 
 router.get('/api/user/:id', async (ctx, next) => {
   if(ctx.isAuthenticated()) {
-    console.log('getting profile for user', ctx.params.id);
-    ctx.body = await service.getProfile(ctx.params.id);
+    if(ctx.params.id == ctx.state.user.id) {
+      ctx.body = ctx.state.user;
+    } else {
+      ctx.body = await service.getProfile(ctx.params.id);
+    }
   } else {
     ctx.status = 401;
   }
