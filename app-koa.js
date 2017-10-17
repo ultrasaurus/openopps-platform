@@ -1,4 +1,5 @@
 const koa = require('koa');
+const cfenv = require('cfenv');
 const blueox = require('blue-ox');
 const render = require('koa-ejs');
 const sass = require('koa-sass');
@@ -11,9 +12,15 @@ const flash = require('koa-better-flash');
 const _ = require('lodash');
 
 module.exports = function () {
+  // import vars from Cloud Foundry service
+  var envVars = cfenv.getAppEnv().getServiceCreds('env-openopps');
+  if (envVars) _.extend(process.env, envVars);
+
   // load configs
   global.openopps = {};
+  _.extend(openopps, require('./config/application'));
   _.extend(openopps, require('./config/settings/auth'));
+  _.extend(openopps, require('./config/version'));
 
   // configure logging
   blueox.beGlobal();
@@ -102,9 +109,9 @@ module.exports = function () {
       await next();
     } else {
       var data = {
-        systemName: 'Midas',
-        draftAdminOnly: true,
-        version: '0.14.4',
+        systemName:  openopps.systemName,
+        draftAdminOnly: openopps.draftAdminOnly,
+        version: openopps.version,
         alert: null,
         user: ctx.state.user || null,
       };

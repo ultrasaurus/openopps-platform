@@ -1,10 +1,23 @@
-var gen = require('postgres-gen');
+const _ = require('lodash');
+const cfenv = require('cfenv');
+const appEnv = cfenv.getAppEnv();
+const psqlConnection = appEnv.getServiceCreds('psql-openopps');
+const gen = require('postgres-gen');
 
-var defaults = {
+var config = {
   host: 'localhost',
   db: 'midas',
   user: 'midas',
-  password: 'midas'
+  password: 'midas',
+  port: '5432',
 };
 
-module.exports = gen(defaults);
+if(!_.isEmpty(psqlConnection)) {
+  config.host = psqlConnection.host;
+  config.db = psqlConnection.db_name;
+  config.user = psqlConnection.username;
+  config.password = psqlConnection.password;
+  config.port = psqlConnection.port;
+}
+
+module.exports = gen(config);

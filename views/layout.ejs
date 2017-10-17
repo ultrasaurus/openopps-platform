@@ -5,7 +5,7 @@
 
     <!-- Application data -->
     <script type="text/javascript">
-    systemName = "Midas"; // TODO: JSON.stringify(systemName)
+    systemName = <%- JSON.stringify(systemName) %>;
     draftAdminOnly = <%- JSON.stringify(draftAdminOnly) %>;
     version = <%- JSON.stringify(version) %>;
     backendUser = <%- JSON.stringify(user) %>;
@@ -41,7 +41,7 @@
       <%- body %>
     </div>
     <footer class="bg-white p1" id="footer"></footer>
-    <script src="/js/bundle.js?v<%- version %>"></script>
+    <script src="/js/bundle.js?v=<%- version %>"></script>
 
   </body>
 </html>
