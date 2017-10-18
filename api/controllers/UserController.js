@@ -47,7 +47,6 @@ module.exports = {
 				if (err) return res.negotiate(err);
 				user.isOwner = false;
 				if (req.user && req.user.id === user.id) user.isOwner = true;
-				if (req.user && req.user.id != user.id && !req.user.isAdmin) user.username = null; // hide email address
 				return res.send(user);
 			});
     } else {
