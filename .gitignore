@@ -33,6 +33,7 @@ assets/build
 assets/uploads
 assets/js/bundle.js
 assets/styles/main.css
+dist/
 
 # Ignore uswds files, these are set up during npm install
 assets/styles/uswds.css
