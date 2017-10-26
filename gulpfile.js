@@ -6,10 +6,8 @@ var jshint = require('gulp-jshint');
 var sass = require('gulp-sass');
 var bro = require('gulp-bro');
 var stringify = require('stringify');
-var html = require('html-browserify');
 var babel = require('gulp-babel');
-var concat = require('gulp-concat');
-var uglify = require('gulp-uglify');
+var uglify = require('gulp-uglify-es').default;
 var rename = require('gulp-rename');
 
 // Lint Task
@@ -33,6 +31,8 @@ gulp.task('scripts', function () {
       .pipe(babel())
       .pipe(bro({ transform: stringify }))
       .pipe(rename('bundle.min.js'))
+      .pipe(uglify())
+      .on('error', function (err) { console.log(err); })
       .pipe(gulp.dest('dist/js'));
   } else {
     gulp.src('assets/js/backbone/app.js')
