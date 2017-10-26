@@ -23,6 +23,8 @@ const commentsQuery = 'select @comment.*, @user.* ' +
   'join @midas_user "user" on "user".id = comment."userId" ' +
   'where comment."taskId" = ?';
 
+const deleteTaskTags = 'delete from tagentity_tasks__task_tags where task_tags = ?';
+
 const options = {
   task: {
     fetch: {
@@ -61,6 +63,8 @@ const clean = {
     cleaned.tags = cleaned.tags.map(function (tag) { return _.pickBy(tag, _.identity); });
     if(!_.isEmpty(cleaned.restrict)) {
       cleaned.restrict = JSON.parse(cleaned.restrict);
+    } else {
+      cleaned.restrict = null;
     }
     return cleaned;
   },
@@ -82,6 +86,7 @@ module.exports = function (db) {
   return {
     Task: dao({ db: db, table: 'task' }),
     User: dao({ db: db, table: 'midas_user' }),
+    TaskTags: dao({ db: db, table: 'tagentity_tasks__task_tags' }),
     TagEntity: dao({ db: db, table: 'tagentity' }),
     Volunteer: dao({ db: db, table: 'volunteer' }),
     Comment: dao({ db: db, table: 'comment' }),
@@ -90,6 +95,7 @@ module.exports = function (db) {
       user: userQuery,
       volunteer: volunteerQuery,
       comments: commentsQuery,
+      deleteTaskTags: deleteTaskTags,
     },
     options: options,
     clean: clean,

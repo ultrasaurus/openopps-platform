@@ -80,4 +80,26 @@ router.get('/api/user/photo/:id', async (ctx, next) => {
   }
 });
 
+router.put('/api/user/:id', async (ctx, next) => {
+  ctx.status = 200;
+  await service.updateProfile(ctx.request.body, function (error) {
+    if (error) {
+      var obj = buildObj(error);
+      ctx.flash('error', 'Error Updating Profile');
+      ctx.status = 400;
+      log.info(error);
+      return ctx.body = obj;
+    }
+    ctx.body = { success: true };
+  });
+});
+
+function buildObj (err) {
+  var obj = new Object();
+  obj.invalidAttributes = new Object();
+  obj.invalidAttributes.username = new Object();
+  obj.invalidAttributes.username.message = err;
+  return JSON.stringify(obj);
+}
+
 module.exports = router.routes();

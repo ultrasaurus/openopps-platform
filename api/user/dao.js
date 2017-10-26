@@ -15,6 +15,8 @@ const taskCompletedQuery = 'select distinct task.* ' +
   'from task inner join volunteer on task.id = volunteer."taskId" ' +
   'where volunteer."userId" = ?';
 
+const deleteUserTags = 'delete from tagentity_users__user_tags where user_tags = ?';
+
 const options = {
   user: {
     fetch: {
@@ -80,12 +82,14 @@ module.exports = function (db) {
   return {
     User: dao({ db: db, table: 'midas_user' }),
     TagEntity: dao({ db: db, table: 'tagentity' }),
+    UserTags: dao({ db: db, table: 'tagentity_users__user_tags' }),
     Badge: dao({ db: db, table: 'badge'}),
     Task: dao({ db: db, table: 'task' }),
     query: {
       user: userQuery,
       tag: tagQuery,
       completed: taskCompletedQuery,
+      deleteUserTags: deleteUserTags,
     },
     options: options,
     clean: clean,
