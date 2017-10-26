@@ -37,7 +37,7 @@ gulp.task('scripts', function () {
   } else {
     gulp.src('assets/js/backbone/app.js')
       .pipe(babel())
-      .pipe(bro())
+      .pipe(bro({ transform: stringify }))
       .pipe(rename('bundle.js'))
       .pipe(gulp.dest('dist/js'));
   }
