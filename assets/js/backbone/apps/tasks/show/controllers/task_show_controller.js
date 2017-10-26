@@ -17,16 +17,12 @@ var TaskEditFormView = require('../../edit/views/task_edit_form_view');
 var UIConfig = require('../../../../config/ui.json');
 var LoginConfig = require('../../../../config/login.json');
 
-var fs = require('fs');
-var VolunteerTextTemplate = fs.readFileSync(__dirname + '/../templates/volunteer_text_template.html').toString();
-var VolunteerFullTimeTextTemplate = fs.readFileSync(__dirname + '/../templates/volunteer_full_time_text_template.html').toString();
-var ChangeStateTemplate = fs.readFileSync(__dirname + '/../templates/change_state_template.html').toString();
-var UpdateLocationAgencyTemplate = fs.readFileSync(__dirname + '/../templates/update_location_agency_template.html').toString();
-var UpdateNameTemplate = fs.readFileSync(__dirname + '/../templates/update_name_template.html').toString();
-var CopyTaskTemplate = fs.readFileSync(__dirname + '/../templates/copy_task_template.html').toString();
-
-
-
+var VolunteerTextTemplate = require('../templates/volunteer_text_template.html').toString();
+var VolunteerFullTimeTextTemplate = require('../templates/volunteer_full_time_text_template.html').toString();
+var ChangeStateTemplate = require('../templates/change_state_template.html').toString();
+var UpdateLocationAgencyTemplate = require('../templates/update_location_agency_template.html').toString();
+var UpdateNameTemplate = require('../templates/update_name_template.html').toString();
+var CopyTaskTemplate = require('../templates/copy_task_template.html').toString();
 
 var popovers = new Popovers();
 
@@ -73,9 +69,9 @@ var TaskShowController = BaseView.extend({
     }
     // if not the owner, trigger the login dialog.
     if (owner !== true) {
-      window.cache.userEvents.trigger("user:request:login", {
+      window.cache.userEvents.trigger('user:request:login', {
         message: "You are not the owner of this opportunity. <a class='link-backbone' href='/tasks/" + _.escape(model.id) + "'>View the opportunity instead.</a>",
-        disableClose: true
+        disableClose: true,
       });
       return;
     }
@@ -89,13 +85,13 @@ var TaskShowController = BaseView.extend({
       model: this.model,
       tags: this.tags,
       madlibTags: this.madlibTags,
-      tagTypes: this.tagTypes
+      tagTypes: this.tagTypes,
     }).render();
-    this.$(".task-show-madlib").hide();
-    this.$(".li-task-view").show();
-    this.$(".li-task-edit").hide();
-    this.$(".task-container").hide();
-    this.$(".li-task-copy").hide();
+    this.$('.task-show-madlib').hide();
+    this.$('.li-task-view').show();
+    this.$('.li-task-edit').hide();
+    this.$('.task-container').hide();
+    this.$('.li-task-copy').hide();
   },
 
   initializeChildren: function () {
@@ -110,13 +106,13 @@ var TaskShowController = BaseView.extend({
 
       if (self.options.action == 'edit') {
         self.initializeEdit();
-        popovers.popoverPeopleInit(".project-people-show-div");
+        popovers.popoverPeopleInit('.project-people-show-div');
       } else {
-        popovers.popoverPeopleInit(".project-people-show-div");
+        popovers.popoverPeopleInit('.project-people-show-div');
         if (self.commentListController) self.commentListController.cleanup();
         self.commentListController = new CommentListController({
           target: 'task',
-          id: self.model.attributes.id
+          id: self.model.attributes.id,
         });
         if (self.attachmentView) self.attachmentView.cleanup();
         self.attachmentView = new AttachmentView({
@@ -125,7 +121,7 @@ var TaskShowController = BaseView.extend({
           state: this.model.attributes.state,
           owner: this.model.attributes.isOwner,
           volunteer: this.model.attributes.volunteer,
-          el: '.attachment-wrapper'
+          el: '.attachment-wrapper',
         }).render();
       }
 
@@ -142,16 +138,16 @@ var TaskShowController = BaseView.extend({
     }
   },
 
-  initializeHandlers: function() {
-    this.listenTo(this.model, "task:update:state:success", function (data) {
+  initializeHandlers: function () {
+    this.listenTo(this.model, 'task:update:state:success', function (data) {
       if (data.attributes.state == 'closed') {
-        $("#li-task-close").hide();
-        $("#li-task-reopen").show();
-        $("#alert-closed").show();
+        $('#li-task-close').hide();
+        $('#li-task-reopen').show();
+        $('#alert-closed').show();
       } else {
-        $("#li-task-close").show();
-        $("#li-task-reopen").hide();
-        $("#alert-closed").hide();
+        $('#li-task-close').show();
+        $('#li-task-reopen').hide();
+        $('#alert-closed').hide();
       }
     });
   },
@@ -171,7 +167,7 @@ var TaskShowController = BaseView.extend({
       model: this.options.model,
       router: this.options.router,
       id: this.options.id,
-      el: this.el
+      el: this.el,
     });
   },
 
@@ -182,7 +178,7 @@ var TaskShowController = BaseView.extend({
   edit: function (e) {
     if (e.preventDefault) e.preventDefault();
     this.initializeEdit();
-    popovers.popoverPeopleInit(".project-people-div");
+    popovers.popoverPeopleInit('.project-people-div');
     Backbone.history.navigate('tasks/' + this.model.id + '/edit');
   },
 
@@ -196,14 +192,14 @@ var TaskShowController = BaseView.extend({
     if (!window.cache.currentUser) {
       Backbone.history.navigate(window.location.pathname + '?volunteer', {
         trigger: false,
-        replace: true
+        replace: true,
       });
-      window.cache.userEvents.trigger("user:request:login");
+      window.cache.userEvents.trigger('user:request:login');
     } else {
       var self = this;
-      var child = $(e.currentTarget).children("#like-button-icon");
+      var child = $(e.currentTarget).children('#like-button-icon');
       var originalEvent = e;
-      var requiredTags = window.cache.currentUser.tags.filter(function(t) { return t.type === 'location' || t.type === 'agency'; });
+      var requiredTags = window.cache.currentUser.tags.filter(function (t) { return t.type === 'location' || t.type === 'agency'; });
       var agencyRequired = (LoginConfig.agency && LoginConfig.agency.enabled);
       var locationRequired = (LoginConfig.location && LoginConfig.location.enabled);
 
@@ -214,31 +210,31 @@ var TaskShowController = BaseView.extend({
       if (!window.cache.currentUser.name) {
         var modalNameTemplate = _.template(UpdateNameTemplate)({});
         this.modalComponent = new ModalComponent({
-          el: "#modal-volunteer",
-          id: "update-name",
-          modalTitle: "What's your name?"
+          el: '#modal-volunteer',
+          id: 'update-name',
+          modalTitle: "What's your name?",
         }).render();
         this.modalAlert = new ModalAlert({
-          el: "#update-name .modal-template",
+          el: '#update-name .modal-template',
           modalDiv: '#update-name',
           content: modalNameTemplate,
           validateBeforeSubmit: true,
           cancel: i18n.t('volunteerModal.cancel'),
           submit: i18n.t('volunteerModal.ok'),
-          callback: function(e) {
+          callback: function (e) {
             var name = $('#update-name-field').val();
             $.ajax({
               url: '/api/user/' + window.cache.currentUser.id,
               method: 'PUT',
               data: {
                 username: window.cache.currentUser.username,
-                name: name
-              }
-            }).done(function(user) {
+                name: name,
+              },
+            }).done(function (user) {
               window.cache.currentUser.name = user.name;
               self.volunteer(originalEvent);
             });
-          }
+          },
         }).render();
         return;
       }
@@ -247,46 +243,46 @@ var TaskShowController = BaseView.extend({
       else if (requiredTags.length !== 2 && (agencyRequired && locationRequired)) {
         var modalInfoTemplate = _.template(UpdateLocationAgencyTemplate)({});
         this.modalComponent = new ModalComponent({
-          el: "#modal-volunteer",
-          id: "update-profile",
-          modalTitle: "Please complete your profile"
+          el: '#modal-volunteer',
+          id: 'update-profile',
+          modalTitle: 'Please complete your profile',
         }).render();
         this.modalAlert = new ModalAlert({
-          el: "#update-profile .modal-template",
+          el: '#update-profile .modal-template',
           modalDiv: '#update-profile',
           content: modalInfoTemplate,
           validateBeforeSubmit: true,
           cancel: i18n.t('volunteerModal.cancel'),
           submit: i18n.t('volunteerModal.ok'),
-          callback: function(e) {
+          callback: function (e) {
             var agency = $('#ragency').select2('data');
             var location = $('#rlocation').select2('data');
             var data = {};
             data.username = window.cache.currentUser.username;
-            data.tags = [agency, location].map(function(t) {
+            data.tags = [agency, location].map(function (t) {
               return { id: t.id };
             });
             $.ajax({
               url: '/api/user/' + window.cache.currentUser.id,
               method: 'PUT',
-              data: data
-            }).done(function(user) {
+              data: data,
+            }).done(function (user) {
               window.cache.currentUser.tags = user.tags;
               self.volunteer(originalEvent);
             });
-          }
+          },
         }).render();
         self.tagFactory.createTagDropDown({
-          type:"location",
-          selector:"#rlocation",
-          width: "100%",
-          multiple: false
+          type:'location',
+          selector:'#rlocation',
+          width: '100%',
+          multiple: false,
         });
         self.tagFactory.createTagDropDown({
-          type:"agency",
-          selector:"#ragency",
-          width: "100%",
-          multiple: false
+          type:'agency',
+          selector:'#ragency',
+          width: '100%',
+          multiple: false,
         });
         return;
       }
@@ -296,21 +292,21 @@ var TaskShowController = BaseView.extend({
         .indexOf('Full Time Detail')
         .value() >= 0;
 
-      var modalType = "volunteerModal";
+      var modalType = 'volunteerModal';
       var modalContent = _.template(VolunteerTextTemplate)({});
       if (hasFullTimeDetail) {
-        var modalType = "volunteerFullTimeModal";
+        modalType = 'volunteerFullTimeModal';
         modalContent = _.template(VolunteerFullTimeTextTemplate)({});
       }
 
       this.modalComponent = new ModalComponent({
-        el: "#modal-volunteer",
-        id: "check-volunteer",
-        modalTitle: i18n.t(modalType +".title")
+        el: '#modal-volunteer',
+        id: 'check-volunteer',
+        modalTitle: i18n.t(modalType +'.title'),
       }).render();
 
       this.modalAlert = new ModalAlert({
-        el: "#check-volunteer .modal-template",
+        el: '#check-volunteer .modal-template',
         modalDiv: '#check-volunteer',
         content: modalContent,
         cancel: i18n.t(modalType +'.cancel'),
@@ -322,20 +318,20 @@ var TaskShowController = BaseView.extend({
             url: '/api/volunteer/',
             type: 'POST',
             data: {
-              taskId: self.model.attributes.id
-            }
+              taskId: self.model.attributes.id,
+            },
           }).done( function (data) {
             $('.volunteer-true').show();
             $('.volunteer-false').hide();
             var html = '<div class="project-people-div" data-userid="' + data.userId + '" data-voluserid="' + data.userId + '"><img src="/api/user/photo/' + data.userId + '" class="project-people"/>';
-            if (self.options.action === "edit") {
+            if (self.options.action === 'edit') {
               html += '<a href="#" class="delete-volunteer fa fa-times"  id="delete-volunteer-' + data.id + '" data-uid="' + data.userId + '" data-vid="' +  data.id + '"></a>';
             }
             html += '</div>';
             $('#task-volunteers').append(html);
-            popovers.popoverPeopleInit(".project-people-div");
+            popovers.popoverPeopleInit('.project-people-div');
           });
-        }
+        },
       }).render();
     }
   },
@@ -345,32 +341,32 @@ var TaskShowController = BaseView.extend({
     // Not able to un-volunteer, so do nothing
   },
 
-  removeVolunteer: function(e) {
+  removeVolunteer: function (e) {
     if (e.stopPropagation()) e.stopPropagation();
     if (e.preventDefault) e.preventDefault();
-    $(e.currentTarget).off("mouseenter");
+    $(e.currentTarget).off('mouseenter');
     $('.popover').remove();
 
     var vId = $(e.currentTarget).data('vid');
     var uId = $(e.currentTarget).data('uid');
     var self = this;
 
-    if (typeof cache !== "undefined")
+    if (typeof cache !== 'undefined')
     {
       $.ajax({
         url: '/api/volunteer/' + vId,
         type: 'DELETE',
         data: {
           taskId: this.model.attributes,
-          vId: vId
+          vId: vId,
         },
       }).done(function (data) {
-          // done();
+        // done();
       });
     }
 
     var oldVols = this.model.attributes.volunteers || [];
-    var unchangedVols = _.filter(oldVols, function(vol){ return ( vol.id !== vId ); } , this)  || [];
+    var unchangedVols = _.filter(oldVols, function (vol){ return ( vol.id !== vId ); } , this)  || [];
     this.model.attributes.volunteers = unchangedVols;
     $('[data-voluserid="' + uId + '"]').remove();
     if (window.cache.currentUser.id === uId) {
@@ -440,7 +436,7 @@ var TaskShowController = BaseView.extend({
 
   stateReopen: function (e) {
     if (e.preventDefault) e.preventDefault();
-    this.model.trigger("task:update:state", 'open');
+    this.model.trigger('task:update:state', 'open');
   },
 
   copy: function (e) {
@@ -453,13 +449,13 @@ var TaskShowController = BaseView.extend({
     var modalContent = _.template(CopyTaskTemplate)();
 
     this.modalComponent = new ModalComponent({
-      el: "#modal-copy",
-      id: "check-copy",
-      modalTitle: "Copy This Opportunity"
+      el: '#modal-copy',
+      id: 'check-copy',
+      modalTitle: 'Copy This Opportunity',
     }).render();
 
     this.modalAlert = new ModalAlert({
-      el: "#check-copy .modal-template",
+      el: '#check-copy .modal-template',
       modalDiv: '#check-copy',
       content: modalContent,
       validateBeforeSubmit: true,
@@ -471,13 +467,13 @@ var TaskShowController = BaseView.extend({
           method: 'POST',
           data: {
             taskId: self.model.attributes.id,
-            title: $('#task-copy-title').val()
-          }
-        }).done(function(data) {
+            title: $('#task-copy-title').val(),
+          },
+        }).done(function (data) {
           self.options.router.navigate('/tasks/' + data.taskId + '/edit',
-                                       { trigger: true });
+            { trigger: true });
         });
-      }
+      },
     }).render();
 
     $('#task-copy-title').val('COPY ' + self.model.attributes.title);
@@ -490,7 +486,7 @@ var TaskShowController = BaseView.extend({
     if (this.commentListController) { this.commentListController.cleanup(); }
     if (this.taskItemView) { this.taskItemView.cleanup(); }
     removeView(this);
-  }
+  },
 
 });
 

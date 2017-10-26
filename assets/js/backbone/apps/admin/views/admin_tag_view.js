@@ -1,4 +1,3 @@
-
 var _ = require('underscore');
 var Backbone = require('backbone');
 var i18n = require('i18next');
@@ -7,8 +6,7 @@ var i18nextJquery = require('jquery-i18next');
 var TagFactory = require('../../../components/tag_factory');
 
 // templates
-var fs = require('fs');
-var AdminTagTemplate = fs.readFileSync(`${__dirname}/../templates/admin_tag_template.html`).toString();
+var AdminTagTemplate = ('../templates/admin_tag_template.html');
 
 var AdminTagView = Backbone.View.extend({
 
@@ -24,11 +22,11 @@ var AdminTagView = Backbone.View.extend({
     var types = [
       'agency',
       'skill',
-      'topic'
+      'topic',
     ];
     var data = {
       types: types,
-      i18n: i18n
+      i18n: i18n,
     };
     var template = _.template(AdminTagTemplate)(data);
     var self = this;
@@ -41,17 +39,17 @@ var AdminTagView = Backbone.View.extend({
     return this;
   },
 
-  tagSelector: function(type) {
+  tagSelector: function (type) {
     var self = this;
 
     var $sel = this.tagFactory.createTagDropDown({
       type: type,
-      selector: "#" + type,
+      selector: '#' + type,
     });
 
-    $sel.on('change', function(e) {
+    $sel.on('change', function (e) {
       var $el = self.$(e.currentTarget);
-      self.tagFactory.addTagEntities(e.added, self, function() {
+      self.tagFactory.addTagEntities(e.added, self, function () {
         $sel.select2('data', null);
         if (e.added && e.added.value === e.added.id) {
           $el.next('.form-status').text('Added tag: ' + e.added.value);
@@ -65,7 +63,7 @@ var AdminTagView = Backbone.View.extend({
 
   cleanup: function () {
     removeView(this);
-  }
+  },
 
 });
 

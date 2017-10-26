@@ -11,8 +11,7 @@ var TaskModel = require('../../../../entities/tasks/task_model');
 var TaskFormViewHelper = require('../../task-form-view-helper');
 
 // templates
-var fs = require('fs');
-var TaskFormTemplate = fs.readFileSync(`${__dirname}/../templates/task_form_template.html`).toString();
+var TaskFormTemplate = require('../templates/task_form_template.html');
 
 var i18n = require('i18next');
 require('jquery-i18next');
@@ -55,7 +54,7 @@ var TaskFormView = Backbone.View.extend({
 
   },
 
- /*
+  /*
   * Initialize the Select2Data custom select components.
   */
   initializeSelect2Data: function () {

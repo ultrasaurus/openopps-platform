@@ -94,13 +94,13 @@ module.exports = function () {
   });
 
   // compile our .scss files if not already done so
-  app.use(sass({
-    src:  __dirname + '/assets',
-    dest: __dirname + '/assets',
-  }));
+  // app.use(sass({
+  //   src:  __dirname + '/assets',
+  //   dest: __dirname + '/assets',
+  // }));
 
   // serve our static resource files
-  app.use(serve(__dirname + '/assets'));
+  app.use(serve(__dirname + '/dist'));
 
   // load main/index.ejs unless api request
   app.use(async function (ctx, next) {

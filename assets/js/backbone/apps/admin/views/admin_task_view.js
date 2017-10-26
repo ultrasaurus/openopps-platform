@@ -6,8 +6,7 @@ var $ = require('jquery');
 var TaskModel = require( '../../../entities/tasks/task_model' );
 
 // templates
-var fs = require('fs');
-var AdminTaskTemplate = fs.readFileSync(`${__dirname}/../templates/admin_task_template.html`).toString();
+var AdminTaskTemplate = require('../templates/admin_task_template.html');
 
 var AdminTaskView = Backbone.View.extend({
 
@@ -95,7 +94,7 @@ var AdminTaskView = Backbone.View.extend({
 
   },
 
-  deleteTask: function(e) {
+  deleteTask: function (e) {
     var view = this,
         id = $(e.currentTarget).data('task-id'),
         title = $(e.currentTarget).data('task-title');
@@ -103,8 +102,8 @@ var AdminTaskView = Backbone.View.extend({
     if (window.confirm('Are you sure you want to delete "' + title + '"?')) {
       $.ajax({
         url: '/api/task/' + id,
-        type: 'DELETE'
-      }).done(function() {
+        type: 'DELETE',
+      }).done(function () {
         view.render();
       });
     }
@@ -112,7 +111,7 @@ var AdminTaskView = Backbone.View.extend({
 
   cleanup: function () {
     removeView(this);
-  }
+  },
 
 });
 

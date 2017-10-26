@@ -23,7 +23,7 @@ var _currentView = null;
 
 var PeopleMapView = Backbone.View.extend({
 
-  initialize: function(options) {
+  initialize: function (options) {
     this.el = options.el;
     this.target = options.target;
     this.router = options.router;
@@ -54,7 +54,7 @@ var PeopleMapView = Backbone.View.extend({
     }
   },
 
-  render: function() {
+  render: function () {
     var self = this;
     this.renderCountries();
     this.renderUserDots();
@@ -63,14 +63,14 @@ var PeopleMapView = Backbone.View.extend({
   /**
    * Render the country basemap from GeoJSON
    */
-  renderCountries: function() {
+  renderCountries: function () {
     var self = this;
     var countryStyle = {
       'color': self.countryOutline,
       'fillColor': self.countryFillColor,
       'weight': 1,
       'fillOpacity': 1.00,
-      'opacity': 1.00
+      'opacity': 1.00,
     };
     L.geoJson(countryData, { style: countryStyle }).addTo(self.map);
   },
@@ -78,41 +78,41 @@ var PeopleMapView = Backbone.View.extend({
   /**
    * Render the user data as dots on the map
    */
-  renderUserDots: function() {
+  renderUserDots: function () {
     var self = this;
     if (!this.people.length) return;
     // massage data: pivot list of people by city, flatten that into a list with
     // cityname, people in that city, sorted largest first (so largest cities get
     // drawn first (bottom).
     var peopleWithLocations = this.people
-      .filter(function(p) {
+      .filter(function (p) {
         return !_.isUndefined(p.location);
       });
-    var cityPeopleObj = _.groupBy(peopleWithLocations, function(p) {
+    var cityPeopleObj = _.groupBy(peopleWithLocations, function (p) {
       return p.location.name;
     });
-    var cityPeopleList = _.map(_.keys(cityPeopleObj), function(c) {
+    var cityPeopleList = _.map(_.keys(cityPeopleObj), function (c) {
       return {
         cityname: c,
-        people: cityPeopleObj[c]
+        people: cityPeopleObj[c],
       };
     });
-    cityPeopleList = _.sortBy(cityPeopleList, function(cp) {
+    cityPeopleList = _.sortBy(cityPeopleList, function (cp) {
       return cp.people.length * -1;
     });
 
     var previouslySelected = null;
     var allCircles = [];
 
-    _.values(cityPeopleList).forEach(function(cp) {
+    _.values(cityPeopleList).forEach(function (cp) {
       var cityLoc = cp.people[0].location;
 
       var tipDesc = this.tipDescTemplate({
         city: cp.cityname,
         count: cp.people.length,
-        names: _.map(cp.people, function(p) {
-            return p.name;
-          }).slice(0, 3).join(', ') // only show three names
+        names: _.map(cp.people, function (p) {
+          return p.name;
+        }).slice(0, 3).join(', '), // only show three names
       });
 
       if (!cityLoc.data || !cityLoc.data.lon || !cityLoc.data.lat) {
@@ -124,7 +124,7 @@ var PeopleMapView = Backbone.View.extend({
         .domain([1, cityPeopleList[0].people.length])
         .range([
           this.smallestDotPx * this.staticScale,
-          this.smallestDotPx * this.staticScale * this.dotSizeFactor
+          this.smallestDotPx * this.staticScale * this.dotSizeFactor,
         ]);
       var scale = dotScale(cp.people.length);
 
@@ -134,7 +134,7 @@ var PeopleMapView = Backbone.View.extend({
         color: self.circleOutline,
         fill: true,
         fillColor: self.circleFillColor,
-        fillOpacity: 1.0
+        fillOpacity: 1.0,
       });
       var radius = scale;
       circle.setRadius(radius);
@@ -143,46 +143,46 @@ var PeopleMapView = Backbone.View.extend({
       var popup = L.popup({
         'offset': L.point(0, -20 - radius),
         'closeButton': false,
-        'autoPan': false
+        'autoPan': false,
       });
       popup.setContent(tipDesc);
       circle.bindPopup(popup);
 
-      circle.on('mouseover', function(e) {
+      circle.on('mouseover', function (e) {
         this.openPopup();
       });
-      circle.on('mouseout', function(e) {
+      circle.on('mouseout', function (e) {
         this.closePopup();
       });
-      circle.on('click', function(e) {
+      circle.on('click', function (e) {
         if (previouslySelected === this) {
           // unselect city: remove styling & re-render list w/ default
           this.setStyle({
-            fillColor: self.circleFillColor
+            fillColor: self.circleFillColor,
           });
-          self.trigger("browseRemove", { type: "location", render: true });
+          self.trigger('browseRemove', { type: 'location', render: true });
           previouslySelected = null;
         } else {
           // select city: add styling, render people detail list below
-          allCircles.forEach(function(c) {
+          allCircles.forEach(function (c) {
             c.setStyle({
-              fillColor: self.circleFillColor
+              fillColor: self.circleFillColor,
             });
           });
 
           this.setStyle({
-            fillColor: self.circleSelectedFillColor
+            fillColor: self.circleSelectedFillColor,
           });
-          self.trigger("browseRemove", { type: "location", render: false });
-          self.trigger("browseSearchLocation", cp.cityname);
+          self.trigger('browseRemove', { type: 'location', render: false });
+          self.trigger('browseSearchLocation', cp.cityname);
           previouslySelected = this;
         }
         e.originalEvent.stopPropagation();
       });
-      circle.on("doubleclick", function(e) {
+      circle.on('doubleclick', function (e) {
         e.originalEvent.stopPropagation();
       });
-      circle.on("mousedown", function(e) {
+      circle.on('mousedown', function (e) {
         e.originalEvent.stopPropagation();
       });
 
@@ -190,14 +190,14 @@ var PeopleMapView = Backbone.View.extend({
     }, this);
   },
 
-  cleanup: function() {
+  cleanup: function () {
     _currentView = {
       center: this.map.getCenter(),
-      zoom: this.map.getZoom()
+      zoom: this.map.getZoom(),
     };
     this.map.remove();
     removeView(this);
-  }
+  },
 
 });
 

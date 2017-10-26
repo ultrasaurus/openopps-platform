@@ -4,6 +4,10 @@ var gulp = require('gulp');
 // Include Our Plugins
 var jshint = require('gulp-jshint');
 var sass = require('gulp-sass');
+var bro = require('gulp-bro');
+var stringify = require('stringify');
+var html = require('html-browserify');
+var babel = require('gulp-babel');
 var concat = require('gulp-concat');
 var uglify = require('gulp-uglify');
 var rename = require('gulp-rename');
@@ -19,18 +23,21 @@ gulp.task('lint', function () {
 gulp.task('sass', function () {
   return gulp.src('assets/styles/main.scss')
     .pipe(sass())
-    .pipe(gulp.dest('dist/css'));
+    .pipe(gulp.dest('dist/styles'));
 });
 
 // Concatenate & Minify JS
 gulp.task('scripts', function () {
   if (process.env.NODE_ENV == 'production') {
-    return gulp.src('assets/js/backbone/app.js')
-      .pipe(uglify())
+    gulp.src('assets/js/backbone/app.js')
+      .pipe(babel())
+      .pipe(bro({ transform: stringify }))
       .pipe(rename('bundle.min.js'))
       .pipe(gulp.dest('dist/js'));
   } else {
-    return gulp.src('assets/js/backbone/app.js')
+    gulp.src('assets/js/backbone/app.js')
+      .pipe(babel())
+      .pipe(bro())
       .pipe(rename('bundle.js'))
       .pipe(gulp.dest('dist/js'));
   }

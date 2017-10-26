@@ -2,8 +2,6 @@
 // We know what to do based on a flag being passed into this view
 // via the controller.  That flag is:
 // this.options.topic = true
-
-
 var _ = require('underscore');
 var Backbone = require('backbone');
 var $ = require('jquery');
@@ -13,16 +11,15 @@ var $ = require('jquery');
 var marked = require('marked');
 var CommentCollection = require('../../../../entities/comments/comment_collection');
 
-var fs = require('fs');
-var CommentFormTemplate = fs.readFileSync(`${__dirname}/../templates/comment_form_template.html`).toString();
-var CommentAcTemplate = fs.readFileSync(`${__dirname}/../templates/comment_ac_template.html`).toString();
-var CommentInlineTemplate = fs.readFileSync(`${__dirname}/../templates/comment_inline_template.html`).toString();
+var CommentFormTemplate = require('../templates/comment_form_template.html');
+var CommentAcTemplate = require('../templates/comment_ac_template.html');
+var CommentInlineTemplate = require('../templates/comment_inline_template.html');
 
 var CommentFormView = Backbone.View.extend({
 
   events: {
-    "submit .comment-submit": "post",
-    "keypress .comment-input": "submitOnEnter"
+    'submit .comment-submit': 'post',
+    'keypress .comment-input': 'submitOnEnter',
   },
 
   initialize: function (options) {
@@ -40,7 +37,7 @@ var CommentFormView = Backbone.View.extend({
       this.$el.append(template);
     }
 
-    this.$('[type="submit"]').prop("disabled", false);
+    this.$('[type="submit"]').prop('disabled', false);
 
     var genTemplate = function (template, data) {
       if (!data) {
@@ -77,19 +74,19 @@ var CommentFormView = Backbone.View.extend({
     };
 
     //this.$(".comment-input").atwho({
-      //at: '@',
-      //search_key: 'value',
-      //tpl: CommentAcTemplate,
-      //insert_tpl: CommentInlineTemplate,
-      //limit: 10,
-      //callbacks: {
+    //at: '@',
+    //search_key: 'value',
+    //tpl: CommentAcTemplate,
+    //insert_tpl: CommentInlineTemplate,
+    //limit: 10,
+    //callbacks: {
         //tpl_eval: genTemplate,
         //sorter: function (query, items, search_key) {
-          //// don't sort, use the order from the server
-          //return items;
+    //// don't sort, use the order from the server
+    //return items;
         //},
         //highlighter: function (li, query) {
-          //return li;
+    //return li;
         //},
         //// highlighter: function (li, query) {
         ////   var regexp;
@@ -106,26 +103,26 @@ var CommentFormView = Backbone.View.extend({
         ////   return liDom[0];
         //// },
         //remote_filter: function (query, callback) {
-          //// get data from the server
-          //$.getJSON("/api/ac/inline", { q: query }, function (data) {
-            //_.each(data, function (d) {
-              //// At.js expects the name to be set for the matcher fn
-              //if (_.isUndefined(d.name)) {
-                //d.name = d.value;
-              //}
-            //});
-            //callback(data);
-          //});
+    //// get data from the server
+    //$.getJSON("/api/ac/inline", { q: query }, function (data) {
+    //_.each(data, function (d) {
+    //// At.js expects the name to be set for the matcher fn
+    //if (_.isUndefined(d.name)) {
+    //d.name = d.value;
+    //}
+    //});
+    //callback(data);
+    //});
         //}
-      //}
+    //}
     //}).on("inserted.atwho", function(event, $li) {
-      //// This is a hack to hide the space after inserting an element.
-      //var ids = self.$("span.atwho-view-flag > span:visible");
-      //// insert a non-breaking space after the inserted element, but not within it
-      //// this allows the user to delete that space if they want to, without deleting
-      //// the referenced element
-      //ids.parent().after('&nbsp;');
-      //ids.hide();
+    //// This is a hack to hide the space after inserting an element.
+    //var ids = self.$("span.atwho-view-flag > span:visible");
+    //// insert a non-breaking space after the inserted element, but not within it
+    //// this allows the user to delete that space if they want to, without deleting
+    //// the referenced element
+    //ids.parent().after('&nbsp;');
+    //ids.hide();
     //});
 
     return this;
@@ -134,10 +131,10 @@ var CommentFormView = Backbone.View.extend({
   post: function (e) {
     if (e.preventDefault) e.preventDefault();
 
-    this.$('[type="submit"]').prop("disabled", true);
+    this.$('[type="submit"]').prop('disabled', true);
 
-    var commentHtml = this.$(".comment-input").html();
-    var commentText = this.$(".comment-input").text().trim();
+    var commentHtml = this.$('.comment-input').html();
+    var commentText = this.$('.comment-input').text().trim();
 
     // abort if the comment is empty
     if (!commentText) {
@@ -153,7 +150,7 @@ var CommentFormView = Backbone.View.extend({
 
     var data = {
       comment   : commentHtml,
-      topic     : false
+      topic     : false,
     };
     data[this.options.target + 'Id'] = this.options[this.options.target + 'Id'];
 
@@ -165,7 +162,7 @@ var CommentFormView = Backbone.View.extend({
     this.$('.comment-alert-empty').hide();
 
     var currentTarget = e.currentTarget;
-    this.collection.trigger("comment:save", data, currentTarget);
+    this.collection.trigger('comment:save', data, currentTarget);
   },
 
   submitOnEnter: function (e) {
@@ -177,12 +174,12 @@ var CommentFormView = Backbone.View.extend({
   },
 
   empty: function () {
-    this.$(".comment-input").empty();
+    this.$('.comment-input').empty();
   },
 
   cleanup: function () {
     removeView(this);
-  }
+  },
 
 });
 

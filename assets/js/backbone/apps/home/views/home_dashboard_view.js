@@ -8,14 +8,13 @@ var TaskCollection = require('../../../entities/tasks/tasks_collection');
 var UIConfig = require('../../../config/ui.json');
 
 // templates
-var fs = require('fs');
 var BrowseMainView = require('../../browse/views/browse_main_view');
 var BrowseListView = require('../../browse/views/browse_list_view');
 var TasksCollection = require('../../../entities/tasks/tasks_collection');
-var DashboardTemplate = fs.readFileSync(`${__dirname}/../templates/home_dashboard_template.html`).toString();
-var BadgesTemplate = fs.readFileSync(`${__dirname}/../templates/home_badges_feed_template.html`).toString();
-var UsersTemplate = fs.readFileSync(`${__dirname}/../templates/home_users_feed_template.html`).toString();
-var NetworkTemplate = fs.readFileSync(`${__dirname}/../templates/home_network_stats_template.html`).toString();
+var DashboardTemplate = require('../templates/home_dashboard_template.html');
+var BadgesTemplate = require('../templates/home_badges_feed_template.html');
+var UsersTemplate = require('../templates/home_users_feed_template.html');
+var NetworkTemplate = require('../templates/home_network_stats_template.html');
 
 var templates = {
   main: _.template(DashboardTemplate),
@@ -67,9 +66,9 @@ var DashboardView = Backbone.View.extend({
 
   render: function () {
     var self            = this,
-      badges          = new ActivityCollection({ type: 'badges' }),
-      users           = new ActivityCollection({ type: 'users' }),
-      tasks           = new TaskCollection();
+        badges          = new ActivityCollection({ type: 'badges' }),
+        users           = new ActivityCollection({ type: 'users' }),
+        tasks           = new TaskCollection();
 
     this.$el.html(templates.main());
 
@@ -96,7 +95,7 @@ var DashboardView = Backbone.View.extend({
 
     this.listenTo(users, 'activity:collection:fetch:success', function (e) {
       var data = { users: e.toJSON() },
-        usersHtml = templates.users(data);
+          usersHtml = templates.users(data);
       self.setTarget('users-feed', usersHtml);
     });
 
@@ -117,8 +116,8 @@ var DashboardView = Backbone.View.extend({
       data: { where: { state: 'open' }},
       success: function (d) {
         self.$('#opportunity-count span')
-            .addClass('loaded')
-            .text(d);
+          .addClass('loaded')
+          .text(d);
       },
       error: function (err) {
         console.log('err with /api/activity/count\n', err);
@@ -128,8 +127,8 @@ var DashboardView = Backbone.View.extend({
     var collection = this.collection.chain().pluck('attributes').filter(function (item) {
       // filter out tasks that are full time details with other agencies
       var userAgency = { id: false },
-        timeRequiredTag = _.where(item.tags, { type: 'task-time-required' })[0],
-        fullTimeTag = false;
+          timeRequiredTag = _.where(item.tags, { type: 'task-time-required' })[0],
+          fullTimeTag = false;
 
       if (window.cache.currentUser) {
         userAgency = _.where(window.cache.currentUser.tags, { type: 'agency' })[0];

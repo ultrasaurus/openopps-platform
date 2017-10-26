@@ -9,8 +9,6 @@
 //  <!-- and so on -->
 // </div>
 //
-
-var fs = require('fs');
 var $ = require('jquery');
 var _ = require('underscore');
 var Backbone = require('backbone');
@@ -18,17 +16,15 @@ var BaseView = require('../base/base_view');
 var ModalWizard = require('../components/modal_wizard');
 var EmptyModalView = require('../apps/home/views/empty_modal_view');
 
-var ModalWizardTemplate = fs.readFileSync(
-  __dirname + '/modal_wizard_template.html'
-).toString();
+var ModalWizardTemplate = require('./modal_wizard_template.html');
 
 
 var ModalPages = ModalWizard.extend({
   events: {
-    "click .wizard-forward" : "moveWizardForward",
-    "click .wizard-backward": "moveWizardBackward",
-    "click .wizard-submit"  : "cancel",
-    "click .wizard-cancel"  : "cancel"
+    'click .wizard-forward' : 'moveWizardForward',
+    'click .wizard-backward': 'moveWizardBackward',
+    'click .wizard-submit'  : 'cancel',
+    'click .wizard-cancel'  : 'cancel',
   },
 
   initialize: function (options) {
@@ -41,7 +37,7 @@ var ModalPages = ModalWizard.extend({
 
     // Store $(".current") in cache to reduce query times for DOM lookup
     // on future children and adjacent element to the current el.
-    var current = $(".current");
+    var current = $('.current');
     var next = current.next();
 
     // Notify the sub-view to see if it is safe to proceed
@@ -52,45 +48,45 @@ var ModalPages = ModalWizard.extend({
     }
     this.wizardButtons(null, next);
     current.hide();
-    current.removeClass("current");
-    next.addClass("current");
+    current.removeClass('current');
+    next.addClass('current');
     next.show();
   },
 
   moveWizardBackward: function (e) {
     if (e.preventDefault) e.preventDefault();
 
-    var current = $(".current");
+    var current = $('.current');
     var prev = current.prev();
 
     if (!_.isUndefined(prev.html())) {
       this.wizardButtons(null, prev);
       current.hide();
-      current.removeClass("current");
-      prev.addClass("current");
+      current.removeClass('current');
+      prev.addClass('current');
       prev.show();
     }
   },
 
   wizardButtons: function (e, step) {
 
-  if (_.isUndefined(step)) {
+    if (_.isUndefined(step)) {
       step = $('.current');
     }
     var prevAvailable = step.prev() && !_.isUndefined(step.prev().html());
     var nextAvailable = step.next() && !_.isUndefined(step.next().html());
     if (nextAvailable) {
-      $("#wizard-forward-button").show();
-      $("#wizard-create-button").hide();
+      $('#wizard-forward-button').show();
+      $('#wizard-create-button').hide();
     } else {
-      $("#wizard-forward-button").hide();
-      $("#wizard-create-button").show();
+      $('#wizard-forward-button').hide();
+      $('#wizard-create-button').show();
     }
 
     if ( prevAvailable ) {
-      $("#wizard-backward-button").show();
+      $('#wizard-backward-button').show();
     } else {
-      $("#wizard-backward-button").hide();
+      $('#wizard-backward-button').hide();
     }
     /*
     this.$(".btn").prop('disabled', false);
@@ -109,11 +105,11 @@ var ModalPages = ModalWizard.extend({
     var data = {
       id: this.options.id,
       modalTitle: this.options.modalTitle,
-      draft: this.options.draft
+      draft: this.options.draft,
     };
     var compiledTemplate = _.template(ModalWizardTemplate)(data);
     this.$el.html(compiledTemplate);
-    $(".modal").removeClass("fade").show();
+    $('.modal').removeClass('fade').show();
     return this;
   },
 

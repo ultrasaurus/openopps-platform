@@ -41,7 +41,7 @@
       <%- body %>
     </div>
     <footer class="bg-white p1" id="footer"></footer>
-    <script src="/js/bundle.js?v=<%- version %>"></script>
+    <script src="/js/bundle<% if(process.env.NODE_ENV == 'production') { %>.min<% } %>.js?v=<%- version %>"></script>
 
   </body>
 </html>

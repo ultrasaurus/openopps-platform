@@ -3,14 +3,13 @@ var Backbone = require('backbone');
 var Bootstrap = require('bootstrap');
 
 // templates
-var fs = require('fs');
-var AdminUserPassword = fs.readFileSync(`${__dirname}/../templates/admin_user_password.html`).toString();
+var AdminUserPassword = require('../templates/admin_user_password.html');
 
 var AdminUserPasswordView = Backbone.View.extend({
 
   events: {
-    "blur #newPassword"             : "v",
-    "submit #reset-password"        : "post"
+    'blur #newPassword' : 'v',
+    'submit #reset-password' : 'post',
   },
 
   initialize: function (options) {
@@ -20,7 +19,7 @@ var AdminUserPasswordView = Backbone.View.extend({
   render: function () {
     var data = {
       admin: this.options.admin,
-      u: this.options.user
+      u: this.options.user,
     };
     var template = _.template(AdminUserPassword)(data);
     this.$el.html(template);
@@ -50,7 +49,7 @@ var AdminUserPasswordView = Backbone.View.extend({
     var data;
     data = {
       id: this.options.user.id,
-      password: this.$("#newPassword").val()
+      password: this.$('#newPassword').val(),
     };
 
     $.ajax({
@@ -62,7 +61,7 @@ var AdminUserPasswordView = Backbone.View.extend({
       success: function (data) {
         if (data === true) {
           // collapse modal
-          $("#reset-password-modal").modal('hide');
+          $('#reset-password-modal').modal('hide');
           return;
         }
         self.handleError(self, xhr, status,
@@ -70,13 +69,13 @@ var AdminUserPasswordView = Backbone.View.extend({
       },
       error: function (xhr, status, error) {
         self.handleError(self, xhr, status, error);
-      }
+      },
     });
   },
 
   cleanup: function () {
     removeView(this);
-  }
+  },
 
 });
 

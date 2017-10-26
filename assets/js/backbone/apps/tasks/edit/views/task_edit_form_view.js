@@ -1,4 +1,3 @@
-var fs = require('fs');
 var $ = require('jquery');
 var _ = require('underscore');
 var Backbone = require('backbone');
@@ -9,7 +8,7 @@ var TagFactory = require('../../../../components/tag_factory');
 var ShowMarkdownMixin = require('../../../../components/show_markdown_mixin');
 var TaskFormViewHelper = require('../../task-form-view-helper');
 
-var TaskEditFormTemplate = fs.readFileSync(__dirname + '/../templates/task_edit_form_template.html').toString();
+var TaskEditFormTemplate = require('../templates/task_edit_form_template.html');
 
 
 var TaskEditFormView = Backbone.View.extend({

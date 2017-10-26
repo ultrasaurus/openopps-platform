@@ -1,12 +1,7 @@
-var fs = require('fs');
 var $ = require('jquery');
 var _ = require('underscore');
 var Backbone = require('backbone');
-
-var LoginPasswordTemplate = fs.readFileSync(
-  __dirname + '/../templates/login_password_template.html'
-).toString();
-
+var LoginPasswordTemplate = require('../templates/login_password_template.html');
 
 var LoginPasswordView = Backbone.View.extend({
   initialize: function (options) {

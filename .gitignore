@@ -17,8 +17,6 @@ npm-debug.log
 
 .node_history
 
-package-lock.json
-
 # Ignore modules, should be built using `node install`
 node_modules
 
