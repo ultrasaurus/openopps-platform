@@ -10,4 +10,9 @@ router.get('/api/ac/tag', async (ctx, next) => {
   ctx.body = await service.tagByType(ctx.query.type, ctx.query.q);
 });
 
+router.get('/api/ac/user', async (ctx, next) => {
+  log.info('ctx.query', ctx.query);
+  ctx.body = await service.userByName(ctx.query.q);
+});
+
 module.exports = router.routes();
