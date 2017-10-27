@@ -54,7 +54,10 @@ router.post('/api/task/copy', async (ctx, next) => {
   log.info('Copy opportunity', ctx.request.body);
   ctx.status = 200;
 
-  await service.copyOpportunity(ctx.request.body, function (error, task) {
+  if (ctx.req.user.isAdmin) {
+    log.info('in here');
+  }
+  await service.copyOpportunity(ctx.request.body, ctx.req.user.isAdmin ? ctx.req.user : null, function (error, task) {
     if (error) {
       ctx.flash('error', 'Error Copying Opportunity');
       ctx.status = 400;
