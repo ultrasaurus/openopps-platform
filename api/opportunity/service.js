@@ -29,13 +29,13 @@ async function commentsByTaskId (id) {
 }
 
 async function createOpportunity (attributes, done) {
+  attributes.submittedAt = attributes.state === 'submitted' ? new Date : null;
   await dao.Task.insert(_.extend(baseTask, attributes)).then(async (task) => {
     (attributes.tags || attributes['tags[]'] || []).map(tag => {
       dao.TaskTags.insert({ tagentity_tasks: tag, task_tags: task.id }).catch(err => {
         log.info('register: failed to create tag ', attributes.title, tag, err);
       });
     });
-    task.submittedAt = attributes.state === 'submitted' ? new Date : null;
     task.owner = attributes.userId;
     return done(null, task);
   }).catch(err => {
@@ -45,12 +45,14 @@ async function createOpportunity (attributes, done) {
 }
 
 async function updateOpportunity (attributes, done) {
+  attributes.submittedAt = attributes.state !== 'draft' ? new Date : null;
+  attributes.updatedAt = new Date();
   await dao.Task.update(attributes).then(async () => {
     await dao.TaskTags.db.query(dao.query.deleteTaskTags, attributes.id)
       .then(async () => {
         (attributes.tags || attributes['tags[]'] || []).map(tag => {
-          dao.TaskTags.insert({ tagentity_tasks: tag, task_tags: attributes.id }).catch(err => {
-            log.info('register: failed to update tag ', attributes.username, tag, err);
+          dao.TaskTags.insert({ tagentity_tasks: typeof(tag) == 'object' ? tag.id : tag, task_tags: attributes.id }).catch(err => {
+            log.info('register: failed to update tag ', attributes.id, tag, err);
           });
         });
         return done(true);
@@ -58,7 +60,7 @@ async function updateOpportunity (attributes, done) {
   }).catch (err => { return done(err); });
 }
 
-async function copyOpportunity (attributes, done) {
+async function copyOpportunity (attributes, adminAttributes, done) {
   var results = await dao.Task.findOne('id = ?', attributes.taskId);
   var tags = await dao.TaskTags.find('task_tags = ?', attributes.taskId);
   if(results === null) {
@@ -66,7 +68,8 @@ async function copyOpportunity (attributes, done) {
   }
   var task = {
     title: attributes.title,
-    userId: results.userId,
+    userId: adminAttributes == null ? results.userId : adminAttributes.id,
+    //restrict: adminAttributes == null ? results.restrict : _.find(adminAttributes.tags, { 'type': 'agency' }),
     state: 'draft',
     description: results.description,
   };

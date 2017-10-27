@@ -124,6 +124,7 @@ module.exports = function () {
   app.use(feature('opportunity'));
   app.use(feature('user'));
   app.use(feature('autocomplete'));
+  app.use(feature('admin'));
 
   app.listen(3000);
   console.log('App running on port 3000');
