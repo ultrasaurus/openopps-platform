@@ -2,7 +2,7 @@
 var gulp = require('gulp');
 
 // Include Our Plugins
-var jshint = require('gulp-jshint');
+var eslint = require('gulp-eslint');
 var sass = require('gulp-sass');
 var bro = require('gulp-bro');
 var stringify = require('stringify');
@@ -13,8 +13,9 @@ var rename = require('gulp-rename');
 // Lint Task
 gulp.task('lint', function () {
   return gulp.src('js/*.js')
-    .pipe(jshint())
-    .pipe(jshint.reporter('default'));
+    .pipe(eslint())
+    .pipe(eslint.format())
+    .pipe(eslint.failAfterError());
 });
 
 // Compile Our Sass
@@ -30,6 +31,7 @@ gulp.task('scripts', function () {
     gulp.src('assets/js/backbone/app.js')
       .pipe(babel())
       .pipe(bro({ transform: stringify }))
+      .on('error', function (err) { console.log(err); })
       .pipe(rename('bundle.min.js'))
       .pipe(uglify())
       .on('error', function (err) { console.log(err); })
@@ -59,7 +61,7 @@ gulp.task('move', function () {
 
 // Watch Files For Changes
 gulp.task('watch', function () {
-  gulp.watch('assets/js/backbone/*.js', ['lint', 'scripts']);
+  gulp.watch(['assets/js/backbone/*' , 'assets/js/utils/*'], ['lint', 'scripts']);
   gulp.watch('assets/styles/*', ['sass']);
 });
 
