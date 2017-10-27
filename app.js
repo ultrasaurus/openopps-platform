@@ -17,19 +17,19 @@
  * The same command-line arguments are supported, e.g.:
  * `node app.js --silent --port=80 --prod`
  */
- var extend = require('util')._extend,
-     cfenv = require('cfenv'),
-     appEnv = cfenv.getAppEnv(),
-     userEnv = appEnv.getServiceCreds('env-openopps');
+var extend = require('util')._extend,
+    cfenv = require('cfenv'),
+    appEnv = cfenv.getAppEnv(),
+    userEnv = appEnv.getServiceCreds('env-openopps');
 
- // Import vars from Cloud Foundry service
- if (userEnv) extend(process.env, userEnv);
+// Import vars from Cloud Foundry service
+if (userEnv) extend(process.env, userEnv);
 
- // If settings present, start New Relic
- if (process.env.NEW_RELIC_APP_NAME && process.env.NEW_RELIC_LICENSE_KEY) {
-   console.log('Activating New Relic: ', process.env.NEW_RELIC_APP_NAME);
-   require('newrelic');
- }
+// If settings present, start New Relic
+if (process.env.NEW_RELIC_APP_NAME && process.env.NEW_RELIC_LICENSE_KEY) {
+  console.log('Activating New Relic: ', process.env.NEW_RELIC_APP_NAME);
+  require('newrelic');
+}
 
 // Ensure we're in the project directory, so relative paths work as expected
 // no matter where we actually lift from.
@@ -65,23 +65,23 @@ var runSails = () => {
   }
   // Start server
   sails.lift(rc('sails'));
-}
+};
 
 // Ensure a "sails" can be located:
-(function() {
-  if((process.argv[2] || '').toLowerCase() == 'koa') {
-      try {
-        require('./app-koa')();
-      } catch (e) {
-        console.log('\nError starting app\n');
-        console.log(e);
-        if(e.message.match("Cannot find module")) {
-          var module = e.message.split("Cannot find module ")[1];
-          console.log("\nTo fix the error please try running `npm install " + module.replace(/\'/g, "") + "`")
-        }
-        return;
-      }
-  } else {
+(function () {
+  if((process.argv[2] || '').toLowerCase() == 'sails') {
     runSails();
+  } else {
+    try {
+      require('./app-koa')();
+    } catch (e) {
+      console.log('\nError starting app\n');
+      console.log(e);
+      if(e.message.match('Cannot find module')) {
+        var module = e.message.split('Cannot find module ')[1];
+        console.log('\nTo fix the error please try running `npm install ' + module.replace(/\'/g, '') + '`');
+      }
+      return;
+    }
   }
 })();
