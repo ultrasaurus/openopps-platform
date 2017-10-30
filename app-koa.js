@@ -6,7 +6,7 @@ const sass = require('koa-sass');
 const serve = require('koa-static');
 const path = require('path');
 const session = require('koa-session');
-const bodyparser = require('koa-bodyparser');
+const parser = require('koa-better-body');
 const passport = require('koa-passport');
 const flash = require('koa-better-flash');
 const _ = require('lodash');
@@ -21,6 +21,7 @@ module.exports = function () {
   _.extend(openopps, require('./config/application'));
   _.extend(openopps, require('./config/settings/auth'));
   _.extend(openopps, require('./config/version'));
+  _.extend(openopps, require('./config/fileStore'));
 
   // configure logging
   blueox.beGlobal();
@@ -42,7 +43,7 @@ module.exports = function () {
   app.use(flash());
 
   // initialize body parser
-  app.use(bodyparser());
+  app.use(parser());
 
   // initialize authentication
   require(path.join(__dirname, 'api/auth/passport'));
@@ -126,6 +127,7 @@ module.exports = function () {
   app.use(feature('autocomplete'));
   app.use(feature('admin'));
   app.use(feature('volunteer'));
+  app.use(feature('document'));
 
   app.listen(3000);
   console.log('App running on port 3000');
