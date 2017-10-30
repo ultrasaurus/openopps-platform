@@ -61,8 +61,9 @@ gulp.task('move', function () {
 
 // Watch Files For Changes
 gulp.task('watch', function () {
-  gulp.watch(['assets/js/backbone/*' , 'assets/js/utils/*'], ['lint', 'scripts']);
-  gulp.watch('assets/styles/*', ['sass']);
+  gulp.watch('assets/js/backbone/**', ['lint', 'scripts']);
+  gulp.watch('assets/js/utils/**', ['lint', 'scripts']);
+  gulp.watch('assets/styles/**', ['sass']);
 });
 
 // Build task

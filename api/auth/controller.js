@@ -66,4 +66,9 @@ router.post('/api/auth/local/register', async (ctx, next) => {
   });
 });
 
+router.get('/api/auth/logout', async (ctx, next) => {
+  ctx.body = { success: true };
+  return ctx.logout();
+});
+
 module.exports = router.routes();

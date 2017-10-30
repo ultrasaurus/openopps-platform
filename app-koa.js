@@ -127,6 +127,8 @@ module.exports = function () {
   app.use(feature('autocomplete'));
   app.use(feature('admin'));
   app.use(feature('volunteer'));
+  app.use(feature('activity'));
+  app.use(feature('comment'));
   app.use(feature('document'));
 
   app.listen(3000);
