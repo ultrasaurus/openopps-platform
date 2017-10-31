@@ -1,6 +1,6 @@
 var _ = require('lodash');
 var db = require('../../db');
-var dao = require('postgres-gen-dao')
+var dao = require('postgres-gen-dao');
 
 var badgeDescriptions = {
   // should be able to follow "You are awared this badge because you "
@@ -22,14 +22,14 @@ var badgeDescriptions = {
   'connector': 'have completed a task for your third agency.',
 };
 
-var getDescription = function() {
+var getDescription = function () {
   return badgeDescriptions[this.type];
-}
+};
 
 module.exports = dao({
   db: db,
   table: 'badge',
   prototype: {
-    description: getDescription
-  }
+    description: getDescription,
+  },
 });
