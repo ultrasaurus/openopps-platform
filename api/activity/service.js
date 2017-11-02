@@ -4,7 +4,13 @@ const db = require('../../db');
 const dao = require('./dao')(db);
 
 async function listBadges () {
-  
+  var tasks = await dao.Task.query(dao.query.taskHistoryQuery, 'completed', dao.options.taskHistory);
+  for (var i = 0; i < tasks.length; i++) {
+    tasks[i].badges = dao.clean.badge(await dao.Badge.query(dao.query.badgeQuery, tasks[i].id, dao.options.badge));
+    tasks[i].participants = await dao.User.query(dao.query.participantsQuery, tasks[i].id, dao.options.participants);
+  }
+  var cleaned = await dao.clean.taskHistory(tasks);
+  return cleaned;
 }
 
 async function newUsersList () {

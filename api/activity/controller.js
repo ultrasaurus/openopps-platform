@@ -6,7 +6,7 @@ const service = require('./service');
 var router = new Router();
 
 router.get('/api/activity/badges', async (ctx, next) => {
-  //ctx.body = await service.listBadges();
+  ctx.body = await service.listBadges(); 
 });
 
 router.get('/api/activity/users', async (ctx, next) => {
