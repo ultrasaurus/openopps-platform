@@ -6,12 +6,25 @@ const service = require('./service');
 var router = new Router();
 
 router.get('/api/upload/get/:id', async (ctx, next) => {
-  ctx.body = await service.findOne(ctx.params.id);
+  var result = await service.findOne(ctx.params.id);
+  if(result) {
+    ctx.body = result;
+  } else {
+    ctx.status = 404;
+  }
 });
 
 router.post('/api/upload/create', async (ctx, next) => {
-  log.info('Request data => ', ctx.request.body);
-  ctx.status = 200;
+  await service.upload(ctx.state.user.id, ctx.request.body).then((results) => {
+    ctx.type = 'text/html';
+    // Wrap in HTML so IE8/9 can process it; can't accept json directly
+    var wrapper = '<textarea data-type="application/json">';
+    wrapper += JSON.stringify(results);
+    wrapper += '</textarea>';
+    ctx.body = wrapper;
+  }).catch((err) => {
+    ctx.status = 400;
+  });
 });
 
 module.exports = router.routes();

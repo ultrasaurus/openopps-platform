@@ -15,8 +15,6 @@ function getMessage (err) {
 }
 
 router.post('/api/auth/local', async (ctx, next) => {
-  log.info('ctx body => ', ctx.request.body);
-  log.info('ctx fields =>', request.fields);
   await passport.authenticate('local', (err, user, info, status) => {
     if (err || !user) {
       log.info('Authentication Error: ', err);

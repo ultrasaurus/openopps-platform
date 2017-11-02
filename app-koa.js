@@ -17,7 +17,9 @@ module.exports = function () {
   if (envVars) _.extend(process.env, envVars);
 
   // load configs
-  global.openopps = {};
+  global.openopps = {
+    appPath: __dirname,
+  };
   _.extend(openopps, require('./config/application'));
   _.extend(openopps, require('./config/settings/auth'));
   _.extend(openopps, require('./config/version'));
@@ -107,6 +109,8 @@ module.exports = function () {
   app.use(async function (ctx, next) {
     // Throw 404 for undefined api routes
     if(ctx.path.match('^/api/.*')) {
+      // JSON request for better-body parser are in request.fields
+      ctx.request.body = ctx.request.body || ctx.request.fields;
       await next();
     } else {
       var data = {
