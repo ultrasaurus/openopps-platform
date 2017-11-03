@@ -1,5 +1,6 @@
 const _ = require('lodash');
 const dao = require('postgres-gen-dao');
+const moment = require('moment');
 
 const taskQuery = 'select @task.*, @tags.*, @owner.id, @owner.name ' +
   'from @task task ' +
@@ -24,6 +25,44 @@ const commentsQuery = 'select @comment.*, @user.* ' +
   'where comment."taskId" = ?';
 
 const deleteTaskTags = 'delete from tagentity_tasks__task_tags where task_tags = ?';
+
+const taskExportQuery = 'select task.id, task.title, description, task."createdAt", task."publishedAt", task."assignedAt", ' +
+'task."submittedAt", midas_user.name as creator_name, ' +
+'(' +
+	'select count(*) ' +
+	'from volunteer where "taskId" = task.id' +
+') as signups, ' +
+'task.state, ' +
+'(' +
+	'select tagentity.name ' +
+	'from tagentity inner join tagentity_users__user_tags tags on tagentity.id = tags.tagentity_users ' +
+	'where tags.user_tags = task."userId" and tagentity.type = ? ' +
+	'limit 1' +
+') as agency_name, task."completedAt" ' +
+'from task inner join midas_user on task."userId" = midas_user.id ';
+
+var exportFormat = {
+  'task_id': 'id',
+  'name': {field: 'title', filter: nullToEmptyString},
+  'description': {field: 'description', filter: nullToEmptyString},
+  'created_date': {field: 'createdAt', filter: excelDateFormat},
+  'published_date': {field: 'publishedAt', filter: excelDateFormat},
+  'assigned_date': {field: 'assignedAt', filter: excelDateFormat},
+  'submitted_date': {field: 'submittedAt', filter: excelDateFormat},
+  'creator_name': {field: 'creator_name', filter: nullToEmptyString},
+  'signups': 'signups',
+  'task_state': 'state',
+  'agency_name': {field: 'agency_name', filter: nullToEmptyString},
+  'completion_date': {field: 'completedAt', filter: excelDateFormat},
+};
+
+function nullToEmptyString (str) {
+  return str ? str : '';
+}
+
+function excelDateFormat (date) {
+  return date != null ? moment(date).format('YYYY-MM-DD HH:mm:ss') : '';
+}
 
 const options = {
   task: {
@@ -96,8 +135,10 @@ module.exports = function (db) {
       volunteer: volunteerQuery,
       comments: commentsQuery,
       deleteTaskTags: deleteTaskTags,
+      taskExportQuery: taskExportQuery,
     },
     options: options,
     clean: clean,
+    exportFormat: exportFormat,
   };
 };

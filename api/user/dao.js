@@ -85,6 +85,7 @@ module.exports = function (db) {
     UserTags: dao({ db: db, table: 'tagentity_users__user_tags' }),
     Badge: dao({ db: db, table: 'badge'}),
     Task: dao({ db: db, table: 'task' }),
+    Passport: dao({ db: db, table: 'passport' }),
     query: {
       user: userQuery,
       tag: tagQuery,

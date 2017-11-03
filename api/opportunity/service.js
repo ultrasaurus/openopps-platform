@@ -2,6 +2,7 @@ const _ = require ('lodash');
 const log = require('blue-ox')('app:opportunity:service');
 const db = require('../../db');
 const dao = require('./dao')(db);
+const json2csv = require('json2csv');
 
 const baseTask = {
   createdAt: new Date(),
@@ -73,8 +74,10 @@ async function copyOpportunity (attributes, adminAttributes, done) {
     state: 'draft',
     description: results.description,
   };
-
-  await dao.Task.insert(_.extend(baseTask, task))
+  
+  var newTask = _.extend(baseTask, task);
+  delete(newTask.id);
+  await dao.Task.insert(newTask)
     .then(async (task) => {
       tags.map(tag => {
         dao.TaskTags.insert({ tagentity_tasks: tag.tagentityTasks, task_tags: task.id }).catch(err => {
@@ -85,6 +88,46 @@ async function copyOpportunity (attributes, adminAttributes, done) {
     }).catch (err => { return done(err); });
 }
 
+async function deleteTask (id) {
+  await dao.TaskTags.delete('task_tags = ?', id).then(async (task) => {
+    dao.Volunteer.delete('"taskId" = ?', id).then(async (task) => {
+      dao.Task.delete('id = ?', id).then(async (task) => {
+        return id;
+      }).catch(err => {
+        log.info('delete: failed to delete task ', err);
+        return false;
+      });
+    }).catch(err => {
+      log.info('delete: failed to delete volunteer from task ', err);
+      return false;
+    });    
+  }).catch(err => {
+    log.info('delete: failed to delete task tags ', err);
+    return false;
+  });
+}
+
+async function getExportData () {
+  var records = (await dao.Task.db.query(dao.query.taskExportQuery, 'agency')).rows;
+  var fieldNames = _.keys(dao.exportFormat);
+  var fields = _.values(dao.exportFormat);
+
+  fields.forEach(function (field, fIndex, fields) {
+    if (typeof(field) === 'object') {
+      records.forEach(function (rec, rIndex, records) {
+        records[rIndex][field.field] = field.filter.call(this, rec[field.field]);
+      });
+      fields[fIndex] = field.field;
+    }
+  });
+
+  return json2csv({
+    data: records,
+    fields: fields,
+    fieldNames: fieldNames,
+  });
+}
+
 module.exports = {
   findById: findById,
   list: list,
@@ -92,4 +135,6 @@ module.exports = {
   createOpportunity: createOpportunity,
   updateOpportunity: updateOpportunity,
   copyOpportunity: copyOpportunity,
+  deleteTask: deleteTask,
+  getExportData: getExportData,
 };

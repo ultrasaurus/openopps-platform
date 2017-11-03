@@ -9,6 +9,20 @@ router.get('/api/task', async (ctx, next) => {
   ctx.body = await service.list();
 });
 
+router.get('/api/task/export', async (ctx, next) => {
+  if (ctx.isAuthenticated() && ctx.state.user.isAdmin) {
+    var exportData = await service.getExportData().then(rendered => {
+      ctx.response.set('Content-Type', 'text/csv');
+      ctx.response.set('Content-disposition', 'attachment; filename=tasks.csv');
+      ctx.body = rendered;
+    }).catch(err => {
+      log.info(err);
+    });
+  } else {
+    ctx.status = 401;
+  }
+});
+
 router.get('/api/task/:id', async (ctx, next) => {
   var task = await service.findById(ctx.params.id);
   if (ctx.state.user.id === task.userId) { task.isOwner = true; }
@@ -66,6 +80,10 @@ router.post('/api/task/copy', async (ctx, next) => {
     }
     ctx.body = task;
   });
+});
+
+router.delete('/api/task/:id', async (ctx) => {
+  ctx.body = await service.deleteTask(ctx.params.id);
 });
 
 module.exports = router.routes();

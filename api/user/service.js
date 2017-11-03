@@ -1,6 +1,7 @@
 const db = require('../../db');
 const dao = require('./dao')(db);
 const log = require('blue-ox')('app:user:service');
+const bcrypt = require('bcryptjs');
 
 async function list () {
   return dao.clean.users(await dao.User.query(dao.query.user, {}, dao.options.user));
@@ -71,6 +72,13 @@ async function validateProfile (attributes) {
   return null;
 }
 
+async function updatePassword (attributes) {
+  attributes.password = await bcrypt.hash(attributes.password, 10);
+  attributes.id = (await dao.Passport.find('"user" = ?', attributes.id))[0].id;
+  await dao.Passport.update(attributes);
+  return true;
+}
+
 module.exports = {
   list: list,
   findOne: findOne,
@@ -78,4 +86,5 @@ module.exports = {
   getProfile: getProfile,
   getActivities: getActivities,
   updateProfile: updateProfile,
+  updatePassword: updatePassword,
 };

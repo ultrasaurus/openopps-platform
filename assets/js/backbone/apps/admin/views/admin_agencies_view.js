@@ -28,7 +28,7 @@ var AdminAgenciesView = Backbone.View.extend({
       dataType: 'json',
       success: function (agencyInfo) {
         agencyInfo.slug = agencyInfo.data.abbr.toLowerCase();
-        agencyInfo.data.domain = agencyInfo.data.domain[0];
+        agencyInfo.data.domain = agencyInfo.data.domain;
         var template = _.template(AdminAgenciesTemplate, {
           variable: 'agency',
         })(agencyInfo);
