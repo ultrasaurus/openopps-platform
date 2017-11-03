@@ -7,6 +7,7 @@ var router = new Router();
 
 router.post('/api/volunteer', async (ctx, next) => {
   var attributes = ctx.request.body;
+  attributes.userId = attributes.userId || ctx.state.user.id;
   var opportunity = await service.addVolunteer(attributes, function (err, volunteer) {
     if (err) {
       ctx.body = null;
