@@ -70,13 +70,15 @@ async function copyOpportunity (attributes, adminAttributes, done) {
   var task = {
     title: attributes.title,
     userId: adminAttributes == null ? results.userId : adminAttributes.id,
-    //restrict: adminAttributes == null ? results.restrict : _.find(adminAttributes.tags, { 'type': 'agency' }),
+    restrict: adminAttributes == null ? results.restrict : getRestrictValues(adminAttributes),
     state: 'draft',
     description: results.description,
   };
   
   var newTask = _.extend(baseTask, task);
   delete(newTask.id);
+  delete(newTask.completedBy);
+  delete(newTask.completedAt);
   await dao.Task.insert(newTask)
     .then(async (task) => {
       tags.map(tag => {
@@ -86,6 +88,18 @@ async function copyOpportunity (attributes, adminAttributes, done) {
       });
       return done(null, { 'taskId': task.id });
     }).catch (err => { return done(err); });
+}
+
+function getRestrictValues (adminAttributes) {
+  var record = _.find(adminAttributes.tags, { 'type': 'agency' });
+  var restrict = {
+    name: record.name,
+    abbr: record.data.abbr,
+    slug: record.data.slug,
+    domain: record.data.domain,
+    projectNetwork: false,
+  };
+  return restrict;
 }
 
 async function deleteTask (id) {
