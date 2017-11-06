@@ -46,7 +46,11 @@ async function createOpportunity (attributes, done) {
 }
 
 async function updateOpportunity (attributes, done) {
-  attributes.submittedAt = attributes.state !== 'draft' ? new Date : null;
+  var origTask = await dao.Task.findOne('id = ?', attributes.id);
+  attributes.assignedAt = attributes.state === 'assigned' && origTask.state !== 'assigned' ? new Date : origTask.assignedAt;
+  attributes.publishedAt = attributes.state === 'open' && origTask.state !== 'open' ? new Date : origTask.publishedAt;
+  attributes.completedAt = attributes.state === 'completed' && origTask.state !== 'completed' ? new Date : origTask.completedAt;
+  attributes.submittedAt = attributes.state === 'submitted' && origTask.state !== 'submitted' ? new Date : origTask.submittedAt;
   attributes.updatedAt = new Date();
   await dao.Task.update(attributes).then(async () => {
     await dao.TaskTags.db.query(dao.query.deleteTaskTags, attributes.id)
