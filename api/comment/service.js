@@ -4,13 +4,23 @@ const db = require('../../db');
 const dao = require('./dao')(db);
 
 async function addComment (attributes) {
-    _.extend(attributes, {
-        createdAt: new Date(),
-        updatedAt: new Date(),
-    });
-    return await dao.Comment.insert(attributes);
+  _.extend(attributes, {
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  });
+  return await dao.Comment.insert(attributes);
+}
+
+async function deleteComment (id) {
+  await dao.Comment.delete('id = ?', id).then(async (task) => {
+    return id;
+  }).catch(err => {
+    log.info('delete: failed to delete task ', err);
+    return false;
+  });
 }
 
 module.exports = {
-    addComment: addComment,
+  addComment: addComment,
+  deleteComment: deleteComment,
 };
