@@ -33,7 +33,81 @@ async function getAgencyTaskStateMetrics (agency) {
 }
 
 async function getActivities () {
+  var activities = [];
+  var result = {};
+  var activity = (await dao.Task.db.query(dao.query.activityQuery)).rows;
+  for (var i=0; i<activity.length; i++) {
+    if (activity[i].type == 'comment') {
+      result = (await dao.Task.db.query(dao.query.activityCommentQuery, activity[i].id)).rows;
+      activities.push(buildCommentObj(result));
+    } else if (activity[i].type == 'volunteer') {
+      result = (await dao.Task.db.query(dao.query.activityVolunteerQuery, activity[i].id)).rows;
+      activities.push(buildVolunteerObj(result));
+    } else if (activity[i].type == 'user') {
+      result = await dao.User.findOne('id = ?', activity[i].id);
+      activities.push(buildUserObj(result));
+    } else {
+      result = (await dao.Task.db.query(dao.query.activityTaskQuery, activity[i].id)).rows;
+      activities.push(buildTaskObj(result));
+    }
+  }
+  return activities;
+}
 
+function buildCommentObj (result) {
+  var activity = {};
+  activity.itemType = 'task';
+  activity.item = {
+    title: result[0].title || '',
+    id: result[0].taskId || '',
+  };
+  activity.type = 'newComment';
+  activity.createdAt = result[0].createdAt;
+  activity.comment = {
+    value: result[0].value,
+  };
+  activity.user = {
+    id: result[0].userId,
+    username: result[0].username,
+    name: result[0].name,
+  };
+  return activity;
+}
+
+function buildUserObj (result) {
+  var activity = {};
+  activity.type = 'newUser';
+  activity.createdAt = result.createdAt;
+  activity.user = {
+    id: result.id,
+    username: result.username,
+    name: result.name,
+  };
+  return activity;
+}
+
+function activityObjBase (result, type) {
+  var activity = {};
+  activity.type = type;
+  activity.createdAt = result[0].createdAt;
+  activity.task = {
+    title: result[0].title || '',
+    id: result[0].taskId || '',
+  };
+  activity.user = {
+    id: result[0].userId,
+    username: result[0].username,
+    name: result[0].name,
+  };
+  return activity;
+}
+
+function buildVolunteerObj (result) {
+  return activityObjBase(result, 'newVolunteer');
+}
+
+function buildTaskObj (result) {
+  return activityObjBase(result, 'newTask');
 }
 
 async function getInteractions () {
@@ -256,4 +330,5 @@ module.exports = {
   getAgencyTaskStateMetrics: getAgencyTaskStateMetrics,
   getAgency: getAgency,
   getDashboardTaskMetrics: getDashboardTaskMetrics,
+  getActivities: getActivities,
 };

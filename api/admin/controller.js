@@ -15,8 +15,8 @@ router.get('/api/admin/metrics', async (ctx, next) => {
 
 router.get('/api/admin/activities', async (ctx, next) => {
   if (ctx.isAuthenticated() && ctx.state.user.isAdmin) {
-    ctx.body = null;
-    //ctx.body = await service.getActivities(); 
+    //ctx.body = [{type: 'newUser', createdAt: '2017-11-13T12:30:52.000Z', user: { username: 'something', name: 'yo bro', id: 3976, createdAt: '2017-11-13T12:30:52.000Z'}}];
+    ctx.body = await service.getActivities();
   } else {
     ctx.status = 401;
   }

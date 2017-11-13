@@ -80,6 +80,42 @@ const taskAgencyStateUserQuery = 'select @task.*, @owner.*, @volunteers.* ' +
   'left join tagentity tag on tags.tagentity_users = tag.id ' +
   "where task.state = ? and lower(data->>'abbr') = ? ";
 
+var activityQuery = 'select comment."createdAt", comment.id, ' + "'comment' as type " + '' +
+  'from midas_user ' +
+  'inner join comment on midas_user.id = comment."userId" ' +
+  'inner join task on comment."taskId" = task.id ' +
+  'union all ' +
+  'select volunteer."createdAt", volunteer.id, ' + "'volunteer' as type " + '' +
+  'from volunteer ' +
+  'inner join midas_user on midas_user.id = volunteer."userId" ' +
+  'inner join task on volunteer."taskId" = task.id ' +
+  'union all ' +
+  'select "createdAt", id, ' + "'user' as type " + '' +
+  'from midas_user ' +
+  'union all ' +
+  'select task."createdAt", task.id, ' + "'task' as type " + '' +
+  'from task ' +
+  'inner join midas_user on midas_user.id = task."userId" ' +
+  'order by "createdAt" desc ' +
+  'limit 10';
+
+var activityCommentQuery = 'select midas_user.name, midas_user.username, task.title, task.id "taskId", midas_user.id "userId", comment.value, comment."createdAt" ' +
+  'from midas_user ' +
+  'inner join comment on midas_user.id = comment."userId" ' +
+  'left join task on comment."taskId" = task.id ' +
+  'where comment.id = ? ';
+
+var activityVolunteerQuery = 'select midas_user.name, midas_user.username, task.title, task.id "taskId", midas_user.id "userId", volunteer."createdAt" ' +
+  'from volunteer ' +
+  'left join midas_user on midas_user.id = volunteer."userId" ' +
+  'left join task on volunteer."taskId" = task.id ' +
+  'where volunteer.id = ? ';
+
+var activityTaskQuery = 'select midas_user.name, midas_user.username, task.title, task.id "taskId", midas_user.id "userId", task."createdAt" ' +
+  'from midas_user ' +
+  'inner join task on midas_user.id = task."userId" ' +
+  'where task.id = ? ';
+
 var exportFormat = {
   'user_id': 'id',
   'name': {field: 'name', filter: nullToEmptyString},
@@ -149,6 +185,10 @@ module.exports = function (db) {
       exportUserData: exportUserData,
       taskStateUserQuery: taskStateUserQuery,
       taskAgencyStateUserQuery: taskAgencyStateUserQuery,
+      activityQuery: activityQuery,
+      activityCommentQuery: activityCommentQuery,
+      activityVolunteerQuery: activityVolunteerQuery,
+      activityTaskQuery: activityTaskQuery,
     },
     clean: clean,
     options: options,
