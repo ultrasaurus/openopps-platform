@@ -21,7 +21,7 @@ async function findById (id) {
 }
 
 async function list () {
-  return await dao.Task.query(dao.query.task, {}, dao.options.task);
+  return dao.clean.task(await dao.Task.query(dao.query.task, {}, dao.options.task));
 }
 
 async function commentsByTaskId (id) {
