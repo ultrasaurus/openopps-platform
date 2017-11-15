@@ -158,7 +158,7 @@ var TaskFormView = Backbone.View.extend({
     var owner = this.model.attributes.owner;
 
     if (show && owner) {
-      $modal.find( '.js-profile-link' ).attr( 'href', '/profile/' + owner.id );
+      $modal.find( '.js-profile-link' ).attr( 'href', '/profile/' + owner );
       $modal.slideDown( 'slow' );
       $modal.one( 'mouseout', function ( e ) {
         _.delay( _.bind( $modal.slideUp, $modal, 'slow' ), 4200 );
