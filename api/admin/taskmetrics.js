@@ -31,7 +31,7 @@ _.extend(TaskMetrics.prototype, {
     if (this.filter) {
       var filter = this.filter;
       tasks = _.filter(tasks, function (task) {
-        return _.findWhere(task.tags, { name: filter });
+        return _.find(task.tags, { name: filter });
       });
     }
     return tasks;

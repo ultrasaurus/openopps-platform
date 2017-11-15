@@ -76,7 +76,7 @@ router.get('/api/admin/tasks', async (ctx, next) => {
 });
 
 router.get('/api/admin/agency/:id', async (ctx, next) => {
-  if (ctx.isAuthenticated() && ctx.state.user.isAdmin) {
+  if (ctx.isAuthenticated() && (ctx.state.user.isAdmin || ctx.state.user.isAgencyAdmin)) {
     ctx.body = await service.getAgency(ctx.params.id);
   } else {
     ctx.status = 401;
@@ -114,7 +114,7 @@ router.get('/api/admin/agencyAdmin/:id', async (ctx, next) => {
 });
 
 router.get('/api/admin/users/*', async (ctx, next) => {
-  if (ctx.isAuthenticated() && ctx.state.user.isAdmin) {
+  if (ctx.isAuthenticated() && (ctx.state.user.isAdmin || ctx.state.user.isAgencyAdmin)) {
     var users = {};
     var agency = ctx.params[0];
     if (ctx.query.page) {
@@ -129,7 +129,7 @@ router.get('/api/admin/users/*', async (ctx, next) => {
 });
 
 router.get('/api/admin/tasks/*', async (ctx, next) => {
-  if (ctx.isAuthenticated() && ctx.state.user.isAdmin) {
+  if (ctx.isAuthenticated() && (ctx.state.user.isAdmin || ctx.state.user.isAgencyAdmin)) {
     var agency = ctx.params[0];
     ctx.body = await service.getAgencyTaskStateMetrics(agency);
   } else {

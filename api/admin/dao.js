@@ -173,6 +173,8 @@ const options = {
       tags: [],
     },
     exclude: {
+      m_user: ['username', 'title', 'bio', 'photoId', 'photoUrl', 'isAdmin', 'disabled', 'passwordAttempts', 
+        'createdAt', 'updatedAt', 'deletedAt', 'completedTasks', 'isAgencyAdmin'],
       tags: [ 'deletedAt', 'createdAt', 'updatedAt', 'data' ],
     },
   },
