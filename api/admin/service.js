@@ -3,6 +3,7 @@ const log = require('blue-ox')('app:admin:service');
 const db = require('../../db');
 const dao = require('./dao')(db);
 const json2csv = require('json2csv');
+const TaskMetrics = require('./taskmetrics');
 
 async function getMetrics () {
   var tasks = await getTaskMetrics();
@@ -313,7 +314,15 @@ async function getExportData () {
 }
 
 async function getDashboardTaskMetrics (group, filter) {
-
+  var tasks = dao.clean.task(await dao.Task.query(dao.query.taskMetricsQuery, {}, dao.options.taskMetrics));
+  var volunteers = await dao.Volunteer.find({ taskId: _.map(tasks, 'id') });
+  var agencyPeople = dao.clean.users(await dao.User.query(dao.query.volunteerDetailsQuery, {}, dao.options.user));
+  var generator = new TaskMetrics(tasks, volunteers, agencyPeople, group, filter);
+  generator.generateMetrics(function (err) {
+    if (err) res.serverError(err + ' metrics are unavailable.');
+    return null;
+  });
+  return generator.metrics;
 }
 
 module.exports = {

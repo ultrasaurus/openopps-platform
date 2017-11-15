@@ -80,7 +80,7 @@ const taskAgencyStateUserQuery = 'select @task.*, @owner.*, @volunteers.* ' +
   'left join tagentity tag on tags.tagentity_users = tag.id ' +
   "where task.state = ? and lower(data->>'abbr') = ? ";
 
-var activityQuery = 'select comment."createdAt", comment.id, ' + "'comment' as type " + '' +
+const activityQuery = 'select comment."createdAt", comment.id, ' + "'comment' as type " + '' +
   'from midas_user ' +
   'inner join comment on midas_user.id = comment."userId" ' +
   'inner join task on comment."taskId" = task.id ' +
@@ -99,22 +99,34 @@ var activityQuery = 'select comment."createdAt", comment.id, ' + "'comment' as t
   'order by "createdAt" desc ' +
   'limit 10';
 
-var activityCommentQuery = 'select midas_user.name, midas_user.username, task.title, task.id "taskId", midas_user.id "userId", comment.value, comment."createdAt" ' +
+const activityCommentQuery = 'select midas_user.name, midas_user.username, task.title, task.id "taskId", midas_user.id "userId", comment.value, comment."createdAt" ' +
   'from midas_user ' +
   'inner join comment on midas_user.id = comment."userId" ' +
   'left join task on comment."taskId" = task.id ' +
   'where comment.id = ? ';
 
-var activityVolunteerQuery = 'select midas_user.name, midas_user.username, task.title, task.id "taskId", midas_user.id "userId", volunteer."createdAt" ' +
+const activityVolunteerQuery = 'select midas_user.name, midas_user.username, task.title, task.id "taskId", midas_user.id "userId", volunteer."createdAt" ' +
   'from volunteer ' +
   'left join midas_user on midas_user.id = volunteer."userId" ' +
   'left join task on volunteer."taskId" = task.id ' +
   'where volunteer.id = ? ';
 
-var activityTaskQuery = 'select midas_user.name, midas_user.username, task.title, task.id "taskId", midas_user.id "userId", task."createdAt" ' +
+const activityTaskQuery = 'select midas_user.name, midas_user.username, task.title, task.id "taskId", midas_user.id "userId", task."createdAt" ' +
   'from midas_user ' +
   'inner join task on midas_user.id = task."userId" ' +
   'where task.id = ? ';
+
+const taskMetricsQuery = 'select @task.*, @tags.* ' +
+'from @task task ' +
+'left join tagentity_tasks__task_tags task_tags on task_tags.task_tags = task.id ' +
+'left join @tagentity tags on tags.id = task_tags.tagentity_tasks ';
+
+const volunteerDetailsQuery = 'select @m_user.*, @tags.* ' +
+'from @midas_user m_user ' +
+'inner join volunteer on m_user.id = volunteer."userId" ' +
+'left join tagentity_users__user_tags user_tags on user_tags.user_tags = m_user.id ' +
+'left join @tagentity tags on tags.id = user_tags.tagentity_users ' +
+"where tags.type = 'agency' ";
 
 var exportFormat = {
   'user_id': 'id',
@@ -147,6 +159,23 @@ const options = {
         'createdAt', 'updatedAt', 'deletedAt', 'completedTasks', 'isAgencyAdmin' ],
     },
   },
+  taskMetrics: {
+    fetch: {
+      tags: [],
+    },
+    exclude: {
+      task: [ 'deletedAt' ],
+      tags: [ 'deletedAt' ],
+    },
+  },
+  user: {
+    fetch: {
+      tags: [],
+    },
+    exclude: {
+      tags: [ 'deletedAt', 'createdAt', 'updatedAt', 'data' ],
+    },
+  },
 };
 
 const clean = {
@@ -156,6 +185,15 @@ const clean = {
       if(!_.isEmpty(cleaned.restrict)) {
         cleaned.restrict = JSON.parse(cleaned.restrict);
       }
+      return cleaned;
+    });
+  },
+  users: function (records) {
+    return records.map(function (record) {
+      var cleaned = _.pickBy(record, _.identity);
+      cleaned.tags = (cleaned.tags || []).map(function (tag) {
+        return _.pickBy(tag, _.identity);
+      });
       return cleaned;
     });
   },
@@ -189,6 +227,8 @@ module.exports = function (db) {
       activityCommentQuery: activityCommentQuery,
       activityVolunteerQuery: activityVolunteerQuery,
       activityTaskQuery: activityTaskQuery,
+      taskMetricsQuery: taskMetricsQuery,
+      volunteerDetailsQuery: volunteerDetailsQuery,
     },
     clean: clean,
     options: options,
