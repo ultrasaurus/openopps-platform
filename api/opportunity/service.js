@@ -31,7 +31,9 @@ async function commentsByTaskId (id) {
 
 async function createOpportunity (attributes, done) {
   attributes.submittedAt = attributes.state === 'submitted' ? new Date : null;
-  await dao.Task.insert(_.extend(baseTask, attributes)).then(async (task) => {
+  attributes.createdAt = new Date();
+  attributes.updatedAt = new Date();
+  await dao.Task.insert(attributes).then(async (task) => {
     (attributes.tags || attributes['tags[]'] || []).map(tag => {
       dao.TaskTags.insert({ tagentity_tasks: tag, task_tags: task.id }).catch(err => {
         log.info('register: failed to create tag ', attributes.title, tag, err);
