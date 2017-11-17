@@ -25,7 +25,7 @@ router.get('/api/user', async (ctx, next) => {
 router.get('/api/user/:id', async (ctx, next) => {
   if(ctx.isAuthenticated()) {
     if(ctx.params.id == ctx.state.user.id) {
-      ctx.body = ctx.state.user;
+      ctx.body = await service.populateBadgeDescriptions(ctx.state.user);
     } else {
       ctx.body = await service.getProfile(ctx.params.id);
     }
