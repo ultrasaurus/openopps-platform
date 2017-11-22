@@ -1,5 +1,6 @@
 const _ = require('lodash');
 const dao = require('postgres-gen-dao');
+const badgeDescriptions = require('../../utils').badgeDescriptions;
 
 const userQuery = 'select @m_user.id, @m_user.name ' +
 'from @midas_user m_user ' +
@@ -24,23 +25,9 @@ const badgeQuery = 'select badge.*, @user.* ' +
 'from badge inner join @midas_user "user" on badge.user = "user".id ' +
 'where badge.task = ? ';
 
-var badgeDescriptions = {
-  'newcomer': 'have completed your first task.',
-  'maker': 'have completed three tasks.',
-  'game changer': 'have completed five tasks.',
-  'disruptor': 'have completed ten tasks.',
-  'partner': 'have completed fifteen tasks.',
-  'mentor': 'have created your first ongoing task.',
-  'instigator': 'have created your first one-time task.',
-  'team builder': 'have accepted at least four people on a task.',
-  'local': 'have completed 2 tasks for one agency.',
-  'explorer': 'have completed a task for your second agency.',
-  'connector': 'have completed a task for your third agency.',
-};
-
 const options = {
   user: {
-    fetch: { 
+    fetch: {
       id: '',
       name: '',
     },

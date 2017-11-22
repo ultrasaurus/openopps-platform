@@ -1,10 +1,10 @@
-var _ = require('lodash');
-var utils = require('../../utils');
-var db = require('../../db');
-var dao = require('postgres-gen-dao');
+const _ = require('lodash');
+const db = require('../../db');
+const dao = require('postgres-gen-dao');
+const badgeDescriptions = require('../../utils').badgeDescriptions;
 
 var getDescription = function () {
-  return utils.badgeDescriptions[this.type];
+  return badgeDescriptions[this.type];
 };
 
 module.exports = dao({
