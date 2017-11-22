@@ -3,6 +3,7 @@ const Router = require('koa-router');
 const _ = require('lodash');
 const service = require('./service');
 const passport = require('koa-passport');
+const utils = require('../../utils');
 
 const router = new Router();
 
@@ -111,7 +112,7 @@ router.post('/api/auth/reset', async (ctx, next) => {
         ctx.status = 400;
         ctx.body = err;
       } else {
-        if(service.validatePassword(password, validToken.email)) {
+        if(utils.validatePassword(password, validToken.email)) {
           await service.resetPassword(validToken, password, function (err) {
             if (err) {
               ctx.status = 400;

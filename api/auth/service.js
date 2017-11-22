@@ -1,5 +1,5 @@
 const _ = require ('lodash');
-var crypto = require('crypto');
+const crypto = require('crypto');
 const bcrypt = require('bcryptjs');
 const validator = require('validator');
 const uuid = require('uuid');
@@ -22,16 +22,6 @@ const basePassport = {
   createdAt: new Date(),
   updatedAt: new Date(),
 };
-
-function validatePassword (password, username) {
-  var notUsername = password.toLowerCase().trim() !== username.split('@',1)[0].toLowerCase().trim();
-  var minLength = password.length >= 8;
-  var lowercase = /[a-z]/.test(password);
-  var uppercase = /[A-Z]/.test(password);
-  var number = /[0-9]/.test(password);
-  var symbol = /[^\w\s]/.test(password);
-  return (notUsername && minLength && lowercase && uppercase && number && symbol);
-}
 
 async function register (attributes, done) {
   if (!attributes.password || attributes.password === '') {
@@ -124,6 +114,5 @@ module.exports = {
   register: register,
   forgotPassword: forgotPassword,
   checkToken: checkToken,
-  validatePassword: validatePassword,
   resetPassword: resetPassword,
 };
