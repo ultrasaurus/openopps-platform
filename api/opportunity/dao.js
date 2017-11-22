@@ -97,13 +97,19 @@ const options = {
 };
 
 const clean = {
+  tasks: function (records) {
+    return records.map(function (record) {
+      var cleaned = _.pickBy(record, _.identity);
+      if(!_.isEmpty(cleaned.restrict)) {
+        cleaned.restrict = JSON.parse(cleaned.restrict);
+      }
+      return cleaned;
+    });
+  },
   task: function (record) {
     var cleaned = _.pickBy(record, _.identity);
-    cleaned.tags = cleaned.tags.map(function (tag) { return _.pickBy(tag, _.identity); });
     if(!_.isEmpty(cleaned.restrict)) {
       cleaned.restrict = JSON.parse(cleaned.restrict);
-    } else {
-      cleaned.restrict = null;
     }
     return cleaned;
   },

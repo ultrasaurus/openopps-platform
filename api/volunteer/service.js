@@ -9,6 +9,8 @@ const baseVolunteer = {
 };
 
 async function addVolunteer (attributes, done) {
+  var newVolunteer = _.extend(baseVolunteer, attributes);
+  delete(newVolunteer.id);
   await dao.Volunteer.insert(_.extend(baseVolunteer, attributes)).then(async (volunteer) => {
     return done(volunteer);
   }).catch(err => {

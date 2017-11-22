@@ -21,7 +21,7 @@ async function findById (id) {
 }
 
 async function list () {
-  return await dao.Task.query(dao.query.task, {}, dao.options.task);
+  return dao.clean.tasks(await dao.Task.query(dao.query.task + ' order by task."createdAt" desc', {}, dao.options.task));
 }
 
 async function commentsByTaskId (id) {
@@ -31,7 +31,9 @@ async function commentsByTaskId (id) {
 
 async function createOpportunity (attributes, done) {
   attributes.submittedAt = attributes.state === 'submitted' ? new Date : null;
-  await dao.Task.insert(_.extend(baseTask, attributes)).then(async (task) => {
+  attributes.createdAt = new Date();
+  attributes.updatedAt = new Date();
+  await dao.Task.insert(attributes).then(async (task) => {
     (attributes.tags || attributes['tags[]'] || []).map(tag => {
       dao.TaskTags.insert({ tagentity_tasks: tag, task_tags: task.id }).catch(err => {
         log.info('register: failed to create tag ', attributes.title, tag, err);
@@ -46,7 +48,11 @@ async function createOpportunity (attributes, done) {
 }
 
 async function updateOpportunity (attributes, done) {
-  attributes.submittedAt = attributes.state !== 'draft' ? new Date : null;
+  var origTask = await dao.Task.findOne('id = ?', attributes.id);
+  attributes.assignedAt = attributes.state === 'assigned' && origTask.state !== 'assigned' ? new Date : origTask.assignedAt;
+  attributes.publishedAt = attributes.state === 'open' && origTask.state !== 'open' ? new Date : origTask.publishedAt;
+  attributes.completedAt = attributes.state === 'completed' && origTask.state !== 'completed' ? new Date : origTask.completedAt;
+  attributes.submittedAt = attributes.state === 'submitted' && origTask.state !== 'submitted' ? new Date : origTask.submittedAt;
   attributes.updatedAt = new Date();
   await dao.Task.update(attributes).then(async () => {
     await dao.TaskTags.db.query(dao.query.deleteTaskTags, attributes.id)

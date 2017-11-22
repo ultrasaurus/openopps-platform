@@ -25,9 +25,14 @@ async function isUsernameUsed (id, username) {
 
 async function getProfile (id) {
   var profile = await findOne(id);
-  profile.badges = await dao.Badge.find('"user" = ?', id);
+  profile.badges = dao.clean.badge(await dao.Badge.find('"user" = ?', id));
   profile.tags = (await dao.TagEntity.db.query(dao.query.tag, id)).rows;
   return dao.clean.profile(profile);
+}
+
+async function populateBadgeDescriptions (user) {
+  user.badges = dao.clean.badge(user.badges);
+  return user;
 }
 
 async function getActivities (id) {
@@ -84,6 +89,7 @@ module.exports = {
   findOne: findOne,
   findOneByUsername: findOneByUsername,
   getProfile: getProfile,
+  populateBadgeDescriptions: populateBadgeDescriptions,
   getActivities: getActivities,
   updateProfile: updateProfile,
   updatePassword: updatePassword,
