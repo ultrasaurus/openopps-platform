@@ -67,3 +67,33 @@ describe('Testing badge service awardForTaskCompletion()', function () {
     });
   });
 });
+
+describe('Testing badge service awardForTaskPublish()', function () {
+  var tests = [
+    {
+      message: 'A user that publishes a one time task should be awarded the instigator badge.',
+      method: 'awardForTaskPublish',
+      args: [{ id: 1, tags: [{ type: 'task-time-required', name: 'One time'}] }, 1],
+      expected: 'instigator',
+    },
+    {
+      message: 'A user that publishes an on going task should be awarded the mentor badge.',
+      method: 'awardForTaskPublish',
+      args: [{ id: 1, tags: [{ type: 'task-time-required', name: 'Ongoing'}] }, 1],
+      expected: 'mentor',
+    },
+    {
+      message: 'A user that publishes a task other than one time or on going should not be awarded any badge.',
+      method: 'awardForTaskPublish',
+      args: [{ id: 1, tags: [{ type: 'task-time-required', name: 'Full Time Detail'}] }, 1],
+      expected: undefined,
+    },
+  ];
+
+  tests.forEach(function (test) {
+    it(test.message, function () {
+      var res = Badge[test.method].apply(null, test.args);
+      assert.equal(res ? res.type : res, test.expected);
+    });
+  });
+});

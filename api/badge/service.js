@@ -90,65 +90,31 @@ function awardForTaskCompletion (task, user, opts) {
  * Determines if the publishing of a task makes the
  * task creator eligible for a badge, and if so, awards
  * that badge to the user.
- * Takes an optional callback
  *
- * @param { Array } tasks
+ * @param { Object } task
  * @param { Number } userId
  * @param { Object } opts - optional
  */
-function awardForTaskPublish (tasks, userId, opts) {
-  return new Promise(function (resolve, reject) {
-    var badge   = { user: userId },
-        counter = { ongoing: 0, oneTime: 0 },
-        ongoingTaskId, oneTimeTaskId;
-    // Check if the badge update should be occurring silently by checking the `opts`.
-    badge.silent = ( opts && ! _.isUndefined( opts.silent ) ) ? opts.silent : false;
+function awardForTaskPublish (task, userId, opts) {
+  var badge = {
+    user: userId,
+    task: task.id,
+    silent: ( opts && ! _.isUndefined( opts.silent ) ) ? opts.silent : false,
+    createdAt: Date(),
+    updatedAt: Date(),
+  };
 
-    // WHERE I LEFT OFF ON 09/29/17
-
-    tasks.forEach(function (t) {
-      var taskType = _.where(t.tags, { type: 'task-time-required' });
-      if (taskType[0] && taskType[0].name) {
-        if (taskType[0].name === 'One time') {
-          counter.oneTime++;
-          oneTimeTaskId = t.id;
-        }
-        else if (taskType[0].name === 'Ongoing') {
-          counter.ongoing++;
-          ongoingTaskId = t.id;
-        }
-      }
-    });
-
-    if (counter.ongoing === 1) {
-      badge.type = 'mentor';
-      badge.task = ongoingTaskId;
-    }
-    else if (counter.oneTime === 1) {
+  var taskType = _.find(task.tags, { type: 'task-time-required' });
+  if (taskType && taskType.name) {
+    if (taskType.name === 'One time') {
       badge.type = 'instigator';
-      badge.task = oneTimeTaskId;
     }
+    else if (taskType.name === 'Ongoing') {
+      badge.type = 'mentor';
+    }
+  }
 
-    if (badge.type) {
-      Badge.findOrCreate(badge, badge, function (err, b) {
-        b = [b];
-        // swallow a potential error (expected) that the badge
-        // already exists
-        if (err && err._e.toString().match('Badge already exists')) {
-          err = null;
-          b = [];
-        } else {
-          sails.log.verbose('awardForTaskPublish badge created (badge)', b);
-        }
-        if (err) sails.log.error(err);
-        if (done) return done(err, b);
-        return;
-      });
-    } else {
-      // result is empty array for no badges!
-      resolve([]);
-    }
-  });
+  return badge.type ? badge : null;
 }
 
 module.exports = {
@@ -156,4 +122,5 @@ module.exports = {
   findOne: Badge.findOne,
   save: save,
   awardForTaskCompletion: awardForTaskCompletion,
+  awardForTaskPublish: awardForTaskPublish,
 };
