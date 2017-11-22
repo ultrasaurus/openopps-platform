@@ -3,15 +3,10 @@ const log = require('blue-ox')('app:volunteer:service');
 const db = require('../../db');
 const dao = require('./dao')(db);
 
-const baseVolunteer = {
-  createdAt: new Date(),
-  updatedAt: new Date(),
-};
-
 async function addVolunteer (attributes, done) {
-  var newVolunteer = _.extend(baseVolunteer, attributes);
-  delete(newVolunteer.id);
-  await dao.Volunteer.insert(_.extend(baseVolunteer, attributes)).then(async (volunteer) => {
+  attributes.createdAt = new Date();
+  attributes.updatedAt = new Date();
+  await dao.Volunteer.insert(attributes).then(async (volunteer) => {
     return done(volunteer);
   }).catch(err => {
     log.info('create: failed to add volunteeer ', err);
