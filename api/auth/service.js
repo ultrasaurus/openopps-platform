@@ -6,6 +6,7 @@ const uuid = require('uuid');
 const log = require('blue-ox')('app:auth:service');
 const db = require('../../db');
 const dao = require('./dao')(db);
+const notification = require('../notification/service');
 
 const baseUser = {
   isAdmin: false,
@@ -49,6 +50,17 @@ async function register (attributes, done) {
     log.info('register: failed to create user ', attributes.username, err);
     return done(true);
   });
+}
+
+async function sendUserCreateNotification (user, action) {
+  var data = {
+    action: action,
+    model: {
+      name: user.name,
+      username: user.username,
+    },
+  };
+  notification.createNotification(data);
 }
 
 async function resetPassword (token, password, done) {
@@ -115,4 +127,5 @@ module.exports = {
   forgotPassword: forgotPassword,
   checkToken: checkToken,
   resetPassword: resetPassword,
+  sendUserCreateNotification: sendUserCreateNotification,
 };

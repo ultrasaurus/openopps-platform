@@ -60,7 +60,11 @@ router.post('/api/auth/local/register', async (ctx, next) => {
       ctx.status = 400;
       return ctx.body = { message: err.message || 'Registration failed.' };
     }
-    ctx.body = { success: true };
+    try {
+      service.sendUserCreateNotification(user, 'user.create.welcome');
+    } finally {
+      ctx.body = { success: true };     
+    }
     return ctx.login(user);
   });
 });
