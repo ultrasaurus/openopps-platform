@@ -61,22 +61,31 @@ async function sendTaskNotification (user, task, action) {
 
 async function updateOpportunity (attributes, done) {
   var origTask = await dao.Task.findOne('id = ?', attributes.id);
+  var tags = attributes.tags || attributes['tags[]'] || [];
   attributes.assignedAt = attributes.state === 'assigned' && origTask.state !== 'assigned' ? new Date : origTask.assignedAt;
   attributes.publishedAt = attributes.state === 'open' && origTask.state !== 'open' ? new Date : origTask.publishedAt;
   attributes.completedAt = attributes.state === 'completed' && origTask.state !== 'completed' ? new Date : origTask.completedAt;
   attributes.submittedAt = attributes.state === 'submitted' && origTask.state !== 'submitted' ? new Date : origTask.submittedAt;
   attributes.updatedAt = new Date();
-  await dao.Task.update(attributes).then(async () => {
-    await dao.TaskTags.db.query(dao.query.deleteTaskTags, attributes.id)
+  await dao.Task.update(attributes).then(async (task) => {
+    task.userId = task.userId || origTask.userId; // userId is null if editted by owner
+    task.tags = [];
+    await dao.TaskTags.db.query(dao.query.deleteTaskTags, task.id)
       .then(async () => {
-        (attributes.tags || attributes['tags[]'] || []).map(tag => {
-          dao.TaskTags.insert({ tagentity_tasks: typeof(tag) == 'object' ? tag.id : tag, task_tags: attributes.id }).catch(err => {
-            log.info('register: failed to update tag ', attributes.id, tag, err);
+        await Promise.all(tags.map(async (tag) => {
+          return await dao.TaskTags.insert({ tagentity_tasks: typeof(tag) == 'object' ? tag.id : tag, task_tags: attributes.id }).then(async (tag) => {
+            return await dao.TagEntity.findOne('id = ?', tag.tagentity_tasks).catch(err => {
+              log.info('update task: failed to load tag entity ', attributes.id, tag, err);
+            });
+          }).catch(err => {
+            log.info('update task: failed to update tag ', attributes.id, tag, err);
           });
+        })).then(tags => {
+          task.tags = tags;
+          return done(task, origTask.state !== task.state);
         });
-        return done(origTask.state !== attributes.state);
-      }).catch (err => { return done(null, err); });
-  }).catch (err => { return done(null, err); });
+      }).catch (err => { return done(null, false, err); });
+  }).catch (err => { return done(null, false, err); });
 }
 
 function sendTaskStateUpdateNotification (user, task) {
@@ -132,7 +141,7 @@ async function copyOpportunity (attributes, adminAttributes, done) {
     state: 'draft',
     description: results.description,
   };
-  
+
   var newTask = _.extend(baseTask, task);
   delete(newTask.id);
   delete(newTask.completedBy);
@@ -172,7 +181,7 @@ async function deleteTask (id) {
     }).catch(err => {
       log.info('delete: failed to delete volunteer from task ', err);
       return false;
-    });    
+    });
   }).catch(err => {
     log.info('delete: failed to delete task tags ', err);
     return false;

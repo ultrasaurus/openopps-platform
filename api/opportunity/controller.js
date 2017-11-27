@@ -2,6 +2,7 @@ const log = require('blue-ox')('app:opportunity');
 const Router = require('koa-router');
 const _ = require('lodash');
 const service = require('./service');
+const Badge = require('../badge/service');
 
 var router = new Router();
 
@@ -47,20 +48,25 @@ router.post('/api/task', async (ctx, next) => {
       service.sendTaskNotification(ctx.req.user, task, task.state === 'draft' ? 'task.create.draft' : 'task.create.thanks');
     } finally {
       ctx.body = task;
-    }   
+    }
   });
 });
 
 router.put('/api/task/:id', async (ctx, next) => {
   log.info('Edit opportunity', ctx.request.body);
   ctx.status = 200;
-
-  await service.updateOpportunity(ctx.request.body, function (stateChange, error) {
+  await service.updateOpportunity(ctx.request.body, function (task, stateChange, error) {
     if (error) {
       ctx.status = 400;
       return ctx.body = { message: error.message || 'Opportunity update failed.' };
     }
     try {
+      var badge = Badge.awardForTaskPublish(task, task.userId);
+      if(badge) {
+        Badge.save(badge).catch(err => {
+          log.info('Error saving badge', err);
+        });
+      }
       if (stateChange) {
         service.sendTaskStateUpdateNotification(ctx.req.user, ctx.request.body);
       }

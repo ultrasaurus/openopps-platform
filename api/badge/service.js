@@ -1,5 +1,6 @@
 const _ = require('lodash');
 const Badge = require('./dao');
+const badgeDescriptions = require('../../utils').badgeDescriptions;
 
 const badgeExists = 'Badge already exists';
 const tasksCompletedAwards = {
@@ -25,7 +26,7 @@ function afterCreate (badge) {
           user: results.rows[0],
           badge: {
             type: badge.type,
-            description: badge.getDescription(),
+            description: badgeDescriptions[badge.type],
           },
         };
 
@@ -47,7 +48,7 @@ function afterCreate (badge) {
 function save (badge) {
   return new Promise(function (resolve, reject) {
     Badge.find('type = $type and "user" = $user', badge).then((result) => {
-      if(result) {
+      if(result.length > 0) {
         resolve({ badge: result[0] });
       } else {
         Badge.insert(badge).then(function (result) {
@@ -77,8 +78,8 @@ function awardForTaskCompletion (task, user, opts) {
       user: user.id,
       task: task.id,
       silent: (opts && !_.isUndefined(opts.silent)) ? opts.silent : false,
-      createdAt: Date(),
-      updatedAt: Date(),
+      createdAt: new Date(),
+      updatedAt: new Date(),
     };
   } else {
     return null;
@@ -100,8 +101,8 @@ function awardForTaskPublish (task, userId, opts) {
     user: userId,
     task: task.id,
     silent: ( opts && ! _.isUndefined( opts.silent ) ) ? opts.silent : false,
-    createdAt: Date(),
-    updatedAt: Date(),
+    createdAt: new Date(),
+    updatedAt: new Date(),
   };
 
   var taskType = _.find(task.tags, { type: 'task-time-required' });

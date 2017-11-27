@@ -10,8 +10,8 @@ const taskQuery = 'select @task.*, @tags.*, @owner.id, @owner.name ' +
 
 const userQuery = 'select @midas_user.*, @agency.* ' +
   'from @midas_user midas_user ' +
-  'join tagentity_users__user_tags user_tags on user_tags.user_tags = midas_user.id ' +
-  'join @tagentity agency on agency.id = user_tags.tagentity_users ' +
+  'left join tagentity_users__user_tags user_tags on user_tags.user_tags = midas_user.id ' +
+  'left join @tagentity agency on agency.id = user_tags.tagentity_users ' +
   "where agency.type = 'agency'";
 
 const volunteerQuery = 'select volunteer.id, volunteer."userId", midas_user.name ' +
