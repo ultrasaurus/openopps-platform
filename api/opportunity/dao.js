@@ -19,6 +19,11 @@ const volunteerQuery = 'select volunteer.id, volunteer."userId", midas_user.name
   'join midas_user on midas_user.id = volunteer."userId" ' +
   'where volunteer."taskId" = ?';
 
+const volunteerListQuery = 'select midas_user.username ' +
+'from volunteer ' +
+'join midas_user on midas_user.id = volunteer."userId" ' +
+'where volunteer."taskId" = ?';
+
 const commentsQuery = 'select @comment.*, @user.* ' +
   'from @comment comment ' +
   'join @midas_user "user" on "user".id = comment."userId" ' +
@@ -142,6 +147,7 @@ module.exports = function (db) {
       comments: commentsQuery,
       deleteTaskTags: deleteTaskTags,
       taskExportQuery: taskExportQuery,
+      volunteerListQuery: volunteerListQuery,
     },
     options: options,
     clean: clean,

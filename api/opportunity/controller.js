@@ -37,15 +37,17 @@ router.post('/api/task', async (ctx, next) => {
   log.info('Create opportunity', ctx.request.body);
   ctx.request.body.userId = ctx.session.passport.user;
 
-  // do some validation here...
   var opportunity = await service.createOpportunity(ctx.request.body, function (err, task) {
     log.info(task);
     if (err) {
-      // req.flash('error', 'Error.Service.CreateOpportunity.Failed');
-      // ctx.status = 400;
-      // return ctx.body = { message: err.message || 'Opportunity creation failed.' };
+      ctx.status = 400;
+      return ctx.body = { message: err.message || 'Opportunity creation failed.' };
     }
-    ctx.body = task;
+    try {
+      service.sendTaskNotification(ctx.req.user, task, task.state === 'draft' ? 'task.create.draft' : 'task.create.thanks');
+    } finally {
+      ctx.body = task;
+    }   
   });
 });
 
@@ -53,14 +55,18 @@ router.put('/api/task/:id', async (ctx, next) => {
   log.info('Edit opportunity', ctx.request.body);
   ctx.status = 200;
 
-  await service.updateOpportunity(ctx.request.body, function (error) {
+  await service.updateOpportunity(ctx.request.body, function (stateChange, error) {
     if (error) {
-      ctx.flash('error', 'Error Updating Opportunity');
       ctx.status = 400;
-      log.info(error);
-      return ctx.body = null;
+      return ctx.body = { message: error.message || 'Opportunity update failed.' };
     }
-    ctx.body = { success: true };
+    try {
+      if (stateChange) {
+        service.sendTaskStateUpdateNotification(ctx.req.user, ctx.request.body);
+      }
+    } finally {
+      ctx.body = { success: true };
+    }
   });
 });
 
@@ -68,9 +74,6 @@ router.post('/api/task/copy', async (ctx, next) => {
   log.info('Copy opportunity', ctx.request.body);
   ctx.status = 200;
 
-  if (ctx.req.user.isAdmin) {
-    log.info('in here');
-  }
   await service.copyOpportunity(ctx.request.body, ctx.req.user.isAdmin ? ctx.req.user : null, function (error, task) {
     if (error) {
       ctx.flash('error', 'Error Copying Opportunity');

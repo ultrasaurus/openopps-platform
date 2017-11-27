@@ -3,6 +3,7 @@ const log = require('blue-ox')('app:opportunity:service');
 const db = require('../../db');
 const dao = require('./dao')(db);
 const json2csv = require('json2csv');
+const notification = require('../notification/service');
 
 const baseTask = {
   createdAt: new Date(),
@@ -47,6 +48,17 @@ async function createOpportunity (attributes, done) {
   });
 }
 
+async function sendTaskNotification (user, task, action) {
+  var data = {
+    action: action,
+    model: {
+      task: task,
+      user: user,
+    },
+  };
+  notification.createNotification(data);
+}
+
 async function updateOpportunity (attributes, done) {
   var origTask = await dao.Task.findOne('id = ?', attributes.id);
   attributes.assignedAt = attributes.state === 'assigned' && origTask.state !== 'assigned' ? new Date : origTask.assignedAt;
@@ -62,9 +74,49 @@ async function updateOpportunity (attributes, done) {
             log.info('register: failed to update tag ', attributes.id, tag, err);
           });
         });
-        return done(true);
-      }).catch (err => { return done(err); });
-  }).catch (err => { return done(err); });
+        return done(origTask.state !== attributes.state);
+      }).catch (err => { return done(null, err); });
+  }).catch (err => { return done(null, err); });
+}
+
+function sendTaskStateUpdateNotification (user, task) {
+  switch (task.state) {
+    case 'assigned':
+      sendTaskAssignedNotification(user, task);
+      break;
+    case 'completed':
+      sendTaskCompletedNotification(user, task);
+      break;
+    case 'open':
+      sendTaskNotification(user, task, 'task.update.opened');
+      break;
+    case 'submitted':
+      sendTaskNotification(user, task, 'task.update.submitted');
+      break;
+  }
+}
+
+async function getNotificationTemplateData (user, task, action) {
+  var volunteers = (await dao.Task.db.query(dao.query.volunteerListQuery, task.id)).rows;
+  var data = {
+    action: action,
+    model: {
+      task: task,
+      owner: user,
+      volunteers: _.map(volunteers, 'username').join(', '),
+    },
+  };
+  return data;
+}
+
+async function sendTaskAssignedNotification (user, task) {
+  var data = await getNotificationTemplateData(user, task, 'task.update.assigned');
+  notification.createNotification(data);
+}
+
+async function sendTaskCompletedNotification (user, task) {
+  var data = await getNotificationTemplateData(user, task, 'task.update.completed');
+  notification.createNotification(data);
 }
 
 async function copyOpportunity (attributes, adminAttributes, done) {
@@ -157,4 +209,6 @@ module.exports = {
   copyOpportunity: copyOpportunity,
   deleteTask: deleteTask,
   getExportData: getExportData,
+  sendTaskNotification: sendTaskNotification,
+  sendTaskStateUpdateNotification: sendTaskStateUpdateNotification,
 };

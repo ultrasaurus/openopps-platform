@@ -24,6 +24,7 @@ module.exports = function () {
   _.extend(openopps, require('./config/settings/auth'));
   _.extend(openopps, require('./config/version'));
   _.extend(openopps, require('./config/fileStore'));
+  _.extend(openopps, require('./config/email'));
 
   // configure logging
   blueox.beGlobal();
