@@ -76,13 +76,16 @@ router.post('/api/auth/forgot', async (ctx, next) => {
     return ctx.body = { message: 'You must enter an email address.'};
   }
 
-  await service.forgotPassword(ctx.request.body.username, function (err) {
+  await service.forgotPassword(ctx.request.body.username, function (token, err) {
     if (err) {
       ctx.status = 400;
       return ctx.body = { message: err };
     }
-
-    return ctx.body = { success: true, email: ctx.request.body.username };
+    try {
+      service.sendUserPasswordResetNotification(ctx.request.body.username, token, 'userpasswordreset.create.token');
+    } finally {
+      ctx.body = { success: true, email: ctx.request.body.username };
+    }
   });
 });
 
