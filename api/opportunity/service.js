@@ -91,7 +91,6 @@ async function updateOpportunity (attributes, done) {
 }
 
 function volunteersCompleted (task) {
-  // TODO: Award badges for task completion
   dao.Volunteer.find('"taskId" = ?', task.id).then(volunteers => {
     var userIds = volunteers.map(v => { return v.userId; });
     dao.User.db.query(dao.query.userTasks, [userIds]).then(users => {
