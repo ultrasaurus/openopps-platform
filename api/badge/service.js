@@ -33,8 +33,6 @@ function afterCreate (badge) {
             },
           },
         };
-
-        // TODO: Send notification
         try {
           notification.createNotification(data);
         } finally {
