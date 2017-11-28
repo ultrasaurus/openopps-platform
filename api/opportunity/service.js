@@ -4,6 +4,7 @@ const db = require('../../db');
 const dao = require('./dao')(db);
 const Badge = require('../badge/service');
 const json2csv = require('json2csv');
+const moment = require('moment');
 const notification = require('../notification/service');
 
 const baseTask = {
@@ -231,6 +232,35 @@ async function getExportData () {
   });
 }
 
+async function sendTasksDueNotifications (action, i) {
+  var now = new Date(new Date().toISOString().split('T')[0]);
+  var dateToCheck = i == 0 ? moment(new Date()).format('MM/DD/YYYY') : moment(new Date()).add(i, 'days').format('MM/DD/YYYY');
+
+  await dao.Task.query(dao.query.tasksDueQuery, dateToCheck, 'assigned')
+    .then(async (tasks) => {
+      for (var i=0; i<tasks.length; i++) {
+        var taskDetail = (await dao.Task.db.query(dao.query.tasksDueDetailQuery, tasks[i].id)).rows[0];
+        var data = {
+          action: action,
+          model: {
+            task: {
+              id: tasks[i].id,
+              title: tasks[i].title,
+            },
+            owner: {
+              name: taskDetail.name,
+              username: taskDetail.username,
+            },
+            volunteers: _.map((await dao.Task.db.query(dao.query.volunteerListQuery, tasks[i].id)).rows, 'username').join(', '),
+          },
+        };
+        if (data.model.volunteers.length > 0) {
+          notification.createNotification(data);
+        }
+      }
+    });
+}
+
 module.exports = {
   findById: findById,
   list: list,
@@ -243,4 +273,5 @@ module.exports = {
   volunteersCompleted: volunteersCompleted,
   sendTaskNotification: sendTaskNotification,
   sendTaskStateUpdateNotification: sendTaskStateUpdateNotification,
+  sendTasksDueNotifications: sendTasksDueNotifications,
 };

@@ -2,6 +2,14 @@ const _ = require('lodash');
 const dao = require('postgres-gen-dao');
 const moment = require('moment');
 
+const tasksDueQuery = 'select task.* ' +
+'from task ' +
+'where "completedBy"::date - ?::date = 0 and state = ? ';
+
+const tasksDueDetailQuery = 'select owner.name, owner.username ' +
+'from task join midas_user owner on task."userId" = owner.id ' +
+'where task.id = ? ';
+
 const taskQuery = 'select @task.*, @tags.*, @owner.id, @owner.name ' +
   'from @task task ' +
   'join @midas_user owner on owner.id = task."userId"' +
@@ -27,9 +35,9 @@ const volunteerQuery = 'select volunteer.id, volunteer."userId", midas_user.name
   'where volunteer."taskId" = ?';
 
 const volunteerListQuery = 'select midas_user.username ' +
-'from volunteer ' +
-'join midas_user on midas_user.id = volunteer."userId" ' +
-'where volunteer."taskId" = ?';
+  'from volunteer ' +
+  'join midas_user on midas_user.id = volunteer."userId" ' +
+  'where volunteer."taskId" = ?';
 
 const commentsQuery = 'select @comment.*, @user.* ' +
   'from @comment comment ' +
@@ -39,19 +47,19 @@ const commentsQuery = 'select @comment.*, @user.* ' +
 const deleteTaskTags = 'delete from tagentity_tasks__task_tags where task_tags = ?';
 
 const taskExportQuery = 'select task.id, task.title, description, task."createdAt", task."publishedAt", task."assignedAt", ' +
-'task."submittedAt", midas_user.name as creator_name, ' +
-'(' +
-	'select count(*) ' +
-	'from volunteer where "taskId" = task.id' +
-') as signups, ' +
-'task.state, ' +
-'(' +
-	'select tagentity.name ' +
-	'from tagentity inner join tagentity_users__user_tags tags on tagentity.id = tags.tagentity_users ' +
-	'where tags.user_tags = task."userId" and tagentity.type = ? ' +
-	'limit 1' +
-') as agency_name, task."completedAt" ' +
-'from task inner join midas_user on task."userId" = midas_user.id ';
+  'task."submittedAt", midas_user.name as creator_name, ' +
+  '(' +
+    'select count(*) ' +
+    'from volunteer where "taskId" = task.id' +
+  ') as signups, ' +
+  'task.state, ' +
+  '(' +
+    'select tagentity.name ' +
+    'from tagentity inner join tagentity_users__user_tags tags on tagentity.id = tags.tagentity_users ' +
+    'where tags.user_tags = task."userId" and tagentity.type = ? ' +
+    'limit 1' +
+  ') as agency_name, task."completedAt" ' +
+  'from task inner join midas_user on task."userId" = midas_user.id ';
 
 var exportFormat = {
   'task_id': 'id',
@@ -88,7 +96,9 @@ const options = {
     },
   },
   user: {
-    fetch: { agency: '' },
+    fetch: { 
+      agency: '',
+    },
     exclude: {
       midas_user: [ 'deletedAt', 'passwordAttempts', 'isAdmin', 'isAgencyAdmin', 'disabled' ],
       agency: [ 'deletedAt' ],
@@ -107,7 +117,9 @@ const options = {
     },
   },
   taskVolunteer: {
-    fetch: { user: '' },
+    fetch: { 
+      user: '',
+    },
   },
 };
 
@@ -159,6 +171,8 @@ module.exports = function (db) {
       taskExportQuery: taskExportQuery,
       volunteerListQuery: volunteerListQuery,
       userTasks: userTasksQuery,
+      tasksDueQuery: tasksDueQuery,
+      tasksDueDetailQuery: tasksDueDetailQuery,
     },
     options: options,
     clean: clean,
