@@ -15,12 +15,6 @@ if (protocol == '') {
   };
 }
 
-const baseNotification = {
-  isActive: 't',
-  createdAt: new Date(),
-  updatedAt: new Date(),
-};
-
 function createNotification (notification) {
   var path = __dirname + '/' + notification.action + '/template';
   var template = require(path);
@@ -103,10 +97,13 @@ function sendEmail (mailOptions, done) {
 }
 
 function insertNotification (action, data) {
-  var newNotification = _.extend(baseNotification);
-  delete(newNotification.id);
-  newNotification.action = action;
-  newNotification.model = data;
+  var newNotification = {
+    action: action,
+    model: data,
+    isActive: 't',
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  };
   dao.Notification.insert(newNotification);
 }
 
