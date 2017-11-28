@@ -1,6 +1,7 @@
 const _ = require('lodash');
 const Badge = require('./dao');
 const badgeDescriptions = require('../../utils').badgeDescriptions;
+const notification = require('../notification/service');
 
 const badgeExists = 'Badge already exists';
 const tasksCompletedAwards = {
@@ -23,23 +24,22 @@ function afterCreate (badge) {
     } else {
       Badge.db.query('select username, name from midas_user where id = ?', badge.user).then(function (results) {
         var data = {
-          user: results.rows[0],
-          badge: {
-            type: badge.type,
-            description: badgeDescriptions[badge.type],
+          action: 'badge.create.owner',
+          model: {
+            user: results.rows[0],
+            badge: {
+              type: badge.type,
+              description: badgeDescriptions[badge.type],
+            },
           },
         };
 
         // TODO: Send notification
-        resolve({ badge: badge });
-        // Notification.create({
-        //   action: 'badge.create.owner',
-        //   model: data,
-        // }).then(function () {
-        //   resolve({ badge: badge });
-        // }, function (err) {
-        //   resolve({ badge: badge, err: err});
-        // });
+        try {
+          notification.createNotification(data);
+        } finally {
+          resolve({ badge: badge });
+        }
       }).catch(reject);
     }
   });

@@ -47,7 +47,7 @@ function createNotification (notification) {
       sendEmail(options, function (err, info) {
         log.info(err ? err : info);
         if (!err) {
-          insertNotification(action, data);       
+          insertNotification(action, data);
         }
       });
     });
@@ -70,7 +70,7 @@ function renderTemplate (template, data, done) {
     }
     data._content = _.template(template)(data);
     fs.readFile(layout, function (err, layout) {
-      if (err) { 
+      if (err) {
         log.info(err);
         return done(err);
       }
