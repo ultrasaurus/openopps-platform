@@ -27,24 +27,6 @@ const options = {
       tags: [ 'deletedAt', 'createdAt', 'updatedAt', 'data' ],
     },
   },
-  profile: {
-    fetch: {
-      badges: [],
-      tags: [],
-    },
-    exclude: {
-      m_user: [ 'deletedAt', 'passwordAttempts', 'isAdmin', 'isAgencyAdmin', 'disabled' ],
-      tags: [ 'deletedAt', 'createdAt', 'updatedAt' ],
-    },
-  },
-  activity: {
-    tasks: {
-      fetch: {
-        created: [],
-        volunteered: [],
-      },
-    },
-  },
 };
 
 const clean = {
