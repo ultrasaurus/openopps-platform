@@ -6,6 +6,7 @@ const uuid = require('uuid');
 const log = require('blue-ox')('app:auth:service');
 const db = require('../../db');
 const dao = require('./dao')(db);
+const notification = require('../notification/service');
 
 const baseUser = {
   isAdmin: false,
@@ -51,6 +52,17 @@ async function register (attributes, done) {
   });
 }
 
+async function sendUserCreateNotification (user, action) {
+  var data = {
+    action: action,
+    model: {
+      name: user.name,
+      username: user.username,
+    },
+  };
+  notification.createNotification(data);
+}
+
 async function resetPassword (token, password, done) {
   token.deletedAt = new Date();
   var user = { id: token.userId, passwordAttempts: 0 };
@@ -84,15 +96,30 @@ async function forgotPassword (username, error) {
       createdAt: new Date(),
       updatedAt: new Date,
     };
-    await dao.UserPasswordReset.insert(passwordReset).then(() => {
-      return error(false);
+    await dao.UserPasswordReset.insert(passwordReset).then((obj) => {
+      return error(obj.token, false);
     }).catch((err) => {
       log.info('Error creating password reset record', err);
-      return error('An error has occurred processing your request. Please reload the page and try again.');
+      return error(null, 'An error has occurred processing your request. Please reload the page and try again.');
     });
   }).catch((err) => {
     log.info('Forgot password attempt', 'No user found for email', username);
-    return error(false); // Make it look like a success
+    return error(null, false); // Make it look like a success
+  });
+}
+
+async function sendUserPasswordResetNotification (username, token, action) {
+  await dao.User.findOne('username = ?', username).then((user) => {
+    var data = {
+      action: action,
+      model: {
+        user: { name: user.name, username: username },
+        token: token,
+      },
+    };
+    notification.createNotification(data);
+  }).catch((err) => {
+    log.info('Error sending forgot password notification', err);
   });
 }
 
@@ -115,4 +142,6 @@ module.exports = {
   forgotPassword: forgotPassword,
   checkToken: checkToken,
   resetPassword: resetPassword,
+  sendUserCreateNotification: sendUserCreateNotification,
+  sendUserPasswordResetNotification: sendUserPasswordResetNotification,
 };
