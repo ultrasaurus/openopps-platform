@@ -2,6 +2,7 @@ const _ = require ('lodash');
 const log = require('blue-ox')('app:opportunity:service');
 const db = require('../../db');
 const dao = require('./dao')(db);
+const Badge = require('../badge/service');
 const json2csv = require('json2csv');
 const notification = require('../notification/service');
 
@@ -86,6 +87,27 @@ async function updateOpportunity (attributes, done) {
         });
       }).catch (err => { return done(null, false, err); });
   }).catch (err => { return done(null, false, err); });
+}
+
+function volunteersCompleted (task) {
+  // TODO: Award badges for task completion
+  dao.Volunteer.find('"taskId" = ?', task.id).then(volunteers => {
+    var userIds = volunteers.map(v => { return v.userId; });
+    dao.User.db.query(dao.query.userTasks, [userIds]).then(users => {
+      users.rows.map(user => {
+        var badge = Badge.awardForTaskCompletion(task, user);
+        if(badge) {
+          Badge.save(badge).catch(err => {
+            log.info('Error saving badge', badge, err);
+          });
+        }
+      });
+    }).catch(err => {
+      log.info('volunteers completed: error loading user tasks completed count', task.id, err);
+    });
+  }).catch(err => {
+    log.info('volunteers completed: error loading volunteers', task.id, err);
+  });
 }
 
 function sendTaskStateUpdateNotification (user, task) {
@@ -218,6 +240,7 @@ module.exports = {
   copyOpportunity: copyOpportunity,
   deleteTask: deleteTask,
   getExportData: getExportData,
+  volunteersCompleted: volunteersCompleted,
   sendTaskNotification: sendTaskNotification,
   sendTaskStateUpdateNotification: sendTaskStateUpdateNotification,
 };

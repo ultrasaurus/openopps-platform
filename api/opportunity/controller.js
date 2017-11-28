@@ -64,11 +64,14 @@ router.put('/api/task/:id', async (ctx, next) => {
       var badge = Badge.awardForTaskPublish(task, task.userId);
       if(badge) {
         Badge.save(badge).catch(err => {
-          log.info('Error saving badge', err);
+          log.info('Error saving badge', badge, err);
         });
       }
       if (stateChange) {
         service.sendTaskStateUpdateNotification(ctx.req.user, ctx.request.body);
+        if(task.state === 'completed') {
+          service.volunteersCompleted(task);
+        }
       }
     } finally {
       ctx.body = { success: true };

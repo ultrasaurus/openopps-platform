@@ -14,6 +14,13 @@ const userQuery = 'select @midas_user.*, @agency.* ' +
   'left join @tagentity agency on agency.id = user_tags.tagentity_users ' +
   "where agency.type = 'agency'";
 
+const userTasksQuery = 'select count(*) as "completedTasks", midas_user.id, midas_user.username, midas_user.name ' +
+  'from midas_user ' +
+  'join volunteer v on v."userId" = midas_user.id ' +
+  'join task t on t.id = v."taskId" and t."completedAt" is not null ' +
+  'where midas_user.id in ? ' +
+  'group by midas_user.id, midas_user.username, midas_user.name';
+
 const volunteerQuery = 'select volunteer.id, volunteer."userId", midas_user.name ' +
   'from volunteer ' +
   'join midas_user on midas_user.id = volunteer."userId" ' +
@@ -99,6 +106,9 @@ const options = {
       ],
     },
   },
+  taskVolunteer: {
+    fetch: { user: '' },
+  },
 };
 
 const clean = {
@@ -148,6 +158,7 @@ module.exports = function (db) {
       deleteTaskTags: deleteTaskTags,
       taskExportQuery: taskExportQuery,
       volunteerListQuery: volunteerListQuery,
+      userTasks: userTasksQuery,
     },
     options: options,
     clean: clean,
