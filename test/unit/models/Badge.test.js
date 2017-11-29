@@ -1,7 +1,7 @@
 const assert = require('chai').assert;
 const Badge = require('../../../api/model/Badge');
 
-describe('Testing badge service awardForTaskCompletion()', function () {
+describe('Testing badge awardForTaskCompletion()', function () {
   var task = { id: 1 };
   var tests = [
     {
@@ -68,7 +68,52 @@ describe('Testing badge service awardForTaskCompletion()', function () {
   });
 });
 
-describe('Testing badge service awardForTaskPublish()', function () {
+describe('Testing badge awardVolunteerCountBadge()', function () {
+  var tests = [
+    {
+      message: 'A user that has 4 volunteers on a task should be awarded the team builder badge.',
+      method: 'awardVolunteerCountBadge',
+      args: [{ id: 1, volunteers: [
+        { userId: 1, taskId: 1},
+        { userId: 2, taskId: 1},
+        { userId: 3, taskId: 1},
+        { userId: 4, taskId: 1},
+      ] }],
+      expected: 'team builder',
+    },
+    {
+      message: 'A user that has 3 volunteers on a task should not be awarded any badge.',
+      method: 'awardVolunteerCountBadge',
+      args: [{ id: 1, volunteers: [
+        { userId: 1, taskId: 1},
+        { userId: 2, taskId: 1},
+        { userId: 3, taskId: 1},
+      ] }],
+      expected: undefined,
+    },
+    {
+      message: 'A user that has 5 volunteers on a task should not be awarded any badge.',
+      method: 'awardVolunteerCountBadge',
+      args: [{ id: 1, volunteers: [
+        { userId: 1, taskId: 1},
+        { userId: 2, taskId: 1},
+        { userId: 3, taskId: 1},
+        { userId: 4, taskId: 1},
+        { userId: 5, taskId: 1},
+      ] }],
+      expected: undefined,
+    },
+  ];
+
+  tests.forEach(function (test) {
+    it(test.message, function () {
+      var res = Badge[test.method].apply(null, test.args);
+      assert.equal(res ? res.type : res, test.expected);
+    });
+  });
+});
+
+describe('Testing badge awardForTaskPublish()', function () {
   var tests = [
     {
       message: 'A user that publishes a one time task should be awarded the instigator badge.',

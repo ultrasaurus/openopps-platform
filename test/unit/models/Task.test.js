@@ -77,13 +77,62 @@ describe('Task model', function () {
       });
       it('draft tasks are visible', function () {
         var task = Task.create(_.extend(taskFixtures.draft, { owner: user }));
+        result = Task.authorized(task, user);
+        assert.equal(result, task);
+      });
+    });
+    describe('with user admin', function () {
+      var user;
+      beforeEach(function () {
+        user = User.create(userFixtures.minAttrs);
+        user.isAdmin = true;
+      });
+      it('draft tasks are visible', function () {
         Task.create(taskFixtures.draft);
         result = Task.authorized(task, user);
         assert.equal(result, task);
       });
     });
-
   });
+
+  describe('.isOpen', function () {
+    it('open, public and assigned tasks are open', function () {
+      ['open', 'public', 'assigned'].forEach(function (state) {
+        // we have a fixture named for each state
+        var task = Task.create(taskFixtures[state]);
+        result = Task.isOpen(task);
+        assert.equal(result, true, 'for state '+state);
+      });
+    });
+    it('closed, archived and completed tasks are not open', function () {
+      ['closed', 'archived', 'completed'].forEach(function (state) {
+        // we have a fixture named for each state
+        var task = Task.create(taskFixtures[state]);
+        result = Task.isOpen(task);
+        assert.equal(result, false, 'for state '+state);
+      });
+    });
+  });
+
+  describe('.isClosed', function () {
+    it('open, public and assigned tasks are not closed', function () {
+      ['open', 'public', 'assigned'].forEach(function (state) {
+        // we have a fixture named for each state
+        var task = Task.create(taskFixtures[state]);
+        result = Task.isClosed(task);
+        assert.equal(result, false, 'for state '+state);
+      });
+    });
+    it('closed, archived and completed tasks are closed', function () {
+      ['closed', 'archived', 'completed'].forEach(function (state) {
+        // we have a fixture named for each state
+        var task = Task.create(taskFixtures[state]);
+        result = Task.isClosed(task);
+        assert.equal(result, true, 'for state '+state);
+      });
+    });
+  });
+
   describe('owner attribute', function () {
     var task;
     beforeEach(function () {
@@ -97,4 +146,5 @@ describe('Task model', function () {
       done();
     });
   });
+
 });

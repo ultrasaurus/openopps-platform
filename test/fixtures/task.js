@@ -28,6 +28,12 @@ module.exports = {
     description: 'Some addresses in the USDA Meat & Poultry Inspection Directory need validating and correcting to ensure they can be leveraged for geospatial mapping. You will determine if the address is suitable for mapping or mailing. Get a quick intro to geo-spatial analysis and help make food inspection more efficient.',
     userId: 1,
   },
+  'public': {
+    state: 'public',
+    title: 'Public Task',
+    description: 'description of the public task',
+    userId: 1,
+  },
   'assigned': {
     state: 'assigned',
     title: 'Assigned Task',
@@ -44,6 +50,12 @@ module.exports = {
     state: 'archived',
     title: 'Archived Task',
     description: 'description of the archived task',
+    userId: 1,
+  },
+  'closed': {
+    state: 'closed',
+    title: 'Closed Task',
+    description: 'description of the closed task',
     userId: 1,
   },
   'oneTimeSubmitted': {

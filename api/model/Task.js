@@ -2,9 +2,6 @@ const _ = require('lodash');
 
 module.exports = {
   create: (task) => {
-    if(_.isArray(task)) {
-      return task.map((t) => { return create(t); });
-    }
     return _.extend({
       state: openopps.taskState || 'draft',
       createdAt: new Date(),
