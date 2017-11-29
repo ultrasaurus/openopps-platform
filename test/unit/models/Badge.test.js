@@ -1,5 +1,5 @@
 const assert = require('chai').assert;
-const Badge = require('../../api/badge/service');
+const Badge = require('../../../api/model/Badge');
 
 describe('Testing badge service awardForTaskCompletion()', function () {
   var task = { id: 1 };

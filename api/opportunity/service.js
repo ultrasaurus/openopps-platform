@@ -2,10 +2,11 @@ const _ = require ('lodash');
 const log = require('blue-ox')('app:opportunity:service');
 const db = require('../../db');
 const dao = require('./dao')(db);
-const Badge = require('../badge/service');
+const notification = require('../notification/service');
+const badgeService = require('../badge/service')(notification);
+const Badge =  require('../model/Badge');
 const json2csv = require('json2csv');
 const moment = require('moment');
-const notification = require('../notification/service');
 
 const baseTask = {
   createdAt: new Date(),
@@ -97,7 +98,7 @@ function volunteersCompleted (task) {
       users.rows.map(user => {
         var badge = Badge.awardForTaskCompletion(task, user);
         if(badge) {
-          Badge.save(badge).catch(err => {
+          badgeService.save(badge).catch(err => {
             log.info('Error saving badge', badge, err);
           });
         }

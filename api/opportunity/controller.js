@@ -2,7 +2,9 @@ const log = require('blue-ox')('app:opportunity');
 const Router = require('koa-router');
 const _ = require('lodash');
 const service = require('./service');
-const Badge = require('../badge/service');
+const notification = require('../notification/service');
+const badgeService = require('../badge/service')(notification);
+const Badge = require('../model/badge');
 
 var router = new Router();
 
@@ -63,7 +65,7 @@ router.put('/api/task/:id', async (ctx, next) => {
     try {
       var badge = Badge.awardForTaskPublish(task, task.userId);
       if(badge) {
-        Badge.save(badge).catch(err => {
+        badgeService.save(badge).catch(err => {
           log.info('Error saving badge', badge, err);
         });
       }

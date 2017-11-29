@@ -4,7 +4,7 @@ const nodemailer = require('nodemailer');
 const db = require('../../db');
 const dao = require('./dao')(db);
 const _ = require('lodash');
-const protocol = openopps.emailProtocol || {};
+const protocol = openopps.emailProtocol || '';
 var transportConfig = openopps[protocol.toLowerCase()] || {};
 
 if (protocol == '') {

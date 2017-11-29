@@ -11,7 +11,7 @@ const passport = require('koa-passport');
 const flash = require('koa-better-flash');
 const _ = require('lodash');
 
-module.exports = function () {
+module.exports = function (config) {
   // import vars from Cloud Foundry service
   var envVars = cfenv.getAppEnv().getServiceCreds('env-openopps');
   if (envVars) _.extend(process.env, envVars);
@@ -25,6 +25,9 @@ module.exports = function () {
   _.extend(openopps, require('./config/version'));
   _.extend(openopps, require('./config/fileStore'));
   _.extend(openopps, require('./config/email'));
+  if(config) {
+    _.extend(openopps, config);
+  }
 
   // configure logging
   blueox.beGlobal();
@@ -136,6 +139,6 @@ module.exports = function () {
   app.use(feature('comment'));
   app.use(feature('document'));
 
-  app.listen(3000);
-  console.log('App running on port 3000');
+  app.listen(config.port || 3000);
+  console.log('App running on port ' + (config.port || 3000));
 };

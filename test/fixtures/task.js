@@ -1,12 +1,12 @@
 var tags = {
   oneTime: {
     name: 'One time',
-    type: 'task-time-required'
+    type: 'task-time-required',
   },
   ongoing: {
     name: 'Ongoing',
-    type: 'task-time-required'
-  }
+    type: 'task-time-required',
+  },
 };
 
 module.exports = {
@@ -50,33 +50,33 @@ module.exports = {
     title: 'Fake one time task',
     state: 'submitted',
     userId: 1,
-    tags: [tags.oneTime]
+    tags: [tags.oneTime],
   },
   'oneTimeOpen': {
     title: 'Fake one time task',
     state: 'open',
     userId: 1,
-    tags: [tags.oneTime]
+    tags: [tags.oneTime],
   },
   'oneTime': {
     title: 'Fake one time task',
     userId: 1,
-    tags: [tags.oneTime]
+    tags: [tags.oneTime],
   },
   'anotherTime': {
     title: 'Second fake one time task',
     userId: 1,
-    tags: [tags.oneTime]
+    tags: [tags.oneTime],
   },
   'ongoing': {
     title: 'Fake ongoing task',
     userId: 1,
-    tags: [tags.ongoing]
+    tags: [tags.ongoing],
   },
   'anotherOngoing': {
     title: 'Second fake ongoing task',
     userId: 1,
-    tags: [tags.ongoing]
-  }
+    tags: [tags.ongoing],
+  },
 
-}
+};
