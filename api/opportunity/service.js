@@ -18,7 +18,7 @@ async function findById (id) {
     return {};
   }
   var task = dao.clean.task(results[0]);
-  task.owner = dao.clean.user((await dao.User.query(dao.query.user + ' and midas_user.id = ?', task.userId, dao.options.user))[0]);
+  task.owner = dao.clean.user((await dao.User.query(dao.query.user, task.userId, dao.options.user))[0]);
   task.volunteers = (await dao.Task.db.query(dao.query.volunteer, task.id)).rows;
   return task;
 }
@@ -59,6 +59,14 @@ async function sendTaskNotification (user, task, action) {
     },
   };
   notification.createNotification(data);
+}
+
+async function canUpdateOpportunity (user, id) {
+  var task = await dao.Task.findOne('id = ?', id);
+  if (task.userId == user.id || user.isAdmin) {
+    return true;
+  }
+  return false;
 }
 
 async function updateOpportunity (attributes, done) {
@@ -273,4 +281,5 @@ module.exports = {
   sendTaskNotification: sendTaskNotification,
   sendTaskStateUpdateNotification: sendTaskStateUpdateNotification,
   sendTasksDueNotifications: sendTasksDueNotifications,
+  canUpdateOpportunity: canUpdateOpportunity,
 };
