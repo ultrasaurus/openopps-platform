@@ -56,7 +56,7 @@ router.post('/api/task', async (ctx, next) => {
 
 router.put('/api/task/:id', async (ctx, next) => {
   await service.canUpdateOpportunity(ctx.req.user, ctx.request.body.id).then(async (canEditOpportunity) => {
-    if (!canEditOpportunity) {
+    if (!canEditOpportunity && ctx.params.id !== ctx.request.body.id) {
       ctx.status = 403;
       return ctx.body = null;
     }
