@@ -28,6 +28,7 @@ router.delete('/api/volunteer/:id', async (ctx, next) => {
     if (!err) {
       service.sendDeletedVolunteerNotification(notificationInfo[0], 'volunteer.destroy.decline');
     }
+    ctx.body = null;
   });
 });
 
