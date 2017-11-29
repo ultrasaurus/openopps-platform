@@ -55,31 +55,45 @@ router.post('/api/task', async (ctx, next) => {
 });
 
 router.put('/api/task/:id', async (ctx, next) => {
-  log.info('Edit opportunity', ctx.request.body);
-  ctx.status = 200;
-  await service.updateOpportunity(ctx.request.body, function (task, stateChange, error) {
-    if (error) {
-      ctx.status = 400;
-      return ctx.body = { message: error.message || 'Opportunity update failed.' };
+  await service.canUpdateOpportunity(ctx.req.user, ctx.request.body.id).then(async (canEditOpportunity) => {
+    if (!canEditOpportunity) {
+      ctx.status = 403;
+      return ctx.body = null;
     }
-    try {
-      var badge = Badge.awardForTaskPublish(task, task.userId);
-      if(badge) {
-        badgeService.save(badge).catch(err => {
-          log.info('Error saving badge', badge, err);
-        });
+    log.info('Edit opportunity', ctx.request.body);
+    ctx.status = 200;
+    await service.updateOpportunity(ctx.request.body, function (task, stateChange, error) {
+      if (error) {
+        ctx.status = 400;
+        return ctx.body = { message: error.message || 'Opportunity update failed.' };
       }
-      if (stateChange) {
-        service.sendTaskStateUpdateNotification(ctx.req.user, ctx.request.body);
-        if(task.state === 'completed') {
-          service.volunteersCompleted(task);
-        }
+      try {
+        awardBadge(task);
+        checkTaskState(stateChange, ctx.req.user, ctx.request.body, task);
+      } finally {
+        ctx.body = { success: true };
       }
-    } finally {
-      ctx.body = { success: true };
-    }
+    });
   });
 });
+
+function awardBadge (task) {
+  var badge = Badge.awardForTaskPublish(task, task.userId);
+  if(badge) {
+    badgeService.save(badge).catch(err => {
+      log.info('Error saving badge', badge, err);
+    });
+  }
+}
+
+function checkTaskState (stateChange, user, body, task) {
+  if (stateChange) {
+    service.sendTaskStateUpdateNotification(user, body);
+    if(task.state === 'completed') {
+      service.volunteersCompleted(task);
+    }
+  }
+}
 
 router.post('/api/task/copy', async (ctx, next) => {
   log.info('Copy opportunity', ctx.request.body);

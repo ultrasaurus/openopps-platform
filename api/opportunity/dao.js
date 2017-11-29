@@ -20,7 +20,7 @@ const userQuery = 'select @midas_user.*, @agency.* ' +
   'from @midas_user midas_user ' +
   'left join tagentity_users__user_tags user_tags on user_tags.user_tags = midas_user.id ' +
   'left join @tagentity agency on agency.id = user_tags.tagentity_users ' +
-  "where agency.type = 'agency'";
+  'where midas_user.id = ? ';
 
 const userTasksQuery = 'select count(*) as "completedTasks", midas_user.id, midas_user.username, midas_user.name ' +
   'from midas_user ' +
@@ -97,7 +97,7 @@ const options = {
   },
   user: {
     fetch: { 
-      agency: '',
+      agency: [],
     },
     exclude: {
       midas_user: [ 'deletedAt', 'passwordAttempts', 'isAdmin', 'isAgencyAdmin', 'disabled' ],
@@ -142,7 +142,10 @@ const clean = {
   },
   user: function (record) {
     var cleaned = _.pickBy(record, _.identity);
-    cleaned.agency = _.pickBy(cleaned.agency, _.identity);
+    cleaned.agency = _.find(_.pickBy(cleaned.agency, _.identity), { 'type': 'agency' });
+    if (typeof cleaned.agency == 'undefined') {
+      delete(cleaned.agency);
+    }
     return cleaned;
   },
   comments: function (records) {
