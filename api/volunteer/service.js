@@ -5,14 +5,20 @@ const dao = require('./dao')(db);
 const notification = require('../notification/service');
 
 async function addVolunteer (attributes, done) {
-  attributes.createdAt = new Date();
-  attributes.updatedAt = new Date();
-  await dao.Volunteer.insert(attributes).then(async (volunteer) => {
-    return done(null, volunteer);
-  }).catch(err => {
-    log.info('create: failed to add volunteeer ', err);
-    return done(err, null);
-  });
+  var volunteer = await dao.Volunteer.find('"taskId" = ? and "userId" = ?', attributes.taskId, attributes.userId);
+  if (volunteer.length == 0) {
+    attributes.createdAt = new Date();
+    attributes.updatedAt = new Date();
+    await dao.Volunteer.insert(attributes).then(async (volunteer) => {
+      return done(null, volunteer);
+    }).catch(err => {
+      log.info('create: failed to add volunteeer ', err);
+      return done(err, null);
+    });
+  } else {
+    volunteer[0].silent = 'true';
+    return done(null, volunteer[0]);
+  }
 }
 
 async function deleteVolunteer (id, done) {

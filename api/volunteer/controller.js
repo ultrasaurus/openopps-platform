@@ -10,16 +10,12 @@ router.post('/api/volunteer', async (ctx, next) => {
   attributes.userId = attributes.userId || ctx.state.user.id;
   await service.addVolunteer(attributes, function (err, volunteer) {
     if (err) {
-      ctx.body = null;
+      return ctx.body = err;
     }
-    if (volunteer.silent != 'true') {
-      try {
-        service.sendAddedVolunteerNotification(ctx.req.user, volunteer, 'volunteer.create.thanks');
-      } finally {
-        ctx.body = volunteer;
-      }
+    if (volunteer.silent == null || volunteer.silent == 'false') {
+      service.sendAddedVolunteerNotification(ctx.req.user, volunteer, 'volunteer.create.thanks');
     }
-    ctx.body = volunteer;
+    return ctx.body = volunteer;
   });
 });
 
