@@ -28,7 +28,7 @@ router.get('/api/task/export', async (ctx, next) => {
 
 router.get('/api/task/:id', async (ctx, next) => {
   var task = await service.findById(ctx.params.id);
-  if (ctx.state.user.id === task.userId) { task.isOwner = true; }
+  if (typeof ctx.state.user !== 'undefined' && ctx.state.user.id === task.userId) { task.isOwner = true; }
   ctx.body = task;
 });
 
