@@ -30,21 +30,18 @@ router.get('/api/user/:id', async (ctx, next) => {
       ctx.body = await service.getProfile(ctx.params.id);
     }
   } else {
-    ctx.status = 401;
+    ctx.status = 403;
   }
 });
 
 router.get('/api/user/username/:username', async (ctx, next) => {
-  // don't allow empty usernames
   if (!ctx.params.username) {
     return ctx.send(true);
   }
   log.info('looking up username', ctx.params.username);
-  // only allow email usernames, so check if the email is valid
   if (validator.isEmail(ctx.params.username) !== true) {
     return ctx.body = true;
   }
-  // check if a user already has this email
   await service.findOneByUsername(ctx.params.username.toLowerCase(), function (err, user) {
     if (err) {
       ctx.status = 400;
@@ -58,7 +55,11 @@ router.get('/api/user/username/:username', async (ctx, next) => {
 });
 
 router.get('/api/user/activities/:id', async (ctx, next) => {
-  ctx.body = await service.getActivities(ctx.params.id);
+  if (ctx.isAuthenticated()) {
+    ctx.body = await service.getActivities(ctx.params.id);
+  } else {
+    ctx.status = 401;
+  }
 });
 
 router.get('/api/user/photo/:id', async (ctx, next) => {
@@ -81,7 +82,7 @@ router.get('/api/user/photo/:id', async (ctx, next) => {
 });
 
 router.put('/api/user/:id', async (ctx, next) => {
-  if (ctx.isAuthenticated()) {
+  if (ctx.isAuthenticated() && parseInt(ctx.params.id) === ctx.request.body.id && (ctx.req.user.id === ctx.params.id || ctx.req.user.isAdmin)) {
     ctx.status = 200;
     await service.updateProfile(ctx.request.body, function (error) {
       if (error) {

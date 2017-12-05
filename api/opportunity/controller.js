@@ -33,34 +33,34 @@ router.get('/api/task/:id', async (ctx, next) => {
 });
 
 router.get('/api/comment/findAllBytaskId/:id', async (ctx, next) => {
-  ctx.body = await service.commentsByTaskId(ctx.params.id);
+  if (ctx.isAuthenticated()) {
+    ctx.body = await service.commentsByTaskId(ctx.params.id);
+  } else {
+    ctx.body = { 'comments': [] };
+  }
 });
 
 router.post('/api/task', async (ctx, next) => {
-  log.info('Create opportunity', ctx.request.body);
-  ctx.request.body.userId = ctx.session.passport.user;
+  if (ctx.isAuthenticated()) {
+    ctx.request.body.userId = ctx.session.passport.user;
 
-  var opportunity = await service.createOpportunity(ctx.request.body, function (err, task) {
-    log.info(task);
-    if (err) {
-      ctx.status = 400;
-      return ctx.body = { message: err.message || 'Opportunity creation failed.' };
-    }
-    try {
+    var opportunity = await service.createOpportunity(ctx.request.body, function (err, task) {
+      log.info(task);
+      if (err) {
+        ctx.status = 400;
+        return ctx.body = { message: err.message || 'Opportunity creation failed.' };
+      }
       service.sendTaskNotification(ctx.req.user, task, task.state === 'draft' ? 'task.create.draft' : 'task.create.thanks');
-    } finally {
       ctx.body = task;
-    }
-  });
+    });
+  } else {
+    ctx.status = 401;
+    return ctx.body = null;
+  }
 });
 
 router.put('/api/task/:id', async (ctx, next) => {
-  await service.canUpdateOpportunity(ctx.req.user, ctx.request.body.id).then(async (canEditOpportunity) => {
-    if (!canEditOpportunity && ctx.params.id !== ctx.request.body.id) {
-      ctx.status = 403;
-      return ctx.body = null;
-    }
-    log.info('Edit opportunity', ctx.request.body);
+  if (ctx.isAuthenticated() && await service.canUpdateOpportunity(ctx.req.user, ctx.request.body.id)) {
     ctx.status = 200;
     await service.updateOpportunity(ctx.request.body, function (task, stateChange, error) {
       if (error) {
@@ -74,7 +74,10 @@ router.put('/api/task/:id', async (ctx, next) => {
         ctx.body = { success: true };
       }
     });
-  });
+  } else {
+    ctx.status = 401;
+    ctx.body = null;
+  }
 });
 
 function awardBadge (task) {
@@ -96,22 +99,27 @@ function checkTaskState (stateChange, user, body, task) {
 }
 
 router.post('/api/task/copy', async (ctx, next) => {
-  log.info('Copy opportunity', ctx.request.body);
-  ctx.status = 200;
-
-  await service.copyOpportunity(ctx.request.body, ctx.req.user.isAdmin ? ctx.req.user : null, function (error, task) {
-    if (error) {
-      ctx.flash('error', 'Error Copying Opportunity');
-      ctx.status = 400;
-      log.info(error);
-      return ctx.body = null;
-    }
-    ctx.body = task;
-  });
+  if (ctx.isAuthenticated() && await service.canUpdateOpportunity(ctx.req.user, ctx.request.body.taskId)) {
+    await service.copyOpportunity(ctx.request.body, ctx.req.user.isAdmin ? ctx.req.user : null, function (error, task) {
+      if (error) {
+        ctx.flash('error', 'Error Copying Opportunity');
+        ctx.status = 400;
+        log.info(error);
+        return ctx.body = null;
+      }
+      ctx.body = task;
+    });
+  } else {
+    ctx.status = 403;
+  }
 });
 
 router.delete('/api/task/:id', async (ctx) => {
-  ctx.body = await service.deleteTask(ctx.params.id);
+  if (ctx.isAuthenticated() && ctx.req.user.isAdmin) {
+    ctx.body = await service.deleteTask(ctx.params.id);
+  } else {
+    ctx.status = 403;
+  }
 });
 
 module.exports = router.routes();
