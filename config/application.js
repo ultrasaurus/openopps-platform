@@ -51,18 +51,7 @@ module.exports = {
 
   validateDomains: process.env.VALIDATE_DOMAINS || false,
   requireAgency:   process.env.REQUIRE_AGENCY || false,
-  requireLocation: process.env.REQUIRE_LOCATION || false
-
+  requireLocation: process.env.REQUIRE_LOCATION || false,
 };
-
-if (module.exports.httpProtocol === 'https') {
-  // Use secure sessions
-  module.exports.session =  {
-    proxy: true,
-    cookie: {
-      secure: true
-    }
-  };
-}
 
 module.exports.appUrl = module.exports.httpProtocol + '://' + module.exports.hostName;

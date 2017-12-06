@@ -5,13 +5,14 @@ const render = require('koa-ejs');
 const sass = require('koa-sass');
 const serve = require('koa-static');
 const path = require('path');
-const session = require('koa-session');
 const parser = require('koa-better-body');
+const session = require('koa-session');
+const redisStore = require('koa-redis');
 const passport = require('koa-passport');
 const flash = require('koa-better-flash');
 const _ = require('lodash');
 
-module.exports = function (config) {
+module.exports = async (config) => {
   // import vars from Cloud Foundry service
   var envVars = cfenv.getAppEnv().getServiceCreds('env-openopps');
   if (envVars) _.extend(process.env, envVars);
@@ -21,6 +22,7 @@ module.exports = function (config) {
     appPath: __dirname,
   };
   _.extend(openopps, require('./config/application'));
+  _.extend(openopps, require('./config/session'));
   _.extend(openopps, require('./config/settings/auth'));
   _.extend(openopps, require('./config/version'));
   _.extend(openopps, require('./config/fileStore'));
@@ -42,8 +44,8 @@ module.exports = function (config) {
 
   // configure session
   app.proxy = true;
-  app.keys = ['your-session-secret'];
-  app.use(session({}, app));
+  app.keys = [openopps.session.secret || 'your-secret-key'];
+  app.use(session(openopps.session, app));
 
   // initialize flash
   app.use(flash());
