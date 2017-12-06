@@ -21,9 +21,9 @@ async function addVolunteer (attributes, done) {
   }
 }
 
-async function deleteVolunteer (id, done) {
-  var notificationInfo = (await dao.Volunteer.db.query(dao.query.volunteer, id)).rows;
-  await dao.Volunteer.delete('id = ?', id).catch(err => {
+async function deleteVolunteer (vId, taskId, done) {
+  var notificationInfo = (await dao.Volunteer.db.query(dao.query.volunteer, vId)).rows;
+  await dao.Volunteer.delete('id = ? and "taskId" = ?', vId, taskId).catch(err => {
     log.info('delete: failed to delete volunteeer ', err);
     return done(null, err);
   });

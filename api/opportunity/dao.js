@@ -100,7 +100,8 @@ const options = {
       agency: [],
     },
     exclude: {
-      midas_user: [ 'deletedAt', 'passwordAttempts', 'isAdmin', 'isAgencyAdmin', 'disabled' ],
+      midas_user: [ 'deletedAt', 'passwordAttempts', 'isAdmin', 'isAgencyAdmin', 'disabled', 'bio', 
+        'createdAt', 'photoId', 'title', 'updatedAt', 'username' ],
       agency: [ 'deletedAt' ],
     },
   },

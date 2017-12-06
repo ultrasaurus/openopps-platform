@@ -19,16 +19,16 @@ var Popovers = BaseComponent.extend({
         content: '<div class="popover-spinner"><div class="loading">Fetching Information</div><i class="fa fa-spinner fa-spin"></i></div>',
         template: '<div class="popover"><div class="arrow"></div><h3 class="popover-title" style="display:none; visibility:hidden"></h3><div class="popover-content"></div></div>',
       }).on('mouseleave', function () {
-        var _this = this;
-        var timeoutFn = function () {
-          if (!$('.popover:hover').length) {
-            $(_this).popover('hide');
-          } else {
-            setTimeout(timeoutFn, 100);
-          }
-        };
-        setTimeout(timeoutFn, 100);
-      });
+      var _this = this;
+      var timeoutFn = function () {
+        if (!$('.popover:hover').length) {
+          $(_this).popover('hide');
+        } else {
+          setTimeout(timeoutFn, 100);
+        }
+      };
+      setTimeout(timeoutFn, 100);
+    });
   },
 
   popoverPeopleOn: function (e) {

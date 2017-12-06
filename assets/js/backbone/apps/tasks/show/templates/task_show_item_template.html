@@ -25,10 +25,14 @@
             </div>
           </div>
           <div class="col col-12 md-col-2 px2">
-            <div class="center project-people-show-div" data-userid="<%- model.userId %>">
-              <h5 class="mt1 mb0">Requestor</h5>
+              <% if (user) { %>
+                <div class="center project-people-show-div" data-userid="<%- model.userId %>">
+              <% } else { %>
+                <div class="center" style="width: 70px; position: relative; display: inline-block; text-align: center; padding: 0 3px;">
+              <% } %>
+              <h5 class="mt1 mb0">Requestor</h5>            
               <img class="circle" width="50" src="/api/user/photo/<%- model.userId %>" alt="<%- model.owner.name %>"/>
-              <div class="mb2"><%- model.owner.name %></div>
+              <div class="mb2"><%- model.owner.name %></div>             
             </div>
           </div>
         </div>
@@ -139,7 +143,11 @@
         <div class="mb2">
         <% if (model.volunteers.length > 0) { %>
           <% _.each(model.volunteers, function (v) { %>
-          <div class="project-people-show-div" data-userid="<%- v.userId %>" data-voluserid="<%- v.userId %>">
+            <% if (user) { %>
+              <div class="project-people-show-div" data-userid="<%- v.userId %>" data-voluserid="<%- v.userId %>">
+            <% } else { %>
+              <div style="width: 70px; position: relative; display: inline-block; text-align: center; padding: 0 3px;">
+            <% } %>
             <img src="/api/user/photo/<%- v.userId %>" alt="<%- v.name %>" class="project-people" />
             <label class="project-people-show-label"><%- v.name %></label>
           </div>

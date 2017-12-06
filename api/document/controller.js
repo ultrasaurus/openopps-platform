@@ -28,11 +28,15 @@ router.post('/api/upload/create', async (ctx, next) => {
 });
 
 router.get('/api/attachment/findAllBytaskId/:id', async (ctx, next) => {
-  await service.taskAttachments(ctx.params.id).then((results) => {
-    ctx.body = results;
-  }).catch((err) => {
-    ctx.status = 400;
-  });
+  if (ctx.isAuthenticated()) {
+    await service.taskAttachments(ctx.params.id).then((results) => {
+      ctx.body = results;
+    }).catch((err) => {
+      ctx.status = 400;
+    });
+  } else {
+    ctx.body = [];
+  }
 });
 
 module.exports = router.routes();
