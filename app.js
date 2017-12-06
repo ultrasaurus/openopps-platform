@@ -67,13 +67,13 @@ var runSails = () => {
   sails.lift(rc('sails'));
 };
 
-// Ensure a "sails" can be located:
 (function () {
   if((process.argv[2] || '').toLowerCase() == 'sails') {
     runSails();
   } else {
+    // Ensure all our dependencies can be located:
     try {
-      require('./app-koa')();
+      require('./app-koa')({});
     } catch (e) {
       console.log('\nError starting app\n');
       console.log(e);

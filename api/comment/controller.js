@@ -9,14 +9,24 @@ router.post('/api/comment', async (ctx, next) => {
   if(ctx.isAuthenticated()) {
     var attributes = ctx.request.body;
     _.extend(attributes, { userId: ctx.state.user.id } );
-    ctx.body = await service.addComment(attributes);
+    await service.addComment(attributes).then(async (comment) => {
+      try {
+        service.sendCommentNotification(ctx.state.user, comment, 'comment.create.owner');
+      } finally {
+        ctx.body = comment;
+      }
+    });
   } else {
     ctx.status = 401;
-  }   
+  }
 });
 
 router.delete('/api/comment/:id', async (ctx) => {
-  ctx.body = await service.deleteComment(ctx.params.id);
+  if(ctx.isAuthenticated() && ctx.req.user.isAdmin) {
+    ctx.body = await service.deleteComment(ctx.params.id);
+  } else {
+    ctx.status = 403;
+  }
 });
   
 module.exports = router.routes();

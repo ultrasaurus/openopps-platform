@@ -197,7 +197,12 @@ function upload (userId, data) {
   }));
 }
 
+async function taskAttachments (taskId) {
+  return await dao.Attachment.query(dao.query.attachmentQuery, taskId, dao.options.attachment);
+}
+
 module.exports = {
   findOne: findOne,
   upload: upload,
+  taskAttachments: taskAttachments,
 };

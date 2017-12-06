@@ -1,5 +1,6 @@
 const _ = require('lodash');
-var dao = require('postgres-gen-dao');
+const dao = require('postgres-gen-dao');
+const badgeDescriptions = require('../../utils').badgeDescriptions;
 
 const userQuery = 'select @m_user.id, @m_user.name, @m_user.title, @tags.* ' +
   'from @midas_user m_user ' +
@@ -17,20 +18,6 @@ const taskCompletedQuery = 'select distinct task.* ' +
 
 const deleteUserTags = 'delete from tagentity_users__user_tags where user_tags = ?';
 
-const badgeDescriptions = {
-  'newcomer': 'have completed your first task.',
-  'maker': 'have completed three tasks.',
-  'game changer': 'have completed five tasks.',
-  'disruptor': 'have completed ten tasks.',
-  'partner': 'have completed fifteen tasks.',
-  'mentor': 'have created your first ongoing task.',
-  'instigator': 'have created your first one-time task.',
-  'team builder': 'have accepted at least four people on a task.',
-  'local': 'have completed 2 tasks for one agency.',
-  'explorer': 'have completed a task for your second agency.',
-  'connector': 'have completed a task for your third agency.',
-};
-
 const options = {
   user: {
     fetch: {
@@ -38,24 +25,6 @@ const options = {
     },
     exclude: {
       tags: [ 'deletedAt', 'createdAt', 'updatedAt', 'data' ],
-    },
-  },
-  profile: {
-    fetch: {
-      badges: [],
-      tags: [],
-    },
-    exclude: {
-      m_user: [ 'deletedAt', 'passwordAttempts', 'isAdmin', 'isAgencyAdmin', 'disabled' ],
-      tags: [ 'deletedAt', 'createdAt', 'updatedAt' ],
-    },
-  },
-  activity: {
-    tasks: {
-      fetch: {
-        created: [],
-        volunteered: [],
-      },
     },
   },
 };

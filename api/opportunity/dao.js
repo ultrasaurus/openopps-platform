@@ -2,6 +2,14 @@ const _ = require('lodash');
 const dao = require('postgres-gen-dao');
 const moment = require('moment');
 
+const tasksDueQuery = 'select task.* ' +
+'from task ' +
+'where "completedBy"::date - ?::date = 0 and state = ? ';
+
+const tasksDueDetailQuery = 'select owner.name, owner.username ' +
+'from task join midas_user owner on task."userId" = owner.id ' +
+'where task.id = ? ';
+
 const taskQuery = 'select @task.*, @tags.*, @owner.id, @owner.name ' +
   'from @task task ' +
   'join @midas_user owner on owner.id = task."userId"' +
@@ -10,11 +18,23 @@ const taskQuery = 'select @task.*, @tags.*, @owner.id, @owner.name ' +
 
 const userQuery = 'select @midas_user.*, @agency.* ' +
   'from @midas_user midas_user ' +
-  'join tagentity_users__user_tags user_tags on user_tags.user_tags = midas_user.id ' +
-  'join @tagentity agency on agency.id = user_tags.tagentity_users ' +
-  "where agency.type = 'agency'";
+  'left join tagentity_users__user_tags user_tags on user_tags.user_tags = midas_user.id ' +
+  'left join @tagentity agency on agency.id = user_tags.tagentity_users ' +
+  'where midas_user.id = ? ';
+
+const userTasksQuery = 'select count(*) as "completedTasks", midas_user.id, midas_user.username, midas_user.name ' +
+  'from midas_user ' +
+  'join volunteer v on v."userId" = midas_user.id ' +
+  'join task t on t.id = v."taskId" and t."completedAt" is not null ' +
+  'where midas_user.id in ? ' +
+  'group by midas_user.id, midas_user.username, midas_user.name';
 
 const volunteerQuery = 'select volunteer.id, volunteer."userId", midas_user.name ' +
+  'from volunteer ' +
+  'join midas_user on midas_user.id = volunteer."userId" ' +
+  'where volunteer."taskId" = ?';
+
+const volunteerListQuery = 'select midas_user.username ' +
   'from volunteer ' +
   'join midas_user on midas_user.id = volunteer."userId" ' +
   'where volunteer."taskId" = ?';
@@ -27,19 +47,19 @@ const commentsQuery = 'select @comment.*, @user.* ' +
 const deleteTaskTags = 'delete from tagentity_tasks__task_tags where task_tags = ?';
 
 const taskExportQuery = 'select task.id, task.title, description, task."createdAt", task."publishedAt", task."assignedAt", ' +
-'task."submittedAt", midas_user.name as creator_name, ' +
-'(' +
-	'select count(*) ' +
-	'from volunteer where "taskId" = task.id' +
-') as signups, ' +
-'task.state, ' +
-'(' +
-	'select tagentity.name ' +
-	'from tagentity inner join tagentity_users__user_tags tags on tagentity.id = tags.tagentity_users ' +
-	'where tags.user_tags = task."userId" and tagentity.type = ? ' +
-	'limit 1' +
-') as agency_name, task."completedAt" ' +
-'from task inner join midas_user on task."userId" = midas_user.id ';
+  'task."submittedAt", midas_user.name as creator_name, ' +
+  '(' +
+    'select count(*) ' +
+    'from volunteer where "taskId" = task.id' +
+  ') as signups, ' +
+  'task.state, ' +
+  '(' +
+    'select tagentity.name ' +
+    'from tagentity inner join tagentity_users__user_tags tags on tagentity.id = tags.tagentity_users ' +
+    'where tags.user_tags = task."userId" and tagentity.type = ? ' +
+    'limit 1' +
+  ') as agency_name, task."completedAt" ' +
+  'from task inner join midas_user on task."userId" = midas_user.id ';
 
 var exportFormat = {
   'task_id': 'id',
@@ -76,9 +96,12 @@ const options = {
     },
   },
   user: {
-    fetch: { agency: '' },
+    fetch: { 
+      agency: [],
+    },
     exclude: {
-      midas_user: [ 'deletedAt', 'passwordAttempts', 'isAdmin', 'isAgencyAdmin', 'disabled' ],
+      midas_user: [ 'deletedAt', 'passwordAttempts', 'isAdmin', 'isAgencyAdmin', 'disabled', 'bio', 
+        'createdAt', 'photoId', 'title', 'updatedAt', 'username' ],
       agency: [ 'deletedAt' ],
     },
   },
@@ -92,6 +115,11 @@ const options = {
         'title', 'bio', 'photoId', 'isAdmin', 'disabled', 'passwordAttempts',
         'createdAt', 'updatedAt', 'deletedAt', 'completedTasks', 'isAgencyAdmin',
       ],
+    },
+  },
+  taskVolunteer: {
+    fetch: { 
+      user: '',
     },
   },
 };
@@ -115,7 +143,10 @@ const clean = {
   },
   user: function (record) {
     var cleaned = _.pickBy(record, _.identity);
-    cleaned.agency = _.pickBy(cleaned.agency, _.identity);
+    cleaned.agency = _.find(_.pickBy(cleaned.agency, _.identity), { 'type': 'agency' });
+    if (typeof cleaned.agency == 'undefined') {
+      delete(cleaned.agency);
+    }
     return cleaned;
   },
   comments: function (records) {
@@ -142,6 +173,10 @@ module.exports = function (db) {
       comments: commentsQuery,
       deleteTaskTags: deleteTaskTags,
       taskExportQuery: taskExportQuery,
+      volunteerListQuery: volunteerListQuery,
+      userTasks: userTasksQuery,
+      tasksDueQuery: tasksDueQuery,
+      tasksDueDetailQuery: tasksDueDetailQuery,
     },
     options: options,
     clean: clean,

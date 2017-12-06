@@ -2,6 +2,9 @@ const log = require('blue-ox')('app:opportunity');
 const Router = require('koa-router');
 const _ = require('lodash');
 const service = require('./service');
+const notification = require('../notification/service');
+const badgeService = require('../badge/service')(notification);
+const Badge = require('../model/badge');
 
 var router = new Router();
 
@@ -25,65 +28,98 @@ router.get('/api/task/export', async (ctx, next) => {
 
 router.get('/api/task/:id', async (ctx, next) => {
   var task = await service.findById(ctx.params.id);
-  if (ctx.state.user.id === task.userId) { task.isOwner = true; }
+  if (typeof ctx.state.user !== 'undefined' && ctx.state.user.id === task.userId) { task.isOwner = true; }
   ctx.body = task;
 });
 
 router.get('/api/comment/findAllBytaskId/:id', async (ctx, next) => {
-  ctx.body = await service.commentsByTaskId(ctx.params.id);
+  if (ctx.isAuthenticated()) {
+    ctx.body = await service.commentsByTaskId(ctx.params.id);
+  } else {
+    ctx.body = { 'comments': [] };
+  }
 });
 
 router.post('/api/task', async (ctx, next) => {
-  log.info('Create opportunity', ctx.request.body);
-  ctx.request.body.userId = ctx.session.passport.user;
+  if (ctx.isAuthenticated()) {
+    ctx.request.body.userId = ctx.session.passport.user;
 
-  // do some validation here...
-  var opportunity = await service.createOpportunity(ctx.request.body, function (err, task) {
-    log.info(task);
-    if (err) {
-      // req.flash('error', 'Error.Service.CreateOpportunity.Failed');
-      // ctx.status = 400;
-      // return ctx.body = { message: err.message || 'Opportunity creation failed.' };
-    }
-    ctx.body = task;
-  });
+    var opportunity = await service.createOpportunity(ctx.request.body, function (err, task) {
+      log.info(task);
+      if (err) {
+        ctx.status = 400;
+        return ctx.body = { message: err.message || 'Opportunity creation failed.' };
+      }
+      service.sendTaskNotification(ctx.req.user, task, task.state === 'draft' ? 'task.create.draft' : 'task.create.thanks');
+      ctx.body = task;
+    });
+  } else {
+    ctx.status = 401;
+    return ctx.body = null;
+  }
 });
 
 router.put('/api/task/:id', async (ctx, next) => {
-  log.info('Edit opportunity', ctx.request.body);
-  ctx.status = 200;
-
-  await service.updateOpportunity(ctx.request.body, function (error) {
-    if (error) {
-      ctx.flash('error', 'Error Updating Opportunity');
-      ctx.status = 400;
-      log.info(error);
-      return ctx.body = null;
-    }
-    ctx.body = { success: true };
-  });
+  if (ctx.isAuthenticated() && await service.canUpdateOpportunity(ctx.req.user, ctx.request.body.id)) {
+    ctx.status = 200;
+    await service.updateOpportunity(ctx.request.body, function (task, stateChange, error) {
+      if (error) {
+        ctx.status = 400;
+        return ctx.body = { message: error.message || 'Opportunity update failed.' };
+      }
+      try {
+        awardBadge(task);
+        checkTaskState(stateChange, ctx.req.user, ctx.request.body, task);
+      } finally {
+        ctx.body = { success: true };
+      }
+    });
+  } else {
+    ctx.status = 401;
+    ctx.body = null;
+  }
 });
 
-router.post('/api/task/copy', async (ctx, next) => {
-  log.info('Copy opportunity', ctx.request.body);
-  ctx.status = 200;
-
-  if (ctx.req.user.isAdmin) {
-    log.info('in here');
+function awardBadge (task) {
+  var badge = Badge.awardForTaskPublish(task, task.userId);
+  if(badge) {
+    badgeService.save(badge).catch(err => {
+      log.info('Error saving badge', badge, err);
+    });
   }
-  await service.copyOpportunity(ctx.request.body, ctx.req.user.isAdmin ? ctx.req.user : null, function (error, task) {
-    if (error) {
-      ctx.flash('error', 'Error Copying Opportunity');
-      ctx.status = 400;
-      log.info(error);
-      return ctx.body = null;
+}
+
+function checkTaskState (stateChange, user, body, task) {
+  if (stateChange) {
+    service.sendTaskStateUpdateNotification(user, body);
+    if(task.state === 'completed') {
+      service.volunteersCompleted(task);
     }
-    ctx.body = task;
-  });
+  }
+}
+
+router.post('/api/task/copy', async (ctx, next) => {
+  if (ctx.isAuthenticated() && await service.canUpdateOpportunity(ctx.req.user, ctx.request.body.taskId)) {
+    await service.copyOpportunity(ctx.request.body, ctx.req.user.isAdmin ? ctx.req.user : null, function (error, task) {
+      if (error) {
+        ctx.flash('error', 'Error Copying Opportunity');
+        ctx.status = 400;
+        log.info(error);
+        return ctx.body = null;
+      }
+      ctx.body = task;
+    });
+  } else {
+    ctx.status = 403;
+  }
 });
 
 router.delete('/api/task/:id', async (ctx) => {
-  ctx.body = await service.deleteTask(ctx.params.id);
+  if (ctx.isAuthenticated() && ctx.req.user.isAdmin) {
+    ctx.body = await service.deleteTask(ctx.params.id);
+  } else {
+    ctx.status = 403;
+  }
 });
 
 module.exports = router.routes();

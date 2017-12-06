@@ -356,12 +356,8 @@ var TaskShowController = BaseView.extend({
     if (typeof cache !== 'undefined')
     {
       $.ajax({
-        url: '/api/volunteer/' + vId,
+        url: '/api/volunteer/' + vId + '?' + $.param({ taskId: this.model.attributes.id }),
         type: 'DELETE',
-        data: {
-          taskId: this.model.attributes,
-          vId: vId,
-        },
       }).done(function (data) {
         // done();
       });

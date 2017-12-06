@@ -38,6 +38,7 @@ const clean = {
 module.exports = function (db) {
   return {
     User: dao({ db: db, table: 'midas_user' }),
+    UserPasswordReset: dao({ db: db, table: 'userpasswordreset' }),
     Passport: dao({ db: db, table: 'passport' }),
     UserTags: dao({ db: db, table: 'tagentity_users__user_tags' }),
     TagEntity: dao({ db: db, table: 'tagentity' }),

@@ -1,12 +1,12 @@
 var tags = {
   oneTime: {
     name: 'One time',
-    type: 'task-time-required'
+    type: 'task-time-required',
   },
   ongoing: {
     name: 'Ongoing',
-    type: 'task-time-required'
-  }
+    type: 'task-time-required',
+  },
 };
 
 module.exports = {
@@ -28,6 +28,12 @@ module.exports = {
     description: 'Some addresses in the USDA Meat & Poultry Inspection Directory need validating and correcting to ensure they can be leveraged for geospatial mapping. You will determine if the address is suitable for mapping or mailing. Get a quick intro to geo-spatial analysis and help make food inspection more efficient.',
     userId: 1,
   },
+  'public': {
+    state: 'public',
+    title: 'Public Task',
+    description: 'description of the public task',
+    userId: 1,
+  },
   'assigned': {
     state: 'assigned',
     title: 'Assigned Task',
@@ -46,37 +52,43 @@ module.exports = {
     description: 'description of the archived task',
     userId: 1,
   },
+  'closed': {
+    state: 'closed',
+    title: 'Closed Task',
+    description: 'description of the closed task',
+    userId: 1,
+  },
   'oneTimeSubmitted': {
     title: 'Fake one time task',
     state: 'submitted',
     userId: 1,
-    tags: [tags.oneTime]
+    tags: [tags.oneTime],
   },
   'oneTimeOpen': {
     title: 'Fake one time task',
     state: 'open',
     userId: 1,
-    tags: [tags.oneTime]
+    tags: [tags.oneTime],
   },
   'oneTime': {
     title: 'Fake one time task',
     userId: 1,
-    tags: [tags.oneTime]
+    tags: [tags.oneTime],
   },
   'anotherTime': {
     title: 'Second fake one time task',
     userId: 1,
-    tags: [tags.oneTime]
+    tags: [tags.oneTime],
   },
   'ongoing': {
     title: 'Fake ongoing task',
     userId: 1,
-    tags: [tags.ongoing]
+    tags: [tags.ongoing],
   },
   'anotherOngoing': {
     title: 'Second fake ongoing task',
     userId: 1,
-    tags: [tags.ongoing]
-  }
+    tags: [tags.ongoing],
+  },
 
-}
+};

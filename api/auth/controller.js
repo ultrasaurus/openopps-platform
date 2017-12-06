@@ -3,6 +3,7 @@ const Router = require('koa-router');
 const _ = require('lodash');
 const service = require('./service');
 const passport = require('koa-passport');
+const utils = require('../../utils');
 
 const router = new Router();
 
@@ -59,9 +60,81 @@ router.post('/api/auth/local/register', async (ctx, next) => {
       ctx.status = 400;
       return ctx.body = { message: err.message || 'Registration failed.' };
     }
-    ctx.body = { success: true };
+    try {
+      service.sendUserCreateNotification(user, 'user.create.welcome');
+    } finally {
+      ctx.body = { success: true };     
+    }
     return ctx.login(user);
   });
+});
+
+router.post('/api/auth/forgot', async (ctx, next) => {
+  if (!ctx.request.body.username) {
+    ctx.flash('error', 'Error.Auth.Forgot.Email.Missing');
+    ctx.status = 400;
+    return ctx.body = { message: 'You must enter an email address.'};
+  }
+
+  await service.forgotPassword(ctx.request.body.username, function (token, err) {
+    if (err) {
+      ctx.status = 400;
+      return ctx.body = { message: err };
+    }
+    try {
+      service.sendUserPasswordResetNotification(ctx.request.body.username, token, 'userpasswordreset.create.token');
+    } finally {
+      ctx.body = { success: true, email: ctx.request.body.username };
+    }
+  });
+});
+
+router.get('/api/auth/checkToken/:token', async (ctx, next) => {
+  if (!ctx.params.token || ctx.params.token === 'null') { // because we are passing null as a string...why?
+    ctx.status = 400;
+    return ctx.body = { message: 'Must provide a token for validation.' };
+  } else {
+    await service.checkToken(ctx.params.token.toLowerCase().trim(), (err, validToken) => {
+      if (err) {
+        ctx.status = 400;
+        return ctx.body = err;
+      } else {
+        return ctx.body = validToken;
+      }
+    });
+  }
+});
+
+// TODO: reset
+router.post('/api/auth/reset', async (ctx, next) => {
+  var token = ctx.request.body.token;
+  var password = ctx.request.body.password;
+
+  if (!token) {
+    ctx.status = 400;
+    ctx.body = { message: 'Must provide a token for validation.' };
+  } else {
+    await service.checkToken(token.toLowerCase().trim(), async (err, validToken) => {
+      if (err) {
+        ctx.status = 400;
+        ctx.body = err;
+      } else {
+        if(utils.validatePassword(password, validToken.email)) {
+          await service.resetPassword(validToken, password, function (err) {
+            if (err) {
+              ctx.status = 400;
+              ctx.body = { message: err.message || 'Password reset failed.' };
+            } else {
+              ctx.body = { success: true };
+            }
+          });
+        } else {
+          ctx.status = 400;
+          ctx.body = { message: 'Password does not meet password rules.' };
+        }
+      }
+    });
+  }
 });
 
 router.get('/api/auth/logout', async (ctx, next) => {

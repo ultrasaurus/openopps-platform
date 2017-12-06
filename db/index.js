@@ -4,7 +4,7 @@ const appEnv = cfenv.getAppEnv();
 const psqlConnection = appEnv.getServiceCreds('psql-openopps');
 const gen = require('postgres-gen');
 
-var config = {
+var config = openopps.dbConnection || {
   host: 'localhost',
   db: 'midas',
   user: 'midas',
