@@ -1,29 +1,42 @@
+'use strict';
 var _ = require('underscore');
 
 // Wrapper for server User class
-class User {
-  constructor (data) {
+var _createClass = function () { function defineProperties (target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck (instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+var User = function () {
+  function User (data) {
+    _classCallCheck(this, User);
+
     // initialize with data that comes from server, backendUser or /user/:id
     // to be compatible with prior usage of raw object
     for (var i in data) {
       this[i] = data[i];
     }
   }
-  get agency () {
-    var agencyTag = _(this.tags).findWhere({ type: 'agency' });
 
-    if (!agencyTag) agencyTag = {};
+  _createClass(User, [{
+    key: 'agency',
+    get: function get () {
+      var agencyTag = _(this.tags).findWhere({ type: 'agency' });
 
-    // ideally this would be its own object
-    return {
-      id: agencyTag.id,
-      name: agencyTag.name,
-      abbr: agencyTag.data ? agencyTag.data.abbr : '',
-      domain: agencyTag.data ? agencyTag.data.domain[0] : '',
-      slug: agencyTag.data ? agencyTag.data.abbr.toLowerCase() : '',
-      allowRestrictAgency: agencyTag.data ? agencyTag.data.allowRestrictAgency : false,
-    };
-  }
-}
+      if (!agencyTag) agencyTag = {};
+
+      // ideally this would be its own object
+      return {
+        id: agencyTag.id,
+        name: agencyTag.name,
+        abbr: agencyTag.data ? agencyTag.data.abbr : '',
+        domain: agencyTag.data ? agencyTag.data.domain[0] : '',
+        slug: agencyTag.data ? agencyTag.data.abbr.toLowerCase() : '',
+        allowRestrictAgency: agencyTag.data ? agencyTag.data.allowRestrictAgency : false,
+      };
+    },
+  }]);
+
+  return User;
+}();
 
 module.exports = User;
