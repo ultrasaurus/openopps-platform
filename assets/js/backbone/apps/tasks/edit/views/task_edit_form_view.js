@@ -14,7 +14,9 @@ var TaskEditFormTemplate = require('../templates/task_edit_form_template.html');
 var TaskEditFormView = Backbone.View.extend({
 
   events: {
-    'blur .validate'                   : 'v',
+    'blur .validate'                   : 'validateField',
+    'keyup .validate'                  : 'validateField',
+    'change .validate'                 : 'validateField',
     'click #change-owner'              : 'displayChangeOwner',
     'click #add-participant'           : 'displayAddParticipant',
     'click #task-view'                 : 'view',
@@ -77,7 +79,7 @@ var TaskEditFormView = Backbone.View.extend({
 
   },
 
-  v: function (e) {
+  validateField: function (e) {
     return validate(e);
   },
 

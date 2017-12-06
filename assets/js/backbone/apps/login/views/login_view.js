@@ -11,22 +11,22 @@ var LoginTemplate = require('../templates/login_template.html');
 
 var LoginView = Backbone.View.extend({
   events: {
-    'click .oauth-link': 'link',
-    'keyup #rname': 'checkName',
-    'change #rname': 'checkName',
-    'blur #rname': 'checkName',
-    'keyup #rusername': 'checkUsername',
-    'change #rusername': 'checkUsername',
-    'click #rusername-button': 'clickUsername',
-    'keyup #rpassword': 'checkPassword',
-    'blur #rpassword': 'checkPassword',
-    'keyup #rpassword-confirm': 'checkPasswordConfirm',
-    'blur #rpassword-confirm': 'checkPasswordConfirm',
-    'click #register-next': 'nextRegistrationView',
-    'click #register-previous': 'previousRegistrationView',
-    'submit #login-password-form': 'submitLogin',
-    'submit #registration-form': 'submitRegister',
-    'submit #forgot-form': 'submitForgot',
+    'click .oauth-link' : 'link',
+    'keyup .validate'   : 'validateField',
+    'change .validate'  : 'validateField',
+    'blur .validate'    : 'validateField',
+    'keyup #rusername'  : 'checkUsername',
+    'change #rusername' : 'checkUsername',
+    'click #rusername-button'     : 'clickUsername',
+    'keyup #rpassword'            : 'checkPassword',
+    'blur #rpassword'             : 'checkPassword',
+    'keyup #rpassword-confirm'    : 'checkPasswordConfirm',
+    'blur #rpassword-confirm'     : 'checkPasswordConfirm',
+    'click #register-next'        : 'nextRegistrationView',
+    'click #register-previous'    : 'previousRegistrationView',
+    'submit #login-password-form' : 'submitLogin',
+    'submit #registration-form'   : 'submitRegister',
+    'submit #forgot-form'         : 'submitForgot',
   },
 
   initialize: function (options) {
@@ -56,6 +56,7 @@ var LoginView = Backbone.View.extend({
           width: '100%',
           multiple: false,
           allowCreate: false,
+          blurOnChange: true,
         });
       }
 
@@ -65,6 +66,7 @@ var LoginView = Backbone.View.extend({
           selector: '#rlocation',
           width: '100%',
           multiple: false,
+          blurOnChange: true,
         });
       }
 
@@ -87,6 +89,7 @@ var LoginView = Backbone.View.extend({
     this.$('#default-registration-view').hide();
     this.$('#optional-registration-view').show();
 
+    // this.$('#register-submit').attr('disabled', true);
     this.$('#registration-footer-cancel-next').hide();
     this.$('#registration-footer-prev-submit').show();
   },
@@ -97,14 +100,14 @@ var LoginView = Backbone.View.extend({
     this.$('#registration-footer-cancel-next').show();
     this.$('#registration-footer-prev-submit').hide();
   },
-
+ 
   link: function (e) {
     if (e.preventDefault) e.preventDefault();
     var link = $(e.currentTarget).attr('href');
     window.location.href = link;
   },
 
-  v: function (e) {
+  validateField: function (e) {
     return validate(e);
   },
 
@@ -144,7 +147,7 @@ var LoginView = Backbone.View.extend({
     if (e.preventDefault) e.preventDefault();
 
     $submitButton.prop('disabled', true);
-    this.$('#register-previous .error').hide();
+    // this.$('#register-previous .error').hide();
 
     // validate input fields
     var validateIds = ['#rname', '#rusername', '#rpassword'];
@@ -182,8 +185,10 @@ var LoginView = Backbone.View.extend({
     }
     if (abort === true || passwordSuccess !== true || passwordConfirmSuccess !== true) {
       $submitButton.prop('disabled', false);
-      this.$('#register-previous .error').show();
+      // this.$('#register-previous .error').show();
       return;
+    } else {
+      this.$('#register-previous .error').hide();
     }
 
     // Create a data object with the required fields
@@ -272,14 +277,14 @@ var LoginView = Backbone.View.extend({
   // following doesn't use regular validate() because we want to
   // display the .help-block instead of the .error-* blocks but
   // could change in the future and make validate() more general
-  checkName: function (e) {
-    var name = this.$('#rname').val();
-    if (name && name !== '') {
-      $('#rname').closest('.form-group').find('.help-block').hide();
-    } else {
-      $('#rname').closest('.form-group').find('.help-block').show();
-    }
-  },
+  // checkName: function (e) {
+  //   var name = this.$('#rname').val();
+  //   if (name && name !== '') {
+  //     $('#rname').closest('.form-group').find('.help-block').hide();
+  //   } else {
+  //     $('#rname').closest('.form-group').find('.help-block').show();
+  //   }
+  // },
 
   checkUsername: function (e) {
     var username = $('#rusername').val();
@@ -331,9 +336,12 @@ var LoginView = Backbone.View.extend({
     var password = this.$('#rpassword').val();
     var confirm = this.$('#rpassword-confirm').val();
     if (password === confirm) {
+      $('#rpassword-confirm').closest('.form-group').removeClass('has-error');
       $('#rpassword-confirm').closest('.form-group').find('.help-block').hide();
     } else {
+      $('#rpassword-confirm').closest('.form-group').addClass('has-error');
       $('#rpassword-confirm').closest('.form-group').find('.help-block').show();
+      $('#register-next').attr('disabled', true);
       success = false;
     }
     return success;

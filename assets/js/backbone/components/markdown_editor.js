@@ -28,6 +28,8 @@ var EditorTemplate = require('./markdown_editor_template.html');
 var MarkdownEditor = BaseComponent.extend({
   events: {
     'click .btn': 'clickButton',
+    'blur .validate': 'v',
+    'keyup .validate': 'v',
   },
 
   initialize: function (options) {

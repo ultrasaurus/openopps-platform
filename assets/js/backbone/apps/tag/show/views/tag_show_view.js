@@ -83,12 +83,14 @@ var TagShowView = Backbone.View.extend({
       type:'location',
       selector:'#tag_location',
       width: '100%',
+      blurOnChange: true,
     });
 
     self.tagFactory.createTagDropDown({
       type:'agency',
       selector:'#tag_agency',
       width: '100%',
+      blurOnChange: true,
     });
 
     self.model.trigger('profile:input:changed');

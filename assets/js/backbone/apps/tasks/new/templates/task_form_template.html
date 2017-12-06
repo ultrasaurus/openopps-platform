@@ -21,7 +21,7 @@
           <% _.each(tags['task-time-required'], function (time) { %>
             <div class="radio">
               <label>
-                <input type="radio" name="task-time-required" value="<%- time.id %>" data-descr="<%- time.name %>">
+                <input type="radio" name="task-time-required" value="<%- time.id %>" data-descr="<%- time.name %>" <%- time.name == 'One time' ? 'checked' : ''%>>
                 <%- time.name %><% if (time.description) { %> &mdash; <%= time.description %> <% } %>
               </label>
             </div>
@@ -96,7 +96,7 @@
           </label>
           <div class="radio">
             <label>
-              <input type="radio" name="participant-location" id="anywhere">
+              <input type="radio" name="participant-location" id="anywhere" checked>
               Anywhere
             </label>
           </div>
@@ -210,7 +210,7 @@
       <div class="col-md-8">
         <p>Once you submit your task, it will be reviewed by Open Opportunities staff. You will receive an email within two business days. We will either send you recommended edits or a notice that your task is approved and live on the website.</p>
         <div class="create__buttons">
-          <button type="button" id="js-task-create" class="btn btn-c2 wizard-submit" data-state="submit">
+          <button type="button" id="js-task-create" class="btn btn-c2 wizard-submit" data-state="submit" disabled>
             Submit for Review
           </button>
           <button type="button" id="js-task-draft" class="btn btn-border wizard-submit" data-state="draft">

@@ -31,9 +31,9 @@ var ProfileShowView = Backbone.View.extend({
     'click .link-backbone'       : linkBackbone,
     'click #profile-cancel'      : 'profileCancel',
     'click #like-button'         : 'like',
-    'keyup'                      : 'fieldModified',
-    'change'                     : 'fieldModified',
-    'blur'                       : 'fieldModified',
+    'keyup .form-control'        : 'fieldModified',
+    'change .form-control'       : 'fieldModified',
+    'blur .form-control'         : 'fieldModified',
     'click .removeAuth'          : 'removeAuth',
   },
 
@@ -334,12 +334,11 @@ var ProfileShowView = Backbone.View.extend({
   },
 
   fieldModified: function (e) {
-
-    //check that the name isn't a null string
-    var $help = this.$('#name').closest('.form-group').find('.help-block');
-    $help.toggle( this.$('#name').val() === '' );
-
     this.model.trigger('profile:input:changed', e);
+
+    if($(e.currentTarget).hasClass('validate')) {
+      validate(e);
+    }
   },
 
   profileCancel: function (e) {

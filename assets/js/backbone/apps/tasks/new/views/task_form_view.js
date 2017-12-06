@@ -21,7 +21,9 @@ var TaskFormView = Backbone.View.extend({
   el: '#container',
 
   events: {
-    'change .validate'                : 'v',
+    'change .validate'                : 'validateField',
+    'blur .validate'                  : 'validateField',
+    'keyup .validate'                 : 'validateField',
     'click [name=task-time-required]' : 'toggleTimeOptions',
     'change #task-location'           : 'locationChange',
     'click #js-task-draft'            : 'saveDraft',
@@ -172,7 +174,7 @@ var TaskFormView = Backbone.View.extend({
   /*
    * Validation event handler
    */
-  v: function (e) {
+  validateField: function (e) {
     return validate(e);
   },
 
@@ -278,11 +280,11 @@ var TaskFormView = Backbone.View.extend({
 
     for ( var i = 0; i < fieldsToValidate.length; i++ ) {
 
-      // README: view.v() return true if there *is* a validation error
+      // README: view.validateField() return true if there *is* a validation error
       // it returns false if there *is not*.
       //
       field = fieldsToValidate[ i ];
-      valid = view.v( { currentTarget: field } );
+      valid = view.validateField( { currentTarget: field } );
 
       if ( true === valid ) { return false; }
 
