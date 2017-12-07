@@ -130,9 +130,10 @@
         <h3>Headline</h3>
         <p>Write a few words that describe what needs to happen, inspires someone about the outcome, or entices them to learn something new.</p>
         <p><em>(Maximum of 100 characters)</em></p>
-        <input id="task-title" type="text" placeholder="A short description of the problem." value="<%- data.title %>" class="form-control input-lg validate" data-validate="empty,count100"/>
+        <input id="task-title" type="text" placeholder="A short description of the problem." value="<%- data.title %>" class="form-control input-lg validate" data-validate="empty,count100,html"/>
         <span class="help-block error-empty" style="display:none;">You must enter a title for this <span data-i18n="task">opportunity</span></span>
         <span class="help-block error-count100" style="display:none;">The short description of the problem must be less than 100 characters.</span>
+        <span class="help-block error-html" style="display:none;">The special characters '<' or '>' are not allowed</span>
       </div>
       <div class="form-group">
         <h3>Description</h3>
@@ -141,6 +142,7 @@
         <p><em>(There is no limit on length, but we recommend 200 words or less.)</em></p>
         <div class="markdown-edit"></div>
         <span class="help-block error-empty" style="display:none;">You must enter a description for this <span data-i18n="task">opportunity</span></span>
+        <span class="help-block error-html" style="display:none;">The special characters '<' or '>' are not allowed</span>
       </div>
       <div class="form-group">
         <h3>Tags</h3>

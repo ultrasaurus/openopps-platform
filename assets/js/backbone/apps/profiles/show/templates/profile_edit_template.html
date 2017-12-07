@@ -53,6 +53,7 @@
               <div class="form-group">
                 <label for="bio" class="control-label">A brief public biography</label>
                 <div class="markdown-edit"></div>
+                <span class="help-block error-html" style="display:none;">The special characters '<' or '>' are not allowed</span>
               </div>
               <div class="clearfix mxn2 mt2">
                 <div class="col col-12 md-col-12 px2">
@@ -81,9 +82,10 @@
                         <h2> Account Information </h2>
                         <div class="form-group">
                           <label for="profile-email" class="control-label">Email</label>
-                          <input type="text" class="form-control validate" id="profile-email" name="username" placeholder="Email" value="<%- email %>" data-validate="email,count60">
+                          <input type="text" class="form-control validate" id="profile-email" name="username" placeholder="Email" value="<%- email %>" data-validate="email,count60,html">
                           <span class="help-block error-email" style="display:none;">Must be a valid email address</span>
                           <span class="help-block error-count60" style="display:none;">Maximum of 60 characters</span>
+                          <span class="help-block error-html" style="display:none;">The special characters '<' or '>' are not allowed</span>
                           <div id="email-update-alert" class="alert alert-warning" style="display:none;">
                           </div>
                         </div>

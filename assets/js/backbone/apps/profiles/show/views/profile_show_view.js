@@ -330,6 +330,7 @@ var ProfileShowView = Backbone.View.extend({
       placeholder: 'A short biography.',
       title: 'Biography',
       rows: 6,
+      validate: ['html'],
     }).render();
   },
 

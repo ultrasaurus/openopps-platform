@@ -18,13 +18,20 @@ var CommentInlineTemplate = require('../templates/comment_inline_template.html')
 var CommentFormView = Backbone.View.extend({
 
   events: {
-    'submit .comment-submit': 'post',
-    'keypress .comment-input': 'submitOnEnter',
+    'submit .comment-submit'           : 'post',
+    'keypress .comment-input'          : 'submitOnEnter',
+    'blur .validate'                   : 'validateField',
+    'keyup .validate'                  : 'validateField',
+    'change .validate'                 : 'validateField',
   },
 
   initialize: function (options) {
     this.options = options;
     this.render();
+  },
+
+  validateField: function (e) {
+    return validate(e);
   },
 
   render: function () {
