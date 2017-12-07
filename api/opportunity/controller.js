@@ -4,7 +4,7 @@ const _ = require('lodash');
 const service = require('./service');
 const notification = require('../notification/service');
 const badgeService = require('../badge/service')(notification);
-const Badge = require('../model/badge');
+const Badge = require('../model/Badge');
 
 var router = new Router();
 

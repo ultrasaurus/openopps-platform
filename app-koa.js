@@ -135,12 +135,13 @@ module.exports = async (config) => {
   app.use(feature('opportunity'));
   app.use(feature('user'));
   app.use(feature('autocomplete'));
+  app.use(feature('location'));
   app.use(feature('admin'));
   app.use(feature('volunteer'));
   app.use(feature('activity'));
   app.use(feature('comment'));
   app.use(feature('document'));
 
-  app.listen(config.port || 3000);
-  console.log('App running on port ' + (config.port || 3000));
+  app.listen(openopps.port);
+  console.log('App running at ' + openopps.hostName + ':' + openopps.port);
 };

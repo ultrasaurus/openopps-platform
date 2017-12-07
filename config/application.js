@@ -9,7 +9,7 @@ module.exports = {
   httpProtocol: process.env.PROTOCOL || 'http',
 
   // hostName defines the domain upon which your app will be deployed (e.g. 'localhost:1337', for development)
-  hostName: process.env.HOST || 'localhost:1337',
+  hostName: process.env.HOST || 'localhost',
 
   // The `port` setting determines which TCP port your app will be deployed on
   // Ports are a transport-layer concept designed to allow many different
@@ -21,7 +21,7 @@ module.exports = {
   //
   // In production, you'll probably want to change this setting
   // to 80 (http://) or 443 (https://) if you have an SSL certificate
-  // port: process.env.PORT || 1337,
+  port: process.env.PORT || 3000,
 
   // The runtime "environment" of your Sails app is either 'development' or 'production'.
   //
