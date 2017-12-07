@@ -141,6 +141,6 @@ module.exports = async (config) => {
   app.use(feature('comment'));
   app.use(feature('document'));
 
-  app.listen(config.port || 3000);
-  console.log('App running on port ' + (config.port || 3000));
+  app.listen(openopps.port);
+  console.log('App running at ' + openopps.hostName + ':' + openopps.port);
 };

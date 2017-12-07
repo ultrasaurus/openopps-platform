@@ -27,7 +27,7 @@
     "csv-parse": "^1.0.4",
     "csvtojson": "^1.x.x",
     "d3": "^4.2.2",
-    "db-migrate": "^0.10.0-beta.11",
+    "db-migrate": "^0.10.2",
     "db-migrate-pg": "^0.1.9",
     "ejs": "^2.x.x",
     "express": "^3.x.x",
@@ -136,11 +136,14 @@
     "init": "node ./tools/init.js",
     "demo": "node ./tools/demo.js",
     "build": "gulp build",
-    "migrate": "grunt db:migrate:up",
-    "check-migrate": "$npm_package_config_grunt db:migrate:up --dry-run | perl -ne 's/.*Processed migration (.*)/\\x1b[41m[WARNING] Pending Migration: \\1\\x1b[0m (Run `npm run migrate`)/ && print'",
+    "migrate": "echo 'Migrate commands exist for the following actions [:up, :down, :check]'",
+    "migrate:up": "node ./node_modules/db-migrate/bin/db-migrate up",
+    "migrate:down": "node ./node_modules/db-migrate/bin/db-migrate down",
+    "migrate:check": "node ./node_modules/db-migrate/bin/db-migrate up --dry-run",
     "start": "node app.js",
     "test": "node ./node_modules/mocha/bin/mocha test/bootstrap.test.js test/integration/**/*.test.js",
     "test:unit": "node ./node_modules/mocha/bin/mocha test/unit/bootstrap.unit.test.js test/unit/**/*.test.js --opts test/test/mocha.opts",
+    "test:integration": "node ./node_modules/mocha/bin/mocha test/integration/services/setup.js test/integration/services/*.test.js",
     "jshint": "find assets/js/backbone -name \\*js -exec ./node_modules/jshint/bin/jshint {} \\;",
     "cover": "istanbul cover ./node_modules/mocha/bin/_mocha -- test/bootstrap.test.js test/integration/**/*.test.js",
     "cover:unit": "nyc --reporter=text node ./node_modules/mocha/bin/mocha test/unit/bootstrap.unit.test.js test/unit/**/*.test.js --opts test/test/mocha.opts",
@@ -167,7 +170,6 @@
   "bugs": "https://github.com/openopps/openopps-platform/issues",
   "license": "CC0-1.0",
   "engines": {
-    "node": "6.11.2",
-    "npm": "3.10.10"
+    "node": "8.9.0"
   }
 }
