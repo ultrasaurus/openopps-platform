@@ -23,28 +23,29 @@ router.get('/api/location/suggest', async (ctx, next) => {
     request(url, function (error, response, body) {
       if(error) {
         resolve([]);
+      } else {
+        try {
+          var data = JSON.parse(body);
+          if (!data.geonames) {
+            resolve(data);
+          } else {
+            resolve(data.geonames.map(function (item) {
+              var name = [item.toponymName];
+              if (item.toponymName !== item.adminName1) name.push(item.adminName1);
+              if (item.countryCode !== 'US') name.push(item.countryCode);
+              return _.extend({
+                name: name.join(', '),
+                lat: item.lat,
+                lon: item.lng,
+                source: 'geonames',
+                sourceId: item.geonameId,
+              }, item.timezone);
+            }));
+          }
+        } catch (e) {
+          resolve([]);
+        }
       }
-      var data = [];
-      try {
-        data = JSON.parse(body);
-      } catch (e) {
-        resolve([]);
-      }
-      if (!data.geonames) {
-        resolve(data);
-      }
-      resolve(data.geonames.map(function (item) {
-        var name = [item.toponymName];
-        if (item.toponymName !== item.adminName1) name.push(item.adminName1);
-        if (item.countryCode !== 'US') name.push(item.countryCode);
-        return _.extend({
-          name: name.join(', '),
-          lat: item.lat,
-          lon: item.lng,
-          source: 'geonames',
-          sourceId: item.geonameId,
-        }, item.timezone);
-      }));
     });
   }).then(data => {
     ctx.body = data;

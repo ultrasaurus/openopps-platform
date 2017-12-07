@@ -2,6 +2,7 @@ const db = require('../../db');
 const dao = require('./dao')(db);
 const log = require('blue-ox')('app:user:service');
 const bcrypt = require('bcryptjs');
+const _ = require('lodash');
 
 async function list () {
   return dao.clean.users(await dao.User.query(dao.query.user, {}, dao.options.user));
@@ -53,10 +54,21 @@ async function updateProfile (attributes, done) {
   await dao.User.update(attributes).then(async () => {
     await dao.UserTags.db.query(dao.query.deleteUserTags, attributes.id)
       .then(async () => {
-        (attributes.tags || attributes['tags[]'] || []).map(tag => {
-          dao.UserTags.insert({ tagentity_users: tag, user_tags: attributes.id }).catch(err => {
-            log.info('register: failed to create tag ', attributes.username, tag, err);
-          });
+        (attributes.tags || attributes['tags[]'] || []).map(async (tag) => {
+          if(_.isNumber(tag)) {
+            await dao.UserTags.insert({ tagentity_users: tag, user_tags: attributes.id }).catch(err => {
+              log.info('register: failed to create tag ', attributes.username, tag, err);
+            });
+          } else {
+            _.extend(tag, { 'createdAt': new Date(), 'updatedAt': new Date() });
+            await dao.TagEntity.insert(tag).then(async (t) => {
+              await dao.UserTags.insert({ tagentity_users: t.id, user_tags: attributes.id }).catch(err => {
+                log.info('register: failed to create tag ', attributes.username, tag, err);
+              });
+            }).catch(err => {
+              log.info('register: failed to create tag ', attributes.username, tag, err);
+            });
+          }
         });
         return done(null);
       }).catch (err => { return done(err); });

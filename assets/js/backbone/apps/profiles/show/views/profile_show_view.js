@@ -78,7 +78,7 @@ var ProfileShowView = Backbone.View.extend({
     // Handle email validation errors
     this.model.on('error', function (model, xhr) {
       var error = xhr.responseJSON;
-      if (error.invalidAttributes && error.invalidAttributes.username) {
+      if (error && error.invalidAttributes && error.invalidAttributes.username) {
         var message = _(error.invalidAttributes.username)
           .pluck('message').join(', ')
           .replace(/record/g, 'user')

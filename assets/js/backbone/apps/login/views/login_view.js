@@ -100,7 +100,7 @@ var LoginView = Backbone.View.extend({
     this.$('#registration-footer-cancel-next').show();
     this.$('#registration-footer-prev-submit').hide();
   },
- 
+
   link: function (e) {
     if (e.preventDefault) e.preventDefault();
     var link = $(e.currentTarget).attr('href');
@@ -230,7 +230,8 @@ var LoginView = Backbone.View.extend({
     $.ajax({
       url: '/api/auth/local/register',
       type: 'POST',
-      data: data,
+      contentType: 'application/json',
+      data: JSON.stringify(data),
     }).done(function (success) {
       $.ajax({
         url: '/api/user',
