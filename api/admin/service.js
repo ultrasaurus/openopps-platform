@@ -114,9 +114,9 @@ function buildTaskObj (result) {
 async function getInteractions () {
   var interactions = {};
   var temp = await dao.Task.db.query(dao.query.postQuery);
-  interactions.posts = parseInt(temp.rows[0].count);
+  interactions.posts = +temp.rows[0].count;
   temp = await dao.Task.db.query(dao.query.volunteerCountQuery);
-  interactions.signups = parseInt(temp.rows[0].count);
+  interactions.signups = +temp.rows[0].count;
 
   var tasks = (await dao.Task.db.query(dao.query.taskHistoryQuery)).rows;
   interactions.assignments = tasks.reduce( function ( count, task ) {
@@ -145,9 +145,9 @@ async function getInteractions () {
 async function getUsers (page, limit) {
   var result = {};
   result.limit = typeof limit !== 'undefined' ? limit : 25;
-  result.page = parseInt(page);
+  result.page = +page;
   result.users = (await dao.User.db.query(await dao.query.userListQuery, page)).rows;
-  result.count = result.users.length > 0 ? parseInt(result.users[0].full_count) : 0;
+  result.count = result.users.length > 0 ? +result.users[0].full_count : 0;
   result = await getUserTaskMetrics (result);
   return result;
 }
@@ -155,9 +155,9 @@ async function getUsers (page, limit) {
 async function getUsersForAgency (page, limit, agency) {
   var result = {};
   result.limit = typeof limit !== 'undefined' ? limit : 25;
-  result.page = parseInt(page);
+  result.page = +page;
   result.users = (await dao.User.db.query(await dao.query.userAgencyListQuery, agency, page)).rows;
-  result.count = result.users.length > 0 ? parseInt(result.users[0].full_count) : 0;
+  result.count = result.users.length > 0 ? +result.users[0].full_count : 0;
   result = await getUserTaskMetrics (result);
   return result;
 }
@@ -168,7 +168,7 @@ async function getUsersFiltered (q) {
     '%' + q.toLowerCase() + '%' || q.toLowerCase() + '%' || '%' + q.toLowerCase(), 
     '%' + q.toLowerCase() + '%' || q.toLowerCase() + '%' || '%' + q.toLowerCase())).rows;
   result = await getUserTaskMetrics (result);
-  result.count = typeof result.users[0] !== 'undefined' ? parseInt(result.users[0].full_count) : 0;
+  result.count = typeof result.users[0] !== 'undefined' ? +result.users[0].full_count : 0;
   result.page = 1;
   result.q = q;
   return result;
@@ -181,7 +181,7 @@ async function getUsersForAgencyFiltered (q, agency) {
     '%' + q.toLowerCase() + '%' || q.toLowerCase() + '%' || '%' + q.toLowerCase(), 
     agency.toLowerCase())).rows;
   result = await getUserTaskMetrics (result);
-  result.count = typeof result.users[0] !== 'undefined' ? parseInt(result.users[0].full_count) : 0;
+  result.count = typeof result.users[0] !== 'undefined' ? +result.users[0].full_count : 0;
   result.page = 1;
   result.q = q;
   return result;
@@ -191,7 +191,7 @@ async function getTaskMetrics () {
   var tasks = {};
   var taskStates = [];
   var temp = await dao.Task.db.query(dao.query.taskQuery);
-  tasks.count = parseInt(temp.rows[0].count);
+  tasks.count = +temp.rows[0].count;
 
   taskStates = (await dao.Task.db.query(dao.query.taskStateQuery)).rows;
   tasks.archived = taskStates.reduce( function ( count, task ) {
@@ -219,7 +219,7 @@ async function getTaskMetrics () {
   }, 0 );
 
   temp = await dao.Task.db.query(dao.query.volunteerQuery, 'withVolunteers');
-  tasks.withVolunteers = parseInt(temp.rows[0].count);
+  tasks.withVolunteers = +temp.rows[0].count;
   
   return tasks;
 }

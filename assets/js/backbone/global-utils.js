@@ -10,7 +10,7 @@ var Backbone = require('backbone');
  * such as 'click .link-backbone' : linkBackbone
  * @param e the event fired by jquery/backbone
  */
-global.linkBackbone = function(e) {
+global.linkBackbone = function (e) {
   // if meta or control is held, or if the middle mouse button is pressed,
   // let the link process normally.
   // eg: open a new tab or window based on the browser prefs
@@ -50,8 +50,8 @@ global.organizeTags = function (tags) {
  */
 global.removeView = function (view) {
   view.undelegateEvents();
-  view.$el.html("");
-}
+  view.$el.html('');
+};
 
 global.validatePassword = function (username, password) {
   var rules = {
@@ -60,7 +60,7 @@ global.validatePassword = function (username, password) {
     upper: false,
     lower: false,
     number: false,
-    symbol: false
+    symbol: false,
   };
   var _username = username.toLowerCase().trim();
   var _password = password.toLowerCase().trim();
@@ -128,12 +128,30 @@ global.validate = function (e) {
       }
       return;
     }
+    if (o == 'radio') {
+      if ($(e.currentTarget).prop('checked').length <= 0) {
+        $(parent).find('.error-radio').show();
+        result = true;
+      } else {
+        $(parent).find('.error-radio').hide();
+      }
+      return;
+    }
     if (o == 'checked') {
       if ($(e.currentTarget).prop('checked') !== true) {
         $(parent).find('.error-checked').show();
         result = true;
       } else {
         $(parent).find('.error-checked').hide();
+      }
+      return;
+    }
+    if(o == 'html') {
+      if(/[<>]/.test(val)) {
+        $(parent).find('.error-html').show();
+        result = true;
+      } else {
+        $(parent).find('.error-html').hide();
       }
       return;
     }
@@ -159,7 +177,7 @@ global.validate = function (e) {
       return;
     }
     if (o == 'button') {
-      if (!($($(parent).find("#" + $(e.currentTarget).attr('id') + "-button")[0]).hasClass('btn-success'))) {
+      if (!($($(parent).find('#' + $(e.currentTarget).attr('id') + '-button')[0]).hasClass('btn-success'))) {
         $(parent).find('.error-' + o).show();
         result = true;
       } else {
@@ -169,9 +187,9 @@ global.validate = function (e) {
     var bits;
     if (o == 'email'){
       var correctLength = false;
-      if ( val !== "" && val.indexOf("@") >= 2 ){
-        bits = val.split("@");
-        var addrBits = bits[1].split(".");
+      if ( val !== '' && val.indexOf('@') >= 2 ){
+        bits = val.split('@');
+        var addrBits = bits[1].split('.');
         if ( addrBits.length >=2 ) {
           for (i=0; i<addrBits.length; i++ ){
             if ( addrBits[i].length < 2 ){
@@ -193,8 +211,8 @@ global.validate = function (e) {
     }
     if ( o== 'emaildomain'){
       var domain = $(e.currentTarget).data('emaildomain');
-      if ( val !== "" && val.indexOf("@") >= 2 ){
-        bits = val.split("@");
+      if ( val !== '' && val.indexOf('@') >= 2 ){
+        bits = val.split('@');
         if ( bits[1] != domain ){
           $(parent).find('.error-emaildomain').show();
           result = true;
@@ -207,8 +225,14 @@ global.validate = function (e) {
   });
   if (result === true) {
     $(parent).addClass('has-error');
+    $('button').attr('disabled', 'disabled');
   } else {
     $(parent).removeClass('has-error');
+    if ($('form').find('*').hasClass('has-error')) {
+      $('button').attr('disabled', 'disabled');
+    } else {
+      $('button').removeAttr('disabled');
+    }
   }
   return result;
 };

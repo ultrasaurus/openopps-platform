@@ -47,8 +47,10 @@
       <div class="col-sm-12">
         <div class="form-group">
           <label for="rname" class="control-label" data-i18n="loginModal.name">Name</label>
-          <input type="text" class="form-control validate" id="rname" name="rname" placeholder="Full Name" data-validate="empty">
-          <span class="help-block error-empty" style="display:none;">Please enter your full name.</span>
+          <input type="text" class="form-control validate" id="rname" name="rname" placeholder="Full Name" data-validate="empty,count60,html" autofocus>
+          <span class="help-block error-empty" style="display:none;">Please enter your full name</span>
+          <span class="help-block error-count60" style="display:none;">Maximum of 60 characters</span>
+          <span class="help-block error-html" style="display:none;">The special characters '<' or '>' are not allowed</span>
         </div>
       </div>
       <div class="col-sm-12">
@@ -62,7 +64,7 @@
               </span>
             </span>
           </div>
-          <span class="help-block error-button" style="display:none;">The email address is not valid or is already in use.</span>
+          <span class="help-block error-button" style="display:none;">The email address is not valid or is already in use</span>
         </div>
       </div>
     </div>
@@ -121,7 +123,7 @@
     <div class="col-sm-12">
       <div class="pull-right">
         <button type="button" id="register-cancel" class="btn btn-c0">Cancel</button>
-        <button type="button" id="register-next" class="btn btn-c2">Next</button>
+        <button type="button" id="register-next" class="btn btn-c2" disabled>Next</button>
       </div>
     </div>
   </div>
@@ -130,11 +132,11 @@
     <div class="col-sm-12">
       <div class="pull-right">
         <% if (login.agency.enabled === true || login.location.enabled === true) { %>
-        <button type="button" id="register-previous" class="btn btn-c0"><span class="badge error" style="display:none;">!</span> Prev</button>
+        <button type="button" id="register-previous" class="btn btn-c0">Previous</button>
         <% } else { %>
         <button type="button" id="register-cancel" class="btn btn-c0">Cancel</button>
         <% } %>
-        <button type="submit" class="btn btn-c2">Submit</button>
+        <button type="submit" id="register-submit" class="btn btn-c2">Submit</button>
       </div>
     </div>
   </div>

@@ -277,12 +277,14 @@ var TaskShowController = BaseView.extend({
           selector:'#rlocation',
           width: '100%',
           multiple: false,
+          blurOnChange: true,
         });
         self.tagFactory.createTagDropDown({
           type:'agency',
           selector:'#ragency',
           width: '100%',
           multiple: false,
+          blurOnChange: true,
         });
         return;
       }
