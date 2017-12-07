@@ -135,6 +135,7 @@ module.exports = async (config) => {
   app.use(feature('opportunity'));
   app.use(feature('user'));
   app.use(feature('autocomplete'));
+  app.use(feature('location'));
   app.use(feature('admin'));
   app.use(feature('volunteer'));
   app.use(feature('activity'));

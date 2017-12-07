@@ -1,0 +1,54 @@
+const log = require('blue-ox')('app:location');
+const Router = require('koa-router');
+const request = require('request');
+const qs = require('querystring');
+const _ = require('lodash');
+
+var router = new Router();
+
+router.get('/api/location/suggest', async (ctx, next) => {
+  log.info('ctx.query', ctx.query);
+  var urlBase = 'http://api.geonames.org/search';
+  var query = _.defaults(ctx.query, {
+    type: 'json',
+    style: 'full',
+    maxRows: 10,
+    username: 'midas',
+    countryBias: 'US',
+    featureClass: 'P',
+  });
+  var url = urlBase + '?' + qs.stringify(query);
+
+  return new Promise((resolve, reject) => {
+    request(url, function (error, response, body) {
+      if(error) {
+        resolve([]);
+      }
+      var data = [];
+      try {
+        data = JSON.parse(body);
+      } catch (e) {
+        resolve([]);
+      }
+      if (!data.geonames) {
+        resolve(data);
+      }
+      resolve(data.geonames.map(function (item) {
+        var name = [item.toponymName];
+        if (item.toponymName !== item.adminName1) name.push(item.adminName1);
+        if (item.countryCode !== 'US') name.push(item.countryCode);
+        return _.extend({
+          name: name.join(', '),
+          lat: item.lat,
+          lon: item.lng,
+          source: 'geonames',
+          sourceId: item.geonameId,
+        }, item.timezone);
+      }));
+    });
+  }).then(data => {
+    ctx.body = data;
+  });
+});
+
+module.exports = router.routes();
