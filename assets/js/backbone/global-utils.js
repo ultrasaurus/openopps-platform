@@ -225,13 +225,13 @@ global.validate = function (e) {
   });
   if (result === true) {
     $(parent).addClass('has-error');
-    $('button').attr('disabled', 'disabled');
+    $(':button.disable').attr('disabled', 'disabled');
   } else {
     $(parent).removeClass('has-error');
     if ($('form').find('*').hasClass('has-error')) {
-      $('button').attr('disabled', 'disabled');
+      $(':button.disable').attr('disabled', 'disabled');
     } else {
-      $('button').removeAttr('disabled');
+      $(':button.disable').removeAttr('disabled');
     }
   }
   return result;
