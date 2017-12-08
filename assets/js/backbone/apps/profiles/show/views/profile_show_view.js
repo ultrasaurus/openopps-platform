@@ -75,16 +75,16 @@ var ProfileShowView = Backbone.View.extend({
       this.saved = true;
       this.data.saved = false;
     }
-    // Handle email validation errors
+    // Handle server side errors
     this.model.on('error', function (model, xhr) {
       var error = xhr.responseJSON;
-      if (error && error.invalidAttributes && error.invalidAttributes.username) {
-        var message = _(error.invalidAttributes.username)
-          .pluck('message').join(', ')
-          .replace(/record/g, 'user')
-          .replace(/undefined/g, 'email')
-          .replace(/`username`/g, 'email');
-        self.$('#email-update-alert').html(message).show();
+      if (error && error.invalidAttributes) {
+        for (var item in error.invalidAttributes) {
+          if (error.invalidAttributes[item]) {
+            message = _(error.invalidAttributes[item]).pluck('message').join(',<br /> ');
+            self.$('#' + item + '-update-alert').html(message).show();
+          }
+        }
       }
     });
   },

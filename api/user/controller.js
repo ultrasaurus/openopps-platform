@@ -84,10 +84,10 @@ router.get('/api/user/photo/:id', async (ctx, next) => {
 router.put('/api/user/:id', async (ctx, next) => {
   if (ctx.isAuthenticated() && +ctx.params.id === ctx.request.body.id && (ctx.state.user.id === +ctx.params.id || ctx.req.user.isAdmin)) {
     ctx.status = 200;
-    await service.updateProfile(ctx.request.body, function (error) {
-      if (error) {
+    await service.updateProfile(ctx.request.body, function (errors) {
+      if (errors) {
         ctx.status = 400;
-        return ctx.body = { message:'Error updating profile.' };
+        return ctx.body = errors;
       }
       ctx.body = { success: true };
     });

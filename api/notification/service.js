@@ -88,7 +88,7 @@ function sendEmail (mailOptions, done) {
   log.info('Sending SMTP message', mailOptions);
   nodemailer.createTransport(transportConfig).sendMail(mailOptions, function (err, info) {
     if (err) {
-      log.info('Failed to send mail. If this is unexpected, please check your email configuration in config/local.js.', err);
+      log.info('Failed to send mail. If this is unexpected, please check your email configuration in config/email.js.', err);
     }
     if (done) {
       return done(err, info);

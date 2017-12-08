@@ -33,15 +33,43 @@ async function commentsByTaskId (id) {
   return { comments: dao.clean.comments(comments) };
 }
 
+function processTaskTags (task, tags) {
+  return Promise.all(tags.map(async (tag) => {
+    if(_.isNumber(tag)) {
+      return await createTaskTag(tag, task);
+    } else {
+      _.extend(tag, { 'createdAt': new Date(), 'updatedAt': new Date() });
+      return await createNewTaskTag(tag, task);
+    }
+  }));
+}
+
+async function createNewTaskTag (tag, task) {
+  return await dao.TagEntity.insert(tag).then(async (t) => {
+    return await createTaskTag(t.id, task);
+  }).catch(err => {
+    log.info('task: failed to create tag ', task.title, tag, err);
+  });
+}
+
+async function createTaskTag (tagId, task) {
+  return await dao.TaskTags.insert({ tagentity_tasks: tagId, task_tags: task.id }).then(async (tag) => {
+    return await dao.TagEntity.findOne('id = ?', tag.tagentity_tasks).catch(err => {
+      log.info('update task: failed to load tag entity ', task.id, tagId, err);
+    });
+  }).catch(err => {
+    log.info('task: failed to create tag ', task.title, tagId, err);
+  });
+}
+
 async function createOpportunity (attributes, done) {
   attributes.submittedAt = attributes.state === 'submitted' ? new Date : null;
   attributes.createdAt = new Date();
   attributes.updatedAt = new Date();
   await dao.Task.insert(attributes).then(async (task) => {
-    (attributes.tags || attributes['tags[]'] || []).map(tag => {
-      dao.TaskTags.insert({ tagentity_tasks: tag, task_tags: task.id }).catch(err => {
-        log.info('register: failed to create tag ', attributes.title, tag, err);
-      });
+    var tags = attributes.tags || attributes['tags[]'] || [];
+    await processTaskTags(task, tags).then(tags => {
+      task.tags = tags;
     });
     task.owner = attributes.userId;
     return done(null, task);
@@ -83,15 +111,7 @@ async function updateOpportunity (attributes, done) {
     task.tags = [];
     await dao.TaskTags.db.query(dao.query.deleteTaskTags, task.id)
       .then(async () => {
-        await Promise.all(tags.map(async (tag) => {
-          return await dao.TaskTags.insert({ tagentity_tasks: typeof(tag) == 'object' ? tag.id : tag, task_tags: attributes.id }).then(async (tag) => {
-            return await dao.TagEntity.findOne('id = ?', tag.tagentity_tasks).catch(err => {
-              log.info('update task: failed to load tag entity ', attributes.id, tag, err);
-            });
-          }).catch(err => {
-            log.info('update task: failed to update tag ', attributes.id, tag, err);
-          });
-        })).then(tags => {
+        await processTaskTags(task, tags).then(tags => {
           task.tags = tags;
           return done(task, origTask.state !== task.state);
         });
