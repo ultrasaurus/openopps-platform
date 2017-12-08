@@ -133,14 +133,14 @@
             <span>Write a few words that describe what needs to happen, inspires someone about the outcome, or entices them to learn something new.</span>
             <span><em>(Maximum of 100 characters)</em></span>
           </label>
+          <input type="text"
+          id="task-title"
+          class="fullwidth form-control validate"
+          data-validate="empty,count100,html"/>
           <span class="help-block error-empty" style="display:none;">You must enter headline for this <span
               data-i18n="task">opportunity</span></span>
           <span class="help-block error-count100" style="display:none;">The short description of the problem must be less than 100 characters.</span>
-          <input type="text"
-                 id="task-title"
-                 class="fullwidth form-control validate"
-                 data-validate="empty,count100"/>
-
+          <span class="help-block error-html" style="display:none;">The special characters '<' or '>' are not allowed</span>
         </div>
         <div class="col-md-4">
           <aside>
@@ -167,6 +167,7 @@
           </label>
           <div class="markdown-edit"></div>
           <span class="help-block error-empty" style="display:none;">You must enter a description for this <span data-i18n="task">opportunity</span></span>
+          <span class="help-block error-html" style="display:none;">The special characters '<' or '>' are not allowed</span>
         </div>
         <div class="col-md-4">
           <aside>
