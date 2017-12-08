@@ -3,14 +3,14 @@
 <div class="p2 mt2 mb3 bg-white">
   <div>
     <% if ( 'draft' === data.state ) { %>
-    <button type="submit" id="js-task-create" class="btn btn-c2 wizard-submit" data-state="submit">
+    <button type="submit" id="js-task-create" class="btn btn-c2 disable wizard-submit" data-state="submit">
       Submit for Review
     </button>
-    <button type="button" class="js-task-draft btn btn-border wizard-submit" data-state="draft">
+    <button type="button" class="js-task-draft btn btn-border disable wizard-submit" data-state="draft">
       Save as Draft
     </button>
     <% } else { %>
-    <button type="submit" id="js-task-create" class="btn btn-c2 wizard-submit" data-state="save">
+    <button type="submit" id="js-task-create" class="btn btn-c2 disable wizard-submit" data-state="save">
       Save Changes
     </button>
     <% } %>
@@ -237,14 +237,14 @@
 <div class="p2 mb3 bg-white">
   <div>
     <% if ( 'draft' === data.state ) { %>
-    <button type="submit" class="btn btn-c2 wizard-submit" data-state="submit">
+    <button type="submit" class="btn btn-c2 disable wizard-submit" data-state="submit">
       Submit for Review
     </button>
-    <button type="button" class="js-task-draft btn btn-border wizard-submit" data-state="draft">
+    <button type="button" class="js-task-draft disable btn btn-border wizard-submit" data-state="draft">
       Save as Draft
     </button>
     <% } else { %>
-    <button type="submit" class="btn btn-c2 wizard-submit" data-state="save">
+    <button type="submit" class="btn btn-c2 disable wizard-submit" data-state="save">
       Save Changes
     </button>
     <% } %>
