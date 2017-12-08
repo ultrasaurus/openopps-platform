@@ -227,7 +227,7 @@ var TaskEditFormView = Backbone.View.extend({
       placeholder: 'Description of opportunity including goals, expected outcomes and deliverables.',
       title: 'Opportunity Description',
       rows: 6,
-      validate: ['empty'],
+      validate: ['empty','html'],
     }).render();
   },
 

@@ -239,7 +239,7 @@ var TaskFormView = Backbone.View.extend({
       id: 'task-description',
       title: i18n.t('Task') + ' Description',
       rows: 6,
-      validate: ['empty'],
+      validate: ['empty','html'],
     }, options );
 
     if ( this.md ) { this.md.cleanup(); }

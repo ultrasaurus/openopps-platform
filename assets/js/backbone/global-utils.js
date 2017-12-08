@@ -115,7 +115,7 @@ global.validatePassword = function (username, password) {
  */
 global.validate = function (e) {
   var opts = String($(e.currentTarget).data('validate')).split(',');
-  var val = $(e.currentTarget).val();
+  var val = ($(e.currentTarget).prop('tagName') == 'DIV' ? $(e.currentTarget).text() : $(e.currentTarget).val());
   var parent = $(e.currentTarget).parents('.form-group, .checkbox')[0];
   var result = false;
   _.each(opts, function (o) {
