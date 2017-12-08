@@ -6,6 +6,7 @@ const sass = require('koa-sass');
 const serve = require('koa-static');
 const path = require('path');
 const parser = require('koa-better-body');
+const CSRF = require('koa-csrf');
 const session = require('koa-session');
 const redisStore = require('koa-redis');
 const passport = require('koa-passport');
@@ -42,16 +43,26 @@ module.exports = async (config) => {
 
   const app = new koa();
 
-  // configure session
-  app.proxy = true;
-  app.keys = [openopps.session.secret || 'your-secret-key'];
-  app.use(session(openopps.session, app));
-
   // initialize flash
   app.use(flash());
 
   // initialize body parser
   app.use(parser());
+
+  // configure session
+  app.proxy = true;
+  app.keys = [openopps.session.secret || 'your-secret-key'];
+  app.use(session(openopps.session, app));
+
+  // configure CSRF
+  app.use(new CSRF({
+    invalidSessionSecretMessage: 'Invalid session',
+    invalidSessionSecretStatusCode: 403,
+    invalidTokenMessage: 'Invalid CSRF token',
+    invalidTokenStatusCode: 403,
+    excludedMethods: [ 'GET', 'HEAD', 'OPTIONS' ],
+    disableQuery: false,
+  }));
 
   // initialize authentication
   require(path.join(__dirname, 'api/auth/passport'));
@@ -102,14 +113,15 @@ module.exports = async (config) => {
     } else await next();
   });
 
-  // compile our .scss files if not already done so
-  // app.use(sass({
-  //   src:  __dirname + '/assets',
-  //   dest: __dirname + '/assets',
-  // }));
-
   // serve our static resource files
   app.use(serve(__dirname + '/dist'));
+
+  // CSRF Token
+  app.use(async (ctx, next) => {
+    if(ctx.path === '/csrfToken') {
+      ctx.body = { _csrf: ctx.csrf };
+    } else await next();
+  });
 
   // load main/index.ejs unless api request
   app.use(async function (ctx, next) {
