@@ -20,7 +20,7 @@ module.exports = {
     obj = validateBio(obj, attributes);
     obj = validateName(obj, attributes);
     obj = validateTitle(obj, attributes);
-    obj = validateTags(obj, attributes); 
+    obj = validateTags(obj, attributes);
     return obj;
   },
 };
@@ -30,17 +30,17 @@ function validateUsername (obj, usernameUsed, attributes) {
     obj['invalidAttributes']['email'] = [];
     obj['invalidAttributes']['email'].push({'message': 'A user with that email already exists (`' + attributes.username + '`).'});
   }
-  if (!validator.isEmail(attributes.username)) {
-    if (_.isEmpty(obj['invalidAttributes']['email'])) {
-      obj['invalidAttributes']['email'] = [];
-    }
-    obj['invalidAttributes']['email'].push({'message': 'Email must be a valid email address.'});
-  }
   if (attributes.username.match(/[<>]/g)) {
     if (_.isEmpty(obj['invalidAttributes']['email'])) {
       obj['invalidAttributes']['email'] = [];
     }
     obj['invalidAttributes']['email'].push({'message': 'Email must not contain the special characters < or >.'});
+  }
+  if (!validator.isEmail(attributes.username)) {
+    if (_.isEmpty(obj['invalidAttributes']['email'])) {
+      obj['invalidAttributes']['email'] = [];
+    }
+    obj['invalidAttributes']['email'].push({'message': 'Email must be a valid email address.'});
   }
   if (attributes.username.length > 60) {
     if (_.isEmpty(obj['invalidAttributes']['email'])) {
