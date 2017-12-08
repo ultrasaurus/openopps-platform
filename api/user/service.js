@@ -3,6 +3,7 @@ const dao = require('./dao')(db);
 const log = require('blue-ox')('app:user:service');
 const bcrypt = require('bcryptjs');
 const _ = require('lodash');
+const User = require('../model/User');
 
 async function list () {
   return dao.clean.users(await dao.User.query(dao.query.user, {}, dao.options.user));
@@ -46,9 +47,9 @@ async function getActivities (id) {
 }
 
 async function updateProfile (attributes, done) {
-  var validated = await validateProfile(attributes);
-  if (validated !== null) {
-    return done(validated);
+  var errors = await User.validateUser(attributes, isUsernameUsed);
+  if (!_.isEmpty(errors.invalidAttributes)) {
+    return done(errors);
   }
   attributes.updatedAt = new Date();
   await dao.User.update(attributes).then(async () => {
