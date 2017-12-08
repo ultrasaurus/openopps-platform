@@ -40,22 +40,24 @@ var TaskEditFormView = Backbone.View.extend({
 
     this.initializeListeners();
 
-    // Register listener to task update, the last step of saving
-    //
-    this.listenTo( this.options.model, 'task:update:success', function ( data ) {
-
-      if ( 'draft' === data.attributes.state ) {
-
+    this.listenTo(this.options.model, 'task:update:success', function (data) {
+      if ('draft' === data.attributes.state) {
         view.renderSaveSuccessModal();
-
       } else {
-
-        Backbone.history.navigate( 'tasks/' + data.attributes.id, { trigger: true } );
-
+        Backbone.history.navigate('tasks/' + data.attributes.id, { trigger: true });
       }
-
-    } );
-
+    });
+    this.listenTo(this.options.model, 'task:update:error', function (model, response, options) {
+      var error = options.xhr.responseJSON;
+      if (error && error.invalidAttributes) {
+        for (var item in error.invalidAttributes) {
+          if (error.invalidAttributes[item]) {
+            message = _(error.invalidAttributes[item]).pluck('message').join(',<br /> ');
+            $('#' + item + '-update-alert').html(message).show();
+          }
+        }
+      }
+    });
   },
 
   view: function (e) {
@@ -67,16 +69,11 @@ var TaskEditFormView = Backbone.View.extend({
    * Render modal for the Task Creation Form ViewController
    */
   renderSaveSuccessModal: function () {
-
     var $modal = this.$( '.js-success-message' );
-
     $modal.slideDown( 'slow' );
-
     $modal.one('mouseout', function () {
       _.delay( _.bind( $modal.slideUp, $modal, 'slow' ), 4200 );
     });
-
-
   },
 
   validateField: function (e) {
@@ -116,7 +113,6 @@ var TaskEditFormView = Backbone.View.extend({
   },
 
   initializeSelect2: function () {
-
     var formatResult = function (object) {
       var formatted = '<div class="select2-result-title">';
       formatted += _.escape(object.name || object.title);
@@ -236,11 +232,9 @@ var TaskEditFormView = Backbone.View.extend({
    * The event is triggered from the `submit` & `saveDraft` methods.
    */
   initializeListeners: function () {
-
     var view = this;
 
     this.on( 'task:tags:save:done', function ( event ) {
-
       var owner          = this.$( '#owner' ).select2( 'data' );
       var completedBy    = this.$( '#estimated-completion-date' ).val();
       var newParticipant = this.$( '#participant' ).select2( 'data' );
@@ -313,9 +307,7 @@ var TaskEditFormView = Backbone.View.extend({
       modelData.tags = tags;
 
       this.options.model.trigger( 'task:update', modelData );
-
     } );
-
   },
 
   saveDraft: function () {
@@ -323,9 +315,7 @@ var TaskEditFormView = Backbone.View.extend({
   },
 
   submit: function ( e ) {
-
     if ( e.preventDefault ) { e.preventDefault(); }
-
     var tags      = [];
     var oldTags   = [];
     var diff      = [];
@@ -347,9 +337,7 @@ var TaskEditFormView = Backbone.View.extend({
     if ( abort === true ) {
       return;
     }
-
     return this.trigger( 'task:tags:save:done', { draft: false, saveState: saveState } );
-
   },
 
   /*
@@ -375,7 +363,6 @@ var TaskEditFormView = Backbone.View.extend({
   },
 
   getTagsFromPage: function () {
-
     // Gather tags for submission after the task is created
     var tags = [],
         taskTimeTag = this.$('[name=task-time-required]:checked').val();
@@ -397,7 +384,6 @@ var TaskEditFormView = Backbone.View.extend({
   },
 
   getOldTags: function () {
-
     var oldTags = [];
     for (var i in this.options.tags) {
       oldTags.push({
@@ -406,7 +392,6 @@ var TaskEditFormView = Backbone.View.extend({
         type: this.options.tags[i].tag.type,
       });
     }
-
     return oldTags;
   },
 
@@ -414,7 +399,6 @@ var TaskEditFormView = Backbone.View.extend({
     if (this.md) { this.md.cleanup(); }
     removeView(this);
   },
-
 });
 
 _.extend(TaskEditFormView.prototype, ShowMarkdownMixin);

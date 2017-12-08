@@ -7,6 +7,7 @@ const badgeService = require('../badge/service')(notification);
 const Badge =  require('../model/Badge');
 const json2csv = require('json2csv');
 const moment = require('moment');
+const Task = require('../model/Task');
 
 const baseTask = {
   createdAt: new Date(),
@@ -63,6 +64,10 @@ async function createTaskTag (tagId, task) {
 }
 
 async function createOpportunity (attributes, done) {
+  var errors = await Task.validateOpportunity(attributes);
+  if (!_.isEmpty(errors.invalidAttributes)) {
+    return done(errors, null);
+  }
   attributes.submittedAt = attributes.state === 'submitted' ? new Date : null;
   attributes.createdAt = new Date();
   attributes.updatedAt = new Date();
@@ -99,6 +104,10 @@ async function canUpdateOpportunity (user, id) {
 }
 
 async function updateOpportunity (attributes, done) {
+  var errors = await Task.validateOpportunity(attributes);
+  if (!_.isEmpty(errors.invalidAttributes)) {
+    return done(null, null, errors);
+  }
   var origTask = await dao.Task.findOne('id = ?', attributes.id);
   var tags = attributes.tags || attributes['tags[]'] || [];
   attributes.assignedAt = attributes.state === 'assigned' && origTask.state !== 'assigned' ? new Date : origTask.assignedAt;

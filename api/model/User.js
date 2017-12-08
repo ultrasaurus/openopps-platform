@@ -90,10 +90,7 @@ function validateTitle (obj, attributes) {
 function validateTags (obj, attributes) {
   (attributes.tags || attributes['tags[]'] || []).map(async (tag) => {
     if(!_.isNumber(tag)) {
-      if (tag.type !== 'topic' && tag.type !== 'skill') {
-        obj['invalidAttributes']['tag'] = [];
-        obj['invalidAttributes']['tag'].push({'message': 'Invalid tag type.'});
-      } else if (tag.name.match(/[<>]/g)) {
+      if (tag.name.match(/[<>]/g)) {
         obj['invalidAttributes']['tag'] = [];
         obj['invalidAttributes']['tag'].push({'message': 'Tags must not contain the special characters < or >.'});
       }

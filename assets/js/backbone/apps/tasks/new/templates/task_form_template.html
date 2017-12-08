@@ -68,6 +68,7 @@
             </label>
             <input id="estimated-completion-date" type="date">
             <span class="help-block error-empty" style="display:none;">You must enter a completion date for this one-time <span data-i18n="task">opportunity</span></span>
+            <div id="completedby-update-alert" class="alert alert-warning" style="display:none;"></div>
           </div>
           <div class="col-md-4"></div>
         </div>
@@ -133,14 +134,11 @@
             <span>Write a few words that describe what needs to happen, inspires someone about the outcome, or entices them to learn something new.</span>
             <span><em>(Maximum of 100 characters)</em></span>
           </label>
-          <input type="text"
-          id="task-title"
-          class="fullwidth form-control validate"
-          data-validate="empty,count100,html"/>
-          <span class="help-block error-empty" style="display:none;">You must enter headline for this <span
-              data-i18n="task">opportunity</span></span>
+          <input type="text" id="task-title" class="fullwidth form-control validate" data-validate="empty,count100,html"/>
+          <span class="help-block error-empty" style="display:none;">You must enter headline for this <span data-i18n="task">opportunity</span></span>
           <span class="help-block error-count100" style="display:none;">The short description of the problem must be less than 100 characters.</span>
           <span class="help-block error-html" style="display:none;">The special characters '<' or '>' are not allowed</span>
+          <div id="title-update-alert" class="alert alert-warning" style="display:none;"></div>
         </div>
         <div class="col-md-4">
           <aside>
@@ -168,6 +166,7 @@
           <div class="markdown-edit"></div>
           <span class="help-block error-empty" style="display:none;">You must enter a description for this <span data-i18n="task">opportunity</span></span>
           <span class="help-block error-html" style="display:none;">The special characters '<' or '>' are not allowed</span>
+          <div id="description-update-alert" class="alert alert-warning" style="display:none;"></div>
         </div>
         <div class="col-md-4">
           <aside>
@@ -190,6 +189,7 @@
           </label>
           <div>
             <input type="hidden" id="js-task-tag" name="skills" class="fullwidth" />
+            <div id="tag-update-alert" class="alert alert-warning" style="display:none;"></div>
           </div>
         </div>
         <div class="col-md-4">

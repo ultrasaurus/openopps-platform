@@ -43,12 +43,10 @@ router.get('/api/comment/findAllBytaskId/:id', async (ctx, next) => {
 router.post('/api/task', async (ctx, next) => {
   if (ctx.isAuthenticated()) {
     ctx.request.body.userId = ctx.session.passport.user;
-
-    var opportunity = await service.createOpportunity(ctx.request.body, function (err, task) {
-      log.info(task);
-      if (err) {
+    var opportunity = await service.createOpportunity(ctx.request.body, function (errors, task) {
+      if (errors) {
         ctx.status = 400;
-        return ctx.body = { message: err.message || 'Opportunity creation failed.' };
+        return ctx.body = errors;
       }
       service.sendTaskNotification(ctx.req.user, task, task.state === 'draft' ? 'task.create.draft' : 'task.create.thanks');
       ctx.body = task;
@@ -62,10 +60,10 @@ router.post('/api/task', async (ctx, next) => {
 router.put('/api/task/:id', async (ctx, next) => {
   if (ctx.isAuthenticated() && await service.canUpdateOpportunity(ctx.req.user, ctx.request.body.id)) {
     ctx.status = 200;
-    await service.updateOpportunity(ctx.request.body, function (task, stateChange, error) {
-      if (error) {
+    await service.updateOpportunity(ctx.request.body, function (task, stateChange, errors) {
+      if (errors) {
         ctx.status = 400;
-        return ctx.body = { message: error.message || 'Opportunity update failed.' };
+        return ctx.body = errors;
       }
       try {
         awardBadge(task);

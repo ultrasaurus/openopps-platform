@@ -1,4 +1,5 @@
 const _ = require('lodash');
+const validator = require('validator');
 
 module.exports = {
   create: (task) => {
@@ -26,24 +27,70 @@ module.exports = {
     return false;
   },
 
-  // if user is given and is the owner, sets isOwner
-  // returns task if public or user has special access
-  // returns null if task should not be accessed based on given user
   authorized: function (task, user) {
     task.isOwner = false;
-    // check if current user is owner
     if (user && (this.getOwnerId(task) == user.id)) {
       task.isOwner = true;
-      return task;   // owners always have access
+      return task;
     }
-    // admins always have access
-    if (user && user.isAdmin) return task;
-
-    // all states except draft and submitted are public
+    if (user && user.isAdmin) {
+      return task;
+    }
     if ((task.state !== 'draft') && (task.state !== 'submitted')) {
       return task;
     }
-    // Default denied: return no task
     return null;
   },
+
+  validateOpportunity: async (attributes, isUsernameUsed) => {
+    var obj = {};
+    obj['invalidAttributes'] = {};
+    obj = validateCompletedBy(obj, attributes);
+    obj = validateTitle(obj, attributes);
+    obj = validateDescription(obj, attributes);
+    obj = validateTags(obj, attributes);
+    return obj;
+  },
 };
+
+function validateCompletedBy (obj, attributes) {
+  if (attributes.completedBy && (!validator.isDate(attributes.completedBy) || attributes.completedBy.match(/[<>]/g))) {
+    obj['invalidAttributes']['completedby'] = [];
+    obj['invalidAttributes']['completedby'].push({'message': 'Estimated completion date must be a date.'});
+  }
+  return obj;
+}
+
+function validateTitle (obj, attributes) {
+  if (attributes.title.match(/[<>]/g)) {
+    obj['invalidAttributes']['title'] = [];
+    obj['invalidAttributes']['title'].push({'message': 'Headline must not contain the special characters < or >'});
+  }
+  if (attributes.title.length > 100) {
+    if (_.isEmpty(obj['invalidAttributes']['title'])) {
+      obj['invalidAttributes']['title'] = [];
+    }
+    obj['invalidAttributes']['title'].push({'message': 'Headline must not be greater than 100 characters'});
+  }
+  return obj;
+}
+
+function validateDescription (obj, attributes) {
+  if (attributes.description.match(/[<>]/g)) {
+    obj['invalidAttributes']['description'] = [];
+    obj['invalidAttributes']['description'].push({'message': 'Description must not contain the special characters < or >'});
+  }
+  return obj;
+}
+
+function validateTags (obj, attributes) {
+  (attributes.tags || attributes['tags[]'] || []).map(async (tag) => {
+    if(!_.isNumber(tag)) {
+      if (tag.name.match(/[<>]/g)) {
+        obj['invalidAttributes']['tag'] = [];
+        obj['invalidAttributes']['tag'].push({'message': 'Tags must not contain the special characters < or >.'});
+      }
+    }
+  });
+  return obj;
+}
