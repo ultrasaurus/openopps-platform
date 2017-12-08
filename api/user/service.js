@@ -46,30 +46,47 @@ async function getActivities (id) {
   };
 }
 
+function processUserTags (user, tags) {
+  return Promise.all(tags.map(async (tag) => {
+    if(_.isNumber(tag)) {
+      return await createUserTag(tag, user);
+    } else {
+      _.extend(tag, { 'createdAt': new Date(), 'updatedAt': new Date() });
+      return await createNewUserTag(tag, user);
+    }
+  }));
+}
+
+async function createNewUserTag (tag, user) {
+  return await dao.TagEntity.insert(tag).then(async (t) => {
+    return await createUserTag(t.id, user);
+  }).catch(err => {
+    log.info('user: failed to create tag ', user.username, tag, err);
+  });
+}
+
+async function createUserTag (tagId, user) {
+  return await dao.UserTags.insert({ tagentity_users: tagId, user_tags: user.id }).then(async (tag) => {
+    return await dao.TagEntity.findOne('id = ?', tag.tagentity_users).catch(err => {
+      log.info('user: failed to load tag entity ', user.id, tagId, err);
+    });
+  }).catch(err => {
+    log.info('user: failed to create tag ', user.username, tagId, err);
+  });
+}
+
 async function updateProfile (attributes, done) {
   var errors = await User.validateUser(attributes, isUsernameUsed);
   if (!_.isEmpty(errors.invalidAttributes)) {
     return done(errors);
   }
   attributes.updatedAt = new Date();
-  await dao.User.update(attributes).then(async () => {
+  await dao.User.update(attributes).then(async (user) => {
     await dao.UserTags.db.query(dao.query.deleteUserTags, attributes.id)
       .then(async () => {
-        (attributes.tags || attributes['tags[]'] || []).map(async (tag) => {
-          if(_.isNumber(tag)) {
-            await dao.UserTags.insert({ tagentity_users: tag, user_tags: attributes.id }).catch(err => {
-              log.info('update user: failed to create tag ', attributes.username, tag, err);
-            });
-          } else {
-            _.extend(tag, { 'createdAt': new Date(), 'updatedAt': new Date() });
-            await dao.TagEntity.insert(tag).then(async (t) => {
-              await dao.UserTags.insert({ tagentity_users: t.id, user_tags: attributes.id }).catch(err => {
-                log.info('update user: failed to create tag ', attributes.username, tag, err);
-              });
-            }).catch(err => {
-              log.info('update user: failed to create tag ', attributes.username, tag, err);
-            });
-          }
+        var tags = attributes.tags || attributes['tags[]'] || [];
+        await processUserTags(user, tags).then(tags => {
+          user.tags = tags;
         });
         return done(null);
       }).catch (err => { return done(err); });
@@ -106,4 +123,5 @@ module.exports = {
   getActivities: getActivities,
   updateProfile: updateProfile,
   updatePassword: updatePassword,
+  processUserTags: processUserTags,
 };

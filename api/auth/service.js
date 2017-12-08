@@ -7,6 +7,7 @@ const log = require('blue-ox')('app:auth:service');
 const db = require('../../db');
 const dao = require('./dao')(db);
 const notification = require('../notification/service');
+const userService = require('../user/service');
 
 const baseUser = {
   isAdmin: false,
@@ -30,21 +31,9 @@ async function register (attributes, done) {
   }
   await dao.User.insert(_.extend(baseUser, attributes)).then(async (user) => {
     log.info('created user', user);
-    (attributes.tags || attributes['tags[]'] || []).map(async (tag) => {
-      if(_.isNumber(tag)) {
-        await dao.UserTags.insert({ tagentity_users: tag, user_tags: user.id }).catch(err => {
-          log.info('register: failed to create tag ', attributes.username, tag, err);
-        });
-      } else {
-        _.extend(tag, { 'createdAt': new Date(), 'updatedAt': new Date() });
-        await dao.TagEntity.insert(tag).then(async (t) => {
-          await dao.UserTags.insert({ tagentity_users: t.id, user_tags: user.id }).catch(err => {
-            log.info('register: failed to create tag ', attributes.username, tag, err);
-          });
-        }).catch(err => {
-          log.info('register: failed to create tag ', attributes.username, tag, err);
-        });
-      }
+    var tags = attributes.tags || attributes['tags[]'] || [];
+    await userService.processUserTags(user, tags).then(tags => {
+      user.tags = tags;
     });
     var passport = {
       user: user.id,
