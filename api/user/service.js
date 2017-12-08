@@ -57,16 +57,16 @@ async function updateProfile (attributes, done) {
         (attributes.tags || attributes['tags[]'] || []).map(async (tag) => {
           if(_.isNumber(tag)) {
             await dao.UserTags.insert({ tagentity_users: tag, user_tags: attributes.id }).catch(err => {
-              log.info('register: failed to create tag ', attributes.username, tag, err);
+              log.info('update user: failed to create tag ', attributes.username, tag, err);
             });
           } else {
             _.extend(tag, { 'createdAt': new Date(), 'updatedAt': new Date() });
             await dao.TagEntity.insert(tag).then(async (t) => {
               await dao.UserTags.insert({ tagentity_users: t.id, user_tags: attributes.id }).catch(err => {
-                log.info('register: failed to create tag ', attributes.username, tag, err);
+                log.info('update user: failed to create tag ', attributes.username, tag, err);
               });
             }).catch(err => {
-              log.info('register: failed to create tag ', attributes.username, tag, err);
+              log.info('update user: failed to create tag ', attributes.username, tag, err);
             });
           }
         });
