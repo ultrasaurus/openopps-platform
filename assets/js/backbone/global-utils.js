@@ -226,12 +226,16 @@ global.validate = function (e) {
   if (result === true) {
     $(parent).addClass('has-error');
     $(':button.disable').attr('disabled', 'disabled');
+    $(':submit.disable').attr('disabled', 'disabled');
+    
   } else {
     $(parent).removeClass('has-error');
     if ($('form').find('*').hasClass('has-error')) {
       $(':button.disable').attr('disabled', 'disabled');
+      $(':submit.disable').attr('disabled', 'disabled');
     } else {
       $(':button.disable').removeAttr('disabled');
+      $(':submit.disable').removeAttr('disabled');
     }
   }
   return result;
