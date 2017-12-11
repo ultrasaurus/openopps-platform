@@ -1,5 +1,6 @@
 const _ = require('lodash');
 const validator = require('validator');
+const Tag = require('./Tag');
 
 module.exports = {
   create: (user) => {
@@ -90,7 +91,10 @@ function validateTitle (obj, attributes) {
 function validateTags (obj, attributes) {
   (attributes.tags || attributes['tags[]'] || []).map(async (tag) => {
     if(!_.isNumber(tag)) {
-      if (tag.name.match(/[<>]/g)) {
+      if (!Tag.IsValidTagType(tag.type)) {
+        obj['invalidAttributes']['tag'] = [];
+        obj['invalidAttributes']['tag'].push({'message': 'Invalid tag type (`' + tag.type + '`).'});
+      } else if (tag.name.match(/[<>]/g)) {
         obj['invalidAttributes']['tag'] = [];
         obj['invalidAttributes']['tag'].push({'message': 'Tags must not contain the special characters < or >.'});
       }
