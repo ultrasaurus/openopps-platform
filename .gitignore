@@ -47,6 +47,9 @@ chef/cookbooks/*
 *.bak
 *.swp
 
+# ignore vscode config file
+.vscode/*
+
 .DS_STORE
 .tmp
 *.idea
