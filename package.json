@@ -33,7 +33,7 @@
     "express": "^3.x.x",
     "file-type": "^3.8.0",
     "flapjacks": "^0.3.2",
-    "fs-extra": "^4.0.2",
+    "fs-extra": "^4.0.3",
     "git-clone": "^0.1.0",
     "gm": "^1.23.0",
     "gulp": "^3.9.1",

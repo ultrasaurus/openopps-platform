@@ -23,7 +23,7 @@
     <div class="modal-footer modal-footer-grey" id="login-footer">
       <div class="row">
         <div class="col-md-12">
-          <button type="submit" class="btn btn-c2 pull-right">Sign in</button>
+          <button type="submit" class="btn btn-c2 pull-right disable">Sign in</button>
           <p class="pull-left login-register-label" id="login-register-label">
             Need an account?
             <a href="#login-register" id="login-register">
@@ -122,8 +122,8 @@
   <div class="row" id="registration-footer-cancel-next" style="display:none;">
     <div class="col-sm-12">
       <div class="pull-right">
-        <button type="button" id="register-cancel" class="btn btn-c0">Cancel</button>
-        <button type="button" id="register-next" class="btn btn-c2" disabled>Next</button>
+        <button type="button" id="register-cancel" class="btn btn-c0">Cancel</button>        
+        <button type="button" id="register-next" class="btn btn-c2 disable" disabled>Next</button>
       </div>
     </div>
   </div>
@@ -134,9 +134,9 @@
         <% if (login.agency.enabled === true || login.location.enabled === true) { %>
         <button type="button" id="register-previous" class="btn btn-c0">Previous</button>
         <% } else { %>
-        <button type="button" id="register-cancel" class="btn btn-c0">Cancel</button>
-        <% } %>
-        <button type="submit" id="register-submit" class="btn btn-c2">Submit</button>
+        <button type="button" id="register-cancel" class="btn btn-c0">Cancel</button>/>
+          <% } %>
+        <button type="submit" id="register-submit" class="btn btn-c2 disable">Submit</button>
       </div>
     </div>
   </div>
@@ -167,7 +167,7 @@
     <div class="col-sm-12">
       <div class="pull-right">
         <button type="button" id="forgot-cancel" class="btn btn-c0">Cancel</button>
-        <button type="submit" class="btn btn-c2">Reset Password</button>
+        <button type="submit" class="btn btn-c2 disable">Reset Password</button>
       </div>
     </div>
   </div>

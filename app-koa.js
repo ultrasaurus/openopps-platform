@@ -56,9 +56,9 @@ module.exports = async (config) => {
 
   // configure CSRF
   app.use(new CSRF({
-    invalidSessionSecretMessage: 'Invalid session',
+    invalidSessionSecretMessage: { message: 'Invalid session' },
     invalidSessionSecretStatusCode: 403,
-    invalidTokenMessage: 'Invalid CSRF token',
+    invalidTokenMessage: { message: 'Invalid CSRF token' },
     invalidTokenStatusCode: 403,
     excludedMethods: [ 'GET', 'HEAD', 'OPTIONS' ],
     disableQuery: false,
