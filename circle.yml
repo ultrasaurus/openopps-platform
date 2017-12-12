@@ -14,3 +14,9 @@ dependencies:
     - rm -rvf node_modules
   override:
     - npm install
+
+test:
+  override:
+    - node ./node_modules/mocha/bin/mocha test/unit/setup.js test/unit/**/*.test.js --opts test/test/mocha.opts --reporter mocha-junit-reporter:
+        environment:
+          MOCHA_FILE: $CIRCLE_TEST_REPORTS/junit/test-results.xml
