@@ -364,8 +364,9 @@ var TaskEditFormView = Backbone.View.extend({
 
   getTagsFromPage: function () {
     // Gather tags for submission after the task is created
-    var tags = [],
-        taskTimeTag = this.$('[name=task-time-required]:checked').val();
+    var tags = [];
+    var taskTimeDescription = this.$('[name=task-time-required]:checked').attr('data-descr');
+    var taskTimeTag = this.$('[name=task-time-required]:checked').val();
 
     if (taskTimeTag) {
       tags.push.apply(tags,[{
@@ -373,13 +374,16 @@ var TaskEditFormView = Backbone.View.extend({
         type: 'task-time-required',
       }]);
     }
-
     tags.push.apply(tags,this.$('#task_tag_skills').select2('data'));
     tags.push.apply(tags,this.$('#task_tag_location').select2('data'));
     tags.push.apply(tags,[this.$('#people').select2('data')]);
     tags.push.apply(tags,[this.$('#time-required').select2('data')]);
-    tags.push.apply(tags,[this.$('#time-estimate').select2('data')]);
-    tags.push.apply(tags,[this.$('#js-time-frequency-estimate').select2('data')]);
+    if (taskTimeDescription === 'One time' || taskTimeDescription === 'Ongoing') {
+      tags.push.apply(tags,[this.$('#time-estimate').select2('data')]);
+    }
+    if (taskTimeDescription === 'Ongoing') {
+      tags.push.apply(tags,[this.$('#js-time-frequency-estimate').select2('data')]);
+    }
     return tags;
   },
 
