@@ -9,12 +9,13 @@ router.post('/api/comment', async (ctx, next) => {
   if(ctx.isAuthenticated()) {
     var attributes = ctx.request.body;
     _.extend(attributes, { userId: ctx.state.user.id } );
-    await service.addComment(attributes).then(async (comment) => {
-      try {
-        service.sendCommentNotification(ctx.state.user, comment, 'comment.create.owner');
-      } finally {
-        ctx.body = comment;
+    await service.addComment(attributes, function (errors, comment) {
+      if (errors) {
+        ctx.status = 400;
+        return ctx.body = errors;
       }
+      service.sendCommentNotification(ctx.state.user, comment, 'comment.create.owner');
+      ctx.body = comment;
     });
   } else {
     ctx.status = 401;

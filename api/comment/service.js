@@ -3,13 +3,18 @@ const log = require('blue-ox')('app:comment:service');
 const db = require('../../db');
 const dao = require('./dao')(db);
 const notification = require('../notification/service');
+const Comment = require('../model/Comment');
 
-async function addComment (attributes) {
+async function addComment (attributes, done) {
+  // var errors = await Comment.validateComment(attributes);
+  // if (!_.isEmpty(errors.invalidAttributes)) {
+  //   return done(errors, null);
+  // }
   _.extend(attributes, {
     createdAt: new Date(),
     updatedAt: new Date(),
   });
-  return await dao.Comment.insert(attributes);
+  return done(null, await dao.Comment.insert(attributes));
 }
 
 async function deleteComment (id) {

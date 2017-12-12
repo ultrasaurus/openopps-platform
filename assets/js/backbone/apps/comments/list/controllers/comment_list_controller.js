@@ -47,6 +47,17 @@ Comment = Backbone.View.extend({
       self.addNewCommentToDom(modelJson, currentTarget);
     });
 
+    this.listenTo(this.commentCollection, 'comment:save:error', function (model, response, options) {
+      var error = options.xhr.responseJSON;
+      if (error && error.invalidAttributes) {
+        for (var item in error.invalidAttributes) {
+          if (error.invalidAttributes[item]) {
+            message = _(error.invalidAttributes[item]).pluck('message').join(',<br /> ');
+            $('#' + item + '-update-alert').html(message).show();
+          }
+        }
+      }
+    });
   },
 
   initializeRender: function () {
