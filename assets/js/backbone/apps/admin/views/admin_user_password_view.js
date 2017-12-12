@@ -9,6 +9,7 @@ var AdminUserPasswordView = Backbone.View.extend({
 
   events: {
     'blur #newPassword' : 'v',
+    'keyup #newPassword' : 'v',
     'submit #reset-password' : 'post',
   },
 
