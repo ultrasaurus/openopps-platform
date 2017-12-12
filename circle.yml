@@ -3,6 +3,7 @@ machine:
     DB_OWNER: ubuntu
     DB_USER: midas
     DB_PASSWORD: midas
+    openopps: { "taskState": "draft" }
     VCAP_APPLICATION: '{ "uris": [ "openopps-test.18f.gov" ] }'
   node:
     version: 8.6.0
