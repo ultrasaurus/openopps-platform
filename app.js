@@ -35,53 +35,17 @@ if (process.env.NEW_RELIC_APP_NAME && process.env.NEW_RELIC_LICENSE_KEY) {
 // no matter where we actually lift from.
 process.chdir(__dirname);
 
-var runSails = () => {
-  var sails;
-  try {
-    sails = require('sails');
-  } catch (e) {
-    console.error('To run an app using `node app.js`, you usually need to have a version of `sails` installed in the same directory as your app.');
-    console.error('To do that, run `npm install sails`');
-    console.error('');
-    console.error('Alternatively, if you have sails installed globally (i.e. you did `npm install -g sails`), you can use `sails lift`.');
-    console.error('When you run `sails lift`, your app will still use a local `./node_modules/sails` dependency if it exists,');
-    console.error('but if it doesn\'t, the app will run with the global sails instead!');
-    return;
-  }
-  // Try to get `rc` dependency
-  var rc;
-  try {
-    rc = require('rc');
-  } catch (e0) {
-    try {
-      rc = require('sails/node_modules/rc');
-    } catch (e1) {
-      console.error('Could not find dependency: `rc`.');
-      console.error('Your `.sailsrc` file(s) will be ignored.');
-      console.error('To resolve this, run:');
-      console.error('npm install rc --save');
-      rc = function () { return {}; };
-    }
-  }
-  // Start server
-  sails.lift(rc('sails'));
-};
-
 (function () {
-  if((process.argv[2] || '').toLowerCase() == 'sails') {
-    runSails();
-  } else {
-    // Ensure all our dependencies can be located:
-    try {
-      require('./app-koa')({});
-    } catch (e) {
-      console.log('\nError starting app\n');
-      console.log(e);
-      if(e.message.match('Cannot find module')) {
-        var module = e.message.split('Cannot find module ')[1];
-        console.log('\nTo fix the error please try running `npm install ' + module.replace(/\'/g, '') + '`');
-      }
-      return;
+  // Ensure all our dependencies can be located:
+  try {
+    require('./app-koa')({});
+  } catch (e) {
+    console.log('\nError starting app\n');
+    console.log(e);
+    if(e.message.match('Cannot find module')) {
+      var module = e.message.split('Cannot find module ')[1];
+      console.log('\nTo fix the error please try running `npm install ' + module.replace(/'/g, '') + '`');
     }
+    return;
   }
 })();
