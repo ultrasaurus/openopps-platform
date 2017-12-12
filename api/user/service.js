@@ -89,22 +89,8 @@ async function updateProfile (attributes, done) {
           user.tags = tags;
         });
         return done(null);
-      }).catch (err => { return done(err); });
-  }).catch (err => { return done(err); });
-}
-
-async function validateProfile (attributes) {
-  var usernameUsed = await isUsernameUsed(attributes.id, attributes.username);
-  if (usernameUsed.length > 0) {
-    return 'A record with that `username` already exists (' + attributes.username + ').';
-  }
-  if (attributes.name.match(/[<>]/g)) {
-    return 'Name must not contain the special characters < or >';
-  }
-  if (attributes.title.match(/[<>]/g)) {
-    return 'Title must not contain the special characters < or >';
-  }
-  return null;
+      }).catch (err => { return done({'message':'Error updating profile.'}); });
+  }).catch (err => { return done({'message':'Error updating profile.'}); });
 }
 
 async function updatePassword (attributes) {

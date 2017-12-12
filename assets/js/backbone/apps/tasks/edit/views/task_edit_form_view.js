@@ -56,6 +56,10 @@ var TaskEditFormView = Backbone.View.extend({
             $('#' + item + '-update-alert').html(message).show();
           }
         }
+      } else if (error) {
+        var alertText = response.statusText + '. Please try again.';
+        $('.alert.alert-danger').text(alertText).show();
+        $(window).animate({ scrollTop: 0 }, 500);
       }
     });
   },
