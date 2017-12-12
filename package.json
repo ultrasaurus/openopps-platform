@@ -136,7 +136,7 @@
     "migrate:down": "node ./node_modules/db-migrate/bin/db-migrate down",
     "migrate:check": "node ./node_modules/db-migrate/bin/db-migrate up --dry-run",
     "start": "node app.js",
-    "test": "node ./node_modules/mocha/bin/mocha test/bootstrap.test.js test/integration/**/*.test.js",
+    "test": "npm run test:unit && npm run test:integration",
     "test:unit": "node ./node_modules/mocha/bin/mocha test/unit/setup.js test/unit/**/*.test.js --opts test/test/mocha.opts",
     "test:integration": "node ./node_modules/mocha/bin/mocha test/integration/services/setup.js test/integration/services/*.test.js",
     "jshint": "find assets/js/backbone -name \\*js -exec ./node_modules/jshint/bin/jshint {} \\;",
