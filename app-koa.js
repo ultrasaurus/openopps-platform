@@ -13,7 +13,7 @@ const passport = require('koa-passport');
 const flash = require('koa-better-flash');
 const _ = require('lodash');
 
-module.exports = async (config) => {
+module.exports = (config) => {
   // import vars from Cloud Foundry service
   var envVars = cfenv.getAppEnv().getServiceCreds('env-openopps');
   if (envVars) _.extend(process.env, envVars);

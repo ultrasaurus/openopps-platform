@@ -52,7 +52,7 @@ describe('UserModel', function () {
     });
   });
 
-  describe('validate user', function () {
+  describe('.validateUser', function () {
     var user = {};
     beforeEach(function () {
       user = User.create(createAttrs);

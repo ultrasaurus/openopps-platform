@@ -147,4 +147,48 @@ describe('Task model', function () {
     });
   });
 
+  describe('.validateOpportunity', function () {
+    var task = {};
+    beforeEach(function () {
+      task = Task.create(taskFixtures.allAttrs);
+    });
+
+    it('a valid task should have no errors', async () => {
+      errors = await Task.validateOpportunity(task);
+      assert.equal(_.isEmpty(errors.invalidAttributes), true);
+    });
+    it('a task with an invalid completion date should have completedby error', async () => {
+      task.completedBy = '<not a valid date>';
+      errors = await Task.validateOpportunity(task);
+      assert.equal((errors.invalidAttributes.completedby || []).length > 0, true);
+    });
+    it('a task with <> in title should have title errors', async () => {
+      task.title = '<script>My evil script.</script>';
+      errors = await Task.validateOpportunity(task);
+      assert.equal((errors.invalidAttributes.title || []).length > 0, true);
+    });
+    it('a task with a title longer than 100 should have title errors', async () => {
+      task.title = 'A super duper really really really obnoxiously ' +
+        'long title for a task that exceeds the length limit and ' +
+        'will not fit into the title column in our database table';
+      errors = await Task.validateOpportunity(task);
+      assert.equal((errors.invalidAttributes.title || []).length > 0, true);
+    });
+    it('a task with <> in description should have description errors', async () => {
+      task.description = '<script>My evil script.</script>';
+      errors = await Task.validateOpportunity(task);
+      assert.equal((errors.invalidAttributes.description || []).length > 0, true);
+    });
+    it('a task with invalid tag type should have tag errors', async () => {
+      task.tags[0].type = 'invalid';
+      errors = await Task.validateOpportunity(task);
+      assert.equal((errors.invalidAttributes.tag || []).length > 0, true);
+    });
+    it('a task with <> in a tag name should have tag errors', async () => {
+      task.tags[0].name = '<script>My evil script.</script>';
+      errors = await Task.validateOpportunity(task);
+      assert.equal((errors.invalidAttributes.tag || []).length > 0, true);
+    });
+  });
+
 });

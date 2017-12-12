@@ -1,4 +1,22 @@
+const _ = require ('lodash');
+
 module.exports = {
+  trimProperties: function (object) {
+    if(_.isString(object)) {
+      return _.trim(object);
+    } else if(_.isArray(object)) {
+      return object.map(item => {
+        return this.trimProperties(item);
+      });
+    } else if(_.isObject(object) && !_.isDate(object) && !_.isFunction(object)) {
+      Object.keys(object).forEach(key => {
+        object[key] = this.trimProperties(object[key]);
+      });
+      return object;
+    } else {
+      return object;
+    }
+  },
   validatePassword: function (password, username) {
     var notUsername = password.toLowerCase().trim() !== username.split('@',1)[0].toLowerCase().trim();
     var minLength = password.length >= 8;
