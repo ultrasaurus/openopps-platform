@@ -85,6 +85,10 @@ var ProfileShowView = Backbone.View.extend({
             self.$('#' + item + '-update-alert').html(message).show();
           }
         }
+      } else if (error) {
+        var alertText = xhr.statusText + '. Please try again.';
+        $('.alert.alert-danger').text(alertText).show();
+        $(window).animate({ scrollTop: 0 }, 500);
       }
     });
   },

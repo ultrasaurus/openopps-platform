@@ -82,7 +82,6 @@ async function createOpportunity (attributes, done) {
     task.owner = attributes.userId;
     return done(null, task);
   }).catch(err => {
-    log.info('create: failed to create opportunity ', attributes.title, err);
     return done(true);
   });
 }
@@ -127,8 +126,10 @@ async function updateOpportunity (attributes, done) {
           task.tags = tags;
           return done(task, origTask.state !== task.state);
         });
-      }).catch (err => { return done(null, false, err); });
-  }).catch (err => { return done(null, false, err); });
+      }).catch (err => { return done(null, false, {'message':'Error updating task.'}); });
+  }).catch (err => { 
+    return done(null, false, {'message':'Error updating task.'}); 
+  });
 }
 
 function volunteersCompleted (task) {
@@ -217,7 +218,7 @@ async function copyOpportunity (attributes, adminAttributes, done) {
         });
       });
       return done(null, { 'taskId': task.id });
-    }).catch (err => { return done(err); });
+    }).catch (err => { return done({'message':'Error copying task.'}); });
 }
 
 function getRestrictValues (adminAttributes) {

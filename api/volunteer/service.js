@@ -13,7 +13,7 @@ async function addVolunteer (attributes, done) {
       return done(null, volunteer);
     }).catch(err => {
       log.info('create: failed to add volunteeer ', err);
-      return done(err, null);
+      return done({'message':'error adding volunteer'}, null);
     });
   } else {
     volunteer[0].silent = 'true';
@@ -25,7 +25,7 @@ async function deleteVolunteer (vId, taskId, done) {
   var notificationInfo = (await dao.Volunteer.db.query(dao.query.volunteer, vId)).rows;
   await dao.Volunteer.delete('id = ? and "taskId" = ?', vId, taskId).catch(err => {
     log.info('delete: failed to delete volunteeer ', err);
-    return done(null, err);
+    return done(null, {'message':'error deleting volunteer'});
   });
   return done(notificationInfo, null);
 }
