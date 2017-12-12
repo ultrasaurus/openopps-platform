@@ -40,6 +40,9 @@ function processTaskTags (task, tags) {
       return await createTaskTag(tag, task);
     } else {
       _.extend(tag, { 'createdAt': new Date(), 'updatedAt': new Date() });
+      if (tag.id) {
+        return await createTaskTag(tag.id, task);
+      }
       return await createNewTaskTag(tag, task);
     }
   }));
