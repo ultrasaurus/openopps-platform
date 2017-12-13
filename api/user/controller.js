@@ -127,7 +127,11 @@ router.get('/api/user/enable/:id', async (ctx, next) => {
 });
 
 router.post('/api/user/resetPassword', async (ctx, next) => {
-  ctx.body = service.updatePassword(ctx.request.body);
+  if (ctx.isAuthenticated() && ctx.state.user.isAdmin) {
+    ctx.body = await service.updatePassword(ctx.request.body);
+  } else {
+    ctx.status = 401;
+  }
 });
 
 module.exports = router.routes();

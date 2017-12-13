@@ -101,10 +101,18 @@ async function updateProfileStatus (attributes, done) {
 }
 
 async function updatePassword (attributes) {
+  await updateProfilePasswordAttempts(attributes.id);
   attributes.password = await bcrypt.hash(attributes.password, 10);
   attributes.id = (await dao.Passport.find('"user" = ?', attributes.id))[0].id;
+  attributes.updatedAt = new Date();
   await dao.Passport.update(attributes);
   return true;
+}
+
+async function updateProfilePasswordAttempts (id) {
+  var user = (await dao.User.find('id = ?', id))[0];
+  user.passwordAttempts = 0;
+  return dao.User.update(user);
 }
 
 module.exports = {
