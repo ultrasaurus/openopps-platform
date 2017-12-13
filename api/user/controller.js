@@ -127,7 +127,7 @@ router.get('/api/user/enable/:id', async (ctx, next) => {
 });
 
 router.post('/api/user/resetPassword', async (ctx, next) => {
-  ctx.body = service.updateProfileStatus(ctx.request.body);
+  ctx.body = service.updatePassword(ctx.request.body);
 });
 
 module.exports = router.routes();
