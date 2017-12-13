@@ -93,6 +93,13 @@ async function updateProfile (attributes, done) {
   }).catch (err => { return done({'message':'Error updating profile.'}); });
 }
 
+async function updateProfileStatus (attributes, done) {
+  attributes.updatedAt = new Date();
+  await dao.User.update(attributes).then(async (user) => {
+    return done(null);
+  }).catch (err => { return done({'message':'Error updating profile status.'}); });
+}
+
 async function updatePassword (attributes) {
   attributes.password = await bcrypt.hash(attributes.password, 10);
   attributes.id = (await dao.Passport.find('"user" = ?', attributes.id))[0].id;
@@ -108,6 +115,7 @@ module.exports = {
   populateBadgeDescriptions: populateBadgeDescriptions,
   getActivities: getActivities,
   updateProfile: updateProfile,
+  updateProfileStatus: updateProfileStatus,
   updatePassword: updatePassword,
   processUserTags: processUserTags,
 };

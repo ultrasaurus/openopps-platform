@@ -100,7 +100,7 @@ router.get('/api/user/disable/:id', async (ctx, next) => {
   if (ctx.isAuthenticated() && ctx.state.user.isAdmin) {
     var user = await service.getProfile(ctx.params.id);
     user.disabled = 't';
-    await service.updateProfile(user, function (error) {
+    await service.updateProfileStatus(user, function (error) {
       if (error) {
         log.info(error);
       }
@@ -115,7 +115,7 @@ router.get('/api/user/enable/:id', async (ctx, next) => {
   if (ctx.isAuthenticated() && ctx.state.user.isAdmin) {
     var user = await service.getProfile(ctx.params.id);
     user.disabled = 'f';
-    await service.updateProfile(user, function (error) {
+    await service.updateProfileStatus(user, function (error) {
       if (error) {
         log.info(error);
       }
@@ -127,7 +127,7 @@ router.get('/api/user/enable/:id', async (ctx, next) => {
 });
 
 router.post('/api/user/resetPassword', async (ctx, next) => {
-  ctx.body = service.updatePassword(ctx.request.body);
+  ctx.body = service.updateProfileStatus(ctx.request.body);
 });
 
 module.exports = router.routes();

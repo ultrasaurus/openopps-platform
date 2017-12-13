@@ -64,17 +64,17 @@ function validateName (obj, attributes) {
   if (typeof attributes.name == 'undefined') {
     obj['invalidAttributes']['name'] = [];
     obj['invalidAttributes']['name'].push({'message': 'Name is required.'});
-  } else {
-    if (attributes.name.match(/[<>]/g)) {
+    return obj;
+  }
+  if (attributes.name.match(/[<>]/g)) {
+    obj['invalidAttributes']['name'] = [];
+    obj['invalidAttributes']['name'].push({'message': 'Name must not contain the special characters < or >.'});
+  }
+  if (attributes.name.length > 60) {
+    if (_.isEmpty(obj['invalidAttributes']['name'])) {
       obj['invalidAttributes']['name'] = [];
-      obj['invalidAttributes']['name'].push({'message': 'Name must not contain the special characters < or >.'});
     }
-    if (attributes.name.length > 60) {
-      if (_.isEmpty(obj['invalidAttributes']['name'])) {
-        obj['invalidAttributes']['name'] = [];
-      }
-      obj['invalidAttributes']['name'].push({'message': 'Name must not be greater than 60 characters.'});
-    }
+    obj['invalidAttributes']['name'].push({'message': 'Name must not be greater than 60 characters.'});
   }
   return obj;
 }
