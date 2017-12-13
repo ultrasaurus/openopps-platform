@@ -134,34 +134,35 @@
         </div>
         <% } %>
       </div>
-
-      <div class="p2 mb3 bg-white">
-        <h4>Participants</h4>
-        <div class="mb2">
-        <% if (model.volunteers.length > 0) { %>
-          <% _.each(model.volunteers, function (v) { %>
-            <% if (user) { %>
-              <div class="project-people-show-div" data-userid="<%- v.userId %>" data-voluserid="<%- v.userId %>">
-            <% } else { %>
-              <div style="width: 70px; position: relative; display: inline-block; text-align: center; padding: 0 3px;">
-            <% } %>
-            <img src="/api/user/photo/<%- v.userId %>" alt="<%- v.name %>" class="project-people" />
-            <label class="project-people-show-label"><%- v.name %></label>
+      <% if (model.volunteers) { %>
+        <div class="p2 mb3 bg-white">
+          <h4>Participants</h4>
+          <div class="mb2">
+          <% if (model.volunteers.length > 0) { %>
+            <% _.each(model.volunteers, function (v) { %>
+              <% if (user) { %>
+                <div class="project-people-show-div" data-userid="<%- v.userId %>" data-voluserid="<%- v.userId %>">
+              <% } else { %>
+                <div style="width: 70px; position: relative; display: inline-block; text-align: center; padding: 0 3px;">
+              <% } %>
+              <img src="/api/user/photo/<%- v.userId %>" alt="<%- v.name %>" class="project-people" />
+              <label class="project-people-show-label"><%- v.name %></label>
+            </div>
+            <% }); %>
+          <% } else { %>
+            None assigned
+          <% } %>
           </div>
-          <% }); %>
-        <% } else { %>
-          None assigned
-        <% } %>
+          <h4>Progress</h4>
+          <ul class="list-unstyled mb1">
+            <li id="task-length-empty" style="display: none;">None</li>
+            <li>Published: <%- model.publishedAt ? moment(model.publishedAt).format('ddd, MMM D, YYYY') : '--' %></li>
+            <li>Assigned: <%- model.assignedAt ? moment(model.assignedAt).format('ddd, MMM D, YYYY') : '--' %></li>
+            <li>Completed: <%- model.completedAt ? moment(model.completedAt).format('ddd, MMM D, YYYY') : '--' %></li>
+          </ul>
         </div>
-        <h4>Progress</h4>
-        <ul class="list-unstyled mb1">
-          <li id="task-length-empty" style="display: none;">None</li>
-          <li>Published: <%- model.publishedAt ? moment(model.publishedAt).format('ddd, MMM D, YYYY') : '--' %></li>
-          <li>Assigned: <%- model.assignedAt ? moment(model.assignedAt).format('ddd, MMM D, YYYY') : '--' %></li>
-          <li>Completed: <%- model.completedAt ? moment(model.completedAt).format('ddd, MMM D, YYYY') : '--' %></li>
-        </ul>
       </div>
-    </div>
+    <% } %>
   </div>
 </div>
 <div class="clearfix mxn2">
