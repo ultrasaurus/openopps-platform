@@ -53,7 +53,7 @@ function validateUsername (obj, usernameUsed, attributes) {
 }
 
 function validateBio (obj, attributes) {
-  if (attributes.bio.match(/[<>]/g)) {
+  if (typeof attributes.bio !== 'undefined' && attributes.bio.match(/[<>]/g)) {
     obj['invalidAttributes']['bio'] = [];
     obj['invalidAttributes']['bio'].push({'message': 'Bio must not contain the special characters < or >.'});
   }
@@ -61,44 +61,53 @@ function validateBio (obj, attributes) {
 }
 
 function validateName (obj, attributes) {
-  if (attributes.name.match(/[<>]/g)) {
+  if (typeof attributes.name == 'undefined') {
     obj['invalidAttributes']['name'] = [];
-    obj['invalidAttributes']['name'].push({'message': 'Name must not contain the special characters < or >.'});
-  }
-  if (attributes.name.length > 60) {
-    if (_.isEmpty(obj['invalidAttributes']['name'])) {
+    obj['invalidAttributes']['name'].push({'message': 'Name is required.'});
+  } else {
+    if (attributes.name.match(/[<>]/g)) {
       obj['invalidAttributes']['name'] = [];
+      obj['invalidAttributes']['name'].push({'message': 'Name must not contain the special characters < or >.'});
     }
-    obj['invalidAttributes']['name'].push({'message': 'Name must not be greater than 60 characters.'});
+    if (attributes.name.length > 60) {
+      if (_.isEmpty(obj['invalidAttributes']['name'])) {
+        obj['invalidAttributes']['name'] = [];
+      }
+      obj['invalidAttributes']['name'].push({'message': 'Name must not be greater than 60 characters.'});
+    }
   }
   return obj;
 }
 
 function validateTitle (obj, attributes) {
-  if (attributes.title.match(/[<>]/g)) {
-    obj['invalidAttributes']['title'] = [];
-    obj['invalidAttributes']['title'].push({'message': 'Title must not contain the special characters < or >.'});
-  }
-  if (attributes.title.length > 150) {
-    if (_.isEmpty(obj['invalidAttributes']['title'])) {
+  if (typeof attributes.title !== 'undefined') {
+    if (attributes.title.match(/[<>]/g)) {
       obj['invalidAttributes']['title'] = [];
+      obj['invalidAttributes']['title'].push({'message': 'Title must not contain the special characters < or >.'});
     }
-    obj['invalidAttributes']['title'].push({'message': 'Title must not be greater than 150 characters.'});
+    if (attributes.title.length > 150) {
+      if (_.isEmpty(obj['invalidAttributes']['title'])) {
+        obj['invalidAttributes']['title'] = [];
+      }
+      obj['invalidAttributes']['title'].push({'message': 'Title must not be greater than 150 characters.'});
+    }
   }
   return obj;
 }
 
 function validateTags (obj, attributes) {
-  (attributes.tags || attributes['tags[]'] || []).map(async (tag) => {
-    if(!_.isNumber(tag)) {
-      if (!Tag.IsValidTagType(tag.type)) {
-        obj['invalidAttributes']['tag'] = [];
-        obj['invalidAttributes']['tag'].push({'message': 'Invalid tag type (`' + tag.type + '`).'});
-      } else if (tag.name.match(/[<>]/g)) {
-        obj['invalidAttributes']['tag'] = [];
-        obj['invalidAttributes']['tag'].push({'message': 'Tags must not contain the special characters < or >.'});
+  if (typeof attributes.tags !== 'undefined') {
+    (attributes.tags || attributes['tags[]'] || []).map(async (tag) => {
+      if(!_.isNumber(tag)) {
+        if (!Tag.IsValidTagType(tag.type)) {
+          obj['invalidAttributes']['tag'] = [];
+          obj['invalidAttributes']['tag'].push({'message': 'Invalid tag type (`' + tag.type + '`).'});
+        } else if (tag.name.match(/[<>]/g)) {
+          obj['invalidAttributes']['tag'] = [];
+          obj['invalidAttributes']['tag'].push({'message': 'Tags must not contain the special characters < or >.'});
+        }
       }
-    }
-  });
+    });
+  }
   return obj;
 }
