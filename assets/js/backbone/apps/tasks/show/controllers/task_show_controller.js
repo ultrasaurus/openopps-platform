@@ -99,10 +99,7 @@ var TaskShowController = BaseView.extend({
 
     this.listenTo(this.model, 'task:show:render:done', function () {
       self.initializeHandlers();
-
-      if (window.cache.currentUser) {
-        self.initializeVolunteers();
-      }
+      self.initializeVolunteers();
 
       if (self.options.action == 'edit') {
         self.initializeEdit();
@@ -129,7 +126,8 @@ var TaskShowController = BaseView.extend({
   },
 
   initializeVolunteers: function () {
-    if (this.model.attributes.volunteer) {
+    obj = _.find(this.model.attributes.volunteers, function (obj) { return obj.userId == window.cache.currentUser.id; });
+    if (obj) {
       $('.volunteer-true').show();
       $('.volunteer-false').hide();
     } else {
