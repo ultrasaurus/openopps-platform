@@ -240,7 +240,7 @@ var TaskEditFormView = Backbone.View.extend({
 
     this.on( 'task:tags:save:done', function ( event ) {
       var owner          = this.$( '#owner' ).select2( 'data' );
-      var completedBy    = this.$( '#estimated-completion-date' ).val();
+      var completedBy    = this.$('[name=task-time-required]:checked').attr('data-descr') == 'One time' ? this.$( '#estimated-completion-date' ).val() : null;
       var newParticipant = this.$( '#participant' ).select2( 'data' );
       var silent         = true;
 
@@ -381,7 +381,9 @@ var TaskEditFormView = Backbone.View.extend({
     tags.push.apply(tags,this.$('#task_tag_skills').select2('data'));
     tags.push.apply(tags,this.$('#task_tag_location').select2('data'));
     tags.push.apply(tags,[this.$('#people').select2('data')]);
-    tags.push.apply(tags,[this.$('#time-required').select2('data')]);
+    if (taskTimeDescription === 'One time') {
+      tags.push.apply(tags,[this.$('#time-required').select2('data')]);
+    }
     if (taskTimeDescription === 'One time' || taskTimeDescription === 'Ongoing') {
       tags.push.apply(tags,[this.$('#time-estimate').select2('data')]);
     }

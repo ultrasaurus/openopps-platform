@@ -66,17 +66,17 @@ function validateTitle (obj, attributes) {
   if (typeof attributes.title == 'undefined') {
     obj['invalidAttributes']['title'] = [];
     obj['invalidAttributes']['title'].push({'message': 'Headline is required.'});
-  } else {
-    if (attributes.title.match(/[<>]/g)) {
+    return obj;
+  }
+  if (attributes.title.match(/[<>]/g)) {
+    obj['invalidAttributes']['title'] = [];
+    obj['invalidAttributes']['title'].push({'message': 'Headline must not contain the special characters < or >.'});
+  }
+  if (attributes.title.length > 100) {
+    if (_.isEmpty(obj['invalidAttributes']['title'])) {
       obj['invalidAttributes']['title'] = [];
-      obj['invalidAttributes']['title'].push({'message': 'Headline must not contain the special characters < or >.'});
     }
-    if (attributes.title.length > 100) {
-      if (_.isEmpty(obj['invalidAttributes']['title'])) {
-        obj['invalidAttributes']['title'] = [];
-      }
-      obj['invalidAttributes']['title'].push({'message': 'Headline must not be greater than 100 characters.'});
-    }
+    obj['invalidAttributes']['title'].push({'message': 'Headline must not be greater than 100 characters.'});
   }
   return obj;
 }
@@ -85,11 +85,11 @@ function validateDescription (obj, attributes) {
   if (typeof attributes.title == 'undefined') {
     obj['invalidAttributes']['description'] = [];
     obj['invalidAttributes']['description'].push({'message': 'Description is required.'});
-  } else {
-    if (attributes.description.match(/[<>]/g)) {
-      obj['invalidAttributes']['description'] = [];
-      obj['invalidAttributes']['description'].push({'message': 'Description must not contain the special characters < or >.'});
-    }
+    return obj;
+  }
+  if (attributes.description.match(/[<>]/g)) {
+    obj['invalidAttributes']['description'] = [];
+    obj['invalidAttributes']['description'].push({'message': 'Description must not contain the special characters < or >.'});
   }
   return obj;
 }

@@ -90,7 +90,7 @@ router.post('/api/auth/forgot', async (ctx, next) => {
 });
 
 router.get('/api/auth/checkToken/:token', async (ctx, next) => {
-  if (!ctx.params.token || ctx.params.token === 'null') { // because we are passing null as a string...why?
+  if (!ctx.params.token || ctx.params.token === 'null') {
     ctx.status = 400;
     return ctx.body = { message: 'Must provide a token for validation.' };
   } else {
@@ -105,7 +105,6 @@ router.get('/api/auth/checkToken/:token', async (ctx, next) => {
   }
 });
 
-// TODO: reset
 router.post('/api/auth/reset', async (ctx, next) => {
   var token = ctx.request.body.token;
   var password = ctx.request.body.password;
