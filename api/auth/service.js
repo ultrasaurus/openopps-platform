@@ -126,7 +126,7 @@ async function sendUserPasswordResetNotification (username, token, action) {
 async function checkToken (token, done) {
   var expiry = new Date();
   expiry.setTime(expiry.getTime() - openopps.auth.local.tokenExpiration);
-  await dao.UserPasswordReset.findOne('token = ? and "createdAt" > ?', [token, expiry]).then(async (passwordReset) => {
+  await dao.UserPasswordReset.findOne('token = ? and "createdAt" > ? and "deletedAt" is null', [token, expiry]).then(async (passwordReset) => {
     await dao.User.findOne('id = ?', passwordReset.userId).then((user) => {
       return done(null, _.extend(passwordReset, { email: user.username }));
     }).catch((err) => {
