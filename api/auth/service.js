@@ -65,17 +65,17 @@ async function sendUserCreateNotification (user, action) {
 
 async function resetPassword (token, password, done) {
   token.deletedAt = new Date();
-  var user = { id: token.userId, passwordAttempts: 0 };
+  var user = { id: token.userId, passwordAttempts: 0, updatedAt: new Date() };
   await dao.Passport.find('"user" = ?', token.userId).then(async (results) => {
     var passport = results[0] || {};
     passport.user = token.userId;
     passport.password = await bcrypt.hash(password, 10);
     passport.accessToken = crypto.randomBytes(48).toString('base64');
-    // update if exist otherwise insert
+    passport.updatedAt = new Date();
     await dao.Passport.upsert(passport).then(async () => {
       await dao.User.update(user).then(async () => {
         await dao.UserPasswordReset.update(token).then(() => {
-          done(null); // finished with no errors
+          done(null);
         });
       });
     }).catch((err) => {

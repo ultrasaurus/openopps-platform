@@ -14,14 +14,14 @@ const baseTask = {
   updatedAt: new Date(),
 };
 
-async function findById (id) {
+async function findById (id, loggedIn) {
   var results = await dao.Task.query(dao.query.task + ' where task.id = ?', id, dao.options.task);
   if(results.length === 0) {
     return {};
   }
   var task = dao.clean.task(results[0]);
   task.owner = dao.clean.user((await dao.User.query(dao.query.user, task.userId, dao.options.user))[0]);
-  task.volunteers = (await dao.Task.db.query(dao.query.volunteer, task.id)).rows;
+  task.volunteers = loggedIn ? (await dao.Task.db.query(dao.query.volunteer, task.id)).rows : undefined;
   return task;
 }
 
