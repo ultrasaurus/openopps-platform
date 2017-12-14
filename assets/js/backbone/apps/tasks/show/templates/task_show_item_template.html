@@ -1,9 +1,7 @@
 <div class="alert alert-danger" id="alert-closed" style="<% if (model.state != 'closed') { %>display: none;<% } %>">
   This <span data-i18n="task">opportunity</span> is <strong>closed</strong>.  It is no longer active, and no more modifications may be made.
 </div>
-
 <div class="edit-task-container edit-task-section"></div>
-
 <div class="task-container">
   <div class="clearfix mxn2">
     <div class="col col-12 md-col-9 px2">
@@ -31,7 +29,7 @@
                 <div class="center" style="width: 70px; position: relative; display: inline-block; text-align: center; padding: 0 3px;">
               <% } %>
               <h5 class="mt1 mb0">Requestor</h5>            
-              <img class="circle" width="50" src="/api/user/photo/<%- model.userId %>" alt="<%- model.owner.name %>"/>
+              <img class="circle" width="50" src="/api/user/photo/<%- model.userId %>" alt="Profile pic of <%- model.owner.name %>"/>
               <div class="mb2"><%- model.owner.name %></div>             
             </div>
           </div>
@@ -49,22 +47,20 @@
             <h4 class="mb0">Time Commitment</h4>
             <div class="mb2">
               <% if (madlibTags['task-time-required']) { %>
-                <!-- One-time, On-going, Full-Time Detail -->
                 <%= madlibTags['task-time-required'][0].name %>
               <% } %>
-               <!-- Time commitment should not be shown when the task is a full time detail. -->
               <% if (madlibTags['task-time-estimate'] &&
                      !(madlibTags['task-time-required'] && madlibTags['task-time-required'][0].name === 'Full Time Detail')) { %>
                 &mdash;
                  <%- madlibTags['task-time-estimate'][0].name %>
               <% } %>
               <% if (madlibTags['task-time-required'] && madlibTags['task-length']) { %>
-                <% if (madlibTags['task-time-required'][0].name === "Ongoing") { %>  <!-- 2-4 hours, etc. -->
+                <% if (madlibTags['task-time-required'][0].name === "Ongoing") { %> 
                   <%- madlibTags['task-length'][0].name.toLowerCase() %>
                 <% } %>
               <% } %>
             </div>
-            <% if (model.completedBy) { %>  <!-- estimated completion date -->
+            <% if (model.completedBy) { %>
             <h4 class="mb0">Target Date</h4>
             <div class="mb2">
                  <%= moment(model.completedBy).format('ddd, MMM D, YYYY') %>
@@ -81,11 +77,6 @@
               <% } %>
             </div>
           </div>
-          <!-- TODO: Attachments - hide temporarily
-          <div class="col col-12 md-col-4 px2">
-            <div class="attachment-wrapper"></div>
-          </div>
-           -->
         </div>
       </div>
     </div>
@@ -103,7 +94,6 @@
             </li>
           </ul>
         </div>
-
         <% if (model.isOwner || (user && user.isAdmin)) { %>
         <div>
           <div id="modal-close"></div>
