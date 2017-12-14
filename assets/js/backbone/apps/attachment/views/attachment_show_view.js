@@ -9,9 +9,8 @@ var Backbone = require('backbone');
 var async = require('async');
 var Popovers = require('../../../mixins/popovers');
 
-var fs = require('fs');
-var AITemplate = fs.readFileSync(__dirname + '/../templates/attachment_item_template.html').toString();
-var ASTemplate = fs.readFileSync(__dirname + '/../templates/attachment_show_template.html').toString();
+var AITemplate = require('../templates/attachment_item_template.html');
+var ASTemplate = require('../templates/attachment_show_template.html');
 
 var popovers = new Popovers();
 
@@ -19,8 +18,8 @@ var AttachmentShowView = Backbone.View.extend({
 
   events: {
     'click .file-delete'                : 'deleteAttachment',
-    "mouseenter .project-people-div"    : popovers.popoverPeopleOn,
-    "click .project-people-div"         : popovers.popoverClick,
+    'mouseenter .project-people-div'    : popovers.popoverPeopleOn,
+    'click .project-people-div'         : popovers.popoverClick,
   },
 
   initialize: function (options) {
@@ -38,17 +37,17 @@ var AttachmentShowView = Backbone.View.extend({
   initializeFiles: function () {
     var self = this;
     $.ajax({
-      url: '/api/attachment/findAllBy' + this.options.target + 'Id/' + this.options.id
+      url: '/api/attachment/findAllBy' + this.options.target + 'Id/' + this.options.id,
     }).done(function (data) {
       if (data && (data.length > 0)) {
-        $(".attachment-none").hide();
+        $('.attachment-none').hide();
       }
       _.each(data, function (f) {
         var template = self.renderAttachment(f);
-        $(".attachment-tbody").append(template);
+        $('.attachment-tbody').append(template);
       });
-      $("time.timeago").timeago();
-      popovers.popoverPeopleInit(".project-people-div");
+      $('time.timeago').timeago();
+      popovers.popoverPeopleInit('.project-people-div');
     });
   },
 
@@ -57,7 +56,7 @@ var AttachmentShowView = Backbone.View.extend({
 
 
     $('#attachment-fileupload').fileupload({
-      url: "/api/upload/create",
+      url: '/api/upload/create',
       dataType: 'text',
       acceptFileTypes: /(\.|\/)(gif|jpe?g|png)$/i,
       add: function (e, data) {
@@ -84,7 +83,7 @@ var AttachmentShowView = Backbone.View.extend({
 
         // store id in the database with the file
         var aData = {
-          fileId: result[0].id
+          fileId: result[0].id,
         };
         aData[self.options.target + 'Id'] = self.options.id;
         $.ajax({
@@ -92,7 +91,7 @@ var AttachmentShowView = Backbone.View.extend({
           type: 'POST',
           data: JSON.stringify(aData),
           dataType: 'json',
-          contentType: 'application/json'
+          contentType: 'application/json',
         }).done(function (attachment) {
           self.$('.attachment-fileupload > .progress').hide();
           self.renderNewAttachment(result[0], attachment);
@@ -103,11 +102,11 @@ var AttachmentShowView = Backbone.View.extend({
         var message = data.errorThrown;
         self.$('.attachment-fileupload > .progress').hide();
         if (data.jqXHR.status == 413) {
-          message = "The uploaded file exceeds the maximum file size.";
+          message = 'The uploaded file exceeds the maximum file size.';
         }
-        self.$(".file-upload-alert > span").html(message);
-        self.$(".file-upload-alert").show();
-      }
+        self.$('.file-upload-alert > span').html(message);
+        self.$('.file-upload-alert').show();
+      },
     });
 
   },
@@ -131,7 +130,7 @@ var AttachmentShowView = Backbone.View.extend({
           this.options.target ==='task' &&
           this.options.volunteer &&
           this.options.state === 'assigned'
-        )
+        ),
     };
     var template = _.template(ASTemplate)(data);
     this.$el.html(template);
@@ -144,7 +143,7 @@ var AttachmentShowView = Backbone.View.extend({
     var data = {
       a: attachment,
       user: window.cache.currentUser,
-      owner: this.options.owner
+      owner: this.options.owner,
     };
     var templ = _.template(AITemplate)(data);
     return templ;
@@ -153,11 +152,11 @@ var AttachmentShowView = Backbone.View.extend({
   renderNewAttachment: function (file, attachment) {
     attachment.file = file;
     var templ = this.renderAttachment(attachment);
-    $(".attachment-none").hide();
+    $('.attachment-none').hide();
     // put new at the top of the list rather than the bottom
-    $(".attachment-tbody").prepend(templ);
-    $("time.timeago").timeago();
-    popovers.popoverPeopleInit(".project-people-div");
+    $('.attachment-tbody').prepend(templ);
+    $('time.timeago').timeago();
+    popovers.popoverPeopleInit('.project-people-div');
   },
 
   deleteAttachment: function (e) {
@@ -170,15 +169,15 @@ var AttachmentShowView = Backbone.View.extend({
         var len = $($(e.currentTarget).parents('tbody')[0]).children().length;
         $(e.currentTarget).parents('tr')[0].remove();
         if (len == 2) {
-          $(".attachment-none").show();
+          $('.attachment-none').show();
         }
-      }
+      },
     });
   },
 
   cleanup: function () {
     removeView(this);
-  }
+  },
 
 });
 

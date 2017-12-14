@@ -1,5 +1,6 @@
 ---
 inherit: manifest.yml
-host: openopps-test
+host: openopps-dev
+domain: app.cloud.gov
 instances: 1
 memory: 512M

@@ -1,6 +1,6 @@
 <ul class="pagination" data-filter="<% q %>">
   <% if (page > 3) { %>
-  <li><a href="#">&laquo;</a></li>
+  <li><a class="page" data-page="<%- 1 %>" href="<%- urlbase %>?p=<%- 1 %>&q=<%- q %>">&laquo;</a></li>
   <% } %>
   <%
   var start = Math.max(1, page-2);
@@ -17,6 +17,6 @@
   <li <% if (i == page) { %>class="active"<% } %>><a class="page" data-page="<%- i %>" href="<%- urlbase %>?p=<%- i %>&q=<%- q %>"><%- i %> <% if (i == page) { %><span class="sr-only">(current)</span><% } %></a></li>
   <% } %>
   <% if (ceil > (page + 2)) { %>
-  <li><a href="#">&raquo;</a></li>
+  <li><a class="page" data-page="<%- ceil %>" href="<%- urlbase %>?p=<%- ceil %>&q=<%- q %>">&raquo;</a></li>
   <% } %>
 </ul>

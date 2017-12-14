@@ -1,11 +1,9 @@
-
 var _ = require('underscore');
 var Backbone = require('backbone');
 var $ = require('jquery');
 
 // templates
-var fs = require('fs');
-var AdminParticipantsTemplate = fs.readFileSync(`${__dirname}/../templates/admin_participants_template.html`).toString();
+var AdminParticipantsTemplate = require('../templates/admin_participants_template.html');
 
 
 var AdminParticipantsView = Backbone.View.extend({
@@ -16,7 +14,7 @@ var AdminParticipantsView = Backbone.View.extend({
   initialize: function (options) {
     this.options = options;
     this.data = {
-      page: 1
+      page: 1,
     };
   },
 
@@ -34,7 +32,7 @@ var AdminParticipantsView = Backbone.View.extend({
         var template = _.template(AdminParticipantsTemplate)(data);
         self.$el.html(template);
         $('.tip').tooltip();
-      }
+      },
     });
 
     Backbone.history.navigate('/admin/participants');
@@ -43,7 +41,7 @@ var AdminParticipantsView = Backbone.View.extend({
 
   cleanup: function () {
     removeView(this);
-  }
+  },
 
 });
 

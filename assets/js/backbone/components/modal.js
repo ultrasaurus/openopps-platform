@@ -7,31 +7,26 @@
  * to trigger from as per bootstrap BP.
  */
 
-var fs = require('fs');
 var $ = require('jquery');
 var _ = require('underscore');
 var Backbone = require('backbone');
 var BaseComponent = require('../base/base_component');
-
-var ModalTemplate = fs.readFileSync(
-  __dirname + '/modal_template.html'
-).toString();
-
+var ModalTemplate = require('./modal_template.html');
 
 var Modal = BaseComponent.extend({
   events: {
-    "click .link-backbone": "link"
+    'click .link-backbone': 'link',
   },
 
-  initialize: function(options) {
+  initialize: function (options) {
     this.options = options;
   },
 
-  render: function() {
+  render: function () {
     var data = {
       id: this.options.id,
       modalTitle: this.options.modalTitle,
-      disableClose: this.options.disableClose
+      disableClose: this.options.disableClose,
     };
 
     var compiledTemplate = _.template(ModalTemplate)(data);
@@ -40,17 +35,17 @@ var Modal = BaseComponent.extend({
     return this;
   },
 
-  link: function(e) {
+  link: function (e) {
     if (e.preventDefault) e.preventDefault();
     // hide the modal, wait for it to close, then navigate
-    $('#' + this.options.id).bind('hidden.bs.modal', function() {
+    $('#' + this.options.id).bind('hidden.bs.modal', function () {
       linkBackbone(e);
     }).modal('hide');
   },
 
-  cleanup: function() {
+  cleanup: function () {
     removeView(this);
-  }
+  },
 });
 
 

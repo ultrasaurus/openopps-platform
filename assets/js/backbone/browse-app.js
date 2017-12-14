@@ -33,25 +33,25 @@ var BrowseRouter = Backbone.Router.extend({
 
   data: { saved: false },
 
-  initialize: function() {
+  initialize: function () {
 
     this.navView = new NavView({
-      el: '.navigation'
+      el: '.navigation',
     }).render();
 
     this.footerView = new FooterView({
-      el: '#footer'
+      el: '#footer',
     }).render();
 
     // set navigation state
-    this.on('route', function(route, params) {
+    this.on('route', function (route, params) {
       var href = window.location.pathname;
       $('.navigation .nav-link')
         .closest('li')
         .removeClass('active');
       $('.navigation .nav-link[href="' + href + '"]')
         .closest('li')
-        .addClass("active");
+        .addClass('active');
       $.getJSON('/csrfToken', function (t) {
         $('meta[name="csrf-token"]').attr('content', t._csrf);
         $.ajaxPrefilter(function (options, originalOptions, jqXHR) {
@@ -65,7 +65,7 @@ var BrowseRouter = Backbone.Router.extend({
     });
   },
 
-  cleanupChildren: function() {
+  cleanupChildren: function () {
     if (this.browseListController) { this.browseListController.cleanup(); }
     if (this.profileShowController) { this.profileShowController.cleanup(); }
     if (this.taskShowController) { this.taskShowController.cleanup(); }
@@ -74,17 +74,17 @@ var BrowseRouter = Backbone.Router.extend({
     this.data = { saved: false };
   },
 
-  showHome: function() {
+  showHome: function () {
     this.cleanupChildren();
     this.homeController = new HomeController({
       target: 'home',
       el: '#container',
       router: this,
-      data: this.data
+      data: this.data,
     });
   },
 
-  parseQueryParams: function(str) {
+  parseQueryParams: function (str) {
     var params = {};
     if (str) {
       var terms = str.split('&');
@@ -100,29 +100,29 @@ var BrowseRouter = Backbone.Router.extend({
     return params;
   },
 
-  listTasks: function(queryStr) {
+  listTasks: function (queryStr) {
     this.cleanupChildren();
     this.browseListController = new BrowseListController({
       target: 'tasks',
       el: '#container',
       router: this,
       queryParams: this.parseQueryParams(queryStr),
-      data: this.data
+      data: this.data,
     });
   },
 
-  listProfiles: function(queryStr) {
+  listProfiles: function (queryStr) {
     this.cleanupChildren();
     this.browseListController = new BrowseListController({
       target: 'profiles',
       el: '#container',
       router: this,
       queryParams: this.parseQueryParams(queryStr),
-      data: this.data
+      data: this.data,
     });
   },
 
-  showTask: function(id, action) {
+  showTask: function (id, action) {
     this.cleanupChildren();
     var model = new TaskModel();
     model.set({ id: id });
@@ -135,7 +135,7 @@ var BrowseRouter = Backbone.Router.extend({
    * collection to it. This collection is then managed by the view using events
    * on the collection.
    */
-  newTask: function( /*params*/ ) {
+  newTask: function ( /*params*/ ) {
 
     var self = this;
     var tasks = new TaskCollection([{}]);
@@ -145,23 +145,30 @@ var BrowseRouter = Backbone.Router.extend({
     this.taskCreateController = new TaskCreateFormView({ collection: tasks });
     this.taskCreateController.render();
 
-    this.listenTo(tasks, 'task:save:success', function(data) {
+    this.listenTo(tasks, 'task:save:success', function (data) {
 
       Backbone.history.navigate('/tasks/' + data, { trigger: true });
 
     });
 
-    this.listenTo(tasks, 'task:save:error', function(model, response, options) {
-
-      var alertText = response.statusText + '. Please try again.';
-      $('.alert.alert-danger').text(alertText).show();
-      $(window).animate({ scrollTop: 0 }, 500);
-
+    this.listenTo(tasks, 'task:save:error', function (model, response, options) {
+      var error = options.xhr.responseJSON;
+      if (error && error.invalidAttributes) {
+        for (var item in error.invalidAttributes) {
+          if (error.invalidAttributes[item]) {
+            message = _(error.invalidAttributes[item]).pluck('message').join(',<br /> ');
+            $('#' + item + '-update-alert').html(message).show();
+          }
+        }
+      } else if (error) {
+        var alertText = response.statusText + '. Please try again.';
+        $('.alert.alert-danger').text(alertText).show();
+        $(window).animate({ scrollTop: 0 }, 500);
+      }
     });
-
   },
 
-  showProfile: function(id, action) {
+  showProfile: function (id, action) {
     this.cleanupChildren();
     // normalize input
     if (id) {
@@ -183,23 +190,23 @@ var BrowseRouter = Backbone.Router.extend({
     this.profileShowController = new ProfileShowController({ id: id, action: action, data: this.data });
   },
 
-  showAdmin: function(action, agencyId) {
+  showAdmin: function (action, agencyId) {
     this.cleanupChildren();
     this.adminMainController = new AdminMainController({
       el: '#container',
       action: action,
-      agencyId: agencyId
+      agencyId: agencyId,
     });
 
   },
 
 });
 
-var initialize = function() {
+var initialize = function () {
   var router = new BrowseRouter();
   return router;
 };
 
 module.exports = {
-  initialize: initialize
+  initialize: initialize,
 };

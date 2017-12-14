@@ -1,22 +1,19 @@
 var _ = require('underscore');
 var Backbone = require('backbone');
 var $ = require('jquery');
-
-// templates
-var fs = require('fs');
-var AdminAgenciesTemplate = fs.readFileSync(`${__dirname}/../templates/admin_agencies_template.html`).toString();
+var AdminAgenciesTemplate = require('../templates/admin_agencies_template.html');
 
 var AdminAgenciesView = Backbone.View.extend({
 
   events: {
-    'click .link'             : 'link'
+    'click .link' : 'link',
   },
 
   initialize: function (options) {
     this.options = options;
     this.adminMainView = options.adminMainView;
     this.data = {
-      agency: window.cache.currentUser.agency
+      agency: window.cache.currentUser.agency,
     };
   },
 
@@ -31,12 +28,12 @@ var AdminAgenciesView = Backbone.View.extend({
       dataType: 'json',
       success: function (agencyInfo) {
         agencyInfo.slug = agencyInfo.data.abbr.toLowerCase();
-        agencyInfo.data.domain = agencyInfo.data.domain[0];
+        agencyInfo.data.domain = agencyInfo.data.domain;
         var template = _.template(AdminAgenciesTemplate, {
-          variable: 'agency'
+          variable: 'agency',
         })(agencyInfo);
         self.$el.html(template);
-      }
+      },
     });
 
     Backbone.history.navigate('/admin/agencies/' + this.data.agency.slug);
@@ -51,7 +48,7 @@ var AdminAgenciesView = Backbone.View.extend({
 
   cleanup: function () {
     removeView(this);
-  }
+  },
 
 });
 

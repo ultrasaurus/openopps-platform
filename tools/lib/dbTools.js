@@ -116,7 +116,7 @@ module.exports = {
         if (!_.isEmpty(tags[i])) {
           var tagData = JSON.stringify(tags[i]);
           console.log('>', tagData);
-          var query_data = [tagType, tags[i].name, tagData, date, date, tags[i], tagType];
+          var query_data = [tagType, tags[i].name, tagData, date, date, tags[i].name, tagType];
           var query = t.none(query_text, query_data);
           tagQueries.push(query);
         }

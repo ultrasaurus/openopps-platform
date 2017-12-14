@@ -49,6 +49,9 @@ var TaskModel = Backbone.Model.extend({
       success: function (data) {
         self.trigger('task:update:success', data);
       },
+      error: function ( model, response, options ) {
+        self.trigger( 'task:update:error', model, response, options );
+      },
     });
   },
 

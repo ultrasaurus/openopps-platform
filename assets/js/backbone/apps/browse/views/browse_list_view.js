@@ -6,9 +6,9 @@ var async = require('async');
 var UIConfig = require('../../../config/ui.json');
 var marked = require('marked');
 var TagConfig = require('../../../config/tag');
-var fs = require('fs');
-var TaskListItem = fs.readFileSync(__dirname + '/../templates/task_list_item.html').toString();
-var NoListItem = fs.readFileSync(__dirname + '/../templates/no_search_results.html').toString();
+
+var TaskListItem = require('../templates/task_list_item.html');
+var NoListItem = require('../templates/no_search_results.html');
 
 var BrowseListView = Backbone.View.extend({
 
@@ -22,7 +22,7 @@ var BrowseListView = Backbone.View.extend({
     this.options = options;
     this.data = {
       pageSize: pageSize,
-      page: 1
+      page: 1,
     };
     $(window).on('scroll', function (e) {
       self.scrollCheck(e);
@@ -68,7 +68,7 @@ var BrowseListView = Backbone.View.extend({
 
     if (this.options.collection.length === 0) {
       var settings = {
-        ui: UIConfig
+        ui: UIConfig,
       };
       compiledTemplate = _.template(NoListItem)(settings);
       this.$el.append(compiledTemplate);
@@ -85,7 +85,7 @@ var BrowseListView = Backbone.View.extend({
           item: obj,
           user: window.cache.currentUser,
           tagConfig: TagConfig,
-          tagShow: ['location', 'skill', 'topic', 'task-time-estimate', 'task-time-required']
+          tagShow: ['location', 'skill', 'topic', 'task-time-estimate', 'task-time-required'],
         };
         if (this.options.collection[i].tags) {
           item.tags = this.organizeTags(this.options.collection[i].tags);
@@ -110,7 +110,7 @@ var BrowseListView = Backbone.View.extend({
 
   cleanup: function () {
     removeView(this);
-  }
+  },
 
 });
 

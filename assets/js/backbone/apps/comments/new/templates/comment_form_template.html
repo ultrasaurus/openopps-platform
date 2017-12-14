@@ -9,11 +9,16 @@
   <div class="col-lg-12 ">
     <% if ( !form.disable ) { %>
     <form action="" class="comment-submit <% if (form.topic) { %>comment-form-topic<% } %>" role="form" data-depth="<%- form.depth %>">
-      <div class="input-group">
-        <div class="comment-input form-control input-sm" contentEditable="true"></div>
-        <span class="input-group-btn">
-          <input class="btn btn-c2 btn-sm" type="submit" value="<% if (form.topic ) { %> Post Comment <% } else if (form.depth == 1) { %> Reply <% } else { %>Add Comment<% } %>" title="<% if (form.topic) { %> Post Comment <% } else if (form.depth == 1) { %> Reply <% } else { %>Add Comment<% } %>">
-        </span>
+      <div class="form-group">
+        <div class="input-group">
+          <div class="comment-input form-control validate input-sm" contentEditable="true" data-validate="html"></div>
+          <span class="input-group-btn">
+            <button class="btn btn-c2 btn-sm disable" type="submit" value="<% if (form.topic ) { %> Post Comment <% } else if (form.depth == 1) { %> Reply <% } else { %>Add Comment<% } %>" title="<% if (form.topic) { %> Post Comment <% } else if (form.depth == 1) { %> Reply <% } else { %>Add Comment<% } %>">
+              <% if (form.topic ) { %> Post Comment <% } else if (form.depth == 1) { %> Reply <% } else { %>Add Comment<% } %></button>
+          </span>                   
+        </div>
+        <span class="help-block error-html" style="display:none;">The special characters '<' or '>' are not allowed</span>
+        <div id="comment-update-alert" class="alert alert-warning" style="display:none;"></div>
       </div>
     </form>
     <% } %>

@@ -10,13 +10,12 @@ var AdminParticipantsView = require('./admin_participants_view');
 var AdminDashboardView = require('./admin_dashboard_view');
 
 // templates
-var fs = require('fs');
-var AdminMainTemplate = fs.readFileSync(`${__dirname}/../templates/admin_main_template.html`).toString();
+var AdminMainTemplate = require('../templates/admin_main_template.html');
 
 var AdminMainView = Backbone.View.extend({
 
   events: {
-    'click .link-admin'             : 'link'
+    'click .link-admin' : 'link',
   },
 
   initialize: function (options) {
@@ -56,7 +55,7 @@ var AdminMainView = Backbone.View.extend({
       agencyId = this.userAgencyId();   // restrict access to User agency
       if (target == 'dashboard') target = 'agencies';
     }
-    var t = $((this.$("[data-target=" + target + "]"))[0]);
+    var t = $((this.$('[data-target=' + target + ']'))[0]);
     // remove active classes
     $($(t.parents('ul')[0]).find('li')).removeClass('active');
     // make the current link active
@@ -108,11 +107,11 @@ var AdminMainView = Backbone.View.extend({
   },
 
   hideOthers: function () {
-    this.$(".admin-container").hide();
+    this.$('.admin-container').hide();
   },
 
   hideDashboardMenu: function () {
-    this.$(".dashboard-menu").hide();
+    this.$('.dashboard-menu').hide();
   },
 
   initializeAdminUserView: function (agencyId) {
@@ -120,8 +119,8 @@ var AdminMainView = Backbone.View.extend({
       this.adminUserView.cleanup();
     }
     this.adminUserView = new AdminUserView({
-      el: "#admin-user",
-      agencyId: agencyId
+      el: '#admin-user',
+      agencyId: agencyId,
     });
   },
 
@@ -130,7 +129,7 @@ var AdminMainView = Backbone.View.extend({
       this.adminTagView.cleanup();
     }
     this.adminTagView = new AdminTagView({
-      el: "#admin-tag"
+      el: '#admin-tag',
     });
   },
 
@@ -139,8 +138,8 @@ var AdminMainView = Backbone.View.extend({
       this.adminTaskView.cleanup();
     }
     this.adminTaskView = new AdminTaskView({
-      el: "#admin-task",
-      agencyId: agencyId
+      el: '#admin-task',
+      agencyId: agencyId,
     });
   },
 
@@ -149,9 +148,9 @@ var AdminMainView = Backbone.View.extend({
       this.adminAgenciesView.cleanup();
     }
     this.adminAgenciesView = new AdminAgenciesView({
-      el: "#admin-agencies",
+      el: '#admin-agencies',
       agencyId: this.options.agencyId,
-      adminMainView: this
+      adminMainView: this,
     });
   },
 
@@ -160,7 +159,7 @@ var AdminMainView = Backbone.View.extend({
       this.adminParticipantsView.cleanup();
     }
     this.adminParticipantsView = new AdminParticipantsView({
-      el: "#admin-participants"
+      el: '#admin-participants',
     });
   },
 
@@ -169,7 +168,7 @@ var AdminMainView = Backbone.View.extend({
       this.adminDashboardView.cleanup();
     }
     this.adminDashboardView = new AdminDashboardView({
-      el: "#admin-dashboard"
+      el: '#admin-dashboard',
     });
   },
 
