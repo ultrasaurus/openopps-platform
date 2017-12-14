@@ -3,8 +3,9 @@ machine:
     DB_OWNER: ubuntu
     DB_USER: midas
     DB_PASSWORD: midas
+    VCAP_APPLICATION: '{ "uris": [ "openopps-test.18f.gov" ] }'
   node:
-    version: 4.4.7
+    version: 6.11.1
 
 dependencies:
   pre:
