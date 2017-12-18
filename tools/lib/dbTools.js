@@ -62,33 +62,28 @@ module.exports = {
       return data[0].exists;
     });
   },
-  importUsersFromFile: function (userFile) {
-    console.log('importing:', userFile);
-    if (fs.existsSync(userFile)) {
-      input = fs.readFileSync(userFile);
-      var users = parse(input, {columns: true});
-      return Promise.all(users.map(async (user) => {
-        return await register(user, () => { });
-      }));
+  parseFile: function (file) {
+    if (fs.existsSync(file)) {
+      console.log('importing:', file);
+      input = fs.readFileSync(file);
+      return parse(input, { columns: true });
     } else {
-      var msg = "File Not Found: '" + userFile + "'";
+      var msg = "File Not Found: '" + file + "'";
       console.log(msg);
       throw new Error(msg);
     }
   },
+  importUsersFromFile: function (userFile) {
+    var users = this.parseFile(userFile);
+    return Promise.all(users.map(async (user) => {
+      return await register(user, () => { });
+    }));
+  },
   importTasksFromFile: function (taskFile) {
-    console.log('importing:', taskFile);
-    if (fs.existsSync(taskFile)) {
-      input = fs.readFileSync(taskFile);
-      var tasks = parse(input, {columns: true});
-      return Promise.all(tasks.map(async (task) => {
-        return await createOpportunity(task, () => { });
-      }));
-    } else {
-      var msg = "File Not Found: '" + taskFile + "'";
-      console.log(msg);
-      throw new Error(msg);
-    }
+    var tasks = this.parseFile(taskFile);
+    return Promise.all(tasks.map(async (task) => {
+      return await createOpportunity(task, () => { });
+    }));
   },
   importTagsFromFile: function (tagFile, tagType) {
     console.log('importing:', tagFile);
