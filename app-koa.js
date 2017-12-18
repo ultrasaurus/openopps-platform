@@ -2,7 +2,6 @@ const koa = require('koa');
 const cfenv = require('cfenv');
 const blueox = require('blue-ox');
 const render = require('koa-ejs');
-const sass = require('koa-sass');
 const serve = require('koa-static');
 const path = require('path');
 const parser = require('koa-better-body');
