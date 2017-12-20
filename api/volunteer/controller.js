@@ -14,7 +14,7 @@ router.post('/api/volunteer', async (ctx, next) => {
         return ctx.body = err;
       }
       if (volunteer.silent == null || volunteer.silent == 'false') {
-        service.sendAddedVolunteerNotification(ctx.req.user, volunteer, 'volunteer.create.thanks');
+        service.sendAddedVolunteerNotification(ctx.state.user, volunteer, 'volunteer.create.thanks');
       }
       return ctx.body = volunteer;
     });

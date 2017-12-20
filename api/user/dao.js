@@ -12,6 +12,12 @@ const tagQuery = 'select tags.* ' +
   'inner join tagentity_users__user_tags user_tags on tags.id = user_tags.tagentity_users ' +
   'where user_tags.user_tags = ?';
 
+const userAgencyQuery = 'select tagentity.name, midas_user."isAdmin" ' +
+  'from midas_user inner join tagentity_users__user_tags on midas_user.id = tagentity_users__user_tags.user_tags ' +
+  'inner join tagentity tagentity on tagentity.id = tagentity_users__user_tags.tagentity_users ' +
+  'where midas_user.id = ? ' +
+  "and tagentity.type = 'agency' ";
+
 const taskCompletedQuery = 'select distinct task.* ' +
   'from task inner join volunteer on task.id = volunteer."taskId" ' +
   'where volunteer."userId" = ?';
@@ -80,6 +86,7 @@ module.exports = function (db) {
       user: userQuery,
       tag: tagQuery,
       completed: taskCompletedQuery,
+      userAgencyQuery: userAgencyQuery,
       deleteUserTags: deleteUserTags,
     },
     options: options,

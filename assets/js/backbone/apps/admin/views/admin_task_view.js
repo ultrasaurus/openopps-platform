@@ -1,20 +1,14 @@
-// vendor
 var _ = require('underscore');
 var Backbone = require('backbone');
 var $ = require('jquery');
-
 var TaskModel = require( '../../../entities/tasks/task_model' );
 
 // templates
 var AdminTaskTemplate = require('../templates/admin_task_template.html');
-
 var AdminTaskView = Backbone.View.extend({
-
   events: {
-
     'click .delete-task'  : 'deleteTask',
     'click .js-task-open' : 'openTask',
-
   },
 
   initialize: function (options) {
@@ -34,64 +28,41 @@ var AdminTaskView = Backbone.View.extend({
       url: '/api' + url,
       data: this.data,
       dataType: 'json',
-      success: function ( data ) {
-        var template = _.template( AdminTaskTemplate )( data );
-        view.$el.html( template );
+      success: function (data) {
+        var template = _.template(AdminTaskTemplate)(data);
+        view.$el.html(template);
         view.$el.show();
-        $( '.tip' ).tooltip();
-        $( '.js-tip' ).tooltip();
+        $('.tip').tooltip();
+        $('.js-tip').tooltip();
       },
     });
-
     return this;
-
   },
-
 
   /*
    * Open a "submitted" task from the admin task view.
    * @param { jQuery Event } event
    */
-  openTask: function ( event ) {
-
+  openTask: function (event) {
     event.preventDefault();
-
     var view = this;
-    var id = $( event.currentTarget ).data( 'task-id' );
-    var title = $( event.currentTarget ).data( 'task-title' );
-
-    var task = new TaskModel( { id: id } );
-
+    var id = $(event.currentTarget).data('task-id');
+    var title = $( event.currentTarget ).data('task-title');
+    var task = new TaskModel({ id: id });
     task.fetch( {
-
       success: function ( model, response, options ) {
-
-        var userConfirmed = window.confirm( 'Are you sure you want to publish "' + model.attributes.title + '"?' );
-
-        if ( userConfirmed ) {
-
-          model.save( {
-
-            state: 'open',
-
-          }, {
-
-            success: function ( model, response, options ) {
-
-              view.render();
-
-            },
-
-          } );
-
+        if (window.confirm('Are you sure you want to publish "' + model.attributes.title + '"?')) {
+          $.ajax({
+            url: '/api/publishTask/' + id,
+            data: {'id': id, 'state': 'open'},
+            type: 'PUT',
+          }).done(function (model, response, options) {
+            view.render();
+          });
         }
-
       },
-
-      error: function ( model, response, options ) {},
-
-    } );
-
+      error: function (model, response, options) {},
+    });
   },
 
   deleteTask: function (e) {
@@ -112,7 +83,6 @@ var AdminTaskView = Backbone.View.extend({
   cleanup: function () {
     removeView(this);
   },
-
 });
 
 module.exports = AdminTaskView;

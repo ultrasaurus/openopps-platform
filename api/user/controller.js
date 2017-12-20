@@ -27,7 +27,9 @@ router.get('/api/user/:id', async (ctx, next) => {
     if(ctx.params.id == ctx.state.user.id) {
       ctx.body = await service.populateBadgeDescriptions(ctx.state.user);
     } else {
-      ctx.body = await service.getProfile(ctx.params.id);
+      var profile = await service.getProfile(ctx.params.id);
+      profile.canEditProfile = await service.canAdministerAccount(ctx.state.user, ctx.params);
+      ctx.body = profile;
     }
   } else {
     ctx.status = 403;
@@ -82,7 +84,7 @@ router.get('/api/user/photo/:id', async (ctx, next) => {
 });
 
 router.put('/api/user/:id', async (ctx, next) => {
-  if (ctx.isAuthenticated() && +ctx.params.id === ctx.request.body.id && (ctx.state.user.id === +ctx.params.id || ctx.req.user.isAdmin)) {
+  if (ctx.isAuthenticated() && await service.canUpdateProfile(ctx)) {
     ctx.status = 200;
     await service.updateProfile(ctx.request.body, function (errors) {
       if (errors) {
@@ -93,11 +95,12 @@ router.put('/api/user/:id', async (ctx, next) => {
     });
   } else {
     ctx.status = 401;
+    ctx.body = { success: false };
   }
 });
 
 router.get('/api/user/disable/:id', async (ctx, next) => {
-  if (ctx.isAuthenticated() && ctx.state.user.isAdmin) {
+  if (ctx.isAuthenticated() && await service.canAdministerAccount(ctx.state.user, ctx.params)) {
     var user = await service.getProfile(ctx.params.id);
     user.disabled = 't';
     await service.updateProfileStatus(user, function (error) {
@@ -112,7 +115,7 @@ router.get('/api/user/disable/:id', async (ctx, next) => {
 });
 
 router.get('/api/user/enable/:id', async (ctx, next) => {
-  if (ctx.isAuthenticated() && ctx.state.user.isAdmin) {
+  if (ctx.isAuthenticated() && await service.canAdministerAccount(ctx.state.user, ctx.params)) {
     var user = await service.getProfile(ctx.params.id);
     user.disabled = 'f';
     await service.updateProfileStatus(user, function (error) {
@@ -127,7 +130,7 @@ router.get('/api/user/enable/:id', async (ctx, next) => {
 });
 
 router.post('/api/user/resetPassword', async (ctx, next) => {
-  if (ctx.isAuthenticated() && ctx.state.user.isAdmin) {
+  if (ctx.isAuthenticated() && await service.canAdministerAccount(ctx.state.user, ctx.request.body)) {
     ctx.body = await service.updatePassword(ctx.request.body);
   } else {
     ctx.status = 401;
