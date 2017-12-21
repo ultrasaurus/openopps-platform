@@ -100,6 +100,48 @@ async function updateProfileStatus (attributes, done) {
   }).catch (err => { return done({'message':'Error updating profile status.'}); });
 }
 
+async function canUpdateProfile (ctx) {
+  if (+ctx.params.id === ctx.request.body.id) {
+    if (ctx.state.user.isAdmin ||
+       (ctx.state.user.isAgencyAdmin && checkAgency(ctx.state.user, ctx.params) && await checkRoleEscalation(ctx.request.body)) ||
+       (ctx.state.user.id === +ctx.params.id && await checkRoleEscalation(ctx.request.body))) {
+      return true;
+    }
+  }
+  return false;
+}
+
+async function checkRoleEscalation (attributes) {
+  var owner = await dao.User.find('id = ?', attributes.id);
+  if (owner.length > 0) {
+    if (_.has(attributes, 'isAdmin') && !owner[0].isAdmin) {
+      return false;
+    }
+    if (_.has(attributes, 'isAgencyAdmin') && !owner[0].isAgencyAdmin) {
+      return false;
+    }
+  }
+  return true;
+}
+
+async function canAdministerAccount (user, attributes) {
+  if ((_.has(user, 'isAdmin') && user.isAdmin) || (user.isAgencyAdmin && await checkAgency(user, attributes))) {
+    return true;
+  }
+  return false;
+}
+
+async function checkAgency (user, attributes) {
+  var owner = (await dao.TagEntity.db.query(dao.query.userAgencyQuery, attributes.id)).rows[0];
+  if (owner && owner.isAdmin) {
+    return false;
+  }
+  if (owner && owner.name) {
+    return _.find(user.tags, { 'type': 'agency' }).name == owner.name;
+  }
+  return false;
+}
+
 async function updatePassword (attributes) {
   await updateProfilePasswordAttempts(attributes.id);
   attributes.password = await bcrypt.hash(attributes.password, 10);
@@ -126,4 +168,6 @@ module.exports = {
   updateProfileStatus: updateProfileStatus,
   updatePassword: updatePassword,
   processUserTags: processUserTags,
+  canAdministerAccount: canAdministerAccount,
+  canUpdateProfile: canUpdateProfile,
 };

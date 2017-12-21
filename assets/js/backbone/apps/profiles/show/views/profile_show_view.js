@@ -55,7 +55,7 @@ var ProfileShowView = Backbone.View.extend({
 
       // Check if the user is not an admin and editing another profile other than
       // the current user.
-      if ( model.id !== currentUser.id && ! isAdmin ) {
+      if ( model.id !== currentUser.id && !model.canEditProfile ) {
 
         this.edit = false;
 

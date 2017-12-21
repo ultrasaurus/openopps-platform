@@ -42,6 +42,8 @@ router.post('/api/auth/local', async (ctx, next) => {
 router.post('/api/auth/local/register', async (ctx, next) => {
   log.info('Register user', ctx.request.body);
 
+  delete(ctx.request.body.isAdmin);
+  delete(ctx.request.body.isAgencyAdmin);
   if (!ctx.request.body.username) {
     ctx.flash('error', 'Error.Passport.Username.Missing');
     ctx.status = 400;

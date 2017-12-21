@@ -62,7 +62,7 @@ var TaskShowController = BaseView.extend({
     if (owner !== true) {
       // if none of these apply, are they an admin?
       if (window.cache.currentUser) {
-        if (window.cache.currentUser.isAdmin === true) {
+        if (window.cache.currentUser.isAdmin === true || model.canEditTask) {
           owner = true;
         }
       }

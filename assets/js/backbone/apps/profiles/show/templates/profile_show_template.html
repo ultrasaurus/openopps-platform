@@ -1,14 +1,14 @@
-<% if (user.isAdmin) { %>
-<div class="alert alert-info">
-  You are an administrator.
-  <% if (user.id !== data.id) { %>
-    You are viewing another user's profile.
-  <% } %>
-</div>
+<% if (user.isAdmin || user.isAgencyAdmin) { %>
+  <div class="alert alert-info">
+    You are an <% if (user.isAdmin) { %> administrator <% } else { %> agency administrator <% } %>.
+    <% if (user.id !== data.id) { %>
+      You are viewing another user's profile.
+    <% } %>
+  </div>
 <% } %>
 
 <% if (saved) { %>
-<div class="alert alert-success">Your profile has been successfully updated.</div>
+  <div class="alert alert-success">Your profile has been successfully updated.</div>
 <% } %>
 
 <div class="clearfix mxn2 mb2">
@@ -25,7 +25,6 @@
         </div>
         <div class="col col-12 md-col-8 px2">
           <h1><% if (data.name) { %><%- data.name %><% } else { %><%- data.username %><% } %></h1>
-
           <div class="profile-jobtitle"><% if (data.title) { %><i class="fa fa-briefcase"></i> <span class="box-icon-text"><%- data.title %></span><% } %></div>
           <div class="profile-company"><% if (data.agency) { %><i class="icon-library"></i> <span class="box-icon-text"><%- data.agency.name %></span><% } %></div>
           <div class="profile-location"><% if (data.location) { %><span class="fa fa-map-marker"></span> <span class="box-icon-text"><%- data.location.name %></span><% } %></div>
@@ -42,9 +41,8 @@
       </div>
       <div class="mt1 mb2">
         <% /* Escaped with marked() */ %>
-          <% if (data.bioHtml) { %><%= data.bioHtml %><% } %>
+        <% if (data.bioHtml) { %><%= data.bioHtml %><% } %>
       </div>
-
     </div>
   </div>
 
@@ -57,36 +55,36 @@
           </li>
         </ul>
       </div>
-      <% if (data.isOwner || user.isAdmin) { %>
-      <div class="navbar-side">
-          <ul class="nav nav-pills nav-stacked">
-          <li>
-            <% if (login.profile.edit === true) { %>
-            <a href="/profile/<%- data.id %>/edit" class="link-backbone"><i class="fa fa-pencil"></i> <span class="box-icon-text">Edit Profile</span></a>
-            <% } else if (login.profile.editUrl) { %>
-            <a href="<%- login.profile.editUrl %>" target="_blank"><i class="fa fa-pencil"></i> <span class="box-icon-text">Edit Profile</span></a>
-            <% } %>
-          </li>
-        </ul>
-      </div>
+      <% if (data.isOwner || data.canEditProfile) { %>
+        <div class="navbar-side">
+            <ul class="nav nav-pills nav-stacked">
+            <li>
+              <% if (login.profile.edit === true) { %>
+                <a href="/profile/<%- data.id %>/edit" class="link-backbone"><i class="fa fa-pencil"></i> <span class="box-icon-text">Edit Profile</span></a>
+              <% } else if (login.profile.editUrl) { %>
+                <a href="<%- login.profile.editUrl %>" target="_blank"><i class="fa fa-pencil"></i> <span class="box-icon-text">Edit Profile</span></a>
+              <% } %>
+            </li>
+          </ul>
+        </div>
       <% } %>
     </div>
   </div>
 </div>
 
 <% if (tags.length > 0) { %>
-<div class="clearfix mxn2 mb2">
-  <div class="col col-12 md-col-8 px2">
-    <div class="p2 bg-white">
-      <h2>Skills &amp; Interests</h2>
-      <div class="py1">
-        <% _.each(tags, function (t) { %>
-          <a class="px2 bg-yellow black rounded" href="/tasks?search=<%= t.name %>"><%= t.name %></a>
-        <% }) %>
+  <div class="clearfix mxn2 mb2">
+    <div class="col col-12 md-col-8 px2">
+      <div class="p2 bg-white">
+        <h2>Skills &amp; Interests</h2>
+        <div class="py1">
+          <% _.each(tags, function (t) { %>
+            <a class="px2 bg-yellow black rounded" href="/tasks?search=<%= t.name %>"><%= t.name %></a>
+          <% }) %>
+        </div>
       </div>
     </div>
   </div>
-</div>
 <% } %>
 
 <div class="clearfix mxn2 mb2">
@@ -101,21 +99,19 @@
   </div>
 
   <% if (data.badges.length > 0) { %>
-  <div class="col col-12 md-col-4 px2">
-    <div class="p2 bg-white">
-      <h2>Badges</h2>
-      <ul class="profile-badges">
-        <% _.map(data.badges, function (b) { %>
-          <li class="profile-badge">
-            <% var filename = b.type.replace(' ', '-'); %>
-            <img src="/images/badges/<%- filename %>.png" alt="The <%- b.type %> badge is awarded when you <%- b.description %>" title="The <%- b.type %> badge is awarded when you <%- b.description %>">
-            <p><%- b.type %></p>
-          </li>
-        <% }); %>
-      </ul>
+    <div class="col col-12 md-col-4 px2">
+      <div class="p2 bg-white">
+        <h2>Badges</h2>
+        <ul class="profile-badges">
+          <% _.map(data.badges, function (b) { %>
+            <li class="profile-badge">
+              <% var filename = b.type.replace(' ', '-'); %>
+              <img src="/images/badges/<%- filename %>.png" alt="The <%- b.type %> badge is awarded when you <%- b.description %>" title="The <%- b.type %> badge is awarded when you <%- b.description %>">
+              <p><%- b.type %></p>
+            </li>
+          <% }); %>
+        </ul>
+      </div>
     </div>
-  </div>
-
   <% } %>
-
 </div>

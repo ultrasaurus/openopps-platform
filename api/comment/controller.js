@@ -23,7 +23,7 @@ router.post('/api/comment', async (ctx, next) => {
 });
 
 router.delete('/api/comment/:id', async (ctx) => {
-  if(ctx.isAuthenticated() && ctx.req.user.isAdmin) {
+  if(ctx.isAuthenticated() && ctx.state.user.isAdmin) {
     ctx.body = await service.deleteComment(ctx.params.id);
   } else {
     ctx.status = 403;
