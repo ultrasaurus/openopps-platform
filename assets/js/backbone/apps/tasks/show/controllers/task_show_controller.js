@@ -223,7 +223,7 @@ var TaskShowController = BaseView.extend({
             var name = $('#update-name-field').val();
             $.ajax({
               url: '/api/user/' + window.cache.currentUser.id,
-              method: 'PUT',
+              method: 'POST',
               data: {
                 username: window.cache.currentUser.username,
                 name: name,
@@ -262,7 +262,7 @@ var TaskShowController = BaseView.extend({
             });
             $.ajax({
               url: '/api/user/' + window.cache.currentUser.id,
-              method: 'PUT',
+              method: 'POST',
               data: data,
             }).done(function (user) {
               window.cache.currentUser.tags = user.tags;
