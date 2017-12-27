@@ -52,6 +52,9 @@ function processUserTags (user, tags) {
       return await createUserTag(tag, user);
     } else {
       _.extend(tag, { 'createdAt': new Date(), 'updatedAt': new Date() });
+      if (tag.id) {
+        return await createUserTag(tag.id, user);
+      }
       return await createNewUserTag(tag, user);
     }
   }));

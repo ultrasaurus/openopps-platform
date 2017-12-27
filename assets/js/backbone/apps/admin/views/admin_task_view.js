@@ -55,7 +55,7 @@ var AdminTaskView = Backbone.View.extend({
           $.ajax({
             url: '/api/publishTask/' + id,
             data: {'id': id, 'state': 'open'},
-            type: 'PUT',
+            type: 'POST',
           }).done(function (model, response, options) {
             view.render();
           });

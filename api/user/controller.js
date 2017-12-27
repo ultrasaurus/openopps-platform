@@ -83,7 +83,7 @@ router.get('/api/user/photo/:id', async (ctx, next) => {
   }
 });
 
-router.put('/api/user/:id', async (ctx, next) => {
+router.post('/api/user/:id', async (ctx, next) => {
   if (ctx.isAuthenticated() && await service.canUpdateProfile(ctx)) {
     ctx.status = 200;
     await service.updateProfile(ctx.request.body, function (errors) {

@@ -3,12 +3,12 @@ const dao = require('postgres-gen-dao');
 const moment = require('moment');
 
 const tasksDueQuery = 'select task.* ' +
-'from task ' +
-'where "completedBy"::date - ?::date = 0 and state = ? ';
+  'from task ' +
+  'where "completedBy"::date - ?::date = 0 and state = ? ';
 
 const tasksDueDetailQuery = 'select owner.name, owner.username ' +
-'from task join midas_user owner on task."userId" = owner.id ' +
-'where task.id = ? ';
+  'from task join midas_user owner on task."userId" = owner.id ' +
+  'where task.id = ? ';
 
 const taskQuery = 'select @task.*, @tags.*, @owner.id, @owner.name ' +
   'from @task task ' +
