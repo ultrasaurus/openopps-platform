@@ -93,14 +93,15 @@ Start the postgres console acting on the `midas` database with: `psql midas`
     ALTER SCHEMA public OWNER TO midas;
     \q
 
-Install node.js. As of Feb 2015 Node.js has moved to 0.12 for its stable version. But many dependencies, especially native compiled packages, don't work with 0.12 yet. So consider running Node.js 0.10.  Consider using [nvm](https://github.com/creationix/nvm) to manage Node versions. Once installed and sourced into your environment nvm can handle manage versions.
+Install node.js. The example commands below use [nvm](https://github.com/creationix/nvm) which is not required, but we find helpful 
+to manage Node versions, when working other Node projects. 
 
 So back to the command line. We assume that nvm is installed and set up
 (added to `.bashrc` or equivalent).
 
-    nvm install 4.2.2
-    nvm alias default 4.2.2
-    nvm version             # should be v4.2.2
+    nvm install 8.9.0
+    nvm alias default 8.9.0
+    nvm version             # should be v8.9.0
 
 Then follow platform-independent steps below starting at [clone the git repository](#clone-the-git-repository).
 
@@ -224,10 +225,8 @@ also changes configuration.
 
 #### Install openopps node packages (from the openopps git folder)
 
-Then install npm 3.x and run the normal npm package installer
+Run the Node Package Installer (npm) to fetch dependencies:
 
-     npm i -g npm@3
-     npm install -g node-gyp@3.3.1 grunt-cli@0.1.13
      npm install
 
 #### Optional: Edit the configuration files
@@ -252,9 +251,7 @@ helpful:
      update midas_user set disabled='f';
      update midas_user set "isAdmin"='t' where username='alan@test.gov';
 
-Note the quotes around "isAdmin". Postgres by default lowercases all non-keywords, which includes column names.
-This doesn't play nicely with our schema.
-
+Note the quotes around "isAdmin". Postgres by default lowercases all non-keywords, which includes column names. 
 
 Now you are ready to rock!
 
