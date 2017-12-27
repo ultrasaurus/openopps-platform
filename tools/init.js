@@ -26,6 +26,9 @@ dbTools.checkTagTableSetup()
     }, function(err) { // eachSeries completed
       if (err) {
         console.log("Failed with error: ", err);
+      } else {
+        console.log("Completed successfully.");
+        process.exit();
       }
       dbTools.end();
     });
