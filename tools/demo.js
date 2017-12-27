@@ -9,6 +9,8 @@ dbTools.checkTableSetup('midas_user').then(async () => {
   return dbTools.importTasksFromFile(path.join(dataDir, 'tasks.csv'));
 }).then(function (tasks) {
   //console.log('new tasks created: ', tasks);
+}).then(() => {
+    console.log("Completed successfully. Ctrl-C to return to terminal.");        
 }).catch(function (err) {
   console.log('err: ', err);
 });
