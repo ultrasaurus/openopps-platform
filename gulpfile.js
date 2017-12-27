@@ -8,7 +8,20 @@ var bro = require('gulp-bro');
 var stringify = require('stringify');
 var babel = require('gulp-babel');
 var uglify = require('gulp-uglify-es').default;
+var sourcemaps = require('gulp-sourcemaps');
 var rename = require('gulp-rename');
+var octo = require('@octopusdeploy/gulp-octo');
+
+var releaseFiles = [
+  '**/*',
+  '!.nyc_output/**/*',
+  '!./{assets,assets/**}',
+  '!./{bin,bin/**}',
+  '!./{coverage,coverage/**}',
+  '!dist/js/{maps,maps/**}',
+  '!./{docs,docs/**}',
+  '!./{test,test/**}',
+];
 
 // Lint Task
 gulp.task('lint', function () {
@@ -27,22 +40,14 @@ gulp.task('sass', function () {
 
 // Concatenate & Minify JS
 gulp.task('scripts', function () {
-  if (process.env.NODE_ENV == 'production') {
-    gulp.src('assets/js/backbone/app.js')
-      .pipe(babel())
-      .pipe(bro({ transform: stringify }))
-      .on('error', function (err) { console.log(err); })
-      .pipe(rename('bundle.min.js'))
-      .pipe(uglify())
-      .on('error', function (err) { console.log(err); })
-      .pipe(gulp.dest('dist/js'));
-  } else {
-    gulp.src('assets/js/backbone/app.js')
-      .pipe(babel())
-      .pipe(bro({ transform: stringify }))
-      .pipe(rename('bundle.js'))
-      .pipe(gulp.dest('dist/js'));
-  }
+  gulp.src('assets/js/backbone/app.js')
+    .pipe(babel())
+    .pipe(bro({ transform: stringify }))
+    .pipe(rename('bundle.min.js'))
+    .pipe(sourcemaps.init())
+    .pipe(uglify())
+    .pipe(sourcemaps.write('./maps'))
+    .pipe(gulp.dest('dist/js'));
 });
 
 // Move additional resources
@@ -68,6 +73,20 @@ gulp.task('watch', function () {
 
 // Build task
 gulp.task('build', ['lint', 'sass', 'scripts', 'move']);
+
+// Build a release
+gulp.task('release', ['build'], function () {
+  var pack = gulp.src(releaseFiles)
+    .pipe(octo.pack('zip'));
+  if(process.env.OctoHost && process.env.OctoKey) {
+    pack.pipe(octo.push({
+      host: process.env.OctoHost,
+      apiKey: process.env.OctoKey,
+    }));
+  } else {
+    pack.pipe(gulp.dest('./bin'));
+  }
+});
 
 //Default task
 gulp.task('default', ['lint', 'sass', 'scripts', 'move', 'watch']);
