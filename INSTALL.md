@@ -237,6 +237,7 @@ See the [Configuration Guide](CONFIG.md)
 
 From the root of the openopps directory, initialize the database:
 
+     npm run migrate:up
      npm run init
 
 If you'd like to include a sample project and users, also run:
