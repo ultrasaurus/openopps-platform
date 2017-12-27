@@ -27,7 +27,8 @@ dbTools.checkTagTableSetup()
       if (err) {
         console.log("Failed with error: ", err);
       } else {
-        console.log("Completed successfully. Ctrl-C to return to terminal.");        
+        console.log("Completed successfully.");
+        process.exit();
       }
       dbTools.end();
     });

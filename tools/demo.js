@@ -10,7 +10,8 @@ dbTools.checkTableSetup('midas_user').then(async () => {
 }).then(function (tasks) {
   //console.log('new tasks created: ', tasks);
 }).then(() => {
-    console.log("Completed successfully. Ctrl-C to return to terminal.");        
+  console.log("Completed successfully.");
+  process.exit();
 }).catch(function (err) {
   console.log('err: ', err);
 });
