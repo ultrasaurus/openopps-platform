@@ -94,34 +94,34 @@
             </li>
           </ul>
         </div>
-        <% if (model.isOwner || (user && user.isAdmin)) { %>
-        <div>
-          <div id="modal-close"></div>
-          <div id="modal-copy"></div>
-          <ul class="nav nav-pills nav-stacked">
-            <li class="li-task-edit">
-              <a href="#" id="task-edit"><i class="fa fa-pencil"></i> <span class="box-icon-text">Edit <span data-i18n="Task">Opportunity</span></span></a>
-            </li>
-            <li class="li-task-view" style="display: none;">
-              <a href="#" id="task-view"><i class="fa fa-pencil"></i> <span class="box-icon-text">View <span data-i18n="Task">Opportunity</span></span></a>
-            </li>
-            <% if (!draftAdminOnly || model.state !== 'draft' || (user && user.isAdmin)) { %>
-            <li id="li-task-close" style="<% if (model.state == 'closed') { %>display: none;<% } %>">
-              <a href="#" id="task-close"><i class="fa fa-times-circle"></i> <span class="box-icon-text">Change <span data-i18n="Task">Opportunity</span> State</span></a>
-            </li>
-            <% } else {%>
-              <li><span class="no-link">This draft <span data-i18n="task">opportunity</span> is awaiting approval from an administrator.</span></li>
-            <% } %>
-            <li id="li-task-reopen" style="<% if (model.state != 'closed') { %>display: none;<% } %>">
-              <a href="#" id="task-reopen"><i class="fa fa-share"></i> <span class="box-icon-text">Reopen</span></a>
-            </li>
-            <% if (user) { %>
-            <li class="li-task-copy">
-              <a href="#" id="task-copy"><i class="fa fa-files-o"></i><span class="box-icon-text">Copy Opportunity</span></a>
-            </li>
-            <% } %>
-          </ul>
-        </div>
+        <% if (model.canEditTask) { %>
+          <div>
+            <div id="modal-close"></div>
+            <div id="modal-copy"></div>
+            <ul class="nav nav-pills nav-stacked">
+              <li class="li-task-edit">
+                <a href="#" id="task-edit"><i class="fa fa-pencil"></i> <span class="box-icon-text">Edit <span data-i18n="Task">Opportunity</span></span></a>
+              </li>
+              <li class="li-task-view" style="display: none;">
+                <a href="#" id="task-view"><i class="fa fa-pencil"></i> <span class="box-icon-text">View <span data-i18n="Task">Opportunity</span></span></a>
+              </li>
+              <% if (!draftAdminOnly || model.state !== 'draft' || (user && user.isAdmin)) { %>
+                <li id="li-task-close" style="<% if (model.state == 'closed') { %>display: none;<% } %>">
+                  <a href="#" id="task-close"><i class="fa fa-times-circle"></i> <span class="box-icon-text">Change <span data-i18n="Task">Opportunity</span> State</span></a>
+                </li>
+              <% } else {%>
+                <li><span class="no-link">This draft <span data-i18n="task">opportunity</span> is awaiting approval from an administrator.</span></li>
+              <% } %>
+                <li id="li-task-reopen" style="<% if (model.state != 'closed') { %>display: none;<% } %>">
+                  <a href="#" id="task-reopen"><i class="fa fa-share"></i> <span class="box-icon-text">Reopen</span></a>
+                </li>
+              <% if (user) { %>
+                <li class="li-task-copy">
+                  <a href="#" id="task-copy"><i class="fa fa-files-o"></i><span class="box-icon-text">Copy Opportunity</span></a>
+                </li>
+              <% } %>
+            </ul>
+          </div>
         <% } %>
       </div>
       <% if (model.volunteers) { %>

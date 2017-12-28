@@ -63,7 +63,7 @@ function validateCompletedBy (obj, attributes) {
 }
 
 function validateTitle (obj, attributes) {
-  if (typeof attributes.title == 'undefined') {
+  if (typeof attributes.title == 'undefined' || attributes.title == '') {
     obj['invalidAttributes']['title'] = [];
     obj['invalidAttributes']['title'].push({'message': 'Headline is required.'});
     return obj;
@@ -82,7 +82,7 @@ function validateTitle (obj, attributes) {
 }
 
 function validateDescription (obj, attributes) {
-  if (typeof attributes.title == 'undefined') {
+  if (typeof attributes.description == 'undefined' || attributes.description == '') {
     obj['invalidAttributes']['description'] = [];
     obj['invalidAttributes']['description'].push({'message': 'Description is required.'});
     return obj;

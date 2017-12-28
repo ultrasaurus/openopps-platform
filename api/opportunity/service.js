@@ -99,8 +99,24 @@ async function sendTaskNotification (user, task, action) {
 
 async function canUpdateOpportunity (user, id) {
   var task = await dao.Task.findOne('id = ?', id);
-  if (task.userId == user.id || user.isAdmin) {
+  if (task.userId == user.id || user.isAdmin || (user.isAgencyAdmin && await checkAgency(user, task.userId))) {
     return true;
+  }
+  return false;
+}
+
+async function canAdministerTask (user, id) {
+  var task = await dao.Task.findOne('id = ?', id);
+  if (task && (user.isAdmin || (user.isAgencyAdmin && await checkAgency(user, task.userId)))) {
+    return true;
+  }
+  return false;
+}
+
+async function checkAgency (user, ownerId) {
+  var owner = await dao.clean.user((await dao.User.query(dao.query.user, ownerId, dao.options.user))[0]);
+  if (owner && owner.agency) {
+    return _.find(user.tags, { 'type': 'agency' }).name == owner.agency.name;
   }
   return false;
 }
@@ -129,6 +145,16 @@ async function updateOpportunity (attributes, done) {
       }).catch (err => { return done(null, false, {'message':'Error updating task.'}); });
   }).catch (err => { 
     return done(null, false, {'message':'Error updating task.'}); 
+  });
+}
+
+async function publishTask (attributes, done) {
+  attributes.publishedAt = new Date();
+  attributes.updatedAt = new Date();
+  await dao.Task.update(attributes).then(async (task) => {
+    return done(true);
+  }).catch (err => { 
+    return done(false);
   });
 }
 
@@ -308,6 +334,7 @@ module.exports = {
   commentsByTaskId: commentsByTaskId,
   createOpportunity: createOpportunity,
   updateOpportunity: updateOpportunity,
+  publishTask: publishTask,
   copyOpportunity: copyOpportunity,
   deleteTask: deleteTask,
   getExportData: getExportData,
@@ -316,4 +343,5 @@ module.exports = {
   sendTaskStateUpdateNotification: sendTaskStateUpdateNotification,
   sendTasksDueNotifications: sendTasksDueNotifications,
   canUpdateOpportunity: canUpdateOpportunity,
+  canAdministerTask: canAdministerTask,
 };

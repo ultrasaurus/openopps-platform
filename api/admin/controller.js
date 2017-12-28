@@ -99,10 +99,10 @@ router.get('/api/admin/admin/:id', async (ctx, next) => {
 });
 
 router.get('/api/admin/agencyAdmin/:id', async (ctx, next) => {
-  if (ctx.isAuthenticated() && ctx.state.user.isAdmin) {
+  if (ctx.isAuthenticated() && await service.canAdministerAccount(ctx.state.user, ctx.params.id)) {
     var user = await service.getProfile(ctx.params.id);
     user.isAgencyAdmin = ctx.query.action === 'true' ? 't' : 'f';
-    await service.updateProfile(user, function (error) {
+    await service.updateProfile(user, function (done, error) {
       if (error) {
         log.info(error);
       }

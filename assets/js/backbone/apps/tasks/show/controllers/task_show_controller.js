@@ -62,7 +62,7 @@ var TaskShowController = BaseView.extend({
     if (owner !== true) {
       // if none of these apply, are they an admin?
       if (window.cache.currentUser) {
-        if (window.cache.currentUser.isAdmin === true) {
+        if (window.cache.currentUser.isAdmin === true || model.canEditTask) {
           owner = true;
         }
       }
@@ -223,7 +223,7 @@ var TaskShowController = BaseView.extend({
             var name = $('#update-name-field').val();
             $.ajax({
               url: '/api/user/' + window.cache.currentUser.id,
-              method: 'PUT',
+              method: 'POST',
               data: {
                 username: window.cache.currentUser.username,
                 name: name,
@@ -262,7 +262,7 @@ var TaskShowController = BaseView.extend({
             });
             $.ajax({
               url: '/api/user/' + window.cache.currentUser.id,
-              method: 'PUT',
+              method: 'POST',
               data: data,
             }).done(function (user) {
               window.cache.currentUser.tags = user.tags;

@@ -46,6 +46,7 @@ var TaskModel = Backbone.Model.extend({
   update: function (data) {
     var self = this;
     this.save(data, {
+      type: 'POST',
       success: function (data) {
         self.trigger('task:update:success', data);
       },
@@ -58,27 +59,33 @@ var TaskModel = Backbone.Model.extend({
   updateState: function (state) {
     var self = this;
 
-    this.save({
-      state: state
+    var data = {
+      state: state,
+    };
+    this.save(data, {
+      type: 'POST',
     }, {
-      success: function(data) {
-        self.trigger("task:update:state:success", data);
-      }
+      success: function (data) {
+        self.trigger('task:update:state:success', data);
+      },
+      error: function ( model, response, options ) {
+        console.log(model);
+      },
     });
   },
 
   // TODO: I think this had to do with projects...
-  orphan: function(data) {
+  orphan: function (data) {
     var self = this;
 
     this.save({
-      projectId: null
+      projectId: null,
+      type: 'POST',
     }, {
-      success: function(data) {
-        self.trigger("task:update:orphan:success", data);
-      }
+      success: function (data) {
+        self.trigger('task:update:orphan:success', data);
+      },
     });
-
   },
 
   remoteGet: function (id) {
@@ -86,11 +93,11 @@ var TaskModel = Backbone.Model.extend({
     this.set({ id: id });
     this.fetch({
       success: function (data) {
-        self.trigger("task:model:fetch:success", data);
+        self.trigger('task:model:fetch:success', data);
       },
-      error: function(data, xhr) {
-        self.trigger("task:model:fetch:error", data, xhr);
-      }
+      error: function (data, xhr) {
+        self.trigger('task:model:fetch:error', data, xhr);
+      },
     });
   },
 
