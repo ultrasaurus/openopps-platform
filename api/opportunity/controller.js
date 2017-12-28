@@ -1,6 +1,7 @@
 const log = require('blue-ox')('app:opportunity');
 const Router = require('koa-router');
 const _ = require('lodash');
+const auth = require('../auth/auth');
 const service = require('./service');
 const notification = require('../notification/service');
 const badgeService = require('../badge/service')(notification);
@@ -12,18 +13,14 @@ router.get('/api/task', async (ctx, next) => {
   ctx.body = await service.list();
 });
 
-router.get('/api/task/export', async (ctx, next) => {
-  if (ctx.isAuthenticated() && ctx.state.user.isAdmin) {
-    var exportData = await service.getExportData().then(rendered => {
-      ctx.response.set('Content-Type', 'text/csv');
-      ctx.response.set('Content-disposition', 'attachment; filename=tasks.csv');
-      ctx.body = rendered;
-    }).catch(err => {
-      log.info(err);
-    });
-  } else {
-    ctx.status = 401;
-  }
+router.get('/api/task/export', auth.isAdmin, async (ctx, next) => {
+  var exportData = await service.getExportData().then(rendered => {
+    ctx.response.set('Content-Type', 'text/csv');
+    ctx.response.set('Content-disposition', 'attachment; filename=tasks.csv');
+    ctx.body = rendered;
+  }).catch(err => {
+    log.info(err);
+  });
 });
 
 router.get('/api/task/:id', async (ctx, next) => {
@@ -48,25 +45,20 @@ router.get('/api/comment/findAllBytaskId/:id', async (ctx, next) => {
   }
 });
 
-router.post('/api/task', async (ctx, next) => {
-  if (ctx.isAuthenticated()) {
-    ctx.request.body.userId = ctx.session.passport.user;
-    var opportunity = await service.createOpportunity(ctx.request.body, function (errors, task) {
-      if (errors) {
-        ctx.status = 400;
-        return ctx.body = errors;
-      }
-      service.sendTaskNotification(ctx.state.user, task, task.state === 'draft' ? 'task.create.draft' : 'task.create.thanks');
-      ctx.body = task;
-    });
-  } else {
-    ctx.status = 401;
-    return ctx.body = null;
-  }
+router.post('/api/task', auth, async (ctx, next) => {
+  ctx.request.body.userId = ctx.session.passport.user;
+  var opportunity = await service.createOpportunity(ctx.request.body, function (errors, task) {
+    if (errors) {
+      ctx.status = 400;
+      return ctx.body = errors;
+    }
+    service.sendTaskNotification(ctx.state.user, task, task.state === 'draft' ? 'task.create.draft' : 'task.create.thanks');
+    ctx.body = task;
+  });
 });
 
-router.post('/api/task/copy', async (ctx, next) => {
-  if (ctx.isAuthenticated() && await service.canUpdateOpportunity(ctx.state.user, ctx.request.body.taskId)) {
+router.post('/api/task/copy', auth, async (ctx, next) => {
+  if (await service.canUpdateOpportunity(ctx.state.user, ctx.request.body.taskId)) {
     await service.copyOpportunity(ctx.request.body, ctx.state.user.isAdmin ? ctx.state.user : null, function (error, task) {
       if (error) {
         ctx.flash('error', 'Error Copying Opportunity');
@@ -81,8 +73,8 @@ router.post('/api/task/copy', async (ctx, next) => {
   }
 });
 
-router.post('/api/task/remove', async (ctx) => {
-  if (ctx.isAuthenticated() && await service.canAdministerTask(ctx.state.user, ctx.request.body.id)) {
+router.post('/api/task/remove', auth, async (ctx) => {
+  if (await service.canAdministerTask(ctx.state.user, ctx.request.body.id)) {
     await service.findOne(ctx.request.body.id).then(async task => {
       if (['draft', 'submitted'].indexOf(task.state) != -1) {
         ctx.body = await service.deleteTask(ctx.request.body.id);
@@ -99,8 +91,8 @@ router.post('/api/task/remove', async (ctx) => {
   }
 });
 
-router.post('/api/task/:id', async (ctx, next) => {
-  if (ctx.isAuthenticated() && await service.canUpdateOpportunity(ctx.state.user, ctx.request.body.id)) {
+router.post('/api/task/:id', auth, async (ctx, next) => {
+  if (await service.canUpdateOpportunity(ctx.state.user, ctx.request.body.id)) {
     ctx.status = 200;
     await service.updateOpportunity(ctx.request.body, function (task, stateChange, errors) {
       if (errors) {
@@ -120,8 +112,8 @@ router.post('/api/task/:id', async (ctx, next) => {
   }
 });
 
-router.post('/api/publishTask/:id', async (ctx, next) => {
-  if (ctx.isAuthenticated() && await service.canAdministerTask(ctx.state.user, ctx.request.body.id)) {
+router.post('/api/publishTask/:id', auth, async (ctx, next) => {
+  if (await service.canAdministerTask(ctx.state.user, ctx.request.body.id)) {
     await service.publishTask(ctx.request.body, function (done) {
       ctx.body = { success: true };
     }).catch(err => {
