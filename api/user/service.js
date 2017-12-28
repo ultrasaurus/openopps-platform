@@ -98,11 +98,20 @@ async function updateProfile (attributes, done) {
   }).catch (err => { return done({'message':'Error updating profile.'}); });
 }
 
-async function updateProfileStatus (attributes, done) {
-  attributes.updatedAt = new Date();
-  await dao.User.update(attributes).then(async (user) => {
-    return done(null);
-  }).catch (err => { return done({'message':'Error updating profile status.'}); });
+async function updateProfileStatus (opts, done) {
+  if (await canAdministerAccount(opts.user, { id: opts.id })) {
+    var user = await getProfile(opts.id);
+    user.disabled = opts.disable ? 't' : 'f';
+    user.updatedAt = new Date();
+    await dao.User.update(user).then(async (result) => {
+      return done(result, null);
+    }).catch (err => {
+      log.info('Error updating profile status', err);
+      return done(null, { 'message': 'Error updating profile status' });
+    });
+  } else {
+    done(null, {'message': 'Forbidden'});
+  }
 }
 
 async function canUpdateProfile (ctx) {
