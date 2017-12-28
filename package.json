@@ -8,6 +8,9 @@
     "async": "^2.0.0-rc.2",
     "autolinker": "^1.1.0",
     "aws-sdk": "^2.3.4",
+    "babel-core": "6.14.0",
+    "babel-loader": "6.2.5",
+    "babel-preset-es2015": "6.14.0",
     "backbone": "^1.3.2",
     "bcryptjs": "*",
     "blue-ox": "^0.3.0",
@@ -73,9 +76,6 @@
     "validator": "^5.1.0"
   },
   "devDependencies": {
-    "babel-core": "6.14.0",
-    "babel-loader": "6.2.5",
-    "babel-preset-es2015": "6.14.0",
     "casperjs": "1.1.3",
     "chai": "^3.5.0",
     "chai-datetime": "^1.4.1",
@@ -137,6 +137,6 @@
   "bugs": "https://github.com/openopps/openopps-platform/issues",
   "license": "CC0-1.0",
   "engines": {
-    "node": "8.9.0"
+    "node": "8.9.1"
   }
 }
