@@ -72,8 +72,11 @@ var AdminTaskView = Backbone.View.extend({
     e.preventDefault();
     if (window.confirm('Are you sure you want to delete "' + title + '"?')) {
       $.ajax({
-        url: '/api/task/' + id,
-        type: 'DELETE',
+        url: '/api/task/remove',
+        type: 'POST',
+        data: {
+          id: id,
+        },
       }).done(function () {
         view.render();
       });

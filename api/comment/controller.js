@@ -22,12 +22,12 @@ router.post('/api/comment', async (ctx, next) => {
   }
 });
 
-router.delete('/api/comment/:id', async (ctx) => {
+router.post('/api/comment/remove', async (ctx) => {
   if(ctx.isAuthenticated() && ctx.state.user.isAdmin) {
-    ctx.body = await service.deleteComment(ctx.params.id);
+    ctx.body = await service.deleteComment(ctx.request.body.id);
   } else {
     ctx.status = 403;
   }
 });
-  
+
 module.exports = router.routes();

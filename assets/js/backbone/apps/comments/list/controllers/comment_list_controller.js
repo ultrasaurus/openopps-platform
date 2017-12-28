@@ -235,8 +235,11 @@ Comment = Backbone.View.extend({
 
     if ( window.cache.currentUser && window.cache.currentUser.isAdmin ) {
       $.ajax({
-        url: '/api/comment/'+id,
-        type: 'DELETE',
+        url: '/api/comment/remove',
+        type: 'POST',
+        data: {
+          id: id,
+        },
       }).done( function (data){
         $(e.currentTarget).parent().parent().remove('li.comment-item');
         self.options.recentlyDeleted = true;

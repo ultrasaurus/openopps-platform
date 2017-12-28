@@ -30,6 +30,29 @@ async function deleteVolunteer (vId, taskId, done) {
   return done(notificationInfo, null);
 }
 
+async function canAddVolunteer (attributes, user) {
+  if (typeof attributes.userId !== 'undefined' && !user.isAdmin) {
+    return false;
+  }
+  return true;
+}
+
+async function canRemoveVolunteer (id, user) {
+  var task = await dao.Task.findOne('id = ?', id);
+  if (task && (user.isAdmin || (user.isAgencyAdmin && await checkAgency(user, task.userId)))) {
+    return true;
+  }
+  return false;
+}
+
+async function checkAgency (user, ownerId) {
+  var owner = (await dao.Task.db.query(dao.query.user, ownerId)).rows[0];
+  if (owner && owner.agency) {
+    return user.tags ? _.find(user.tags, { 'type': 'agency' }).name == owner.agency.name : false;
+  }
+  return false;
+}
+
 async function sendAddedVolunteerNotification (user, volunteer, action) {
   var notificationInfo = (await dao.Volunteer.db.query(dao.query.volunteer, volunteer.id)).rows;
   var data = {
@@ -58,6 +81,8 @@ async function sendDeletedVolunteerNotification (notificationInfo, action) {
 module.exports = {
   addVolunteer: addVolunteer,
   deleteVolunteer: deleteVolunteer,
+  canAddVolunteer: canAddVolunteer,
+  canRemoveVolunteer: canRemoveVolunteer,
   sendAddedVolunteerNotification: sendAddedVolunteerNotification,
   sendDeletedVolunteerNotification: sendDeletedVolunteerNotification,
 };
