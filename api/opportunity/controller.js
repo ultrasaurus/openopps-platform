@@ -28,8 +28,8 @@ router.get('/api/task/export', async (ctx, next) => {
 
 router.get('/api/task/:id', async (ctx, next) => {
   var task = await service.findById(ctx.params.id, ctx.state.user ? true : false);
-  if (typeof ctx.state.user !== 'undefined' && ctx.state.user.id === task.userId) { 
-    task.isOwner = true; 
+  if (typeof ctx.state.user !== 'undefined' && ctx.state.user.id === task.userId) {
+    task.isOwner = true;
   }
   if (task.isOwner ||
     (_.has(ctx.state.user, 'isAdmin') && ctx.state.user.isAdmin) ||
@@ -75,6 +75,24 @@ router.post('/api/task/copy', async (ctx, next) => {
         return ctx.body = null;
       }
       ctx.body = task;
+    });
+  } else {
+    ctx.status = 403;
+  }
+});
+
+router.post('/api/task/remove', async (ctx) => {
+  if (ctx.isAuthenticated() && await service.canAdministerTask(ctx.state.user, ctx.request.body.id)) {
+    await service.findOne(ctx.request.body.id).then(async task => {
+      if (['draft', 'submitted'].indexOf(task.state) != -1) {
+        ctx.body = await service.deleteTask(ctx.request.body.id);
+      } else {
+        log.info('Wrong state');
+        ctx.status = 400;
+      }
+    }).catch(err => {
+      log.info('Error occured', err);
+      ctx.status = 400;
     });
   } else {
     ctx.status = 403;
@@ -129,13 +147,5 @@ function checkTaskState (stateChange, user, body, task) {
     }
   }
 }
-
-router.delete('/api/task/:id', async (ctx) => {
-  if (ctx.isAuthenticated() && await service.canAdministerTask(ctx.state.user, ctx.params.id)) {
-    ctx.body = await service.deleteTask(ctx.params.id);
-  } else {
-    ctx.status = 403;
-  }
-});
 
 module.exports = router.routes();
