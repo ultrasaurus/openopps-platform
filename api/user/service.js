@@ -10,7 +10,9 @@ async function list () {
 }
 
 async function findOne (id) {
-  return await dao.User.findOne('id = ?', id);
+  return await dao.User.findOne('id = ?', id).catch(err => {
+    return null;
+  });
 }
 
 async function findOneByUsername (username, done) {
