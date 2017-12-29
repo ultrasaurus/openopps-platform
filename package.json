@@ -5,6 +5,7 @@
   "description": "platform that creates an empowered network through sharing skills and collaborating on projects",
   "keywords": [],
   "dependencies": {
+    "ajv": "^5.0.0",
     "app-module-path": "^2.2.0",
     "async": "^2.0.0-rc.2",
     "autolinker": "^1.1.0",
@@ -101,9 +102,10 @@
     "dir": "."
   },
   "scripts": {
-    "preinstall": "npm install fs-extra git-clone && node install-theme && npm run import --openopps-platform:dir=_theme",
+    "preinstall": "npm install fs-extra git-clone ajv@5.0.0 && npm run preinstall:theme",
+    "preinstall:theme": "[ ${THEME} ] && (node install-theme && npm run import --openopps-platform:dir=_theme) || echo '$THEME undefined; no theme installed'",
     "import": "node import-theme $npm_package_config_dir",
-    "postinstall": "npm run uswds && npm run build",
+    "postinstall": "pwd; ls -l; npm run uswds && npm run build",
     "init": "node ./tools/init.js",
     "demo": "node ./tools/demo.js",
     "build": "gulp build",
