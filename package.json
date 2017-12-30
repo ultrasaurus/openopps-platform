@@ -90,7 +90,8 @@
     "select2": "3.5.2-browserify",
     "stringify": "^5.1.0",
     "underscore": "^1.8.3",
-    "uswds": "latest",
+    "usajobs-design-system": "^1.4.0",
+    "uswds": "^1.4.4",
     "uuid": "^3.1.0",
     "validator": "^5.1.0",
     "vinyl-buffer": "^1.0.0",
@@ -152,7 +153,11 @@
     "uswds": "npm run uswds:css && npm run uswds:images && npm run uswds:fonts",
     "uswds:css": "node fs-copy node_modules/uswds/dist/css/uswds.css assets/styles/uswds.css",
     "uswds:images": "node fs-copy node_modules/uswds/dist/img assets/images/uswds",
-    "uswds:fonts": "node fs-copy node_modules/uswds/dist/fonts assets/fonts"
+    "uswds:fonts": "node fs-copy node_modules/uswds/dist/fonts assets/fonts",
+    "design-system": "npm run design-system:css && npm run design-system:images && npm run design-system:fonts",
+    "design-system:css": "node fs-copy node_modules/usajobs-design-system/css/usajobs-design-system.min.css assets/styles/usajobs-design-system.min.css",
+    "design-system:images": "node fs-copy node_modules/usajobs-design-system/img assets/img",
+    "design-system:fonts": "node fs-copy node_modules/usajobs-design-system/fonts assets/fonts"
   },
   "main": "app.js",
   "repository": {

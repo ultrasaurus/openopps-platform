@@ -53,10 +53,18 @@ gulp.task('move', function () {
     .pipe(gulp.dest('dist/fonts'));
   gulp.src(['./assets/images/**'])
     .pipe(gulp.dest('dist/images'));
+  gulp.src(['./assets/img/**'])
+    .pipe(gulp.dest('dist/img'));
   gulp.src(['./assets/locales/**'])
     .pipe(gulp.dest('dist/locales'));
   gulp.src(['./assets/*.*'])
     .pipe(gulp.dest('dist'));
+  gulp.src(['./assets/styles/usajobs-design-system.min.css'])
+    .pipe(gulp.dest('dist/styles'));
+  gulp.src(['./assets/styles/usajobs-design-system-base--open-opps.css'])
+    .pipe(gulp.dest('dist/styles'));
+  gulp.src(['./assets/js/vendor/fontawesome-all.js'])
+    .pipe(gulp.dest('dist/js'));
 });
 
 // Watch Files For Changes

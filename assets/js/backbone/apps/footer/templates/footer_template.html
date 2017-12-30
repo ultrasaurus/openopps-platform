@@ -1,16 +1,34 @@
-<footer class="container center">
-  <% if (ui.contact) { %>
-  Questions? Contact us: <a href="<%- ui.contact.link %>" target="_blank"><%- ui.contact.name %></a>
-  |
-  <% } %>
-  Version <a target="_blank"
-  href="<%- versionLink %>"><%- version %></a>
-  <% if (login.terms.enabled === true) { %>
-  |
-  <a href="<%- login.terms.link %>"><%- login.terms.name %></a>
-  <% } %>
-  |
-  Locations provided by <a target="_blank" href="http://www.geonames.org/">GeoNames</a>
-  |
-  <a target="_blank" href="https://github.com/openopps/openopps-platform"><i class="fa fa-github"></i> Powered by open source</a>
-</footer>
+  <footer class="usa-footer usa-footer-big usajobs-footer--v2" aria-label="footer" data-object="footer">
+      <div class="usa-footer-secondary_section usa-footer-big-secondary-section">
+          <div class="usa-grid">
+              <div class="usa-footer-logo usa-width-one-half">
+                  <span class="logo"></span>
+                  <p class="usajobs-footer--v1__note">
+                      Open Opportunities is a <a href="https://www.opm.gov">United States Office of Personnel Management</a> website.
+                  </p>
+              </div> 
+          </div>
+          <div class="usa-grid">
+              <div class="usa-footer-logo usa-width-one-whole">
+                <ul class="usa-unstyled-list usajobs-footer--v1__subsection-horizontal">
+                  <li><a href="<%- login.terms.link %>">Terms and conditions</a></li>
+                  <li><a href="https://www.opm.gov/about-us/budget-performance/">Budget and Performance</a></li>
+                  <li><a href="https://www.opm.gov/information-management/freedom-of-information-act/">FOIA</a></li>
+                  <li><a href="https://www.opm.gov/our-inspector-general/">Inspector General</a></li>
+                  <li><a href="https://www.opm.gov/information-management/no-fear-act/">No Fear Act Data</a></li>
+                  <li><a href="/Help/Privacy/">Privacy Policy</a></li>
+                  <li><a href="http://www.usa.gov/">USA.gov</a></li>
+                </ul>
+              </div>
+            </div>
+            <div class="usa-grid">
+              <div class="usa-footer-logo usa-width-one-whole">
+                  <ul class="usa-unstyled-list usajobs-footer--v1__subsection-horizontal">
+                    <li>Locations provided by <a href="http://www.geonames.org/">GeoNames</a></li>
+                    <li><i class="fa fa-github"></i> Powered by <a href="https://github.com/openopps/openopps-platform">Open Source</a></li>
+                  </ul>
+              </div>
+          </div>
+      </div>
+  </footer>
+
