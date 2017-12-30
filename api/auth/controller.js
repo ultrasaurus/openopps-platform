@@ -40,7 +40,7 @@ router.post('/api/auth/local', async (ctx, next) => {
 });
 
 router.post('/api/auth/local/register', async (ctx, next) => {
-  log.info('Register user', ctx.request.body);
+  log.info('Register user', _.omit(ctx.request.body,"password"));
 
   delete(ctx.request.body.isAdmin);
   delete(ctx.request.body.isAgencyAdmin);
