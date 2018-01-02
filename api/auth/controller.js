@@ -40,7 +40,7 @@ router.post('/api/auth/local', async (ctx, next) => {
 });
 
 router.post('/api/auth/local/register', async (ctx, next) => {
-  log.info('Register user', ctx.request.body);
+  log.info('Register user', _.omit(ctx.request.body,"password"));
 
   delete(ctx.request.body.isAdmin);
   delete(ctx.request.body.isAgencyAdmin);
@@ -58,14 +58,14 @@ router.post('/api/auth/local/register', async (ctx, next) => {
 
   await service.register(ctx.request.body, function (err, user) {
     if (err) {
-      req.flash('error', 'Error.Passport.Registration.Failed');
+      ctx.flash('error', 'Error.Passport.Registration.Failed');
       ctx.status = 400;
       return ctx.body = { message: err.message || 'Registration failed.' };
     }
     try {
       service.sendUserCreateNotification(user, 'user.create.welcome');
     } finally {
-      ctx.body = { success: true };     
+      ctx.body = { success: true };
     }
     return ctx.login(user);
   });
