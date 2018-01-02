@@ -174,7 +174,7 @@ function findOne (id) {
           log.info('Error retrieving file ', file.name, err);
           resolve(false);
         }
-        resolve(data);
+        resolve(data.Body ? data.Body : data);
       });
     }).catch((err) => {
       resolve(false);
