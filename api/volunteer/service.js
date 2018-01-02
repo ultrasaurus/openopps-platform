@@ -38,11 +38,8 @@ async function canAddVolunteer (attributes, user) {
 }
 
 async function canRemoveVolunteer (id, user) {
-  var task = await dao.Task.findOne('id = ?', id);
-  if (task && (user.isAdmin || (user.isAgencyAdmin && await checkAgency(user, task.userId)))) {
-    return true;
-  }
-  return false;
+  var task = await dao.Task.findOne('id = ?', id).catch(() => { return null; });
+  return task && (task.userId === user.id || user.isAdmin || (user.isAgencyAdmin && await checkAgency(user, task.userId)));
 }
 
 async function checkAgency (user, ownerId) {
