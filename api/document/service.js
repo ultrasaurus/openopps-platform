@@ -44,8 +44,7 @@ s3 = {
     };
     s3.upload(params, cb);
   },
-  get: function (file, res) {
-    res.type(file.mimeType);
+  get: function (file, cb) {
     var s3 = new AWS.S3();
     var params = {
       Bucket: config.s3.bucket,
