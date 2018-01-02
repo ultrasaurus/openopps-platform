@@ -55,7 +55,7 @@ async function sendAddedVolunteerNotification (user, volunteer, action) {
   var data = {
     action: action,
     model: {
-      task: { title: notificationInfo[0].title },
+      task: { id: notificationInfo[0].id, title: notificationInfo[0].title },
       owner: { username: notificationInfo[0].ownername },
       user: user,
     },
