@@ -39,7 +39,7 @@ s3 = {
     var s3 = new AWS.S3();
     var params = {
       Bucket: config.s3.bucket,
-      Key: p.join(config.s3.prefix || '', name),
+      Key: path.join(config.s3.prefix || '', name),
       Body: data,
     };
     s3.upload(params, cb);
@@ -49,7 +49,7 @@ s3 = {
     var s3 = new AWS.S3();
     var params = {
       Bucket: config.s3.bucket,
-      Key: p.join(config.s3.prefix || '', file.fd),
+      Key: path.join(config.s3.prefix || '', file.fd),
     };
     s3.getObject(params, cb);
   },
