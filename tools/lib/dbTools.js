@@ -90,7 +90,9 @@ module.exports = {
     var tags = [];
     // load tags from file
     if (fs.existsSync(tagFile)) {
-      lines = fs.readFileSync(tagFile).toString().split('\n');
+      lines = fs.readFileSync(tagFile).toString().split(/\r?\n/).filter(line => {
+        return line !== '';
+      });
       tags = _.map(lines, function (line) {
         if (tagType == 'agency') {
           var match = line.match(/\((.+)\)/);
@@ -112,7 +114,7 @@ module.exports = {
     // returns a promise
     return db.tx(function (t) {
       tagQueries = [];
-      var query_text = 'INSERT INTO tagEntity ("type","name","data","createdAt","updatedAt") SELECT $1, $2, $3, $4, $5 WHERE NOT EXISTS (SELECT id FROM tagEntity WHERE "name" = $5 AND "type" = $6)';
+      var query_text = 'INSERT INTO tagEntity ("type","name","data","createdAt","updatedAt") SELECT $1, $2, $3, $4, $5 WHERE NOT EXISTS (SELECT id FROM tagEntity WHERE "name" = $6 AND "type" = $7)';
       for (i in tags) {
         if (!_.isEmpty(tags[i])) {
           var tagData = JSON.stringify(tags[i]);
