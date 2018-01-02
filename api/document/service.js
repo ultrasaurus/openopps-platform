@@ -44,11 +44,11 @@ s3 = {
     };
     s3.upload(params, cb);
   },
-  get: function (file, cb) {
+  get: function (name, cb) {
     var s3 = new AWS.S3();
     var params = {
       Bucket: config.s3.bucket,
-      Key: path.join(config.s3.prefix || '', file.fd),
+      Key: path.join(config.s3.prefix || '', name),
     };
     s3.getObject(params, cb);
   },
