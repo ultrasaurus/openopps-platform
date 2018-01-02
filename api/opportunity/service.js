@@ -236,10 +236,7 @@ async function copyOpportunity (attributes, adminAttributes, done) {
     description: results.description,
   };
 
-  var newTask = _.extend(baseTask, task);
-  delete(newTask.id);
-  delete(newTask.completedBy);
-  delete(newTask.completedAt);
+  var newTask = _.extend(_.clone(baseTask), task);
   await dao.Task.insert(newTask)
     .then(async (task) => {
       tags.map(tag => {
