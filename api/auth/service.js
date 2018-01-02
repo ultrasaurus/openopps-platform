@@ -30,7 +30,8 @@ async function register (attributes, done) {
     return done(new Error('password may not be blank'));
   }
   await dao.User.insert(_.extend(baseUser, attributes)).then(async (user) => {
-    log.info('created user', user);
+    log.info('created user', _.omit(user, 'password'));
+
     var tags = attributes.tags || attributes['tags[]'] || [];
     await userService.processUserTags(user, tags).then(tags => {
       user.tags = tags;
@@ -41,7 +42,7 @@ async function register (attributes, done) {
       accessToken: crypto.randomBytes(48).toString('base64'),
     };
     await dao.Passport.insert(_.extend(basePassport, passport)).then(passport => {
-      log.info('created passport', passport);
+      log.info('created passport', _.omit(passport, ['password', 'accessToken']));
     }).catch(err => {
       log.info('register: failed to create passport ', attributes.username, err);
     });
