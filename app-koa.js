@@ -9,6 +9,7 @@ const CSRF = require('koa-csrf');
 const session = require('koa-session');
 const redisStore = require('koa-redis');
 const passport = require('koa-passport');
+const cacheControl = require('koa-cache-control');
 const flash = require('koa-better-flash');
 const _ = require('lodash');
 
@@ -48,6 +49,12 @@ module.exports = (config) => {
   // initialize body parser
   app.use(parser());
 
+  // initialize cache controller
+  app.use(cacheControl({
+    mustRevalidate: true,
+    public: true,
+  }));
+
   // configure session
   app.proxy = true;
   app.keys = [openopps.session.secret || 'your-secret-key'];
@@ -56,9 +63,9 @@ module.exports = (config) => {
   // configure CSRF
   app.use(new CSRF({
     invalidSessionSecretMessage: { message: 'Invalid session' },
-    invalidSessionSecretStatusCode: 403,
+    invalidSessionSecretStatusCode: 401,
     invalidTokenMessage: { message: 'Invalid CSRF token' },
-    invalidTokenStatusCode: 403,
+    invalidTokenStatusCode: 401,
     excludedMethods: [ 'GET', 'HEAD', 'OPTIONS' ],
     disableQuery: false,
   }));
@@ -118,6 +125,7 @@ module.exports = (config) => {
   // CSRF Token
   app.use(async (ctx, next) => {
     if(ctx.path === '/csrfToken') {
+      ctx.cacheControl = { private: true };
       ctx.body = { _csrf: ctx.csrf };
     } else await next();
   });
@@ -128,6 +136,7 @@ module.exports = (config) => {
     if(ctx.path.match('^/api/.*')) {
       // JSON request for better-body parser are in request.fields
       ctx.request.body = ctx.request.body || ctx.request.fields;
+      ctx.cacheControl = { private: true };
       await next();
     } else {
       var data = {
