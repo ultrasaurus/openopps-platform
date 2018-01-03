@@ -25,6 +25,7 @@ module.exports = (config) => {
   _.extend(openopps, require('./config/application'));
   _.extend(openopps, require('./config/session'));
   _.extend(openopps, require('./config/settings/auth'));
+  _.extend(openopps, require('./config/cache'));
   _.extend(openopps, require('./config/version'));
   _.extend(openopps, require('./config/fileStore'));
   _.extend(openopps, require('./config/email'));
@@ -50,10 +51,7 @@ module.exports = (config) => {
   app.use(parser());
 
   // initialize cache controller
-  app.use(cacheControl({
-    mustRevalidate: true,
-    public: true,
-  }));
+  app.use(cacheControl(openopps.cache.public));
 
   // configure session
   app.proxy = true;
@@ -125,7 +123,7 @@ module.exports = (config) => {
   // CSRF Token
   app.use(async (ctx, next) => {
     if(ctx.path === '/csrfToken') {
-      ctx.cacheControl = { private: true };
+      ctx.cacheControl = openopps.cache.noStore;
       ctx.body = { _csrf: ctx.csrf };
     } else await next();
   });
@@ -136,7 +134,7 @@ module.exports = (config) => {
     if(ctx.path.match('^/api/.*')) {
       // JSON request for better-body parser are in request.fields
       ctx.request.body = ctx.request.body || ctx.request.fields;
-      ctx.cacheControl = { private: true };
+      ctx.cacheControl = openopps.cache.noStore;
       await next();
     } else {
       var data = {
