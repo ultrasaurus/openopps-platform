@@ -11,6 +11,7 @@ var UIConfig = require('../../../config/ui.json');
 var Login = require('../../../config/login.json');
 var LoginController = require('../../login/controllers/login_controller');
 var NavTemplate = require('../templates/nav_template.html');
+var User = require('../../../../utils/user');
 
 var NavView = Backbone.View.extend({
   events: {
@@ -51,7 +52,7 @@ var NavView = Backbone.View.extend({
         dataType: 'json',
       }).done(function (data) {
         // reset the currentUser object
-        window.cache.currentUser = data;
+        window.cache.currentUser = new User(data);
         // re-render the view
         self.render();
       });
