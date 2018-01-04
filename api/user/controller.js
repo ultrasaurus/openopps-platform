@@ -68,6 +68,14 @@ router.get('/api/user/photo/:id', async (ctx, next) => {
   }
 });
 
+router.post('/api/user/resetPassword', auth, async (ctx, next) => {
+  if (await service.canAdministerAccount(ctx.state.user, ctx.request.body)) {
+    ctx.body = await service.updatePassword(ctx.request.body);
+  } else {
+    ctx.status = 403;
+  }
+});
+
 router.post('/api/user/:id', auth, async (ctx, next) => {
   if (await service.canUpdateProfile(ctx)) {
     ctx.status = 200;
@@ -102,14 +110,6 @@ router.get('/api/user/enable/:id', auth, async (ctx, next) => {
   }, (user, err) => {
     err ? err.message === 'Forbidden' ? ctx.status = 403 : ctx.status = 400 : ctx.body = { user };
   });
-});
-
-router.post('/api/user/resetPassword', auth, async (ctx, next) => {
-  if (await service.canAdministerAccount(ctx.state.user, ctx.request.body)) {
-    ctx.body = await service.updatePassword(ctx.request.body);
-  } else {
-    ctx.status = 403;
-  }
 });
 
 module.exports = router.routes();
