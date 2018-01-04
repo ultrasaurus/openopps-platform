@@ -1,7 +1,12 @@
 const _ = require ('lodash');
 
 async function baseAuth (ctx, next) {
-  ctx.isAuthenticated() ? await next() : ctx.status = 401;
+  if(ctx.isAuthenticated()) {
+    await next();
+  } else {
+    ctx.body = { message: 'You must be logged in to view this page' };
+    ctx.status = 401;
+  }
 }
 
 module.exports = baseAuth;
