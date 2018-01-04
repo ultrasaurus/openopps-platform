@@ -26,7 +26,7 @@ router.post('/api/auth/local', async (ctx, next) => {
         message = getMessage(err);
       }
       if (ctx.accepts('json')) {
-        ctx.status = 403;
+        ctx.status = 401;
         return ctx.body = { message: message };
       } else {
         ctx.flash('message', message);
