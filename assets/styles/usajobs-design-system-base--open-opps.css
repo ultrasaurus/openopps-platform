@@ -7573,7 +7573,7 @@ html {
 
 @media screen and (min-width: 62em) {
   .usajobs-footer--openopps__container {
-    max-width: 1200px;
+    max-width: 1600px;
     margin-left: auto;
     margin-right: auto;
   }
@@ -8301,7 +8301,7 @@ html {
   margin-left: auto;
   margin-right: auto;
   max-width: 160rem;
-  border-bottom: none; 
+  border-bottom: none;
 }
 
 .usajobs-nav__body::after {
@@ -8399,7 +8399,7 @@ html {
 
 @media screen and (min-width: 62em) {
   .usajobs-nav__menu {
-      height: 6rem; 
+      height: 6rem;
   }
 }
 
