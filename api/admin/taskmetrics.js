@@ -1,6 +1,6 @@
 const _ = require('lodash');
 const async = require('async');
-const log = require('blue-ox')('app:admin:taskmetrics');
+const log = use('log')('app:admin:taskmetrics');
 
 var TaskDecorator =           require(__dirname + '/taskmetrics/taskDecorator');
 var StateMetrics =            require(__dirname + '/taskmetrics/stateMetrics');

@@ -35,16 +35,21 @@ if (process.env.NEW_RELIC_APP_NAME && process.env.NEW_RELIC_LICENSE_KEY) {
 // no matter where we actually lift from.
 process.chdir(__dirname);
 
+require('@iarna/lib')('lib/');
+const log = use('log')('app');
+
+log.info('start');
+
 (function () {
   // Ensure all our dependencies can be located:
   try {
     require('./app-koa')({});
   } catch (e) {
-    console.log('\nError starting app\n');
-    console.log(e);
+    log.error('Error starting app\n');
+    log.error(e);
     if(e.message.match('Cannot find module')) {
       var module = e.message.split('Cannot find module ')[1];
-      console.log('\nTo fix the error please try running `npm install ' + module.replace(/'/g, '') + '`');
+      log.error('To fix the error please try running `npm install ' + module.replace(/'/g, '') + '`');
     }
     return;
   }

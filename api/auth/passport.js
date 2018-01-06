@@ -1,6 +1,6 @@
 const passport = require('koa-passport');
 const LocalStrategy = require('passport-local').Strategy;
-const log = require('blue-ox')('app:passport');
+const log = use('log')('app:passport');
 const db = require('../../db');
 const dao = require('./dao')(db);
 const bcrypt = require('bcryptjs');
