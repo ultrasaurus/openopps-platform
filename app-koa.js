@@ -33,12 +33,7 @@ module.exports = (config) => {
     _.extend(openopps, config);
   }
 
-  // configure logging
-  blueox.beGlobal();
-  blueox.useColor = true;
-  blueox.level('info');
-
-  var log = blueox('app');
+  var log = blueox('app-koa');
   var qlog = blueox('db');
   var rlog = blueox('app:http');
 
