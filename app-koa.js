@@ -1,6 +1,6 @@
+const log = use('log')('app-koa');
 const koa = require('koa');
 const cfenv = require('cfenv');
-const blueox = require('blue-ox');
 const render = require('koa-ejs');
 const serve = require('koa-static');
 const path = require('path');
@@ -33,9 +33,8 @@ module.exports = (config) => {
     _.extend(openopps, config);
   }
 
-  var log = blueox('app-koa');
-  var qlog = blueox('db');
-  var rlog = blueox('app:http');
+  const qlog = use('log')('db');
+  const rlog = use('log')('app:http');
 
   const app = new koa();
 
