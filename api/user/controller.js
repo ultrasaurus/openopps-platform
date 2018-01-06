@@ -1,4 +1,4 @@
-const log = require('blue-ox')('app:user');
+const log = use('log')('app:user');
 const validator = require('validator');
 const Router = require('koa-router');
 const _ = require('lodash');

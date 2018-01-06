@@ -1,6 +1,6 @@
 const db = require('../../db');
 const dao = require('./dao')(db);
-const log = require('blue-ox')('app:user:service');
+const log = use('log')('app:user:service');
 const bcrypt = require('bcryptjs');
 const _ = require('lodash');
 const User = require('../model/User');
