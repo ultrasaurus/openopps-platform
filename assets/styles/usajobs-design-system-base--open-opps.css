@@ -805,7 +805,7 @@ html {
 }
 
 body {
-  background-color: #ffffff;
+  background-color: #f1f1f1;
   overflow-x: hidden;
 }
 
@@ -2474,13 +2474,13 @@ dfn {
 
 .usa-banner {
   background-color: #f1f1f1;
-  padding-bottom: 0.7rem;
+  padding-bottom: 0.2rem;
 }
 
 @media screen and (min-width: 481px) {
   .usa-banner {
     font-size: 1.3rem;
-    padding-bottom: 0;
+    /* padding-bottom: 0; */
   }
 }
 
@@ -4894,11 +4894,13 @@ html {
 
 .usajobs-shell {
   position: relative;
-  max-width: 1200px;
+  max-width: 1600px;
   margin-left: auto;
   margin-right: auto;
   max-width: 160rem;
   background: #ffffff;
+  /* margin-bottom: 1rem; */
+  box-shadow: 0 -1px 3px rgba(0, 0, 0, 0.12);
 }
 
 .usajobs-shell::after {
@@ -8792,7 +8794,7 @@ html {
   .usajobs-nav--full_bleed__banner-inner,
   .usajobs-nav--core-v2__banner-inner,
   .usajobs-nav--open-opps__banner-inner {
-    padding-left: 0;
+    /* padding-left: 0; */
     padding-right: 0;
   }
 }
