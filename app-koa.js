@@ -94,7 +94,7 @@ module.exports = (config) => {
       await next();
     } else {
       rlog.info('Redirecting from ' + ctx.host);
-      var url = openopps.hostName + (hostParts[1] ? ':' + hostParts[1] : '') + ctx.path + (ctx.querystring ? '?' + ctx.querystring : '');
+      var url = ctx.protocol + '://' + openopps.hostName + (hostParts[1] ? ':' + hostParts[1] : '') + ctx.path + (ctx.querystring ? '?' + ctx.querystring : '');
       ctx.status = 301;
       ctx.redirect(url);
     }
