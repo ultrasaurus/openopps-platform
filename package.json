@@ -139,6 +139,6 @@
   "bugs": "https://github.com/openopps/openopps-platform/issues",
   "license": "CC0-1.0",
   "engines": {
-    "node": "8.9.4"
+    "node": "8.9.3"
   }
 }
