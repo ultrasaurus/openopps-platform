@@ -11,6 +11,9 @@ module.exports = {
   // hostName defines the domain upon which your app will be deployed (e.g. 'localhost:1337', for development)
   hostName: process.env.HOST || 'localhost',
 
+  // redirect domain not matching hostName
+  redirect: process.env.REDIRECT || false,
+
   // The `port` setting determines which TCP port your app will be deployed on
   // Ports are a transport-layer concept designed to allow many different
   // networking applications run at the same time on a single computer.
