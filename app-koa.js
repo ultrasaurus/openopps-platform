@@ -90,7 +90,7 @@ module.exports = (config) => {
   // redirect any request coming other than openopps.hostName
   app.use(async (ctx, next) => {
     var hostParts = ctx.host.split(':');
-    if(hostParts[0] === openopps.hostName) {
+    if(!openopps.redirect || hostParts[0] === openopps.hostName) {
       await next();
     } else {
       rlog.info('Redirecting from ' + ctx.host);
