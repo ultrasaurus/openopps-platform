@@ -87,6 +87,19 @@ module.exports = (config) => {
     return require(path.join(__dirname, 'api', name, 'controller'));
   };
 
+  // redirect any request coming other than openopps.hostName
+  app.use(async (ctx, next) => {
+    var hostParts = ctx.host.split(':');
+    if(hostParts[0] === openopps.hostName) {
+      await next();
+    } else {
+      rlog.info('Redirecting from ' + ctx.host);
+      var url = openopps.hostName + (hostParts[1] ? ':' + hostParts[1] : '') + ctx.path + (ctx.querystring ? '?' + ctx.querystring : '');
+      ctx.status = 301;
+      ctx.redirect(url);
+    }
+  });
+
   // log request to console
   app.use(async (ctx, next) => {
     var start = Date.now(), str = ctx.method + ' ' + ctx.protocol + '://' + ctx.host + ctx.path + (ctx.querystring ? '?' + ctx.querystring : '') + '\n';
