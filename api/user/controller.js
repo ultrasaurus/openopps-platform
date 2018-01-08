@@ -79,12 +79,12 @@ router.post('/api/user/resetPassword', auth, async (ctx, next) => {
 router.post('/api/user/:id', auth, async (ctx, next) => {
   if (await service.canUpdateProfile(ctx)) {
     ctx.status = 200;
-    await service.updateProfile(ctx.request.body, function (errors) {
+    await service.updateProfile(ctx.request.body, function (errors, result) {
       if (errors) {
         ctx.status = 400;
         return ctx.body = errors;
       }
-      ctx.body = { success: true };
+      ctx.body = result;
     });
   } else {
     ctx.status = 403;

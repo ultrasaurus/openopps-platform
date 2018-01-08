@@ -52,7 +52,6 @@ var ProfileModel = Backbone.Model.extend({
       };
       _this.save(data, {
         type: 'POST',
-      }, {
         success: function (data) {
           _this.trigger('profile:updatedPhoto', data);
         },
