@@ -74,7 +74,7 @@
                         <% if ( task.volunteers.length ) { %>
                         <p><i>Sign-ups</i>
                           <% _( task.volunteers ).forEach( function( vol ) { %>
-                            <a href="/profile/<%- vol.userId %>"><%-vol.name || 'Unnamed'%></a><%-(vol == task.volunteers[task.volunteers.length-1]) ? '' : ', ' %>
+                            <a href="/profile/<%- vol.id %>"><%-vol.name || 'Unnamed'%></a><%-(vol == task.volunteers[task.volunteers.length-1]) ? '' : ', ' %>
                           <% } ); %>
                         </p>
                         <% } %>
@@ -137,7 +137,7 @@
                         <% if ( task.volunteers.length ) { %>
                         <p><i>Sign-ups</i>
                           <% _( task.volunteers ).forEach( function( vol ) { %>
-                            <a href="/profile/<%- vol.userId %>"><%-vol.name || 'Unnamed'%></a><%-(vol == task.volunteers[task.volunteers.length-1]) ? '' : ', ' %>
+                            <a href="/profile/<%- vol.id %>"><%-vol.name || 'Unnamed'%></a><%-(vol == task.volunteers[task.volunteers.length-1]) ? '' : ', ' %>
                           <% } ); %>
                         </p>
                         <% } %>
@@ -179,7 +179,7 @@
                         <% if ( task.volunteers.length ) { %>
                         <p><i>Sign-ups</i>
                           <% _( task.volunteers ).forEach( function( vol ) { %>
-                            <a href="/profile/<%- vol.userId %>"><%-vol.name || 'Unnamed'%></a><%-(vol == task.volunteers[task.volunteers.length-1]) ? '' : ', ' %>
+                            <a href="/profile/<%- vol.id %>"><%-vol.name || 'Unnamed'%></a><%-(vol == task.volunteers[task.volunteers.length-1]) ? '' : ', ' %>
                           <% } ); %>
                         </p>
                         <% } %>

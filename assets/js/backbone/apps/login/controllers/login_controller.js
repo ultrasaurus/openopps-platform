@@ -13,11 +13,11 @@ var ModalComponent = require('../../../components/modal');
 var Login = BaseController.extend({
 
   events: {
-    "click #register-cancel": "showLogin",
-    "click #login-register": "showRegister",
-    "click #forgot-done-cancel": "showLogin",
-    "click #forgot-cancel": "showLogin",
-    "click #forgot-password": "showForgot"
+    'click #register-cancel': 'showLogin',
+    'click #login-register': 'showRegister',
+    'click #forgot-done-cancel': 'showLogin',
+    'click #forgot-cancel': 'showLogin',
+    'click #forgot-password': 'showForgot'
   },
 
   initialize: function(options) {
@@ -39,77 +39,77 @@ var Login = BaseController.extend({
     }
     this.modalComponent = new ModalComponent({
       el: this.el,
-      id: "login",
-      modalTitle: "Login or Register",
+      id: 'login',
+      modalTitle: 'Login or Register',
       disableClose: disableClose
     }).render();
 
     // put the login view inside the modal
     this.loginView = new LoginView({
-      el: ".modal-template",
+      el: '.modal-template',
       login: login,
       message: this.options.message
     }).render();
-    this.$("#registration-view").hide();
-    this.$("#forgot-view").hide();
-    this.$("#forgot-done-view").hide();
-    $("#login").modal('show');
+    this.$('#registration-view').hide();
+    this.$('#forgot-view').hide();
+    this.$('#forgot-done-view').hide();
+    $('#login').modal('show');
 
-    self.listenTo(window.cache.userEvents, "user:login", function(user) {
+    self.listenTo(window.cache.userEvents, 'user:login', function(user) {
       // hide the modal
       self.stopListening(window.cache.userEvents);
       // window.cache.userEvents.stopListening();
       $('#login').bind('hidden.bs.modal', function() {
         // if successful, reload page
         Backbone.history.loadUrl();
-        window.cache.userEvents.trigger("user:login:success", user);
+        window.cache.userEvents.trigger('user:login:success', user);
         if (self.options.navigate) {
-          window.cache.userEvents.trigger("user:login:success:navigate", user);
+          window.cache.userEvents.trigger('user:login:success:navigate', user);
         }
       }).modal('hide');
     });
 
     // clean up no matter how the modal is closed
     $('#login').bind('hidden.bs.modal', function() {
-      window.cache.userEvents.trigger("user:login:close");
+      window.cache.userEvents.trigger('user:login:close');
       self.cleanup();
     });
   },
 
   showRegister: function(e) {
     if (e.preventDefault) e.preventDefault();
-    this.$("#login-view").hide();
-    this.$("#login-footer").hide();
-    this.$("#registration-view").show();
-    this.$("#registration-footer").show();
-    this.$("#forgot-view").hide();
-    this.$("#forgot-footer").hide();
-    this.$("#forgot-done-view").hide();
-    this.$("#forgot-done-footer").hide();
+    this.$('#login-view').hide();
+    this.$('#login-footer').hide();
+    this.$('#registration-view').show();
+    this.$('#registration-footer').show();
+    this.$('#forgot-view').hide();
+    this.$('#forgot-footer').hide();
+    this.$('#forgot-done-view').hide();
+    this.$('#forgot-done-footer').hide();
   },
 
   showLogin: function(e) {
     if (e.preventDefault) e.preventDefault();
-    this.$("#login-view").show();
-    this.$("#login-footer").show();
-    this.$("#registration-view").hide();
-    this.$("#registration-footer").hide();
-    this.$("#forgot-view").hide();
-    this.$("#forgot-footer").hide();
-    this.$("#forgot-done-view").hide();
-    this.$("#forgot-done-footer").hide();
+    this.$('#login-view').show();
+    this.$('#login-footer').show();
+    this.$('#registration-view').hide();
+    this.$('#registration-footer').hide();
+    this.$('#forgot-view').hide();
+    this.$('#forgot-footer').hide();
+    this.$('#forgot-done-view').hide();
+    this.$('#forgot-done-footer').hide();
   },
 
   showForgot: function(e) {
     if (e.preventDefault) e.preventDefault();
-    this.$("#forgot-view").show();
-    this.$("#forgot-footer").show();
-    this.$("#registration-view").hide();
-    this.$("#registration-footer").hide();
-    this.$("#login-view").hide();
-    this.$("#login-footer").hide();
-    this.$("#forgot-done-view").hide();
-    this.$("#forgot-done-footer").hide();
+    this.$('#forgot-view').show();
+    this.$('#forgot-footer').show();
+    this.$('#registration-view').hide();
+    this.$('#registration-footer').hide();
+    this.$('#login-view').hide();
+    this.$('#login-footer').hide();
+    this.$('#forgot-done-view').hide();
+    this.$('#forgot-done-footer').hide();
   },
 
   // ---------------------

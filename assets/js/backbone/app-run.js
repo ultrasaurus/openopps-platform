@@ -1,13 +1,13 @@
 var _ = require('underscore');
 var Backbone = require('backbone');
 var AppsRouter = require('./apps-router');
-import User from '../utils/user';
+var User = require('../utils/user');
 
 var Application = {
   started: null,
 
   // Initialize and fire up the application.
-  initialize: function() {
+  initialize: function () {
     var self = this;
     // Cache user
     // Check if a user is already defined
@@ -34,7 +34,7 @@ var Application = {
       this.application = AppsRouter.initialize();
       self.started = true;
     }
-  }
+  },
 };
 
 // Backbone Multi-tenant router firing up.

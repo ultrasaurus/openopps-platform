@@ -11,13 +11,13 @@ var TaskModel = require('../../../../entities/tasks/task_model');
 
 TaskList = Backbone.View.extend({
 
-  el: "#task-list-wrapper",
+  el: '#task-list-wrapper',
 
   events: {
     'click .add-task' : 'add',
     'click .show-task': 'show',
     'click .task'     : 'show',
-    'click .wizard'   : 'wizard'
+    'click .wizard'   : 'wizard',
   },
 
   initialize: function (settings) {
@@ -29,12 +29,12 @@ TaskList = Backbone.View.extend({
     this.initializeListeners();
     this.requestTasksCollectionData();
 
-    this.collection.on("tasks:render", function () {
-      self.requestTasksCollectionData()
-    })
+    this.collection.on('tasks:render', function () {
+      self.requestTasksCollectionData();
+    });
   },
 
-  initializeListeners: function() {
+  initializeListeners: function () {
     var self = this;
     this.listenTo(this.taskModel, 'task:tags:save:success', function () {
       self.initializeTaskModelInstance();
@@ -61,23 +61,23 @@ TaskList = Backbone.View.extend({
       url: '/api/task/findAllByProjectId/' + parseInt(this.options.projectId),
       success: function (collection) {
         self.tasks = collection;
-        self.renderTaskCollectionView()
-      }
+        self.renderTaskCollectionView();
+      },
     });
   },
 
   renderTaskCollectionView: function () {
     var self = this;
 
-    this.listenTo(this.collection, "task:save:success", function (model) {
+    this.listenTo(this.collection, 'task:save:success', function (model) {
       self.requestTasksCollectionData();
     });
 
     if (this.taskCollectionView) this.taskCollectionView.cleanup();
     this.taskCollectionView = new TaskCollectionView({
-      el: "#task-list-wrapper",
+      el: '#task-list-wrapper',
       onRender: true,
-      collection: self.tasks
+      collection: self.tasks,
     });
   },
 
@@ -100,7 +100,7 @@ TaskList = Backbone.View.extend({
     if (this.modalWizardComponent) this.modalWizardComponent.cleanup();
     if (this.taskCollectionView) this.taskCollectionView.cleanup();
     removeView(this);
-  }
+  },
 
 });
 

@@ -11,8 +11,7 @@ var TaskModel = require('../../../../entities/tasks/task_model');
 var TaskFormViewHelper = require('../../task-form-view-helper');
 
 // templates
-var fs = require('fs');
-var TaskFormTemplate = fs.readFileSync(`${__dirname}/../templates/task_form_template.html`).toString();
+var TaskFormTemplate = require('../templates/task_form_template.html');
 
 var i18n = require('i18next');
 require('jquery-i18next');
@@ -22,7 +21,9 @@ var TaskFormView = Backbone.View.extend({
   el: '#container',
 
   events: {
-    'change .validate'                : 'v',
+    'change .validate'                : 'validateField',
+    'blur .validate'                  : 'validateField',
+    'keyup .validate'                 : 'validateField',
     'click [name=task-time-required]' : 'toggleTimeOptions',
     'change #task-location'           : 'locationChange',
     'click #js-task-draft'            : 'saveDraft',
@@ -55,7 +56,7 @@ var TaskFormView = Backbone.View.extend({
 
   },
 
- /*
+  /*
   * Initialize the Select2Data custom select components.
   */
   initializeSelect2Data: function () {
@@ -159,7 +160,7 @@ var TaskFormView = Backbone.View.extend({
     var owner = this.model.attributes.owner;
 
     if (show && owner) {
-      $modal.find( '.js-profile-link' ).attr( 'href', '/profile/' + owner.id );
+      $modal.find( '.js-profile-link' ).attr( 'href', '/profile/' + owner );
       $modal.slideDown( 'slow' );
       $modal.one( 'mouseout', function ( e ) {
         _.delay( _.bind( $modal.slideUp, $modal, 'slow' ), 4200 );
@@ -173,7 +174,7 @@ var TaskFormView = Backbone.View.extend({
   /*
    * Validation event handler
    */
-  v: function (e) {
+  validateField: function (e) {
     return validate(e);
   },
 
@@ -238,7 +239,7 @@ var TaskFormView = Backbone.View.extend({
       id: 'task-description',
       title: i18n.t('Task') + ' Description',
       rows: 6,
-      validate: ['empty'],
+      validate: ['empty','html'],
     }, options );
 
     if ( this.md ) { this.md.cleanup(); }
@@ -279,11 +280,11 @@ var TaskFormView = Backbone.View.extend({
 
     for ( var i = 0; i < fieldsToValidate.length; i++ ) {
 
-      // README: view.v() return true if there *is* a validation error
+      // README: view.validateField() return true if there *is* a validation error
       // it returns false if there *is not*.
       //
       field = fieldsToValidate[ i ];
-      valid = view.v( { currentTarget: field } );
+      valid = view.validateField( { currentTarget: field } );
 
       if ( true === valid ) { return false; }
 

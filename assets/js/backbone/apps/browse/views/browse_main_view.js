@@ -11,8 +11,8 @@ var TagConfig = require('../../../config/tag');
 var BrowseListView = require('./browse_list_view');
 var ProfileListView = require('./profile_list_view');
 var ProfileMapView = require('./profile_map_view');
-var BrowseMainTemplate = fs.readFileSync(__dirname + ('/../templates/browse_main_view_template.html')).toString();
-var BrowseSearchTag = fs.readFileSync(__dirname + ('/../templates/browse_search_tag.html')).toString();
+var BrowseMainTemplate = require('../templates/browse_main_view_template.html');
+var BrowseSearchTag = require('../templates/browse_search_tag.html');
 var i18n = require('i18next');
 require('jquery-i18next');
 
@@ -22,14 +22,14 @@ global.popovers = new Popovers();
 var BrowseMainView = Backbone.View.extend({
 
   events: {
-    "keyup #search": 'search',
-    "change #stateFilters input": 'stateFilter',
+    'keyup #search': 'search',
+    'change #stateFilters input': 'stateFilter',
     'change #js-restrict-task-filter input': 'agencyFilter',
-    "mouseenter .project-people-div"  : popovers.popoverPeopleOn,
-    "click      .project-people-div"  : popovers.popoverClick,
+    'mouseenter .project-people-div'  : popovers.popoverPeopleOn,
+    'click      .project-people-div'  : popovers.popoverClick,
   },
 
-  initialize: function(options) {
+  initialize: function (options) {
     this.options = options;
     this.term = options.queryParams.search;
     this.filters = options.queryParams.filters ?
@@ -42,11 +42,11 @@ var BrowseMainView = Backbone.View.extend({
     window.foo = this;
   },
 
-  isAgencyChecked: function() {
+  isAgencyChecked: function () {
     return !!$( '#js-restrict-task-filter input:checked' ).length;
   },
 
-  initAgencyFilter: function() {
+  initAgencyFilter: function () {
     this.agency = { data: {} };
     if (this.options.queryParams.agency) {
       // TODO: ideally we would be able to query the API for agencies
@@ -66,18 +66,18 @@ var BrowseMainView = Backbone.View.extend({
     }
   },
 
-  render: function() {
+  render: function () {
     var target = this.options.target,
-      options = {
-        target: target,
-        user: window.cache.currentUser,
-        ui: UIConfig,
-        placeholder: target === 'tasks' ?
-          "I'm looking for opportunities by name, " + i18n.t("tag.agency") + ", skill, topic, description..." : target === 'projects' ?
-          "I'm looking for working groups by name, " + i18n.t("tag.agency") + ", skill, topic, description..." : target === 'profiles' ?
-          "I'm looking for people by name, title,  " + i18n.t("tag.agency") + ", location..." : "I'm looking for...",
-        agencyName: (!(_.isEmpty(this.agency.data)) ? this.agency.data.name : this.userAgency.name)
-      };
+        options = {
+          target: target,
+          user: window.cache.currentUser,
+          ui: UIConfig,
+          placeholder: target === 'tasks' ?
+            "I'm looking for opportunities by name, " + i18n.t('tag.agency') + ', skill, topic, description...' : target === 'projects' ?
+              "I'm looking for working groups by name, " + i18n.t('tag.agency') + ', skill, topic, description...' : target === 'profiles' ?
+                "I'm looking for people by name, title,  " + i18n.t('tag.agency') + ', location...' : "I'm looking for...",
+          agencyName: (!(_.isEmpty(this.agency.data)) ? this.agency.data.name : this.userAgency.name),
+        };
     this.rendered = _.template(BrowseMainTemplate)(options);
     this.$el.html(this.rendered);
     this.$el.localize();
@@ -86,9 +86,9 @@ var BrowseMainView = Backbone.View.extend({
 
     _.each(_.isArray(this.filters.state) ?
       this.filters.state : [this.filters.state],
-      function(state) {
-        $('#stateFilters [value="' + state + '"]').prop('checked', true);
-      });
+    function (state) {
+      $('#stateFilters [value="' + state + '"]').prop('checked', true);
+    });
 
     $('#js-restrict-task-filter [name="restrict"]').prop('checked', !(_.isEmpty(this.agency.data)));
 
@@ -96,12 +96,12 @@ var BrowseMainView = Backbone.View.extend({
     return this;
   },
 
-  search: function(event) {
+  search: function (event) {
     var $target = this.$(event.currentTarget);
     this.filter($target.val());
   },
 
-  stateFilter: function(event) {
+  stateFilter: function (event) {
     var states = _($('#stateFilters input:checked')).pluck('value');
     if ( this.isAgencyChecked() ) {
       this.filter( undefined, { state: states }, this.agency );
@@ -147,67 +147,67 @@ var BrowseMainView = Backbone.View.extend({
   },
 
 
-  searchMap: function(loc) {
+  searchMap: function (loc) {
     loc = !loc ? '' : loc === this.term ? '' : loc;
     $('#search').val(loc);
     this.filter(loc);
   },
 
-  renderList: function(collection) {
+  renderList: function (collection) {
 
     // create a new view for the returned data
     if (this.browseListView) { this.browseListView.cleanup(); }
 
     if (this.options.target == 'projects' || this.options.target == 'tasks') {
       // projects and tasks get tiles
-      $("#browse-map").hide();
+      $('#browse-map').hide();
       this.browseListView = new BrowseListView({
         el: '#browse-list',
         target: this.options.target,
-        collection: collection
+        collection: collection,
       });
       // Show draft filter
       var draft = _(collection).chain()
         .pluck('state')
         .indexOf('draft').value() >= 0;
-      $(".draft-filter").toggleClass('hidden', !draft);
+      $('.draft-filter').toggleClass('hidden', !draft);
 
     } else {
       // profiles are in a table
       this.browseListView = new ProfileListView({
         el: '#browse-list',
         target: this.options.target,
-        collection: collection
+        collection: collection,
       });
     }
-    $("#browse-search-spinner").hide();
-    $("#browse-list").show();
+    $('#browse-search-spinner').hide();
+    $('#browse-list').show();
     this.browseListView.render();
 
-    popovers.popoverPeopleInit(".project-people-div");
+    popovers.popoverPeopleInit('.project-people-div');
   },
 
-  renderMap: function(profiles) {
+  renderMap: function (profiles) {
     return;
     // create a new view for the returned data. Need to show the div before
     // rendering otherwise the SVG borders will be wrong.
     if (this.browseMapView) { this.browseMapView.cleanup(); }
-    $("#browse-map").show();
+    $('#browse-map').show();
     this.browseMapView = new ProfileMapView({
       el: '#browse-map',
-      people: profiles
+      people: profiles,
     });
     this.browseMapView.render();
     // set up listeners for events from the map view
-    this.listenTo(this.browseMapView, "browseSearchLocation", this.searchMap);
-    this.listenTo(this.browseMapView, "browseRemove", this.searchRemove);
+    this.listenTo(this.browseMapView, 'browseSearchLocation', this.searchMap);
+    this.listenTo(this.browseMapView, 'browseRemove', this.searchRemove);
   },
 
-  cleanup: function() {
+  cleanup: function () {
     if (this.browseMapView) { this.browseMapView.cleanup(); }
     if (this.browseListView) { this.browseListView.cleanup(); }
     removeView(this);
-  }
+  },
 
 });
 

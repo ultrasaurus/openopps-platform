@@ -9,14 +9,13 @@ var TagConfig = require('../../../../config/tag');
 
 var TagFactory = require('../../../../components/tag_factory');
 
-var fs = require('fs');
-var TagTemplate = fs.readFileSync(`${__dirname}/../templates/tag_item_template.html`).toString();
-var TagShowTemplate = fs.readFileSync(`${__dirname}/../templates/tag_show_template.html`).toString();
+var TagTemplate = require('../templates/tag_item_template.html');
+var TagShowTemplate = require('../templates/tag_show_template.html');
 
 var TagShowView = Backbone.View.extend({
 
   events: {
-    "click .tag-delete"     : "deleteTag"
+    'click .tag-delete'     : 'deleteTag',
   },
 
   /*
@@ -47,7 +46,7 @@ var TagShowView = Backbone.View.extend({
       showTags: this.showTags,
       tags: this.tags,
       edit: this.edit,
-      user: window.cache.currentUser || {}
+      user: window.cache.currentUser || {},
     };
 
     if (this.model.attributes.completedBy == null) {
@@ -67,35 +66,37 @@ var TagShowView = Backbone.View.extend({
     var self = this;
 
     self.tagFactory.createTagDropDown({
-      type:"skill",
-      selector:"#tag_skill",
-      width: "100%",
-      tokenSeparators: [","]
+      type:'skill',
+      selector:'#tag_skill',
+      width: '100%',
+      tokenSeparators: [','],
     });
 
     self.tagFactory.createTagDropDown({
-      type:"topic",
-      selector:"#tag_topic",
-      width: "100%",
-      tokenSeparators: [","]
+      type:'topic',
+      selector:'#tag_topic',
+      width: '100%',
+      tokenSeparators: [','],
     });
 
     self.tagFactory.createTagDropDown({
-      type:"location",
-      selector:"#tag_location",
-      width: "100%"
+      type:'location',
+      selector:'#tag_location',
+      width: '100%',
+      blurOnChange: true,
     });
 
     self.tagFactory.createTagDropDown({
-      type:"agency",
-      selector:"#tag_agency",
-      width: "100%"
+      type:'agency',
+      selector:'#tag_agency',
+      width: '100%',
+      blurOnChange: true,
     });
 
-    self.model.trigger("profile:input:changed");
+    self.model.trigger('profile:input:changed');
   },
 
-  initializeTags: function() {
+  initializeTags: function () {
     // Load tags for the view
     var self = this;
 
@@ -108,10 +109,10 @@ var TagShowView = Backbone.View.extend({
     var renderTag = function (tag) {
       if(self.edit)
       {
-        var input = $("#tag_" + tag.type);
+        var input = $('#tag_' + tag.type);
         var data = input.select2('data');
         data.push({id:tag.id,name:tag.name, value:tag.name});
-        input.select2("data", data, true);
+        input.select2('data', data, true);
       }
       else
       {
@@ -120,10 +121,10 @@ var TagShowView = Backbone.View.extend({
           tags: self.tags,
           tag: tag,
           edit: self.edit,
-          user: window.cache.currentUser || {}
+          user: window.cache.currentUser || {},
         };
         var compiledTemplate = _.template(TagTemplate)(templData);
-        var tagDom = $("." + tag.type).children(".tags");
+        var tagDom = $('.' + tag.type).children('.tags');
         tagDom.append(compiledTemplate);
         $('#' + tagClass[tag.type] + '-empty').hide();
       }
@@ -133,11 +134,11 @@ var TagShowView = Backbone.View.extend({
     if (this.model.attributes.completedBy != null) {
       renderTag({
         type: 'task-length',
-        name: moment(self.model.attributes.completedBy).format('ddd, MMM D, YYYY')
+        name: moment(self.model.attributes.completedBy).format('ddd, MMM D, YYYY'),
       });
     }
 
-    this.listenTo(this.model, this.target + ":tag:delete", function (e) {
+    this.listenTo(this.model, this.target + ':tag:delete', function (e) {
       if ($(e.currentTarget).parent('li').siblings().length == 1) {
         $(e.currentTarget).parent('li').siblings('.tag-empty').show();
       }
@@ -147,17 +148,17 @@ var TagShowView = Backbone.View.extend({
 
   deleteTag: function (e) {
     if (e.preventDefault) e.preventDefault();
-    var tags = _(this.model.get('tags')).filter(function(tag) {
-          return tag.id !== $(e.currentTarget).data('id');
-        });
+    var tags = _(this.model.get('tags')).filter(function (tag) {
+      return tag.id !== $(e.currentTarget).data('id');
+    });
     this.model.set('tags', tags);
-    this.model.trigger(this.options.target + ":tag:delete", e);
+    this.model.trigger(this.options.target + ':tag:delete', e);
 
   },
 
   cleanup: function () {
     removeView(this);
-  }
+  },
 
 });
 

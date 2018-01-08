@@ -9,8 +9,7 @@ var i18nextJquery = require('jquery-i18next');
 var UIConfig = require('../../../../config/ui.json');
 
 // templates
-var fs = require('fs');
-var ProfileActivityTemplate = fs.readFileSync(`${__dirname}/../templates/profile_activity_template.html`).toString();
+var ProfileActivityTemplate = require('../templates/profile_activity_template.html');
 
 var ProfileActivityView = Backbone.View.extend({
 
@@ -25,12 +24,12 @@ var ProfileActivityView = Backbone.View.extend({
   render: function () {
     // sort initially by date, descending.
     var results = this.options.data
-        .filter(function(i) {
-          return i && i.createdAt;
-        })
-        .sort(function (a, b) {
-          return new Date(b.createdAt) - new Date(a.createdAt);
-        });
+      .filter(function (i) {
+        return i && i.createdAt;
+      })
+      .sort(function (a, b) {
+        return new Date(b.createdAt) - new Date(a.createdAt);
+      });
     var data = {
       ui: UIConfig,
       target: this.options.target,
@@ -39,7 +38,7 @@ var ProfileActivityView = Backbone.View.extend({
       targetCapitalized: this.options.target.charAt(0).toUpperCase() + this.options.target.slice(1),
       handle: this.options.handle,
       data: results,
-      count: {}
+      count: {},
     };
 
     for (var i in this.options.data) {

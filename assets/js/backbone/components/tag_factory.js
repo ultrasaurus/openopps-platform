@@ -81,15 +81,15 @@ var TagFactory = BaseComponent.extend({
     options.multiple = (options.multiple !== undefined ? options.multiple : true);
     options.allowCreate = (options.allowCreate !== undefined ? options.allowCreate : true);
 
-    var tagLabel = i18n.t("tag." + options.type);
+    var tagLabel = i18n.t('tag.' + options.type);
 
     //construct the settings for this tag type
     var settings = {
 
-      placeholder: options.placeholder || "Start typing to select a " + tagLabel,
+      placeholder: options.placeholder || 'Start typing to select a ' + tagLabel,
       minimumInputLength: (isLocation ? 1 : 2),
       selectOnBlur: !isLocation,
-      width: options.width || "500px",
+      width: options.width || '500px',
       tokenSeparators: options.tokenSeparators || [],
       multiple: options.multiple,
 
@@ -134,9 +134,9 @@ var TagFactory = BaseComponent.extend({
           id: term,
           value: term,
           temp: true,
-          name: "<b>" + _.escape(term) + "</b> <i>" + (isLocation ?
-            "search for this location" :
-            "click to create a new tag with this value") + "</i>"
+          name: '<b>' + _.escape(term) + '</b> <i>' + (isLocation ?
+            'search for this location' :
+            'click to create a new tag with this value') + '</i>'
         };
       };
     }
@@ -145,15 +145,15 @@ var TagFactory = BaseComponent.extend({
     var $sel = $(options.selector).select2(settings);
 
     //event handlers
-    $sel.on("select2-selecting", function(e) {
+    $sel.on('select2-selecting', function (e) {
       if (e.choice.tagType === 'location') {
         if (e.choice.temp) {
           this.temp = true;
           e.choice.name = '<em>Searching for <strong>' + e.choice.value + '</strong></em>';
 
           //lookup the new location
-          $.get('/api/location/suggest?q=' + e.choice.value, function(d) {
-            d = _(d).map(function(item) {
+          $.get('/api/location/suggest?q=' + e.choice.value, function (d) {
+            d = _(d).map(function (item) {
               return {
                 id: item.name,
                 name: item.name,
@@ -165,7 +165,7 @@ var TagFactory = BaseComponent.extend({
             this.cache = $sel.select2('data');
             if (settings.multiple) {
               //remove the "Searching for..." text from multi-select boxes
-              this.cache = _.reject(this.cache, function(item) {
+              this.cache = _.reject(this.cache, function (item) {
                 return (item.name.indexOf('Searching') >= 0);
               });
             }
@@ -184,27 +184,27 @@ var TagFactory = BaseComponent.extend({
           delete this.temp;
         }
       } else { //if this is NOT a location tag
-        if (e.choice.hasOwnProperty("unmatched") && e.choice.unmatched) {
+        if (e.choice.hasOwnProperty('unmatched') && e.choice.unmatched) {
           //remove the hint before adding it to the list
           e.choice.name = e.val;
         }
       }
     });
 
-    $sel.on('select2-blur', function(e) {
+    $sel.on('select2-blur', function (e) {
       if (!this.reload && this.temp) {
         this.reload = true;
         delete this.temp;
       }
     });
 
-    $sel.on('select2-open', function(e) {
+    $sel.on('select2-open', function (e) {
       if (!this.reload && this.open) {
         delete this.open;
         delete this.temp;
-        var cache = $("#location").select2('data');
-        setTimeout(function() {
-          $("#location").select2(settings)
+        var cache = $('#location').select2('data');
+        setTimeout(function () {
+          $('#location').select2(settings)
             .select2('data', cache)
             .select2('open');
         }, 0);

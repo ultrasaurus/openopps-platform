@@ -11,8 +11,7 @@ var ProfileResetView = require('../views/profile_reset_view');
 var Login = require('../../../../config/login.json');
 
 // templates
-var fs = require('fs');
-var AlertTemplate = fs.readFileSync(`${__dirname}/../../../../components/alert_template.html`).toString();
+var AlertTemplate = require('../../../../components/alert_template.html');
 
 var Profile = BaseController.extend({
 
@@ -21,7 +20,7 @@ var Profile = BaseController.extend({
   region: true,
   subRegion: false,
 
-  el: "#container",
+  el: '#container',
 
   events: {
   },
@@ -45,7 +44,7 @@ var Profile = BaseController.extend({
         el: this.$el,
         routeId: this.routeId,
         action: this.action,
-        data: this.data
+        data: this.data,
       }).render();
     }
     // otherwise load the profile model and display the appropriate view
@@ -64,8 +63,8 @@ var Profile = BaseController.extend({
     if ((Login.profile.edit === false) && (this.action == 'edit')) {
       var data = {
         alert: {
-          message: "<strong>Direct editing of profiles is disabled.</strong>  <a href=\"" + Login.profile.editUrl + "\" title=\"Edit Profile\">Click here to edit your profile</a>"
-        }
+          message: '<strong>Direct editing of profiles is disabled.</strong>  <a href="' + Login.profile.editUrl + '" title="Edit Profile">Click here to edit your profile</a>',
+        },
       };
       var template = _.template(AlertTemplate)(data);
       this.$el.html(template);
@@ -73,13 +72,13 @@ var Profile = BaseController.extend({
     }
     // var fetchId = null;
     // if (this.id && this.id != 'edit') { fetchId = this.id; }
-    this.model.trigger("profile:fetch", this.routeId);
+    this.model.trigger('profile:fetch', this.routeId);
     // process a successful model fetch, and display the model
-    this.listenTo(this.model, "profile:fetch:success", function (model) {
+    this.listenTo(this.model, 'profile:fetch:success', function (model) {
       // @instance
       self.model = model;
       var modelJson = model.toJSON();
-      _.each(modelJson.tags, function(tag, i) {
+      _.each(modelJson.tags, function (tag, i) {
         if (modelJson.tags[i].type == 'agency') {
           self.model.agency = modelJson.tags[i];
           self.model.agency.tagId = modelJson.tags[i].id;
@@ -93,18 +92,18 @@ var Profile = BaseController.extend({
     });
     // if the profile fetch fails, check if it is due to the user
     // not being logged in
-    this.listenTo(this.model, "profile:fetch:error", function (model, response) {
+    this.listenTo(this.model, 'profile:fetch:error', function (model, response) {
       // if the user isn't logged in, trigger the login window
-      if (response.status === 403) {
-        window.cache.userEvents.trigger("user:request:login", {
-          message: "You must be logged in to view profiles",
-          disableClose: false
+      if (response.status === 401 || response.status === 403) {
+        window.cache.userEvents.trigger('user:request:login', {
+          message: 'You must be logged in to view profiles',
+          disableClose: false,
         });
       }
       var data = {
         alert: {
-          message: "<strong>Unable to load profile.  Please reload this page to try again.</strong><br/>Error: "
-        }
+          message: '<strong>Unable to load profile.  Please reload this page to try again.</strong><br/>Error: ',
+        },
       };
       // check if the response provided an error
       if (response.responseText) {
@@ -125,7 +124,7 @@ var Profile = BaseController.extend({
         model: this.model,
         routeId: this.routeId,
         action: this.action,
-        data: this.data
+        data: this.data,
       }).render();
     } else {
       this.profileView = new ProfileView({
@@ -133,16 +132,16 @@ var Profile = BaseController.extend({
         model: this.model,
         routeId: this.routeId,
         action: this.action,
-        data: this.data
+        data: this.data,
       }).render();
     }
   },
 
-  cleanup: function() {
+  cleanup: function () {
     if (this.profileView) { this.profileView.cleanup(); }
     if (this.settingsView) { this.settingsView.cleanup(); }
     removeView(this);
-  }
+  },
 
 });
 

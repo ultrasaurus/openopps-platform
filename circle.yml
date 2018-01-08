@@ -3,15 +3,14 @@ machine:
     DB_OWNER: ubuntu
     DB_USER: midas
     DB_PASSWORD: midas
-    VCAP_APPLICATION: '{ "uris": [ "openopps-test.18f.gov" ] }'
+    VCAP_APPLICATION: '{ "uris": [ "openopps-test.opm.gov" ] }'
   node:
-    version: 6.11.1
+    version: 8.6.0
 
 dependencies:
   pre:
-    - ./tools/postgres/create-db.sh
-    - if [[ `npm -v` != 3* ]]; then npm i -g npm@3; fi
+    # - ./tools/postgres/create-db.sh
+    - if [[ `npm -v` != 5* ]]; then npm i -g npm@5.4.2; fi
     - rm -rvf node_modules
   override:
     - npm install
-
