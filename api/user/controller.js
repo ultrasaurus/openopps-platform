@@ -76,7 +76,7 @@ router.post('/api/user/resetPassword', auth, async (ctx, next) => {
   }
 });
 
-router.post('/api/user/:id', auth, async (ctx, next) => {
+router.put('/api/user/:id', auth, async (ctx, next) => {
   if (await service.canUpdateProfile(ctx)) {
     ctx.status = 200;
     await service.updateProfile(ctx.request.body, function (errors, result) {
