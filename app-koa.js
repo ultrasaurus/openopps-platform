@@ -6,7 +6,7 @@ const serve = require('koa-static');
 const path = require('path');
 const parser = require('koa-better-body');
 const CSRF = require('koa-csrf');
-const session = require('koa-session');
+const session = require('koa-generic-session');
 const redisStore = require('koa-redis');
 const passport = require('koa-passport');
 const cacheControl = require('koa-cache-control');
@@ -62,10 +62,10 @@ module.exports = (config) => {
   app.use(new CSRF({
     invalidSessionSecretMessage: { message: 'Invalid session' },
     invalidSessionSecretStatusCode: 401,
-    invalidTokenMessage: { message: 'Invalid CSRF token' },
+    invalidTokenMessage: JSON.stringify({ message: 'Invalid CSRF token' }),
     invalidTokenStatusCode: 401,
     excludedMethods: [ 'GET', 'HEAD', 'OPTIONS' ],
-    disableQuery: false,
+    disableQuery: true,
   }));
 
   // initialize authentication

@@ -12,8 +12,16 @@ var session = {
 
   /* Set the cookie maximum age (timeout).
    * If this is not set, then cookies will persist forever.
+   * Setting this to null will make cookies non-persistent.
    */
-  maxAge: 15 * 60 * 1000, // 15 minutes
+  cookie: {
+    maxAge: null,
+  },
+  /* Set the session store's expiration time.
+   * This is different from cookie.maxAge, setting
+   * this to null to get ttl from cookie.maxAge.
+   */
+  ttl: 60 * 1000, // 15 minutes
 
   /* Force a session identifier cookie to be set on every response.
    * The expiration is reset to the original maxAge, resetting the
