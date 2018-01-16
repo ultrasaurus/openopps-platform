@@ -13,9 +13,11 @@ var ProfileResetTemplate = require('../templates/profile_reset_template.html');
 var ProfileResetView = Backbone.View.extend({
 
   events: {
-    'keyup #rpassword'               : 'checkPassword',
-    'blur #rpassword'                : 'checkPassword',
-    'submit #form-password-reset'    : 'submitReset',
+    'keyup #rpassword'            : 'checkPassword',
+    'blur #rpassword'             : 'checkPassword',
+    'keyup #rpassword-confirm'    : 'checkPasswordConfirm',
+    'blur #rpassword-confirm'     : 'checkPasswordConfirm',
+    'submit #form-password-reset' : 'submitReset',
   },
 
   initialize: function (options) {
@@ -49,6 +51,21 @@ var ProfileResetView = Backbone.View.extend({
       }
       success = success && value;
     });
+    return success;
+  },
+
+  checkPasswordConfirm: function (e) {
+    var success = true;
+    var password = this.$('#rpassword').val();
+    var confirm = this.$('#rpassword-confirm').val();
+    if (password === confirm) {
+      $('#rpassword-confirm').closest('.form-group').removeClass('has-error');
+      $('#rpassword-confirm').closest('.form-group').find('.help-block').hide();
+    } else {
+      $('#rpassword-confirm').closest('.form-group').addClass('has-error');
+      $('#rpassword-confirm').closest('.form-group').find('.help-block').show();
+      success = false;
+    }
     return success;
   },
 
@@ -87,6 +104,15 @@ var ProfileResetView = Backbone.View.extend({
       return;
     } else {
       $(parent.find('.error-password')[0]).hide();
+    }
+    var passwordConfirmSuccess = this.checkPasswordConfirm();
+    var passwordConfirmParent = $(this.$('#rpassword-confirm').parents('.form-group')[0]);
+    if (passwordConfirmSuccess !== true) {
+      passwordConfirmParent.addClass('has-error');
+      $(passwordConfirmParent.find('.error-password')[0]).show();
+      return;
+    } else {
+      $(passwordConfirmParent.find('.error-password')[0]).hide();
     }
 
     // Create a data object with the required fields
