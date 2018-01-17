@@ -1,73 +1,54 @@
-<main class="main-content usajobs-content-well" id="main-content">
-<div class="wrapper-addTask"></div>
-<div class="clearfix mxn2">
-  <div class="col-right col-12 md-col-3 px2 mb2 browse-buttons">
-        <a href="#addTask" class="btn btn-c2 add-opportunity" data-toggle="modal" data-backdrop="static" style="<% if (!user) { %>display: none;<% } %>"><i class="fa fa-plus"></i> <span data-i18n="Task">Opportunity</span></a>
-  </div>
+<section class="usajobs-canvas">
+  <div class="usajobs-content-gutter usajobs-open-opps-search">
   <div class="usajobs-grid">
-    <input type="text" id="search" title="Search" class="form-control" placeholder="<%- placeholder %>">
+    <div class="usa-width-two-thirds">
+      <input type="text" id="search" title="Search" class="form-control" placeholder="<%- placeholder %>">
+    </div>
+    <div class="usa-width-one-third">
+      <a href="#addTask" class="usa-button usa-button-gray" data-toggle="modal" data-backdrop="static" style="<% if (!user) { %>display: none;<% } %>"><i class="fa fa-plus"></i> <span data-i18n="Task">Post opportunity</span></a>
+    </div>
   </div>
-</div>
+  <div id="browse-search-spinner" class="fullwidth text-center">
+      Loading... <i class="fa fa-spinner fa-spin"></i>
+    </div>
+  <main class="main-content usajobs-content-well" id="main-content" aria-label="Search results">
 
-</main>
-<aside class="usajobs-rightrail" id="rightrail">
-    <div class="clearfix mxn2">
-        <% if (target === 'tasks') { %>
-        <div class="col-right col-12 md-col-3 px2">
-          <div class="box">
-            <div class="border-bottom box-pad-lr">
-              <h2>Filters</h2>
+      <div class="usajobs-open-opps-search-results" id="browse-list"></div>
+  </main>
+    <aside class="usajobs-rightrail" id="rightrail">
+      <div class="usajobs-open-opps-opportunity">
+          <% if (target === 'tasks') { %>
+            <h2>Filters</h2>
+
+            <div id="stateFilters">
+              <% _.each(ui.states, function (t) { %>
+                <label class="<% if ( t.value == " draft " || t.value == 'submitted' ) { %>hidden <%- t.value %>-filter<% } %>">
+                  <input type='checkbox' name='state<%- t.label %>' class='stateFilter' value='<%- t.value %>'>
+                  <%- t.label %>
+                </label>
+                <% }); %>
             </div>
-            <div class="box-pad-t">
-              <% if ( target == "tasks" ) {%>
-              <div class="box-pad-lr" id="stateFilters">
-                <% _.each(ui.states, function (t) { %>
-                  <label class="<% if ( t.value == " draft " || t.value == 'submitted' ) { %>hidden <%- t.value %>-filter<% } %>">
-                    <input type='checkbox' name='state<%- t.label %>' class='stateFilter' value='<%- t.value %>'>
-                    <%- t.label %>
-                  </label>
-                  <% }); %>
-              </div>
-              <% } %>
-              <div id="search-projs-wrapper" class="box-pad-lr">
-                <ul id="search-projs" class="nav nav-pills nav-stacked nav-search">
-                </ul>
-              </div>
-              <div class="box-pad-lr">
-                <ul id="search-tags" class="nav nav-pills nav-stacked nav-search">
-                </ul>
-              </div>
-              <div class="box-pad-lr search-clear" style="display: none;">
-                <div class="align-right">
-                  <a href="#" id="search-clear" class="btn btn-sm btn-c0"><i class="fa fa-remove"></i> Clear Search Criteria</a>
-                </div>
+
+            <ul id="search-projs" class="nav nav-pills nav-stacked nav-search">
+            </ul>
+            <ul id="search-tags" class="nav nav-pills nav-stacked nav-search">
+            </ul>
+
+            <div class="search-clear" style="display: none;">
+              <div class="align-right">
+                <a href="#" id="search-clear" class="btn btn-sm btn-c0"><i class="fa fa-remove"></i> Clear Search Criteria</a>
               </div>
             </div>
-          </div>
-      
-          <% if (agencyName) { %>
-            <div class="box">
-              <div class="border-bottom box-pad-lr">
-                <h2>Agency Filters</h2>
-              </div>
-              <div class="box-pad-t">
-                <div class="box-pad-lr">
-                  <label id="js-restrict-task-filter">
-                    <input class="restrict-participation" type="checkbox" name="restrict">
-                    Restrict to <%- agencyName %> agency
-                  </label>
-                </div>
-              </div>
-            </div>
+
+            <% if (agencyName) { %>
+            <h2>Agency Filters</h2>
+              <label id="js-restrict-task-filter">
+                <input class="restrict-participation" type="checkbox" name="restrict">
+                Restrict to <%- agencyName %> agency
+              </label>
+            <% } %>
           <% } %>
-        </div>
-      
-        <% } %>
-        <div class="<% (target === 'tasks') ? print('col col-12 md-col-9 px2') : print('col col-12') %>">
-          <div id="browse-search-spinner" class="fullwidth text-center">
-            Loading... <i class="fa fa-spinner fa-spin"></i>
-          </div>
-          <div class="clearfix mxn2" id="browse-list"></div>
-        </div>
       </div>
-</aside>
+    </aside>
+  </div>
+</section>

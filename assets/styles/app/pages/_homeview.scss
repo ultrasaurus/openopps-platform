@@ -123,11 +123,12 @@
 
 .usajobs-opop-why__col {
   max-width: 29.4rem;
+  margin-left: auto;
+  margin-right: auto;
 }
 
-.usajobs-opop-why__title {
-  font-size: 3.4rem;
-  font-weight: 600;
+.usajobs-opop-why__title h2 {
+  color: #ffffff;
 }
 
 .usajobs-opop-why__icon {
@@ -144,9 +145,6 @@
 }
 
 .usajobs-opop-work__title {
-	color: #205493;
-	font-size: 3.4rem;
-  font-weight: 600;
   text-align: center;
 }
 

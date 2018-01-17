@@ -30,4 +30,115 @@
 
 @import 'app/utils';
 
-@import 'custom';
+// @import 'custom';
+
+// USAJOBS Open Opportunitites build
+
+@import 'uswds';
+
+// Base ------------------- //
+@import 'base/variables';
+@import 'base/utilities';
+@import 'base/fonts';
+@import 'base/breakpoints';
+@import 'base/accessibility';
+@import 'base/shell';
+@import 'base/grid';
+@import 'base/images';
+@import 'base/list';
+@import 'base/forms';
+
+
+// Elements --------------- //
+@import 'element/typography';
+@import 'element/link';
+@import 'element/button';
+@import 'element/select';
+@import 'element/icon';
+
+
+// Components ------------- //
+@import 'component/card/component-card';
+@import 'component/card/opportunity';
+@import 'component/footer';
+@import 'component/header';
+@import 'component/modal';
+@import 'component/nav';
+@import 'component/nav-secondary';
+@import 'component/pill';
+@import 'component/search/pagination';
+
+body {
+    background-color: $color-gray-lightest;
+}
+
+@media screen and (min-width: 120em) {
+    .usajobs-nav--full_bleed__banner-inner, .usajobs-nav--core-v2__banner-inner, .usajobs-nav--open-opps__banner-inner {
+        padding-left: 3rem;
+    }
+}
+
+h2 {
+    color: $color-primary-darker;
+}
+
+@media screen and (min-width: 62em) {
+    .usajobs-content-well {
+      float: left;
+      display: block;
+      margin-right: 2.3576520234%;
+      width: 65.8807826589%;
+    }
+    .usajobs-content-well:last-child {
+      margin-right: 0;
+    }
+  }
+  
+  @media screen and (min-width: 75em) {
+    .usajobs-content-well {
+      float: left;
+      display: block;
+      margin-right: 2.3576520234%;
+      width: 65.8807826589%;
+    }
+    .usajobs-content-well:last-child {
+      margin-right: 0;
+    }
+  }
+
+  @media screen and (min-width: 48em) {
+    .usajobs-content-gutter {
+      padding-left: 3rem;
+      padding-right: 3rem;
+    }
+  }
+  
+  @media screen and (min-width: 62em) {
+    .usajobs-rightrail {
+      float: left;
+      display: block;
+      margin-right: 2.3576520234%;
+      width: 31.7615653177%;
+    }
+    .usajobs-rightrail:last-child {
+      margin-right: 0;
+    }
+  }
+  
+  @media screen and (min-width: 75em) {
+    .usajobs-rightrail {
+      float: left;
+      display: block;
+      margin-right: 2.3576520234%;
+      width: 31.7615653177%;
+    }
+    .usajobs-rightrail:last-child {
+      margin-right: 0;
+    }
+  }
+  
+  @media screen and (min-width: 62em) {
+    .usajobs-rightrail .usajobs-content-gutter {
+      padding-left: 0;
+    }
+  }

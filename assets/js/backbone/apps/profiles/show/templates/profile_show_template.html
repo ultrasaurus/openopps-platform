@@ -1,121 +1,125 @@
-<% if (user.isAdmin) { %>
-<div class="alert alert-info">
-  You are an administrator.
-  <% if (user.id !== data.id) { %>
-    You are viewing another user's profile.
-  <% } %>
-</div>
-<% } %>
-
-<% if (saved) { %>
-<div class="alert alert-success">Your profile has been successfully updated.</div>
-<% } %>
-
-<div class="clearfix mxn2 mb2">
-  <div class="col col-12 md-col-8 px2">
-    <div class="p2 bg-white">
-      <div class="clearfix mxn2">
-        <div class="col col-12 md-col-4 px2">
-          <img src="/api/user/photo/<%- data.id %>">
-          <div id="file-upload-progress-container" style="display: none;" class="progress progress-striped active">
-            <div id="file-upload-progress" class="progress-bar" style="width: 0"></div>
-          </div>
-          <div id="file-upload-alert" class="alert alert-warning" style="display:none;">
-          </div>
-        </div>
-        <div class="col col-12 md-col-8 px2">
-          <h1><% if (data.name) { %><%- data.name %><% } else { %><%- data.username %><% } %></h1>
-
-          <div class="profile-jobtitle"><% if (data.title) { %><i class="fa fa-briefcase"></i> <span class="box-icon-text"><%- data.title %></span><% } %></div>
-          <div class="profile-company"><% if (data.agency) { %><i class="icon-library"></i> <span class="box-icon-text"><%- data.agency.name %></span><% } %></div>
-          <div class="profile-location"><% if (data.location) { %><span class="fa fa-map-marker"></span> <span class="box-icon-text"><%- data.location.name %></span><% } %></div>
-          <div class="profile-email">
-            <i class="fa fa-envelope"></i> <span class="box-icon-text">
-              <% if (email) { %>
-                <%- email %>
-              <% } else { %>
-              No email addresses
-              <% } %>
-            </span>
-          </div>
-        </div>
-      </div>
-      <div class="mt1 mb2">
-        <% /* Escaped with marked() */ %>
-          <% if (data.bioHtml) { %><%= data.bioHtml %><% } %>
-      </div>
-
-    </div>
-  </div>
-
-  <div class="col col-12 md-col-4 px2">
-    <div class="p2 bg-white">
-      <div class="navbar-side <% if (data.isOwner || user.isAdmin) { %>border-bottom<% } %>">
-        <ul class="nav nav-pills nav-stacked">
-          <li>
-            <a href="#" id="email"><i class="fa fa-envelope-o"></i> <span class="box-icon-text">Share</span></a>
-          </li>
-        </ul>
-      </div>
-      <% if (data.isOwner || user.isAdmin) { %>
-      <div class="navbar-side">
-          <ul class="nav nav-pills nav-stacked">
-          <li>
-            <% if (login.profile.edit === true) { %>
-            <a href="/profile/<%- data.id %>/edit" class="link-backbone"><i class="fa fa-pencil"></i> <span class="box-icon-text">Edit Profile</span></a>
-            <% } else if (login.profile.editUrl) { %>
-            <a href="<%- login.profile.editUrl %>" target="_blank"><i class="fa fa-pencil"></i> <span class="box-icon-text">Edit Profile</span></a>
-            <% } %>
-          </li>
-        </ul>
-      </div>
+<section class="usajobs-canvas">
+    <main class="main-content usajobs-content-well" id="main-content" aria-label="Opportunity">
+        <div class="usajobs-open-opps-opportunity">
+    <% if (user.isAdmin) { %>
+    <div class="alert alert-info">
+      You are an administrator.
+      <% if (user.id !== data.id) { %>
+        You are viewing another user's profile.
       <% } %>
     </div>
-  </div>
-</div>
+    <% } %>
 
-<% if (tags.length > 0) { %>
-<div class="clearfix mxn2 mb2">
-  <div class="col col-12 md-col-8 px2">
-    <div class="p2 bg-white">
-      <h2>Skills &amp; Interests</h2>
-      <div class="py1">
-        <% _.each(tags, function (t) { %>
-          <a class="px2 bg-yellow black rounded" href="/tasks?search=<%= t.name %>"><%= t.name %></a>
-        <% }) %>
+    <% if (saved) { %>
+    <div class="alert alert-success">Your profile has been successfully updated.</div>
+    <% } %>
+
+    <div class="clearfix mxn2 mb2">
+      <div class="col col-12 md-col-8 px2">
+        <div class="p2 bg-white">
+          <div class="clearfix mxn2">
+            <div class="col col-12 md-col-4 px2">
+              <img src="/api/user/photo/<%- data.id %>">
+              <div id="file-upload-progress-container" style="display: none;" class="progress progress-striped active">
+                <div id="file-upload-progress" class="progress-bar" style="width: 0"></div>
+              </div>
+              <div id="file-upload-alert" class="alert alert-warning" style="display:none;">
+              </div>
+            </div>
+            <div class="col col-12 md-col-8 px2">
+              <h1><% if (data.name) { %><%- data.name %><% } else { %><%- data.username %><% } %></h1>
+
+              <div class="profile-jobtitle"><% if (data.title) { %><i class="fa fa-briefcase"></i> <span class="box-icon-text"><%- data.title %></span><% } %></div>
+              <div class="profile-company"><% if (data.agency) { %><i class="icon-library"></i> <span class="box-icon-text"><%- data.agency.name %></span><% } %></div>
+              <div class="profile-location"><% if (data.location) { %><span class="fa fa-map-marker"></span> <span class="box-icon-text"><%- data.location.name %></span><% } %></div>
+              <div class="profile-email">
+                <i class="fa fa-envelope"></i> <span class="box-icon-text">
+                  <% if (email) { %>
+                    <%- email %>
+                  <% } else { %>
+                  No email addresses
+                  <% } %>
+                </span>
+              </div>
+            </div>
+          </div>
+          <div class="mt1 mb2">
+            <% /* Escaped with marked() */ %>
+              <% if (data.bioHtml) { %><%= data.bioHtml %><% } %>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="col col-12 md-col-4 px2">
+        <div class="p2 bg-white">
+          <div class="navbar-side <% if (data.isOwner || user.isAdmin) { %>border-bottom<% } %>">
+            <ul class="nav nav-pills nav-stacked">
+              <li>
+                <a href="#" id="email"><i class="fa fa-envelope-o"></i> <span class="box-icon-text">Share</span></a>
+              </li>
+            </ul>
+          </div>
+          <% if (data.isOwner || user.isAdmin) { %>
+          <div class="navbar-side">
+              <ul class="nav nav-pills nav-stacked">
+              <li>
+                <% if (login.profile.edit === true) { %>
+                <a href="/profile/<%- data.id %>/edit" class="link-backbone"><i class="fa fa-pencil"></i> <span class="box-icon-text">Edit Profile</span></a>
+                <% } else if (login.profile.editUrl) { %>
+                <a href="<%- login.profile.editUrl %>" target="_blank"><i class="fa fa-pencil"></i> <span class="box-icon-text">Edit Profile</span></a>
+                <% } %>
+              </li>
+            </ul>
+          </div>
+          <% } %>
+        </div>
       </div>
     </div>
   </div>
-</div>
-<% } %>
-
-<div class="clearfix mxn2 mb2">
-  <div class="col col-12 md-col-8 px2">
-    <div class="p2 bg-white">
-      <h2>Opportunities</h2>
-      <h3 class="light">Participated</h3>
-      <div class="task-activity-wrapper"></div>
-      <h3 class="light">Created</h3>
-      <div class="task-createdactivity-wrapper"></div>
+  
+    <% if (tags.length > 0) { %>
+      <div class="usajobs-open-opps-opportunity">
+      
+        
+          <h2>Skills &amp; Interests</h2>
+          <div class="py1">
+            <% _.each(tags, function (t) { %>
+              <a class="px2 bg-yellow black rounded" href="/tasks?search=<%= t.name %>"><%= t.name %></a>
+            <% }) %>
+          
+        
+      </div>
     </div>
+    <% } %>
   </div>
 
-  <% if (data.badges.length > 0) { %>
-  <div class="col col-12 md-col-4 px2">
-    <div class="p2 bg-white">
-      <h2>Badges</h2>
-      <ul class="profile-badges">
-        <% _.map(data.badges, function (b) { %>
-          <li class="profile-badge">
-            <% var filename = b.type.replace(' ', '-'); %>
-            <img src="/images/badges/<%- filename %>.png" alt="The <%- b.type %> badge is awarded when you <%- b.description %>" title="The <%- b.type %> badge is awarded when you <%- b.description %>">
-            <p><%- b.type %></p>
-          </li>
-        <% }); %>
-      </ul>
+  <div class="usajobs-open-opps-opportunity">
+
+          <h2>Opportunities</h2>
+          <h3>Participated</h3>
+          <div class="task-activity-wrapper"></div>
+          <h3>Created</h3>
+          <div class="task-createdactivity-wrapper"></div>
+
     </div>
-  </div>
 
-  <% } %>
+  </main>
+    <aside class="usajobs-rightrail" id="rightrail">
+        <div class="usajobs-open-opps-opportunity">
+        <h2>Badges</h2>
+        <% if (data.badges.length > 0) { %> 
+              <ul class="profile-badges">
+                <% _.map(data.badges, function (b) { %>
+                  <li class="profile-badge">
+                    <% var filename = b.type.replace(' ', '-'); %>
+                    <img src="/images/badges/<%- filename %>.png" alt="The <%- b.type %> badge is awarded when you <%- b.description %>" title="The <%- b.type %> badge is awarded when you <%- b.description %>">
+                    <p><%- b.type %></p>
+                  </li>
+                <% }); %>
+              </ul>
+          <% } %>
+        </div>
+    </aside>
 
-</div>
+</section>

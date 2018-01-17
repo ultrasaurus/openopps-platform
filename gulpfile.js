@@ -9,6 +9,8 @@ var stringify = require('stringify');
 var babel = require('gulp-babel');
 var uglify = require('gulp-uglify-es').default;
 var rename = require('gulp-rename');
+var bourbon 	= require('bourbon').includePaths;
+var neat		= require('bourbon-neat').includePaths;
 
 // Lint Task
 gulp.task('lint', function () {
@@ -21,7 +23,9 @@ gulp.task('lint', function () {
 // Compile Our Sass
 gulp.task('sass', function () {
   return gulp.src('assets/styles/main.scss')
-    .pipe(sass())
+    .pipe(sass({
+      includePaths: [bourbon, neat],
+    }))
     .pipe(gulp.dest('dist/styles'));
 });
 
@@ -59,10 +63,6 @@ gulp.task('move', function () {
     .pipe(gulp.dest('dist/locales'));
   gulp.src(['./assets/*.*'])
     .pipe(gulp.dest('dist'));
-  gulp.src(['./assets/styles/usajobs-design-system.min.css'])
-    .pipe(gulp.dest('dist/styles'));
-  gulp.src(['./assets/styles/usajobs-design-system-base--open-opps.css'])
-    .pipe(gulp.dest('dist/styles'));
   gulp.src(['./assets/js/vendor/fontawesome-all.js'])
     .pipe(gulp.dest('dist/js'));
 });

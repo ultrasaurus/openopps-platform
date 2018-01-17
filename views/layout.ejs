@@ -16,8 +16,6 @@
     <!-- CSRF token -->
     <meta name="csrf-token" content="">
     <link rel="stylesheet" href="/styles/main.css">
-    <!-- <link rel="stylesheet" href="/styles/usajobs-design-system.min.css"> -->
-    <link rel="stylesheet" href="/styles/usajobs-design-system-base--open-opps.css">
   </head>
 
   <body>
@@ -27,7 +25,7 @@
         document.write('<div class="alert alert-danger"><strong>You are using an old, unsupported version of Internet Explorer.</strong>  This website may not work correctly in your browser.  For the best experience, you should use <a href="http://www.google.com/chrome" class="alert-link">Google Chrome</a> or <a href="http://www.microsoft.com/InternetExplorer" class="alert-link">update Internet Explorer</a>.</div>');
       }
     </script>  
-    <header class="usajobs-site-header" aria-label="header">
+    <header class="usajobs-site-header" aria-label="header" id="title">
         <div class="usa-banner">
             <div class="usa-accordion">
               <div class="usa-banner-header">
@@ -74,7 +72,7 @@
       </div>
       <% } %>
       <%- body %>
-      <footer class="bg-white p1" id="footer"></footer>
+      <footer id="footer"></footer>
     </section>
     <script src="/js/bundle<% if(process.env.NODE_ENV == 'production') { %>.min<% } %>.js?v=<%- version %>"></script>
   </body>
