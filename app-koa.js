@@ -2,14 +2,14 @@ const koa = require('koa');
 const cfenv = require('cfenv');
 const blueox = require('blue-ox');
 const render = require('koa-ejs');
-const sass = require('koa-sass');
 const serve = require('koa-static');
 const path = require('path');
 const parser = require('koa-better-body');
 const CSRF = require('koa-csrf');
-const session = require('koa-session');
+const session = require('koa-generic-session');
 const redisStore = require('koa-redis');
 const passport = require('koa-passport');
+const cacheControl = require('koa-cache-control');
 const flash = require('koa-better-flash');
 const _ = require('lodash');
 
@@ -25,6 +25,7 @@ module.exports = (config) => {
   _.extend(openopps, require('./config/application'));
   _.extend(openopps, require('./config/session'));
   _.extend(openopps, require('./config/settings/auth'));
+  _.extend(openopps, require('./config/cache'));
   _.extend(openopps, require('./config/version'));
   _.extend(openopps, require('./config/fileStore'));
   _.extend(openopps, require('./config/email'));
@@ -49,6 +50,9 @@ module.exports = (config) => {
   // initialize body parser
   app.use(parser());
 
+  // initialize cache controller
+  app.use(cacheControl(openopps.cache.public));
+
   // configure session
   app.proxy = true;
   app.keys = [openopps.session.secret || 'your-secret-key'];
@@ -57,11 +61,11 @@ module.exports = (config) => {
   // configure CSRF
   app.use(new CSRF({
     invalidSessionSecretMessage: { message: 'Invalid session' },
-    invalidSessionSecretStatusCode: 403,
-    invalidTokenMessage: { message: 'Invalid CSRF token' },
-    invalidTokenStatusCode: 403,
+    invalidSessionSecretStatusCode: 401,
+    invalidTokenMessage: JSON.stringify({ message: 'Invalid CSRF token' }),
+    invalidTokenStatusCode: 401,
     excludedMethods: [ 'GET', 'HEAD', 'OPTIONS' ],
-    disableQuery: false,
+    disableQuery: true,
   }));
 
   // initialize authentication
@@ -82,6 +86,19 @@ module.exports = (config) => {
   feature = function (name) {
     return require(path.join(__dirname, 'api', name, 'controller'));
   };
+
+  // redirect any request coming other than openopps.hostName
+  app.use(async (ctx, next) => {
+    var hostParts = ctx.host.split(':');
+    if(!openopps.redirect || hostParts[0] === openopps.hostName) {
+      await next();
+    } else {
+      rlog.info('Redirecting from ' + ctx.host);
+      var url = ctx.protocol + '://' + openopps.hostName + (hostParts[1] ? ':' + hostParts[1] : '') + ctx.path + (ctx.querystring ? '?' + ctx.querystring : '');
+      ctx.status = 301;
+      ctx.redirect(url);
+    }
+  });
 
   // log request to console
   app.use(async (ctx, next) => {
@@ -119,6 +136,7 @@ module.exports = (config) => {
   // CSRF Token
   app.use(async (ctx, next) => {
     if(ctx.path === '/csrfToken') {
+      ctx.cacheControl = openopps.cache.noStore;
       ctx.body = { _csrf: ctx.csrf };
     } else await next();
   });
@@ -129,6 +147,7 @@ module.exports = (config) => {
     if(ctx.path.match('^/api/.*')) {
       // JSON request for better-body parser are in request.fields
       ctx.request.body = ctx.request.body || ctx.request.fields;
+      ctx.cacheControl = openopps.cache.noStore;
       await next();
     } else {
       var data = {

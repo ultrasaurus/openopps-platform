@@ -76,11 +76,11 @@ function renderTemplate (template, data, done) {
 
 function sendEmail (mailOptions, done) {
   mailOptions.from = openopps.systemName + ' <' + openopps.systemEmail + '>';
-  if (openopps.notificationsCC) options.cc = _.compact([
+  if (openopps.notificationsCC) mailOptions.cc = _.compact([
     mailOptions.cc,
     openopps.notificationsCC,
   ]);
-  if (openopps.notificationsBCC) options.bcc = _.compact([
+  if (openopps.notificationsBCC) mailOptions.bcc = _.compact([
     mailOptions.bcc,
     openopps.notificationsBCC,
   ]);

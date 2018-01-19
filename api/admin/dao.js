@@ -117,16 +117,22 @@ const activityTaskQuery = 'select midas_user.name, midas_user.username, task.tit
   'where task.id = ? ';
 
 const taskMetricsQuery = 'select @task.*, @tags.* ' +
-'from @task task ' +
-'left join tagentity_tasks__task_tags task_tags on task_tags.task_tags = task.id ' +
-'left join @tagentity tags on tags.id = task_tags.tagentity_tasks ';
+  'from @task task ' +
+  'left join tagentity_tasks__task_tags task_tags on task_tags.task_tags = task.id ' +
+  'left join @tagentity tags on tags.id = task_tags.tagentity_tasks ';
 
 const volunteerDetailsQuery = 'select @m_user.*, @tags.* ' +
-'from @midas_user m_user ' +
-'inner join volunteer on m_user.id = volunteer."userId" ' +
-'left join tagentity_users__user_tags user_tags on user_tags.user_tags = m_user.id ' +
-'left join @tagentity tags on tags.id = user_tags.tagentity_users ' +
-"where tags.type = 'agency' ";
+  'from @midas_user m_user ' +
+  'inner join volunteer on m_user.id = volunteer."userId" ' +
+  'left join tagentity_users__user_tags user_tags on user_tags.user_tags = m_user.id ' +
+  'left join @tagentity tags on tags.id = user_tags.tagentity_users ' +
+  "where tags.type = 'agency' ";
+
+const userAgencyQuery = 'select tagentity.name, midas_user."isAdmin" ' +
+  'from midas_user inner join tagentity_users__user_tags on midas_user.id = tagentity_users__user_tags.user_tags ' +
+  'inner join tagentity tagentity on tagentity.id = tagentity_users__user_tags.tagentity_users ' +
+  'where midas_user.id = ? ' +
+  "and tagentity.type = 'agency' ";
 
 var exportFormat = {
   'user_id': 'id',
@@ -231,6 +237,7 @@ module.exports = function (db) {
       activityTaskQuery: activityTaskQuery,
       taskMetricsQuery: taskMetricsQuery,
       volunteerDetailsQuery: volunteerDetailsQuery,
+      userAgencyQuery: userAgencyQuery,
     },
     clean: clean,
     options: options,

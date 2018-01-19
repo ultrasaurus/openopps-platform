@@ -1,9 +1,9 @@
 <section class="usajobs-canvas">
     <main class="main-content usajobs-content-well" id="main-content" aria-label="Opportunity">
         <div class="usajobs-open-opps-opportunity">
-          <% if (user.isAdmin) { %>
+          <% if (user.isAdmin || user.isAgencyAdmin) { %>
           <div class="alert alert-info">
-            You are an administrator.
+            You are an <% if (user.isAdmin) { %> administrator <% } else { %> agency administrator <% } %>.
             <% if (user.id !== data.id) { %>
               You are viewing another user's profile.
             <% } %>
@@ -21,7 +21,6 @@
           <div id="file-upload-alert" class="alert alert-warning" style="display:none;">
           </div>
           <h1><% if (data.name) { %><%- data.name %><% } else { %><%- data.username %><% } %></h1>
-
           <div class="profile-jobtitle"><% if (data.title) { %><i class="fa fa-briefcase"></i> <span class="box-icon-text"><%- data.title %></span><% } %></div>
           <div class="profile-company"><% if (data.agency) { %><i class="icon-library"></i> <span class="box-icon-text"><%- data.agency.name %></span><% } %></div>
           <div class="profile-location"><% if (data.location) { %><span class="fa fa-map-marker"></span> <span class="box-icon-text"><%- data.location.name %></span><% } %></div>
@@ -49,7 +48,7 @@
               </li>
             </ul>
           </div>
-          <% if (data.isOwner || user.isAdmin) { %>
+          <% if (data.isOwner || data.canEditProfile) { %>
           <div class="usajobs-opop-section-edit">
               <ul class="nav nav-pills nav-stacked">
               <li>

@@ -8,6 +8,7 @@ var bro = require('gulp-bro');
 var stringify = require('stringify');
 var babel = require('gulp-babel');
 var uglify = require('gulp-uglify-es').default;
+var sourcemaps = require('gulp-sourcemaps');
 var rename = require('gulp-rename');
 var bourbon 	= require('bourbon').includePaths;
 var neat		= require('bourbon-neat').includePaths;
@@ -31,22 +32,14 @@ gulp.task('sass', function () {
 
 // Concatenate & Minify JS
 gulp.task('scripts', function () {
-  if (process.env.NODE_ENV == 'production') {
-    gulp.src('assets/js/backbone/app.js')
-      .pipe(babel())
-      .pipe(bro({ transform: stringify }))
-      .on('error', function (err) { console.log(err); })
-      .pipe(rename('bundle.min.js'))
-      .pipe(uglify())
-      .on('error', function (err) { console.log(err); })
-      .pipe(gulp.dest('dist/js'));
-  } else {
-    gulp.src('assets/js/backbone/app.js')
-      .pipe(babel())
-      .pipe(bro({ transform: stringify }))
-      .pipe(rename('bundle.js'))
-      .pipe(gulp.dest('dist/js'));
-  }
+  gulp.src('assets/js/backbone/app.js')
+    .pipe(babel())
+    .pipe(bro({ transform: stringify }))
+    .pipe(rename('bundle.min.js'))
+    .pipe(sourcemaps.init())
+    .pipe(uglify())
+    .pipe(sourcemaps.write('./maps'))
+    .pipe(gulp.dest('dist/js'));
 });
 
 // Move additional resources

@@ -11,6 +11,9 @@ module.exports = {
   // hostName defines the domain upon which your app will be deployed (e.g. 'localhost:1337', for development)
   hostName: process.env.HOST || 'localhost',
 
+  // redirect domain not matching hostName
+  redirect: (process.env.REDIRECT || '').match(/^true$/i) || false,
+
   // The `port` setting determines which TCP port your app will be deployed on
   // Ports are a transport-layer concept designed to allow many different
   // networking applications run at the same time on a single computer.
@@ -47,11 +50,11 @@ module.exports = {
 
   // Default task state
   taskState: process.env.TASK_STATE || 'draft',
-  draftAdminOnly: process.env.DRAFT_ADMIN_ONLY || false,
+  draftAdminOnly: (process.env.DRAFT_ADMIN_ONLY || '').match(/^true$/i) || false,
 
-  validateDomains: process.env.VALIDATE_DOMAINS || false,
-  requireAgency:   process.env.REQUIRE_AGENCY || false,
-  requireLocation: process.env.REQUIRE_LOCATION || false,
+  validateDomains: (process.env.VALIDATE_DOMAINS || '').match(/^true$/i) || false,
+  requireAgency:   (process.env.REQUIRE_AGENCY || '').match(/^true$/i) || false,
+  requireLocation: (process.env.REQUIRE_LOCATION || '').match(/^true$/i) || false,
 };
 
 module.exports.appUrl = module.exports.httpProtocol + '://' + module.exports.hostName;

@@ -14,6 +14,10 @@ const baseTask = {
   updatedAt: new Date(),
 };
 
+function findOne (id) {
+  return dao.Task.findOne('id = ?', id);
+}
+
 async function findById (id, loggedIn) {
   var results = await dao.Task.query(dao.query.task + ' where task.id = ?', id, dao.options.task);
   if(results.length === 0) {
@@ -99,8 +103,24 @@ async function sendTaskNotification (user, task, action) {
 
 async function canUpdateOpportunity (user, id) {
   var task = await dao.Task.findOne('id = ?', id);
-  if (task.userId == user.id || user.isAdmin) {
+  if (task.userId == user.id || user.isAdmin || (user.isAgencyAdmin && await checkAgency(user, task.userId))) {
     return true;
+  }
+  return false;
+}
+
+async function canAdministerTask (user, id) {
+  var task = await dao.Task.findOne('id = ?', id);
+  if (task && (user.isAdmin || (user.isAgencyAdmin && await checkAgency(user, task.userId)))) {
+    return true;
+  }
+  return false;
+}
+
+async function checkAgency (user, ownerId) {
+  var owner = await dao.clean.user((await dao.User.query(dao.query.user, ownerId, dao.options.user))[0]);
+  if (owner && owner.agency) {
+    return user.tags ? _.find(user.tags, { 'type': 'agency' }).name == owner.agency.name : false;
   }
   return false;
 }
@@ -127,8 +147,18 @@ async function updateOpportunity (attributes, done) {
           return done(task, origTask.state !== task.state);
         });
       }).catch (err => { return done(null, false, {'message':'Error updating task.'}); });
-  }).catch (err => { 
-    return done(null, false, {'message':'Error updating task.'}); 
+  }).catch (err => {
+    return done(null, false, {'message':'Error updating task.'});
+  });
+}
+
+async function publishTask (attributes, done) {
+  attributes.publishedAt = new Date();
+  attributes.updatedAt = new Date();
+  await dao.Task.update(attributes).then(async (task) => {
+    return done(true);
+  }).catch (err => {
+    return done(false);
   });
 }
 
@@ -206,10 +236,7 @@ async function copyOpportunity (attributes, adminAttributes, done) {
     description: results.description,
   };
 
-  var newTask = _.extend(baseTask, task);
-  delete(newTask.id);
-  delete(newTask.completedBy);
-  delete(newTask.completedAt);
+  var newTask = _.extend(_.clone(baseTask), task);
   await dao.Task.insert(newTask)
     .then(async (task) => {
       tags.map(tag => {
@@ -303,11 +330,13 @@ async function sendTasksDueNotifications (action, i) {
 }
 
 module.exports = {
+  findOne: findOne,
   findById: findById,
   list: list,
   commentsByTaskId: commentsByTaskId,
   createOpportunity: createOpportunity,
   updateOpportunity: updateOpportunity,
+  publishTask: publishTask,
   copyOpportunity: copyOpportunity,
   deleteTask: deleteTask,
   getExportData: getExportData,
@@ -316,4 +345,5 @@ module.exports = {
   sendTaskStateUpdateNotification: sendTaskStateUpdateNotification,
   sendTasksDueNotifications: sendTasksDueNotifications,
   canUpdateOpportunity: canUpdateOpportunity,
+  canAdministerTask: canAdministerTask,
 };

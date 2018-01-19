@@ -128,7 +128,7 @@
               </li>
             </ul>
           </div>
-          <% if (model.isOwner || (user && user.isAdmin)) { %>
+          <% if (model.canEditTask) { %>
           <div>
             <div id="modal-close"></div>
             <div id="modal-copy"></div>

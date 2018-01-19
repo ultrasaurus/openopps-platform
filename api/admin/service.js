@@ -284,12 +284,32 @@ async function getProfile (id) {
 async function updateProfile (user, done) {
   user.updatedAt = new Date();
   await dao.User.update(user).then(async () => {
-    return done(true);
-  }).catch (err => { return done(err); });
+    return done(true, null);
+  }).catch (err => {
+    return done(null, err);
+  });
 }
 
 async function getAgency (id) {
   return await dao.TagEntity.findOne('id = ?', id);
+}
+
+async function canAdministerAccount (user, id) {
+  if (user.isAdmin || (user.isAgencyAdmin && await checkAgency(user, id))) {
+    return true;
+  }
+  return false;
+}
+
+async function checkAgency (user, ownerId) {
+  var owner = (await dao.User.db.query(dao.query.userAgencyQuery, ownerId)).rows[0];
+  if (owner && owner.isAdmin) {
+    return false;
+  }
+  if (owner && owner.name) {
+    return _.find(user.tags, { 'type': 'agency' }).name == owner.name;
+  }
+  return false;
 }
 
 async function getExportData () {
@@ -340,4 +360,5 @@ module.exports = {
   getAgency: getAgency,
   getDashboardTaskMetrics: getDashboardTaskMetrics,
   getActivities: getActivities,
+  canAdministerAccount: canAdministerAccount,
 };

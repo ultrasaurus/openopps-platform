@@ -6,7 +6,7 @@ const service = require('./service');
 var router = new Router();
 
 router.post('/api/volunteer', async (ctx, next) => {
-  if (ctx.isAuthenticated() && await canAddVolunteer(ctx.request.body, ctx.state.user)) {
+  if (ctx.isAuthenticated() && await service.canAddVolunteer(ctx.request.body, ctx.state.user)) {
     var attributes = ctx.request.body;
     attributes.userId = +attributes.userId || ctx.state.user.id;
     await service.addVolunteer(attributes, function (err, volunteer) {
@@ -14,7 +14,7 @@ router.post('/api/volunteer', async (ctx, next) => {
         return ctx.body = err;
       }
       if (volunteer.silent == null || volunteer.silent == 'false') {
-        service.sendAddedVolunteerNotification(ctx.req.user, volunteer, 'volunteer.create.thanks');
+        service.sendAddedVolunteerNotification(ctx.state.user, volunteer, 'volunteer.create.thanks');
       }
       return ctx.body = volunteer;
     });
@@ -24,21 +24,14 @@ router.post('/api/volunteer', async (ctx, next) => {
   }
 });
 
-async function canAddVolunteer (attributes, user) {
-  if (typeof attributes.userId !== 'undefined' && !user.isAdmin) {
-    return false;
-  }
-  return true;
-}
-
-router.delete('/api/volunteer/:id', async (ctx, next) => {
-  if (ctx.isAuthenticated()) {
-    await service.deleteVolunteer(+ctx.params.id, +ctx.query.taskId, function (notificationInfo, err) {
+router.post('/api/volunteer/remove', async (ctx, next) => {
+  if (ctx.isAuthenticated() && await service.canRemoveVolunteer(ctx.request.body.taskId, ctx.state.user)) {
+    await service.deleteVolunteer(+ctx.request.body.id, +ctx.request.body.taskId, function (notificationInfo, err) {
       if (!err) {
         service.sendDeletedVolunteerNotification(notificationInfo[0], 'volunteer.destroy.decline');
       } else {
         ctx.status = 400;
-      }  
+      }
       ctx.body = null;
     });
   } else {
