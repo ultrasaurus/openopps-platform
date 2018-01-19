@@ -68,6 +68,9 @@
 @import 'component/pill';
 @import 'component/search/pagination';
 
+// Layouts ------------- //
+@import 'layouts/profile';
+
 body {
     background-color: $color-gray-lightest;
 }
