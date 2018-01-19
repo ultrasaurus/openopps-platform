@@ -19,8 +19,8 @@ router.post('/api/comment', auth, async (ctx, next) => {
   });
 });
 
-router.post('/api/comment/remove', auth.isAdmin, async (ctx) => {
-  ctx.body = await service.deleteComment(ctx.request.body.id);
+router.delete('/api/comment/:id', auth.isAdmin, async (ctx) => {
+  ctx.body = await service.deleteComment(ctx.params.id);
 });
 
 module.exports = router.routes();

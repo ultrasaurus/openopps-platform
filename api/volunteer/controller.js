@@ -24,9 +24,9 @@ router.post('/api/volunteer', async (ctx, next) => {
   }
 });
 
-router.post('/api/volunteer/remove', async (ctx, next) => {
-  if (ctx.isAuthenticated() && await service.canRemoveVolunteer(ctx.request.body.taskId, ctx.state.user)) {
-    await service.deleteVolunteer(+ctx.request.body.id, +ctx.request.body.taskId, function (notificationInfo, err) {
+router.delete('/api/volunteer/:id', async (ctx, next) => {
+  if (ctx.isAuthenticated() && await service.canRemoveVolunteer(ctx.query.taskId, ctx.state.user)) {
+    await service.deleteVolunteer(+ctx.params.id, +ctx.query.taskId, function (notificationInfo, err) {
       if (!err) {
         service.sendDeletedVolunteerNotification(notificationInfo[0], 'volunteer.destroy.decline');
       } else {
