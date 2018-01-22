@@ -13,3 +13,42 @@
         right: .5rem;
         font-size: 1.4rem;
     }
+
+@media screen and (min-width: 62em){
+    .usajobs-joa--v1-5__intro-hiring-paths {
+        float: none;
+        width: 100%;
+        padding: 3rem 1.5rem 1.5rem;
+    }
+}
+    
+.usajobs-joa--v1-5__intro-hiring-paths {
+    position: relative;
+}
+
+@media screen and (min-width: 62em) {
+    .usajobs-joa-intro-hiring-paths {
+        float: left;
+        display: block;
+        margin-right: 2.3576520234%;
+        width: 31.7615653177%;
+        margin-right: 0;
+    }
+}
+
+.default-user-icon-profile {
+    height: 176.67px;	
+    width: 176.67px;
+}
+
+.role-label {
+    background-color: #FAD980; //TODO: get variables
+    color: #212121;
+}
+
+.skill-label {
+    background-color: #E7F4E4;  //TODO: get variables
+    color: #212121;
+    text-decoration: none;
+    padding: 1rem;
+}

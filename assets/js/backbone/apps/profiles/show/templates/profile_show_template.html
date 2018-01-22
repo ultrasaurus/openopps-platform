@@ -1,26 +1,73 @@
 <section class="usajobs-canvas">
     <main class="main-content usajobs-content-well" id="main-content" aria-label="Opportunity">
+
         <div class="usajobs-open-opps-opportunity">
-          <% if (user.isAdmin || user.isAgencyAdmin) { %>
-          <div class="alert alert-info">
-            You are an <% if (user.isAdmin) { %> administrator <% } else { %> agency administrator <% } %>.
-            <% if (user.id !== data.id) { %>
-              You are viewing another user's profile.
-            <% } %>
-          </div>
-          <% } %>
+            <% if (data.isOwner || data.canEditProfile) { %>
+              <div class="usajobs-opop-section-edit">
+                  <ul class="nav nav-pills nav-stacked">
+                  <li>
+                    <% if (login.profile.edit === true) { %>
+                    <a href="/profile/<%- data.id %>/edit" class="link-backbone"><i class="fas fa-edit"></i> <span>Edit</span></a>
+                    <% } else if (login.profile.editUrl) { %>
+                    <a href="<%- login.profile.editUrl %>" target="_blank"><i class="fas fa-edit"></i> <span>Edit</span></a>
+                    <% } %>
+                  </li>
+                </ul>
+              </div>
+              <% } %>
 
-          <% if (saved) { %>
-          <div class="alert alert-success">Your profile has been successfully updated.</div>
-          <% } %>
+            <div id="profile" class="usajobs-joa-intro-hiring-paths usajobs-joa--v1-5__intro-hiring-paths">
+              <h2 class="usajobs-joa-intro-hiring-paths__section-title">Profile</h2>
+              <img class="default-user-icon-profile" src="/api/user/photo/<%- data.id %>">
+              <div id="file-upload-progress-container" style="display: none;" class="progress progress-striped active">
+                <div id="file-upload-progress" class="progress-bar" style="width: 0"></div>
+              </div>
+              <div id="file-upload-alert" class="alert alert-warning" style="display:none;"></div>
 
-          <img src="/api/user/photo/<%- data.id %>">
-          <div id="file-upload-progress-container" style="display: none;" class="progress progress-striped active">
-            <div id="file-upload-progress" class="progress-bar" style="width: 0"></div>
-          </div>
-          <div id="file-upload-alert" class="alert alert-warning" style="display:none;">
-          </div>
-          <h1><% if (data.name) { %><%- data.name %><% } else { %><%- data.username %><% } %></h1>
+              <h3><% if (data.name) { %><%- data.name %><% } else { %><%- data.username %><% } %></h3>
+              <% if (user.isAdmin || user.isAgencyAdmin) { %>
+              <div class="role-label">
+                <% if (user.isAdmin) { %> Administrator <% } else { %> Agency Administrator <% } %>
+              </div>
+                <% if (user.id !== data.id) { %>
+                  You are viewing another user's profile.
+                <% } %>
+              <% } %>
+    
+              <% if (saved) { %>
+              <div class="alert alert-success">Your profile has been successfully updated.</div>
+              <% } %>
+
+          
+              
+              
+              
+            
+            <ul class="usajobs-joa-intro-hiring-paths__list">
+                    <li class="usajobs-joa-intro-hiring-paths__item">
+                        <a href="/Help/working-in-government/unique-hiring-paths/public/" class="usajobs-joa-intro-hiring-paths__link" target="_blank">
+                                 <div class="usajobs-joa-intro-hiring-paths__figure">
+                                    <span class="usajobs-joa-intro-hiring-paths__icon public">
+                                        <span class="fa fa-users"></span>
+                                    </span>
+                            </div>
+                           
+                            <div class="usajobs-joa-intro-hiring-paths__body">
+                                <h4 class="usajobs-joa-intro-hiring-paths__title">
+                                    The public
+                                </h4>
+                                <p class="usajobs-joa-intro-hiring-paths__detail">
+                                    U.S. citizens, nationals or those who owe allegiance to the U.S., and excepted service employees.
+                                </p>
+                            </div>
+                        </a>
+                    </li>
+            </ul>
+            
+        </div>
+
+
+          
           <div class="profile-jobtitle"><% if (data.title) { %><i class="fa fa-briefcase"></i> <span class="box-icon-text"><%- data.title %></span><% } %></div>
           <div class="profile-company"><% if (data.agency) { %><i class="icon-library"></i> <span class="box-icon-text"><%- data.agency.name %></span><% } %></div>
           <div class="profile-location"><% if (data.location) { %><span class="fa fa-map-marker"></span> <span class="box-icon-text"><%- data.location.name %></span><% } %></div>
@@ -48,36 +95,20 @@
               </li>
             </ul>
           </div>
-          <% if (data.isOwner || data.canEditProfile) { %>
-          <div class="usajobs-opop-section-edit">
-              <ul class="nav nav-pills nav-stacked">
-              <li>
-                <% if (login.profile.edit === true) { %>
-                <a href="/profile/<%- data.id %>/edit" class="link-backbone"><i class="fas fa-edit"></i> <span>Edit</span></a>
-                <% } else if (login.profile.editUrl) { %>
-                <a href="<%- login.profile.editUrl %>" target="_blank"><i class="fas fa-edit"></i> <span>Edit</span></a>
-                <% } %>
-              </li>
-            </ul>
-          </div>
-          <% } %>
+          
 
       </div>
 
   
     <% if (tags.length > 0) { %>
       <div class="usajobs-open-opps-opportunity">
-      
-        
           <h2>Skills &amp; Interests</h2>
-          <div class="py1">
+          <div>
             <% _.each(tags, function (t) { %>
-              <a class="px2 bg-yellow black rounded" href="/tasks?search=<%= t.name %>"><%= t.name %></a>
+              <a class="skill-label" href="/tasks?search=<%= t.name %>"><%= t.name %></a>
             <% }) %>
-          
-        
+          </div>
       </div>
-    </div>
     <% } %>
   </div>
 
