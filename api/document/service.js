@@ -1,5 +1,5 @@
 const _ = require('lodash');
-const log = require('blue-ox')('app:document:service');
+const log = use('log')('app:document:service');
 const db = require('../../db');
 const dao = require('./dao')(db);
 const AWS = require('aws-sdk');
