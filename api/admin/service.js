@@ -1,5 +1,5 @@
 const _ = require ('lodash');
-const log = use('log')('app:admin:service');
+const log = require('log')('app:admin:service');
 const db = require('../../db');
 const dao = require('./dao')(db);
 const json2csv = require('json2csv');

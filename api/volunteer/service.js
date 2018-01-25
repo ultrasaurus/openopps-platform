@@ -1,5 +1,5 @@
 const _ = require ('lodash');
-const log = use('log')('app:volunteer:service');
+const log = require('log')('app:volunteer:service');
 const db = require('../../db');
 const dao = require('./dao')(db);
 const notification = require('../notification/service');

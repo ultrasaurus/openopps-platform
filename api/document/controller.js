@@ -1,4 +1,4 @@
-const log = use('log')('app:document');
+const log = require('log')('app:document');
 const Router = require('koa-router');
 const _ = require('lodash');
 const service = require('./service');

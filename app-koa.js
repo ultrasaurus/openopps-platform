@@ -1,4 +1,4 @@
-const log = use('log')('app-koa');
+const log = require('log')('app-koa');
 const koa = require('koa');
 const cfenv = require('cfenv');
 const render = require('koa-ejs');
