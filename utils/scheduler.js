@@ -1,5 +1,5 @@
 const schedule = require('node-schedule');
-const log = use('log')('app:scheduler');
+const log = require('log')('app:scheduler');
 const taskService = ('../api/opportunities/service');
 
 const tasks = {

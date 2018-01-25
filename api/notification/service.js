@@ -1,5 +1,5 @@
 const fs = require('fs');
-const log = use('log')('app:notification:service');
+const log = require('log')('app:notification:service');
 const nodemailer = require('nodemailer');
 const db = require('../../db');
 const dao = require('./dao')(db);

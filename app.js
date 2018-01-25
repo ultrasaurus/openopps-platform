@@ -35,8 +35,8 @@ if (process.env.NEW_RELIC_APP_NAME && process.env.NEW_RELIC_LICENSE_KEY) {
 // no matter where we actually lift from.
 process.chdir(__dirname);
 
-require('@iarna/lib')('lib/');
-const log = use('log')('app');
+require('app-module-path').addPath('lib/');
+const log = require('log')('app');
 
 log.info('start');
 
