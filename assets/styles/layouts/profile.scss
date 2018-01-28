@@ -7,32 +7,48 @@
       }
     }
     
-    .usajobs-opop-section-edit {
+    .usajobs-opop-section-edit, .usajobs-opop-section-edit a:visited {
         position: absolute;
-        top: .5rem;
-        right: .5rem;
-        font-size: 1.4rem;
+        top: 3rem;
+        right: 3rem;
+        text-decoration: none;
+        color: #0D71B9;
     }
 
-@media screen and (min-width: 62em){
-    .usajobs-joa--v1-5__intro-hiring-paths {
-        float: none;
-        width: 100%;
-        padding: 3rem 1.5rem 1.5rem;
+.usajobs-open-opps-profile h1, .usajobs-open-opps-profile h2 {
+    margin-top: 0;
+}
+
+.usajobs-open-opps-profile__body {
+    // display: flex;
+}
+
+.usajobs-open-opps-participated__body {
+    @include media($ML) {
+        padding: 0 1.5rem 3rem;
     }
 }
+
+.task-activity-wrapper {
+    margin-bottom: 6rem;
+}
+
+.usajobs-open-opps-participated__section {
+    padding-top: 1.5rem; 
+}
     
-.usajobs-joa--v1-5__intro-hiring-paths {
-    position: relative;
+@media screen and (min-width: 62em) {
+    .usajobs-opop-profile-title {
+        width: 31.7615653177%;
+        margin-right: auto;
+    }
 }
 
 @media screen and (min-width: 62em) {
-    .usajobs-joa-intro-hiring-paths {
-        float: left;
-        display: block;
-        margin-right: 2.3576520234%;
-        width: 31.7615653177%;
-        margin-right: 0;
+    .usajobs-opop-profile-details {
+
+        margin-right: auto;
+        width: 63.5231306354%;
     }
 }
 
@@ -41,14 +57,57 @@
     width: 176.67px;
 }
 
+.usajobs-opop-profile-name {
+    display: block;
+    float: left;
+    color: #212121;
+    margin-top: 1.5rem; 
+}
+
 .role-label {
     background-color: #FAD980; //TODO: get variables
     color: #212121;
+    padding: 0 1rem;
+    font-weight: normal;
+    font-size: 1.6rem;
+    display: block;
+    float: left;
+    margin-top: 1.2rem;
+    margin-left: 1rem;
 }
 
 .skill-label {
     background-color: #E7F4E4;  //TODO: get variables
     color: #212121;
-    text-decoration: none;
     padding: 1rem;
 }
+
+.main-content a {
+    text-decoration: none;
+}
+
+.open-opps-row {
+    border-bottom: 0.5px solid #212121;
+    @include media($M) {
+        padding: $size-default 0;
+        text-align: left;
+    }
+}
+
+.open-opps-row.header {
+    font-weight: bold;
+}
+
+.open-opps-title, .open-opps-title a,.open-opps-title:visited {
+    width: 2.5rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: #006FBB;
+}
+
+.emaillink {
+    color: #0D71B9;
+}
+
+

@@ -1,143 +1,92 @@
-<section class="usajobs-canvas">
+<section class="usajobs-canvas usajobs-open-opps-profile">
     <main class="main-content usajobs-content-well" id="main-content" aria-label="Opportunity">
-
-        <div class="usajobs-open-opps-opportunity">
-            <% if (data.isOwner || data.canEditProfile) { %>
-              <div class="usajobs-opop-section-edit">
-                  <ul class="nav nav-pills nav-stacked">
-                  <li>
-                    <% if (login.profile.edit === true) { %>
-                    <a href="/profile/<%- data.id %>/edit" class="link-backbone"><i class="fas fa-edit"></i> <span>Edit</span></a>
-                    <% } else if (login.profile.editUrl) { %>
-                    <a href="<%- login.profile.editUrl %>" target="_blank"><i class="fas fa-edit"></i> <span>Edit</span></a>
-                    <% } %>
-                  </li>
-                </ul>
-              </div>
+      <div class="usajobs-open-opps-opportunity">
+        <div class="usajobs-open-opps-profile__body usajobs-grid">
+          <% if (data.isOwner || data.canEditProfile) { %>
+          <div class="usajobs-opop-section-edit">
+              <% if (login.profile.edit === true) { %>
+              <a href="/profile/<%- data.id %>/edit" class="link-backbone"><i class="fas fa-edit"></i> <span>Edit</span></a>
+              <% } else if (login.profile.editUrl) { %>
+              <a href="<%- login.profile.editUrl %>" target="_blank"><i class="fas fa-edit"></i> <span>Edit</span></a>
               <% } %>
-
-            <div id="profile" class="usajobs-joa-intro-hiring-paths usajobs-joa--v1-5__intro-hiring-paths">
-              <h2 class="usajobs-joa-intro-hiring-paths__section-title">Profile</h2>
+          </div>
+          <% } %>
+          <div id="profile" class="usajobs-opop-profile-title usa-width-one-third">
+              <h1 class="usajobs-opop-intro-hiring-paths__section-title">Profile</h1>
               <img class="default-user-icon-profile" src="/api/user/photo/<%- data.id %>">
               <div id="file-upload-progress-container" style="display: none;" class="progress progress-striped active">
                 <div id="file-upload-progress" class="progress-bar" style="width: 0"></div>
               </div>
               <div id="file-upload-alert" class="alert alert-warning" style="display:none;"></div>
-
-              <h3><% if (data.name) { %><%- data.name %><% } else { %><%- data.username %><% } %></h3>
+          </div>
+          <div class="usajobs-opop-profile-details usa-width-two-thirds">
+            <div class="profile-name-role">
+              <h2 class="usajobs-opop-profile-name"><% if (data.name) { %><%- data.name %><% } else { %><%- data.username %><% } %></h2>
               <% if (user.isAdmin || user.isAgencyAdmin) { %>
-              <div class="role-label">
-                <% if (user.isAdmin) { %> Administrator <% } else { %> Agency Administrator <% } %>
-              </div>
+              <span class="role-label"><% if (user.isAdmin) { %> Administrator <% } else { %> Agency Administrator <% } %></span>
                 <% if (user.id !== data.id) { %>
                   You are viewing another user's profile.
                 <% } %>
               <% } %>
-    
               <% if (saved) { %>
-              <div class="alert alert-success">Your profile has been successfully updated.</div>
-              <% } %>
+                <div class="alert alert-success">Your profile has been successfully updated.</div>
+                <% } %>
+            </div>
+                    
+            <div class="profile-jobtitle"><% if (data.title) { %><i class="fa fa-briefcase"></i> <span><%- data.title %></span><% } %></div>
+            <div class="profile-company"><% if (data.agency) { %><i class="fa fa-university"></i> <span><%- data.agency.name %></span><% } %></div>
+            <div class="profile-location"><% if (data.location) { %><span class="fa fa-map-marker"></span> <span><%- data.location.name %></span><% } %></div>
+            <div class="profile-email"><% if (email) { %><i class="far fa-envelope"></i> <span class="emaillink"><%= email %></span><% } %></div>
+              
+            <div>
+                <% if (data.bioHtml) { %>
+                  <h3>Biography</h3>
+                  <%= data.bioHtml %>
+                <% } %>
+            </div>
 
-          
-              
-              
-              
-            
-            <ul class="usajobs-joa-intro-hiring-paths__list">
-                    <li class="usajobs-joa-intro-hiring-paths__item">
-                        <a href="/Help/working-in-government/unique-hiring-paths/public/" class="usajobs-joa-intro-hiring-paths__link" target="_blank">
-                                 <div class="usajobs-joa-intro-hiring-paths__figure">
-                                    <span class="usajobs-joa-intro-hiring-paths__icon public">
-                                        <span class="fa fa-users"></span>
-                                    </span>
-                            </div>
-                           
-                            <div class="usajobs-joa-intro-hiring-paths__body">
-                                <h4 class="usajobs-joa-intro-hiring-paths__title">
-                                    The public
-                                </h4>
-                                <p class="usajobs-joa-intro-hiring-paths__detail">
-                                    U.S. citizens, nationals or those who owe allegiance to the U.S., and excepted service employees.
-                                </p>
-                            </div>
-                        </a>
-                    </li>
-            </ul>
-            
+            <div class="<% if (data.isOwner || user.isAdmin) { %>border-bottom<% } %>">
+                <a href="#" id="email"><i class="fas fa-share-alt"></i> <span>Share Profile</span></a>
+            </div>
+          </div>
         </div>
-
-
-          
-          <div class="profile-jobtitle"><% if (data.title) { %><i class="fa fa-briefcase"></i> <span class="box-icon-text"><%- data.title %></span><% } %></div>
-          <div class="profile-company"><% if (data.agency) { %><i class="icon-library"></i> <span class="box-icon-text"><%- data.agency.name %></span><% } %></div>
-          <div class="profile-location"><% if (data.location) { %><span class="fa fa-map-marker"></span> <span class="box-icon-text"><%- data.location.name %></span><% } %></div>
-          <div class="profile-email">
-            <i class="fa fa-envelope"></i> <span class="box-icon-text">
-              <% if (email) { %>
-                <%- email %>
-              <% } else { %>
-              No email addresses
-              <% } %>
-            </span>
-          </div>
-
-          <div>
-            <% /* Escaped with marked() */ %>
-              <% if (data.bioHtml) { %><%= data.bioHtml %><% } %>
-          </div>
-
-
-
-          <div class="navbar-side <% if (data.isOwner || user.isAdmin) { %>border-bottom<% } %>">
-            <ul class="nav nav-pills nav-stacked">
-              <li>
-                <a href="#" id="email"><i class="fas fa-share-alt"></i> <span class="box-icon-text">Share Profile</span></a>
-              </li>
-            </ul>
-          </div>
-          
-
       </div>
-
-  
-    <% if (tags.length > 0) { %>
+      <% if (tags.length > 0) { %>
       <div class="usajobs-open-opps-opportunity">
+        <div usajobs-open-opps-participated__body>
           <h2>Skills &amp; Interests</h2>
           <div>
             <% _.each(tags, function (t) { %>
               <a class="skill-label" href="/tasks?search=<%= t.name %>"><%= t.name %></a>
             <% }) %>
           </div>
+        </div>
       </div>
-    <% } %>
-  </div>
-
-  <div class="usajobs-open-opps-opportunity">
-
+      <% } %>
+      <div class="usajobs-open-opps-opportunity">
+        <div class="usajobs-open-opps-participated__body">
           <h2>Opportunities</h2>
           <h3>Participated</h3>
           <div class="task-activity-wrapper"></div>
           <h3>Created</h3>
           <div class="task-createdactivity-wrapper"></div>
-
-    </div>
-
-  </main>
+        </div>
+      </div>
+    </main>
     <aside class="usajobs-rightrail" id="rightrail">
-        <div class="usajobs-open-opps-opportunity">
+      <div class="usajobs-open-opps-opportunity">
         <h2>Badges</h2>
         <% if (data.badges.length > 0) { %> 
-              <ul class="profile-badges">
-                <% _.map(data.badges, function (b) { %>
-                  <li class="profile-badge">
-                    <% var filename = b.type.replace(' ', '-'); %>
-                    <img src="/images/badges/<%- filename %>.png" alt="The <%- b.type %> badge is awarded when you <%- b.description %>" title="The <%- b.type %> badge is awarded when you <%- b.description %>">
-                    <p><%- b.type %></p>
-                  </li>
-                <% }); %>
-              </ul>
-          <% } %>
-        </div>
+        <ul class="profile-badges">
+          <% _.map(data.badges, function (b) { %>
+          <li class="profile-badge">
+            <% var filename = b.type.replace(' ', '-'); %>
+            <img src="/images/badges/<%- filename %>.png" alt="The <%- b.type %> badge is awarded when you <%- b.description %>" title="The <%- b.type %> badge is awarded when you <%- b.description %>">
+            <p><%- b.type %></p>
+          </li>
+          <% }); %>
+        </ul>
+        <% } %>
+      </div>
     </aside>
-
 </section>
