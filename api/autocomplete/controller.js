@@ -1,4 +1,4 @@
-const log = require('blue-ox')('app:autocomplete');
+const log = require('log')('app:autocomplete');
 const Router = require('koa-router');
 const _ = require('lodash');
 const service = require('./service');

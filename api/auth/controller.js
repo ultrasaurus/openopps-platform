@@ -1,4 +1,4 @@
-const log = require('blue-ox')('app:authentication');
+const log = require('log')('app:authentication');
 const Router = require('koa-router');
 const _ = require('lodash');
 const service = require('./service');
@@ -40,7 +40,7 @@ router.post('/api/auth/local', async (ctx, next) => {
 });
 
 router.post('/api/auth/local/register', async (ctx, next) => {
-  log.info('Register user', _.omit(ctx.request.body,"password"));
+  log.info('Register user', _.omit(ctx.request.body, 'password'));
 
   delete(ctx.request.body.isAdmin);
   delete(ctx.request.body.isAgencyAdmin);
@@ -78,13 +78,13 @@ router.post('/api/auth/forgot', async (ctx, next) => {
     return ctx.body = { message: 'You must enter an email address.'};
   }
 
-  await service.forgotPassword(ctx.request.body.username, function (token, err) {
+  await service.forgotPassword(ctx.request.body.username.toLowerCase().trim(), function (token, err) {
     if (err) {
       ctx.status = 400;
       return ctx.body = { message: err };
     }
     try {
-      service.sendUserPasswordResetNotification(ctx.request.body.username, token, 'userpasswordreset.create.token');
+      service.sendUserPasswordResetNotification(ctx.request.body.username.toLowerCase().trim(), token, 'userpasswordreset.create.token');
     } finally {
       ctx.body = { success: true, email: ctx.request.body.username };
     }

@@ -5,6 +5,7 @@
   "description": "platform that creates an empowered network through sharing skills and collaborating on projects",
   "keywords": [],
   "dependencies": {
+    "app-module-path": "^2.2.0",
     "async": "^2.0.0-rc.2",
     "autolinker": "^1.1.0",
     "aws-sdk": "^2.3.4",
@@ -57,6 +58,7 @@
     "koa-static": "^4.0.1",
     "lodash": "^4.11.2",
     "marked": "openopps/marked",
+    "md5-file": "^3.2.3",
     "moment": "^2.19.4",
     "newrelic": "^1.27.2",
     "node-schedule": "^1.2.5",
