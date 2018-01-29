@@ -35,7 +35,7 @@
   "Browse" : "Browse",
 
   "taskPage" : {
-    "volunteerButton" : "I'm interested",
+    "volunteerButton" : "Apply",
     "volunteeredButton" : "Application received"
   },
 
@@ -69,8 +69,8 @@
 
   "home" : {
     "headline" : "Open Opportunities",
-    "subhead" : "Work with other federal employees on projects you are passionate about.",
-    "callToAction" : "Get Started Today"
+    "subhead" : "Discover opportunities across government that will help you build and make connections.",
+    "callToAction" : "Browse opportunities"
   },
 
   "commonAPI" : {

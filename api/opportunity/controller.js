@@ -31,7 +31,7 @@ router.get('/api/task/:id', async (ctx, next) => {
   if (task.isOwner ||
     (_.has(ctx.state.user, 'isAdmin') && ctx.state.user.isAdmin) ||
     ((_.has(ctx.state.user, 'isAgencyAdmin') && ctx.state.user.isAgencyAdmin) &&
-      (ctx.state.user.tags && _.find(ctx.state.user.tags, { 'type': 'agency' }).name == task.owner.agency.name))) {
+      (ctx.state.user.tags && (_.find(ctx.state.user.tags, { 'type': 'agency' }) || {}).name == task.owner.agency.name))) {
     task.canEditTask = true;
   }
   ctx.body = task;
