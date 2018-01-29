@@ -20,6 +20,7 @@ var NavView = Backbone.View.extend({
     'click .nav-link': linkBackbone,
     'click .login': 'loginClick',
     'click .logout': 'logout',
+    'click .menu-toggle': 'toggleMenu'
   },
 
   initialize: function (options) {
@@ -92,6 +93,16 @@ var NavView = Backbone.View.extend({
     var template = _.template(NavTemplate)(data);
     this.$el.html(template);
     this.$el.localize();
+  },
+
+  toggleMenu: function (e) {
+    if (e.preventDefault) e.preventDefault();
+    $('.usajobs-nav__account').attr('data-state', function (i, attr) {
+      return attr == 'is-open' ? 'is-closed' : 'is-open';
+    });
+    $('.usajobs-nav__secondary-menu').attr('aria-expanded', function (i, attr) {
+      return attr == 'true' ? 'false' : 'true';
+    });
   },
 
   loginClick: function (e) {

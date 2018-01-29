@@ -3,9 +3,9 @@
     <a href="/tasks/<%- item.id %>" class="usajobs-open-opps-opportunity__title" itemprop="title">
       <%- item.title %>
     </a>
-    <p class="usajobs-open-opps-opportunity__desc">
-      <%= item.description %>
-    </p>
+    <div class="usajobs-open-opps-opportunity__desc">
+      <%= item.descriptionHtml %>
+    </div>
     <% if (item.restrict) { %>
     <p class="usajobs-open-opps-opportunity__agency-only">
       <%- item.restrict.name %>

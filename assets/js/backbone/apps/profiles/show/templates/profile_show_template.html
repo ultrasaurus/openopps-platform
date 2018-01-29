@@ -11,15 +11,17 @@
               <% } %>
           </div>
           <% } %>
-          <div id="profile" class="usajobs-opop-profile-title usa-width-one-third">
-              <h1 class="usajobs-opop-intro-hiring-paths__section-title">Profile</h1>
+          <div class="usa-width-one-whole">
+            <h1 class="usajobs-opop-intro-hiring-paths__section-title">Profile</h1>
+          </div>
+          <div id="profile" class="usajobs-opop-profile-title usa-width-one-fourth">
               <img class="default-user-icon-profile" src="/api/user/photo/<%- data.id %>">
               <div id="file-upload-progress-container" style="display: none;" class="progress progress-striped active">
                 <div id="file-upload-progress" class="progress-bar" style="width: 0"></div>
               </div>
               <div id="file-upload-alert" class="alert alert-warning" style="display:none;"></div>
           </div>
-          <div class="usajobs-opop-profile-details usa-width-two-thirds">
+          <div class="usajobs-opop-profile-details usa-width-three-fourths">
             <div class="profile-name-role">
               <h2 class="usajobs-opop-profile-name"><% if (data.name) { %><%- data.name %><% } else { %><%- data.username %><% } %></h2>
               <% if (user.isAdmin || user.isAgencyAdmin) { %>

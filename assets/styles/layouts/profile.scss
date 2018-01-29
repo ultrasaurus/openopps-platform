@@ -52,6 +52,16 @@
     }
 }
 
+@media screen and (min-width: 62em) {
+    .profile-name-role {
+        margin-top: 3rem;
+    }
+}
+
+.profile-jobtitle {
+    clear: left;
+}
+
 .default-user-icon-profile {
     height: 176.67px;	
     width: 176.67px;
