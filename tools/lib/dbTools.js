@@ -1,3 +1,4 @@
+require('app-module-path').addPath('lib/');
 var _ = require('lodash');
 var fs = require('fs');
 var pgp = require('pg-promise')();
