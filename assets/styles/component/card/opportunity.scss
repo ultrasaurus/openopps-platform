@@ -5,6 +5,10 @@
 .usajobs-open-opps-opportunity {
   @include card-v4();
 
+  @include media($M) {
+    margin: $size-default 0 0;
+  }
+
   @include media($L) {
     padding: $size-default;
   }
@@ -87,6 +91,8 @@
 
 .usajobs-open-opps-opportunity-item {
   @include card-v4();
+
+
 
   // @include media($L) {
   //   padding: $size-default;

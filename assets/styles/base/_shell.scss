@@ -35,6 +35,12 @@
   width: 100%;
 }
 
+.usajobs-canvas::after {
+  clear: both;
+  content: "";
+  display: table;
+}
+
 .usajobs-content-well {
   margin-bottom: $size-XL;
 

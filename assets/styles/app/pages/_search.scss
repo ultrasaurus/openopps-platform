@@ -3,10 +3,10 @@
 @import '../../base-shared';
 
 .usajobs-open-opps-search-results {
-  margin-top: $size-default;
+  // margin-top: $size-default;
 
   @include media($L) {
-    margin-top: $size-M;
+    // margin-top: $size-M;
     display: flex;
     flex-wrap: wrap;
   }
