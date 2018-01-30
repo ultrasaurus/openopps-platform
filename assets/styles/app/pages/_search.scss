@@ -2,6 +2,31 @@
 
 @import '../../base-shared';
 
+.usajobs-grid.usajobs-open-opps-search__title {
+  @include media($L) { 
+    padding: 0;
+    margin: $size-M 0;
+  }
+}
+
+.usajobs-open-opps-search__input {
+  border: none;
+  max-width: calc(100% - 72px);
+  float: left;
+  height: 4.3rem;
+  margin-bottom: 0;
+}
+
+.usa-button.usajobs-open-opps-search-button {
+  margin: 0;
+  height: 4.3rem;
+  width: 7.2rem;
+}
+
+.usajobs-grid.usajobs-open-opps-search__title .usa-button-gray {
+  height: 4.3rem;
+}
+
 .usajobs-open-opps-search-results {
   // margin-top: $size-default;
 
@@ -29,7 +54,7 @@
     // ask the user to enter a brief description that would not be truncated.
     &__desc {
       position: relative;
-      max-height: #{$base-line-height * 8}em; // use this to control the number of lines
+      max-height: #{$base-line-height * 4}em; // use this to control the number of lines
       overflow: hidden;
     }
 

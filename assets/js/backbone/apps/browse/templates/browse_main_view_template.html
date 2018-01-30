@@ -3,11 +3,8 @@
   
   <main class="main-content usajobs-content-well" id="main-content" aria-label="Search results">
     <div class="usajobs-grid usajobs-open-opps-search__title">
-      <div class="usa-width-two-thirds">
-        <input type="text" id="search" title="Search" class="form-control" placeholder="<%- placeholder %>">
-      </div>
-      <div class="usa-width-one-third">
-        <a href="#addTask" class="usa-button usa-button-gray" data-toggle="modal" data-backdrop="static" style="<% if (!user) { %>display: none;<% } %>"><i class="fa fa-plus"></i> <span data-i18n="Task">Post opportunity</span></a>
+      <div class="usa-width-one-whole">
+        <input type="text" id="search" title="Search" class="usajobs-open-opps-search__input" placeholder="<%- placeholder %>"><button class="usa-button usajobs-open-opps-search-button"><span class="fa fa-search"></span></button>
       </div>
     </div>
     <div id="browse-search-spinner" class="fullwidth text-center">
@@ -16,18 +13,25 @@
     <div class="usajobs-open-opps-search-results" id="browse-list"></div>
   </main>
     <aside class="usajobs-rightrail" id="rightrail">
+      <div class="usajobs-grid usajobs-open-opps-search__title">
+        <div class="usa-width-one-whole">
+          <a href="#addTask" class="usa-button usa-button-gray" data-toggle="modal" data-backdrop="static" style="<% if (!user) { %>display: none;<% } %>"><i class="fa fa-plus"></i> <span data-i18n="Task">Post opportunity</span></a>
+        </div>
+      </div>
       <div class="usajobs-open-opps-opportunity">
           <% if (target === 'tasks') { %>
-            <h2>Filters</h2>
-
-            <div id="stateFilters">
+            <h3>Filters</h3>
+            
+            <ul id="stateFilters" class="usa-unstyled-list">
               <% _.each(ui.states, function (t) { %>
+              <li>
+                <input type='checkbox' name='state<%- t.label %>' value='<%- t.value %>'>
                 <label class="<% if ( t.value == " draft " || t.value == 'submitted' ) { %>hidden <%- t.value %>-filter<% } %>">
-                  <input type='checkbox' name='state<%- t.label %>' class='stateFilter' value='<%- t.value %>'>
                   <%- t.label %>
                 </label>
+              </li>
                 <% }); %>
-            </div>
+            </ul>
 
             <ul id="search-projs" class="nav nav-pills nav-stacked nav-search">
             </ul>
@@ -41,11 +45,9 @@
             </div>
 
             <% if (agencyName) { %>
-            <h2>Agency Filters</h2>
-              <label id="js-restrict-task-filter">
-                <input class="restrict-participation" type="checkbox" name="restrict">
-                Restrict to <%- agencyName %> agency
-              </label>
+            <h3>Agency Filters</h3>
+              <input class="restrict-participation" type="checkbox" name="restrict">
+              <label id="js-restrict-task-filter">Restrict to <%- agencyName %> agency</label>
             <% } %>
           <% } %>
       </div>

@@ -94,7 +94,7 @@ background-color: #ffffff;
 
 .dashboard__task-list__item .usajobs-open-opps-opportunity .usajobs-open-opps-opportunity__desc {
   position: relative;
-  max-height: 12rem;
+  max-height: #{$base-line-height * 4}em; // use this to control the number of lines
   overflow: hidden;
 }
 
