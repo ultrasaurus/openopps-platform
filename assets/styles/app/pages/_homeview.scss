@@ -1,13 +1,13 @@
 .usajobs-opop {
     margin-bottom: 6rem;
   }
-  
+
   .usajobs-opop::after {
     clear: both;
     content: "";
     display: table;
   }
-  
+
   @media screen and (min-width: 48em) {
     .usajobs-opop {
       margin-bottom: 0;
@@ -34,7 +34,7 @@
   //     margin-bottom: -5.4rem;
   //   }
   // }
-  
+
   .usajobs-opop-discover__body {
     max-width: 596px;
     margin-left: auto;
@@ -51,13 +51,13 @@
     padding-top: 1.15rem;
     padding-bottom: 1.15rem;
   }
-  
+
   .usajobs-opop-discover__body::after {
     clear: both;
     content: "";
     display: table;
   }
-  
+
   @media screen and (min-width: 48em) {
     .usajobs-opop-discover__body {
       padding-top: 1.15rem;
@@ -65,6 +65,10 @@
       padding-bottom: 1.15rem;
       padding-right: 3.3rem;
     }
+  }
+
+  .usajobs-opop-discover__body [data-i18n="home.tagline"] {
+    font-weight: bold;
   }
 
   .usajobs-opop-discover__title {
@@ -117,7 +121,7 @@
 
 @media screen and (min-width: 48em) {
   .usajobs-opop-why__body, .usajobs-opop-work__body, .usajobs-opop-find__body {
-    padding: 3.3rem;
+    padding: 3.3rem 3.3rem 6.3rem 3.3rem;
   }
 }
 
@@ -127,8 +131,9 @@
   margin-right: auto;
 }
 
-.usajobs-opop-why__title h2 {
+.usajobs-opop-why__body > .usajobs-grid .usajobs-opop-why__title h2 {
   color: #ffffff;
+  margin-bottom: 3.7rem;
 }
 
 .usajobs-opop-why__icon {
@@ -138,6 +143,7 @@
 .usajobs-opop-why__subtitle {
   font-size: 2.2rem;
   font-weight: 600;
+  margin-bottom: 2rem;
 }
 
 .usajobs-opop-work {
@@ -146,10 +152,16 @@
 
 .usajobs-opop-work__title {
   text-align: center;
+  margin-bottom: 4.2rem;
+}
+
+.usajobs-grid .usa-width-one-half > .usajobs-opop-work__list {
+  margin-top: 13rem;
+  margin-left: 8rem;
 }
 
 .usajobs-opop-find {
-  background-color: #D8D8D8;
+  background-color: #fff;
 }
 
 .usajobs-opop-find__title {
