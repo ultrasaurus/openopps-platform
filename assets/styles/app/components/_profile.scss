@@ -7,15 +7,29 @@
   padding: 0;
 }
 
+.profile-badges::after {
+  clear: both;
+  content: "";
+  display: block;
+}
+
 .profile-badge {
   display: inline-block;
   text-align: center;
   text-transform: capitalize;
-}
+  float: left;
+  margin-right: 1.5rem;
 
-.profile-badge img {
-  min-height: 70px;
-  width: 70px;
+  img {
+    min-height: 70px;
+    width: 9.2rem;
+    height: 9.2rem;
+  }
+
+  p {
+    max-width: 10rem;
+    margin-top: 0;
+  }
 }
 
 .profile-reset h1 {
@@ -40,5 +54,3 @@
 .clickable-row {
   cursor: pointer;
 }
-
-
