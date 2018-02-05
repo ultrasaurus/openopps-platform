@@ -17,18 +17,15 @@ var Paginate = require('../templates/admin_paginate.html');
 
 var AdminUserView = Backbone.View.extend({
 
-  events                               : {
-    'click a.page'                     : 'clickPage',
-    'click .link-backbone'             : linkBackbone,
-    'click .admin-user-mkadmin'        : 'adminCreate',
-    'click .admin-user-rmadmin'        : 'adminRemove',
-    'click .admin-user-mk-agencyadmin' : 'agencyAdminCreate',
-    'click .admin-user-rm-agencyadmin' : 'agencyAdminRemove',
-    'click .admin-user-enable'         : 'adminEnable',
-    'click .admin-user-disable'        : 'adminDisable',
-    'click .admin-user-unlock'         : 'adminUnlock',
-    'click .admin-user-resetpw'        : 'resetPassword',
-    'keyup #user-filter'               : 'filter',
+  events: {
+    'click a.page'              : 'clickPage',
+    'click .link-backbone'      : linkBackbone,
+    'click #user-admin'         : 'toggleAdmin',
+    'click #user-agency-admin'  : 'toggleAgencyAdmin',
+    'click #user-enable'        : 'toggleEnable',
+    'click .admin-user-unlock'  : 'adminUnlock',
+    'click .user-reset'         : 'resetPassword',
+    'keyup #user-filter'        : 'filter',
   },
 
   initialize: function (options) {
@@ -73,15 +70,44 @@ var AdminUserView = Backbone.View.extend({
     // render the table
     var template = _.template(AdminUserTable)(data);
     // render the pagination
-    var paginate = _.template(Paginate)(data);
-    self.$('#user-page').html(paginate);
+    self.renderPagination(data);
     self.$('#filter-count').html(data.users.length);
     self.$('.table-responsive').html(template);
     self.$('.btn').tooltip();
     // hide spinner and show results
     self.$('.spinner').hide();
     self.$('.table-responsive').show();
+    window.scrollTo(0, 0);
     self.$el.localize();
+  },
+
+  renderPagination: function (data) {
+    var self = this;
+    // render the pagination
+    //self.renderPaginate(data);
+    data.pages = [];
+    data.numberOfPages = Math.ceil(data.count/data.limit);
+    if (data.numberOfPages > 7) {
+      switch (true) {
+        case data.page < 5:
+          data.pages = [1, 2, 3, 4, 5, 0, data.numberOfPages];
+          break;
+        case data.page >= data.numberOfPages - 3:
+          data.pages = [1, 0];
+          for (var i = data.numberOfPages - 4; i <= data.numberOfPages; i++)
+            data.pages.push(i);
+          break;
+        default:
+          data.pages = [1, 0, data.page - 1, data.page,
+            data.page + 1, 0, data.numberOfPages];
+          break;
+      }
+    } else {
+      for (var j = 1; j <= data.numberOfPages; j++)
+        data.pages.push(j);
+    }
+    var paginate = _.template(Paginate)(data);
+    self.$('#user-page').html(paginate);
   },
 
   clickPage: function (e) {
@@ -135,69 +161,37 @@ var AdminUserView = Backbone.View.extend({
     });
   },
 
-  adminCreate: function (e) {
+  toggleAdmin: function (e) {
     if (e.preventDefault) e.preventDefault();
     var t = $(e.currentTarget);
     var id = $(t.parents('tr')[0]).data('id');
     this.updateUser(t, {
       id: id,
-      isAdmin: true,
-      url: '/api/admin/admin/' + id + '?action=true',
+      checked: t.prop('checked'),
+      url: '/api/admin/admin/' + id + '?action=' + t.prop('checked'),
     });
   },
 
-  adminRemove: function (e) {
+  toggleAgencyAdmin: function (e) {
     if (e.preventDefault) e.preventDefault();
     var t = $(e.currentTarget);
     var id = $(t.parents('tr')[0]).data('id');
     this.updateUser(t, {
       id: id,
-      isAdmin: false,
-      url: '/api/admin/admin/' + id + '?action=false',
+      checked: t.prop('checked'),
+      url: '/api/admin/agencyAdmin/' + id + '?action=' + t.prop('checked'),
     });
   },
 
-  agencyAdminCreate: function (e) {
+  toggleEnable: function (e) {
     if (e.preventDefault) e.preventDefault();
     var t = $(e.currentTarget);
     var id = $(t.parents('tr')[0]).data('id');
+    var url = '/api/user/' + (t.prop('checked') ? 'enable' : 'disable') + '/' + id;
     this.updateUser(t, {
       id: id,
-      isAgencyAdmin: true,
-      url: '/api/admin/agencyAdmin/' + id + '?action=true',
-    });
-  },
-
-  agencyAdminRemove: function (e) {
-    if (e.preventDefault) e.preventDefault();
-    var t = $(e.currentTarget);
-    var id = $(t.parents('tr')[0]).data('id');
-    this.updateUser(t, {
-      id: id,
-      isAgencyAdmin: false,
-      url: '/api/admin/agencyAdmin/' + id + '?action=false',
-    });
-  },
-
-  adminEnable: function (e) {
-    if (e.preventDefault) e.preventDefault();
-    var t = $(e.currentTarget);
-    var id = $(t.parents('tr')[0]).data('id');
-    this.updateUser(t, {
-      id: id,
-      disabled: false,
-      url: '/api/user/enable/' + id,
-    });
-  },
-
-  adminDisable: function (e) {
-    if (e.preventDefault) e.preventDefault();
-    var t = $(e.currentTarget);
-    var id = $(t.parents('tr')[0]).data('id');
-    this.updateUser(t, {
-      id: id,
-      disabled: true,
-      url: '/api/user/disable/' + id,
+      checked: t.prop('checked'),
+      url: url,
     });
   },
 
@@ -215,35 +209,19 @@ var AdminUserView = Backbone.View.extend({
 
   updateUser: function (t, data) {
     var self = this;
-    var spinner = $($(t.parent()[0]).children('.btn-spin')[0]);
+    var spinner = $($(t.parent()[0]).children('.icon-spin')[0]);
+    // Show spinner and hide checkbox
     spinner.show();
-    t.hide();
+    t.siblings('label').hide();
     if (data.url) {
       $.ajax({
         url: data.url,
         dataType: 'json',
         success: function (d) {
-          // hide the spinner
+          // Hide spinner and show checkbox
           spinner.hide();
-          // show the opposite button
-          if (data.disabled === true) {
-            $(t.siblings('.admin-user-enable')[0]).show();
-          }
-          if (data.disabled === false) {
-            $(t.siblings('.admin-user-disable')[0]).show();
-          }
-          if (data.isAdmin === true) {
-            $(t.siblings('.admin-user-rmadmin')[0]).show();
-          }
-          if (data.isAdmin === false) {
-            $(t.siblings('.admin-user-mkadmin')[0]).show();
-          }
-          if (data.isAgencyAdmin === true) {
-            $(t.siblings('.admin-user-rm-agencyadmin')[0]).show();
-          }
-          if (data.isAgencyAdmin === false) {
-            $(t.siblings('.admin-user-mk-agencyadmin')[0]).show();
-          }
+          t.siblings('label').show();
+          t.prop('checked', data.checked);
         },
       });
     }
