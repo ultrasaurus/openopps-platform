@@ -1,29 +1,35 @@
-<div class="mt2 dashboard">
-  <div class="box-banner p2" id="opportunity-count">
-    <div class="clearfix mxn2 p2">
-      <div class="col col-12 md-col-8 px2">
-        <h1>There are <span class="opportunity-count--number">many</span> open opportunities right now.</h1>
+<main class="usajobs-opop" id="main-content" role="main">
+  <div class="usajobs-opop-banner" id="opportunity-count">
+    <div class="usajobs-opop-banner__body">
+      <div>
+        There are <span class="opportunity-count--number">many</span> open opportunities right now.
       </div>
-      <div class="col col-12 md-col-4 px2 center">
-        <a href="/tasks" class="btn btn-large btn-primary btn-inverse">Find yours</a>
+      <div>
+        <a href="/tasks">
+          <button class="usa-button usa-button-primary-alt">Find yours</button>
+        </a>
       </div>
     </div>
   </div>
-  <div class="bg-white p2">
-    <div class="clearfix mxn2">
-      <div data-target="badges-feed" class="col col-12 md-col-8 px2 badges-feed"></div>
-      <div class="col col-12 md-col-4 px2">
-        <div data-target="users-feed" class="users-feed"></div>
-        <div data-target="network-stats" class="network-stats"></div>
-      </div>
-      <div class="col col-12 md-col-4 px2 dashboard__task-list">
-        <h2><%= window.cache.currentUser.agency.abbr  %> Opportunities</h2>
-        <div id="browse-search-spinner" class="fullwidth text-center">
-          Loading... <i class="fa fa-spinner fa-spin"></i>
+  <div class="usajobs-grid usajobs-opop-dashboard">
+    <div class="usajobs-opop-dashboard__body">
+    <section class="usajobs-content-well">
+      <div class="usajobs-opop-badges__body">
+        <div data-target="badges-feed" class="badges-feed"></div>
+      </div> 
+    </section>
+    <aside class="usajobs-rightrail">
+      <div data-target="users-feed" class="users-feed"></div>
+      <div data-target="network-stats" class="network-stats"></div>
+      <div class="dashboard__task-list">
+          <h2><%= window.cache.currentUser.agency.abbr  %> Opportunities</h2>
+          <div id="browse-search-spinner" class="fullwidth text-center">
+            Loading... <i class="fa fa-spinner fa-spin"></i>
+          </div>
+          <div id="browse-list" class="dashboard__task-list__item"></div>
+          See more <a class="see-more-tasks" href="/tasks?agency=<%= window.cache.currentUser.agency.abbr %>"><%= window.cache.currentUser.agency.name %></a> opportunities.
         </div>
-        <div class="clearfix mxn2" id="browse-list"></div>
-        <a class="see-more-tasks" href="/tasks?agency=<%= window.cache.currentUser.agency.abbr %>">See more <%= window.cache.currentUser.agency.name %> opportunities.</a>
-      </div>
-    </div>
+    </aside>
   </div>
 </div>
+</main>

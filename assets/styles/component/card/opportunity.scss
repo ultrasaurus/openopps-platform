@@ -1,0 +1,139 @@
+
+@import 'base-shared';
+@import 'card';
+
+.usajobs-open-opps-opportunity {
+  @include card-v4();
+
+  @include media($M) {
+    margin: 0 0 $size-default;
+  }
+
+  @include media($L) {
+    padding: $size-default;
+  }
+
+  & &__title {
+    @include h3();
+    display: block;
+    margin: 0;
+    font-weight: bold;
+    color: $color-primary;
+    text-decoration: none;
+    overflow-wrap: break-word; // This prevents whack titles from breaking the card
+  }
+
+  & &__desc {
+    margin: $size-base 0;
+
+    @include media($ML) {
+      margin: $size-S 0;
+    }
+  }
+
+  & &__agency-only {
+    margin-top: 0;
+    font-weight: bold;
+    font-style: italic;
+
+    @include media($ML) {
+      margin: $size-S 0 $size-default;
+    }
+  }
+
+  &__details {
+    @include unstyledList();
+  }
+
+  &__detail-item {
+    color: $color-gray;
+  }
+}
+
+.usajobs-open-opps-opportunity-requestor {
+  display: flex;
+  margin-top: $size-M;
+  align-items: center;
+
+  &__figure {
+    flex-shrink: 0;
+    padding: 0 0 $size-base 0;
+
+    @include media($L) {
+      padding-bottom: 0;
+    }
+  }
+
+  &__body {
+    flex: 1;
+    min-width: 0;
+    padding: 0 $size-S;
+  }
+
+  &__by {
+    margin: 0;
+    font-size: $small-font-size;
+    color: $color-gray;
+  }
+
+  & &__name {
+    margin: 0;
+  }
+
+  &__status {
+    flex: 1;
+
+    .usajobs-pill--opportunity-status {
+      margin: 0 auto;
+    }
+  }
+}
+
+.usajobs-open-opps-opportunity-item {
+  @include card-v4();
+
+
+
+  // @include media($L) {
+  //   padding: $size-default;
+  // }
+
+  & &__title {
+    @include h3();
+    display: block;
+    margin: 0;
+    font-weight: bold;
+    color: $color-primary;
+    text-decoration: none;
+  }
+
+  & &__desc {
+    margin: $size-base 0;
+
+    @include media($ML) {
+      margin: $size-S 0;
+    }
+  }
+
+  & &__agency-only {
+    margin-top: 0;
+    font-weight: bold;
+    font-style: italic;
+
+    @include media($ML) {
+      margin: $size-S 0 $size-default;
+    }
+  }
+
+  &__details {
+    @include unstyledList();
+  }
+
+  &__detail-item {
+    color: $color-gray;
+  }
+
+  .usajobs-pill--opportunity-status {
+    margin: 0 auto;
+  }
+}

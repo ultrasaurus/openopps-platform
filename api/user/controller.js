@@ -1,4 +1,4 @@
-const log = require('blue-ox')('app:user');
+const log = require('log')('app:user');
 const validator = require('validator');
 const Router = require('koa-router');
 const _ = require('lodash');
@@ -33,7 +33,7 @@ router.get('/api/user/username/:username', async (ctx, next) => {
   if (validator.isEmail(ctx.params.username) !== true) {
     return ctx.body = true;
   }
-  await service.findOneByUsername(ctx.params.username.toLowerCase(), function (err, user) {
+  await service.findOneByUsername(ctx.params.username.toLowerCase().trim(), function (err, user) {
     if (err) {
       ctx.status = 400;
       return ctx.body = { message:'Error looking up username.' };
@@ -68,15 +68,23 @@ router.get('/api/user/photo/:id', async (ctx, next) => {
   }
 });
 
-router.post('/api/user/:id', auth, async (ctx, next) => {
+router.post('/api/user/resetPassword', auth, async (ctx, next) => {
+  if (await service.canAdministerAccount(ctx.state.user, ctx.request.body)) {
+    ctx.body = await service.updatePassword(ctx.request.body);
+  } else {
+    ctx.status = 403;
+  }
+});
+
+router.put('/api/user/:id', auth, async (ctx, next) => {
   if (await service.canUpdateProfile(ctx)) {
     ctx.status = 200;
-    await service.updateProfile(ctx.request.body, function (errors) {
+    await service.updateProfile(ctx.request.body, function (errors, result) {
       if (errors) {
         ctx.status = 400;
         return ctx.body = errors;
       }
-      ctx.body = { success: true };
+      ctx.body = result;
     });
   } else {
     ctx.status = 403;
@@ -102,14 +110,6 @@ router.get('/api/user/enable/:id', auth, async (ctx, next) => {
   }, (user, err) => {
     err ? err.message === 'Forbidden' ? ctx.status = 403 : ctx.status = 400 : ctx.body = { user };
   });
-});
-
-router.post('/api/user/resetPassword', auth, async (ctx, next) => {
-  if (await service.canAdministerAccount(ctx.state.user, ctx.request.body)) {
-    ctx.body = await service.updatePassword(ctx.request.body);
-  } else {
-    ctx.status = 403;
-  }
 });
 
 module.exports = router.routes();

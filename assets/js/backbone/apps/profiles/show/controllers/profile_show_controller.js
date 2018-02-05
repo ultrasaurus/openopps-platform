@@ -94,7 +94,7 @@ var Profile = BaseController.extend({
     // not being logged in
     this.listenTo(this.model, 'profile:fetch:error', function (model, response) {
       // if the user isn't logged in, trigger the login window
-      if (response.status === 403) {
+      if (response.status === 401 || response.status === 403) {
         window.cache.userEvents.trigger('user:request:login', {
           message: 'You must be logged in to view profiles',
           disableClose: false,

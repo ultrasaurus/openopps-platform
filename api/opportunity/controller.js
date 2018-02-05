@@ -1,4 +1,4 @@
-const log = require('blue-ox')('app:opportunity');
+const log = require('log')('app:opportunity');
 const Router = require('koa-router');
 const _ = require('lodash');
 const auth = require('../auth/auth');
@@ -31,7 +31,7 @@ router.get('/api/task/:id', async (ctx, next) => {
   if (task.isOwner ||
     (_.has(ctx.state.user, 'isAdmin') && ctx.state.user.isAdmin) ||
     ((_.has(ctx.state.user, 'isAgencyAdmin') && ctx.state.user.isAgencyAdmin) &&
-      (ctx.state.user.tags && _.find(ctx.state.user.tags, { 'type': 'agency' }).name == task.owner.agency.name))) {
+      (ctx.state.user.tags && (_.find(ctx.state.user.tags, { 'type': 'agency' }) || {}).name == task.owner.agency.name))) {
     task.canEditTask = true;
   }
   ctx.body = task;
@@ -57,41 +57,7 @@ router.post('/api/task', auth, async (ctx, next) => {
   });
 });
 
-router.post('/api/task/copy', auth, async (ctx, next) => {
-  if (await service.canUpdateOpportunity(ctx.state.user, ctx.request.body.taskId)) {
-    await service.copyOpportunity(ctx.request.body, ctx.state.user.isAdmin ? ctx.state.user : null, function (error, task) {
-      if (error) {
-        ctx.flash('error', 'Error Copying Opportunity');
-        ctx.status = 400;
-        log.info(error);
-        return ctx.body = null;
-      }
-      ctx.body = task;
-    });
-  } else {
-    ctx.status = 403;
-  }
-});
-
-router.post('/api/task/remove', auth, async (ctx) => {
-  if (await service.canAdministerTask(ctx.state.user, ctx.request.body.id)) {
-    await service.findOne(ctx.request.body.id).then(async task => {
-      if (['draft', 'submitted'].indexOf(task.state) != -1) {
-        ctx.body = await service.deleteTask(ctx.request.body.id);
-      } else {
-        log.info('Wrong state');
-        ctx.status = 400;
-      }
-    }).catch(err => {
-      log.info('Error occured', err);
-      ctx.status = 400;
-    });
-  } else {
-    ctx.status = 403;
-  }
-});
-
-router.post('/api/task/:id', auth, async (ctx, next) => {
+router.put('/api/task/:id', auth, async (ctx, next) => {
   if (await service.canUpdateOpportunity(ctx.state.user, ctx.request.body.id)) {
     ctx.status = 200;
     await service.updateOpportunity(ctx.request.body, function (task, stateChange, errors) {
@@ -112,13 +78,29 @@ router.post('/api/task/:id', auth, async (ctx, next) => {
   }
 });
 
-router.post('/api/publishTask/:id', auth, async (ctx, next) => {
+router.put('/api/publishTask/:id', auth, async (ctx, next) => {
   if (await service.canAdministerTask(ctx.state.user, ctx.request.body.id)) {
     await service.publishTask(ctx.request.body, function (done) {
       ctx.body = { success: true };
     }).catch(err => {
       log.info(err);
     });
+  }
+});
+
+router.post('/api/task/copy', auth, async (ctx, next) => {
+  if (await service.canUpdateOpportunity(ctx.state.user, ctx.request.body.taskId)) {
+    await service.copyOpportunity(ctx.request.body, ctx.state.user.isAdmin ? ctx.state.user : null, function (error, task) {
+      if (error) {
+        ctx.flash('error', 'Error Copying Opportunity');
+        ctx.status = 400;
+        log.info(error);
+        return ctx.body = null;
+      }
+      ctx.body = task;
+    });
+  } else {
+    ctx.status = 403;
   }
 });
 
@@ -139,5 +121,23 @@ function checkTaskState (stateChange, user, body, task) {
     }
   }
 }
+
+router.delete('/api/task/:id', auth, async (ctx) => {
+  if (await service.canAdministerTask(ctx.state.user, ctx.params.id)) {
+    await service.findOne(ctx.params.id).then(async task => {
+      if (['draft', 'submitted'].indexOf(task.state) != -1) {
+        ctx.body = await service.deleteTask(ctx.params.id);
+      } else {
+        log.info('Wrong state');
+        ctx.status = 400;
+      }
+    }).catch(err => {
+      log.info('Error occured', err);
+      ctx.status = 400;
+    });
+  } else {
+    ctx.status = 403;
+  }
+});
 
 module.exports = router.routes();

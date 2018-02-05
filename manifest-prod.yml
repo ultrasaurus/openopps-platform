@@ -1,8 +1,7 @@
 ---
 inherit: manifest.yml
-host: openopps
-domains:
-  - 18f.gov
+no-hostname: true
+domain: openopps.usajobs.gov
 instances: 2
 memory: 1G
 env:

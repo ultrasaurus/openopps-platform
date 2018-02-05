@@ -55,7 +55,7 @@ var AdminTaskView = Backbone.View.extend({
           $.ajax({
             url: '/api/publishTask/' + id,
             data: {'id': id, 'state': 'open'},
-            type: 'POST',
+            type: 'PUT',
           }).done(function (model, response, options) {
             view.render();
           });
@@ -72,11 +72,8 @@ var AdminTaskView = Backbone.View.extend({
     e.preventDefault();
     if (window.confirm('Are you sure you want to delete "' + title + '"?')) {
       $.ajax({
-        url: '/api/task/remove',
-        type: 'POST',
-        data: {
-          id: id,
-        },
+        url: '/api/task/' + id,
+        type: 'DELETE',
       }).done(function () {
         view.render();
       });

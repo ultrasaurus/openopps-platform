@@ -1,6 +1,6 @@
 const db = require('../../db');
 const dao = require('./dao')(db);
-const log = require('blue-ox')('app:user:service');
+const log = require('log')('app:user:service');
 const bcrypt = require('bcryptjs');
 const _ = require('lodash');
 const User = require('../model/User');
@@ -93,7 +93,7 @@ async function updateProfile (attributes, done) {
         await processUserTags(user, tags).then(tags => {
           user.tags = tags;
         });
-        return done(null);
+        return done(null, user);
       }).catch (err => { return done({'message':'Error updating profile.'}); });
   }).catch (err => { return done({'message':'Error updating profile.'}); });
 }

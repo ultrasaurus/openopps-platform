@@ -46,7 +46,6 @@ var TaskModel = Backbone.Model.extend({
   update: function (data) {
     var self = this;
     this.save(data, {
-      type: 'POST',
       success: function (data) {
         self.trigger('task:update:success', data);
       },
@@ -58,12 +57,8 @@ var TaskModel = Backbone.Model.extend({
 
   updateState: function (state) {
     var self = this;
-
-    var data = {
+    this.save({
       state: state,
-    };
-    this.save(data, {
-      type: 'POST',
     }, {
       success: function (data) {
         self.trigger('task:update:state:success', data);
@@ -80,7 +75,6 @@ var TaskModel = Backbone.Model.extend({
 
     this.save({
       projectId: null,
-      type: 'POST',
     }, {
       success: function (data) {
         self.trigger('task:update:orphan:success', data);
