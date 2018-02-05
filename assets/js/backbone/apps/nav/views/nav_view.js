@@ -20,7 +20,7 @@ var NavView = Backbone.View.extend({
     'click .nav-link': linkBackbone,
     'click .login': 'loginClick',
     'click .logout': 'logout',
-    'click .menu-toggle': 'toggleMenu'
+    'click .menu-toggle': 'toggleMenu',
   },
 
   initialize: function (options) {
