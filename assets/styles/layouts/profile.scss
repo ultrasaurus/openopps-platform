@@ -4,6 +4,14 @@
   margin-bottom: $size-SM;
 }
 
+.usajobs-open-opps-profile {
+    margin-top: $size-M;
+
+    h1, h2 {
+        margin-top: 0;
+    }
+}
+
 @media screen and (min-width: 37.5em) {
     .usajobs-opop-section__edit {
         top: 1.5rem;
@@ -19,9 +27,9 @@
         color: #0D71B9;
     }
 
-.usajobs-open-opps-profile h1, .usajobs-open-opps-profile h2 {
-    margin-top: 0;
-}
+
+
+
 
 .usajobs-open-opps-participated__body {
     @include media($ML) {
@@ -143,3 +151,33 @@
 .usajobs-open-opps-opportunity .usajobs-opop-profile-details .profile-share {
   margin-bottom: $size-default;
 }
+
+.profile-badges {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .profile-badges::after {
+    clear: both;
+    content: "";
+    display: block;
+  }
+  
+  .profile-badge {
+    display: inline-block;
+    text-align: center;
+    text-transform: capitalize;
+    float: left;
+    margin-right: 1.5rem;
+  
+    img {
+      min-height: 70px;
+      width: 9.2rem;
+      height: 9.2rem;
+    }
+  
+    p {
+      max-width: 10rem;
+      margin-top: 0;
+    }
+  }
