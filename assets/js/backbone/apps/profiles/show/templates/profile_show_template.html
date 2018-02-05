@@ -34,20 +34,20 @@
                 <div class="alert alert-success">Your profile has been successfully updated.</div>
                 <% } %>
             </div>
-                    
+
             <div class="profile-jobtitle"><% if (data.title) { %><i class="fa fa-briefcase"></i> <span><%- data.title %></span><% } %></div>
             <div class="profile-company"><% if (data.agency) { %><i class="fa fa-university"></i> <span><%- data.agency.name %></span><% } %></div>
             <div class="profile-location"><% if (data.location) { %><span class="fa fa-map-marker"></span> <span><%- data.location.name %></span><% } %></div>
             <div class="profile-email"><% if (email) { %><i class="far fa-envelope"></i> <span class="emaillink"><%= email %></span><% } %></div>
-              
-            <div>
+
+            <div class="profile-biography">
                 <% if (data.bioHtml) { %>
                   <h3>Biography</h3>
                   <%= data.bioHtml %>
                 <% } %>
             </div>
 
-            <div class="<% if (data.isOwner || user.isAdmin) { %>border-bottom<% } %>">
+            <div class="profile-share <% if (data.isOwner || user.isAdmin) { %>border-bottom<% } %>">
                 <a href="#" id="email"><i class="fas fa-share-alt"></i> <span>Share Profile</span></a>
             </div>
           </div>
@@ -55,7 +55,7 @@
       </div>
       <% if (tags.length > 0) { %>
       <div class="usajobs-open-opps-opportunity">
-        <div usajobs-open-opps-participated__body>
+        <div class="usajobs-open-opps-participated__body usajobs-grid">
           <h2>Skills &amp; Interests</h2>
           <div>
             <% _.each(tags, function (t) { %>
@@ -78,7 +78,7 @@
     <aside class="usajobs-rightrail" id="rightrail">
       <div class="usajobs-open-opps-opportunity">
         <h2>Badges</h2>
-        <% if (data.badges.length > 0) { %> 
+        <% if (data.badges.length > 0) { %>
         <ul class="profile-badges">
           <% _.map(data.badges, function (b) { %>
           <li class="profile-badge">
