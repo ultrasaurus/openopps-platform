@@ -17,6 +17,9 @@
 @media screen and (min-width: 48em) {
   .usa-button.usa-button-primary-alt {
     width: 29.1rem;
+    margin-top: $size-SM;
+    padding-top: 1.2rem;
+    padding-bottom: 1.2rem;
   }
 }
 
@@ -38,11 +41,13 @@ background-color: #ffffff;
 .usajobs-opop-badges__body {
   max-width: 60rem;
   text-align: left;
+  margin-top: $size-M;
 }
 
 .activity-feed--badges {
   height: 6rem;
   font-size: 1.6rem;
+  margin-bottom: $size-SM;
 }
 
 .activity-feed--badge {
@@ -51,10 +56,13 @@ background-color: #ffffff;
   background-size: contain;
   min-height: 60px;
   width: 60px;
+  margin-top: -0.5rem;
+  margin-right: $size-default;
 }
 
 .activity-feed--avatars {
-  margin-top: .3em;
+  margin-top: $size-default;
+  margin-bottom: $size-default;
 }
 
 .activity-feed--avatars::before,
@@ -67,14 +75,33 @@ background-color: #ffffff;
   clear: both;
 }
 
+.activity-feed--avatars a {
+  background-position: center;
+  background-size: contain;
+  background-image: url(/images/default-user-icon-profile.png);
+  border-radius: 100%;
+  float: left;
+  margin-right: $size-default;
+  margin-bottom: $size-default;
+  min-height: 44px;
+  width: 44px;
+}
+
 .activity-feed--avatar {
   background-position: center;
   background-size: contain;
   border-radius: 100%;
   float: left;
-  margin-right: .3em;
-  min-height: 40px;
-  width: 40px;
+  min-height: 44px;
+  width: 44px;
+}
+
+.users-feed {
+  margin-top: $size-M;
+}
+
+.users-feed li {
+  margin-bottom: 0.2rem;
 }
 
 .tasks-completed {
@@ -110,5 +137,3 @@ background-color: #ffffff;
   height: 1.5em;
   background: linear-gradient(#FFF0, #FFF);
 }
-
-

@@ -6,12 +6,20 @@
   @include media($L) { 
     padding: 0;
     margin: $size-M 0;
+    position: relative;
+  }
+
+  .search-icon {
+    position: absolute;
+    top: 33%;
+    right: 15px;
+    fill-opacity: .5;
   }
 }
 
 .usajobs-open-opps-search__input {
   border: none;
-  max-width: calc(100% - 72px);
+  max-width: 100%;
   float: left;
   height: 4.3rem;
   margin-bottom: 0;
