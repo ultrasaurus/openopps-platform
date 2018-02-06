@@ -1,12 +1,12 @@
-<div class="row"><div class="col-md-12 form-inline text-right">
+<form class="usajobs-form">
   <label for="filter">Type:</label>
-  <select name="filter" class="filter form-control">
+  <select name="filter" class="filter">
     <option value="">All</option>
     <option value="One time">One time</option>
     <option value="Ongoing">Ongoing</option>
   </select>
   <label for="group">Period:</label>
-  <select name="group" class="group form-control">
+  <select name="group" class="group">
     <option value="week">Week</option>
     <option value="month">Month</option>
     <option value="quarter">Quarter</option>
@@ -14,13 +14,14 @@
     <option value="fyquarter">Fiscal Quarter</option>
     <option value="fy">Fiscal Year</option>
   </select>
-</div></div>
+</form>
 
-<div class="row overflow-x"><div class="col-md-12">
-  <table class="table task-metrics-table">
+<div class="overflow-x">
+  <h3>Completed Opportunities</h3>
+  <table class="usa-table-borderless task-metrics-table">
     <thead>
       <tr>
-        <th scope="col">Completed Opportunities</th>
+        <th scope="col"></th>
         <% _.each(range, function(key) { %>
         <th scope="col"><%- label(key) %></th>
         <% }); %>
@@ -45,78 +46,17 @@
           <td><%- tasks.completed[key] || 0 %></td>
         <% }); %>
       </tr>
-      <tr class="small">
+      <tr>
         <th scope="row">Percentage Completed</th>
         <% _.each(range, function(key) { %>
         <td><%- Math.round(tasks.completed[key] / tasks.published[key] * 100, 4) || 0 %>%</td>
         <% }); %>
       </tr>
-      <!-- We don't track the date a task was archived
-      <tr>
-        <th scope="row">Archived</th>
-        <td></td>
-        <td></td>
-        <td></td>
-      </tr>
-      -->
     </tbody>
   </table>
-</div></div>
-<!-- This is redundant with the top section until we can break out by tags
-<div class="row"><div class="col-md-12">
-  <table class="table task-metrics-table">
-    <thead>
-      <tr>
-        <th scope="col">Active Opportunities</th>
-        <th scope="col"></th>
-        <th scope="col">Cumulative</th>
-        <th scope="col"></th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <th scope="row">Published</th>
-        <td></td>
-        <td></td>
-        <td></td>
-      </tr>
-      <tr class="small">
-        <th scope="row">One-time</th>
-        <td></td>
-        <td></td>
-        <td></td>
-      </tr>
-      <tr class="small">
-        <th scope="row">On-going</th>
-        <td></td>
-        <td></td>
-        <td></td>
-      </tr>
-      <tr>
-        <th scope="row">Assigned</th>
-        <td></td>
-        <td></td>
-        <td></td>
-      </tr>
-      <tr class="small">
-        <th scope="row">One-time</th>
-        <td></td>
-        <td></td>
-        <td></td>
-      </tr>
-      <tr class="small">
-        <th scope="row">On-going</th>
-        <td></td>
-        <td></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-</div></div>
--->
-
-<div class="row overflow-x"><div class="col-md-12">
-  <table class="table task-metrics-table">
+</div>
+<div class="overflow-x">
+  <table class="usa-table-borderless task-metrics-table">
     <thead>
       <tr>
         <th scope="col">Participants</th>
@@ -134,10 +74,10 @@
       </tr>
     </tbody>
   </table>
-</div></div>
+</div>
 
-<div class="row overflow-x"><div class="col-md-12">
-  <table class="table task-metrics-table">
+<div class="overflow-x">
+  <table class="usa-table-borderless task-metrics-table">
     <thead>
       <tr>
         <th scope="col" data-i18n="tag.AgencyPlural" ></th>
@@ -155,4 +95,4 @@
       </tr>
     </tbody>
   </table>
-</div></div>
+</div>

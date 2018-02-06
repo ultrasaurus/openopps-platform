@@ -70,6 +70,7 @@
 
 // Layouts ------------- //
 @import 'layouts/profile';
+@import 'layouts/admin-dashboard';
 
 body {
     background-color: $color-gray-lightest;
@@ -96,7 +97,7 @@ h1, h2, h3 {
       margin-right: 0;
     }
   }
-  
+
   @media screen and (min-width: 75em) {
     .usajobs-content-well {
       float: left;
@@ -115,7 +116,7 @@ h1, h2, h3 {
       padding-right: 3rem;
     }
   }
-  
+
   @media screen and (min-width: 62em) {
     .usajobs-rightrail {
       float: left;
@@ -127,7 +128,7 @@ h1, h2, h3 {
       margin-right: 0;
     }
   }
-  
+
   @media screen and (min-width: 75em) {
     .usajobs-rightrail {
       float: left;
@@ -139,7 +140,7 @@ h1, h2, h3 {
       margin-right: 0;
     }
   }
-  
+
   @media screen and (min-width: 62em) {
     .usajobs-rightrail .usajobs-content-gutter {
       padding-left: 0;
