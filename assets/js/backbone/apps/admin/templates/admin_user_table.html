@@ -58,7 +58,7 @@
         </td>
         <td>
           <% if (user.isAdmin || (user.isAgencyAdmin && !u.isAdmin)) { %>
-            <input id="user-enable" type="checkbox" <% if (!u.disabled) { %> checked <% } %> />
+            <input id="user-enable" type="checkbox" data-action='user' <% if (!u.disabled) { %> checked <% } %> />
             <label class="no-label" for="user-enable"></label>
             <div class="icon-spin" style="display:none;"><i class="fa-spin fa fa-spinner"></i></div>
           <% } %>
@@ -72,14 +72,14 @@
         <% } %>
         <% if (user.isAdmin) { %>
           <td>
-            <input id="user-admin" type="checkbox" <% if (u.isAdmin) { %> checked <% } %> />
+            <input id="user-admin" type="checkbox" data-action='admin' <% if (u.isAdmin) { %> checked <% } %> />
             <label class="no-label" for="user-admin"></label>
             <div class="icon-spin" style="display:none;"><i class="fa-spin fa fa-spinner"></i></div>
           </td>
         <% } %>
         <td>
           <% if (user.isAdmin || (user.isAgencyAdmin && !u.isAdmin)) { %>
-            <input id="user-agency-admin" type="checkbox" <% if (u.isAgencyAdmin) { %> checked <% } %> />
+            <input id="user-agency-admin" type="checkbox" data-action='agencyAdmin' <% if (u.isAgencyAdmin) { %> checked <% } %> />
             <label class="no-label" for="user-agency-admin"></label>
             <div class="icon-spin" style="display:none;"><i class="fa-spin fa fa-spinner"></i></div>
           <% } %>

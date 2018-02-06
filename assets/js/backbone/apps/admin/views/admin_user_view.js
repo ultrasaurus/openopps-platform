@@ -20,9 +20,9 @@ var AdminUserView = Backbone.View.extend({
   events: {
     'click a.page'              : 'clickPage',
     'click .link-backbone'      : linkBackbone,
-    'click #user-admin'         : 'toggleAdmin',
-    'click #user-agency-admin'  : 'toggleAgencyAdmin',
-    'click #user-enable'        : 'toggleEnable',
+    'click #user-admin'         : 'toggleCheckbox',
+    'click #user-agency-admin'  : 'toggleCheckbox',
+    'click #user-enable'        : 'toggleCheckbox',
     'click .admin-user-unlock'  : 'adminUnlock',
     'click .user-reset'         : 'resetPassword',
     'keyup #user-filter'        : 'filter',
@@ -83,10 +83,8 @@ var AdminUserView = Backbone.View.extend({
 
   renderPagination: function (data) {
     var self = this;
-    // render the pagination
-    //self.renderPaginate(data);
     data.pages = [];
-    data.numberOfPages = Math.ceil(data.count/data.limit);
+    data.numberOfPages = Math.ceil(data.count/data.trueLimit);
     if (data.numberOfPages > 7) {
       switch (true) {
         case data.page < 5:
@@ -161,37 +159,25 @@ var AdminUserView = Backbone.View.extend({
     });
   },
 
-  toggleAdmin: function (e) {
-    if (e.preventDefault) e.preventDefault();
-    var t = $(e.currentTarget);
-    var id = $(t.parents('tr')[0]).data('id');
-    this.updateUser(t, {
-      id: id,
-      checked: t.prop('checked'),
-      url: '/api/admin/admin/' + id + '?action=' + t.prop('checked'),
-    });
+  getUrlFor: function (id, elem) {
+    switch (elem.data('action')) {
+      case 'user':
+        return '/api/user/' + (elem.prop('checked') ? 'enable' : 'disable') + '/' + id;
+      case 'admin':
+        return '/api/admin/admin/' + id + '?action=' + elem.prop('checked');
+      case 'agencyAdmin':
+        return '/api/admin/agencyAdmin/' + id + '?action=' + elem.prop('checked');
+    }
   },
 
-  toggleAgencyAdmin: function (e) {
+  toggleCheckbox: function (e) {
     if (e.preventDefault) e.preventDefault();
     var t = $(e.currentTarget);
     var id = $(t.parents('tr')[0]).data('id');
     this.updateUser(t, {
       id: id,
       checked: t.prop('checked'),
-      url: '/api/admin/agencyAdmin/' + id + '?action=' + t.prop('checked'),
-    });
-  },
-
-  toggleEnable: function (e) {
-    if (e.preventDefault) e.preventDefault();
-    var t = $(e.currentTarget);
-    var id = $(t.parents('tr')[0]).data('id');
-    var url = '/api/user/' + (t.prop('checked') ? 'enable' : 'disable') + '/' + id;
-    this.updateUser(t, {
-      id: id,
-      checked: t.prop('checked'),
-      url: url,
+      url: this.getUrlFor(id, t),
     });
   },
 
