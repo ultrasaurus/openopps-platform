@@ -85,24 +85,17 @@ var AdminUserView = Backbone.View.extend({
     var self = this;
     data.pages = [];
     data.numberOfPages = Math.ceil(data.count/data.trueLimit);
-    if (data.numberOfPages > 7) {
-      switch (true) {
-        case data.page < 5:
-          data.pages = [1, 2, 3, 4, 5, 0, data.numberOfPages];
-          break;
-        case data.page >= data.numberOfPages - 3:
-          data.pages = [1, 0];
-          for (var i = data.numberOfPages - 4; i <= data.numberOfPages; i++)
-            data.pages.push(i);
-          break;
-        default:
-          data.pages = [1, 0, data.page - 1, data.page,
-            data.page + 1, 0, data.numberOfPages];
-          break;
-      }
-    } else {
+    if(data.numberOfPages < 8) {
       for (var j = 1; j <= data.numberOfPages; j++)
         data.pages.push(j);
+    } else if (data.page < 5) {
+      data.pages = [1, 2, 3, 4, 5, 0, data.numberOfPages];
+    } else if (data.page >= data.numberOfPages - 3) {
+      data.pages = [1, 0];
+      for (var i = data.numberOfPages - 4; i <= data.numberOfPages; i++)
+        data.pages.push(i);
+    } else {
+      data.pages = [1, 0, data.page - 1, data.page, data.page + 1, 0, data.numberOfPages];
     }
     var paginate = _.template(Paginate)(data);
     self.$('#user-page').html(paginate);
