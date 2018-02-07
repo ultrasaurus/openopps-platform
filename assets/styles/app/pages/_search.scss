@@ -2,7 +2,7 @@
 
 @import '../../base-shared';
 
-.usajobs-open-opps-search {
+.usajobs-open-opps-people {
   position: relative;
   background-color: #fff;
   margin: $size-default 0;
@@ -28,9 +28,36 @@
   padding-top: $size-default;
 }
 
-.profile-list {
+.usajobs-grid.usajobs-open-opps-people-search__title {
+  @include media($L) {
+    padding: 0;
+    margin: $size-M 0;
+  }
+
+  .usa-width-one-half {
+    position: relative;
+  }
+
+  .search-icon {
+    position: absolute;
+    top: 33%;
+    right: 15px;
+    fill-opacity: .5;
+  }
+
+  .usajobs-open-opps-people-search__input {
+    //border: none;
+    max-width: 100%;
+    float: left;
+    height: 4.3rem;
+    margin-bottom: 0;
+  }
+}
+
+#profile-list {
   display: table;
   overflow-x: auto;
+  padding-bottom: $size-M;
 }
 
 .open-opps-people-row {
@@ -41,10 +68,14 @@
     text-align: left;
   }
 
+  &.header {
+    font-weight: bold;
+  }
+
   .col-name {
     display: table-cell;
     width: 15%;
-    padding: $size-default 0;
+    padding: $size-default 0 $size-default $size-default;
     border-bottom: 1.5px solid #c8c8c8;
   }
 
@@ -65,38 +96,38 @@
   .col-location {
     display: table-cell;
     width: 15%;
-    padding: $size-default 0;
+    padding: $size-default $size-default $size-default 0;
     border-bottom: 1.5px solid #c8c8c8;
   }
 }
 
-.usajobs-grid.usajobs-open-opps-search__title {
-  @include media($L) {
-    padding: 0;
+.usajobs-grid.usajobs-open-opps-search__title {
+  @include media($L) {
+    padding: 0;
     margin: $size-M 0;
-    position: relative;
+    position: relative;
   }
 
-  .search-icon {
-    position: absolute;
+  .search-icon {
+    position: absolute;
     top: 33%;
-    right: 15px;
-    fill-opacity: .5;
+    right: 15px;
+    fill-opacity: .5;
   }
 }
 
-.usajobs-open-opps-search__input {
-  border: none;
+.usajobs-open-opps-search__input {
+  border: none;
   max-width: 100%;
-  float: left;
-  height: 4.3rem;
-  margin-bottom: 0;
+  float: left;
+  height: 4.3rem;
+  margin-bottom: 0;
 }
 
-.usa-button.usajobs-open-opps-search-button {
-  margin: 0;
-  height: 4.3rem;
-  width: 7.2rem;
+.usa-button.usajobs-open-opps-search-button {
+  margin: 0;
+  height: 4.3rem;
+  width: 7.2rem;
 }
 
 .usajobs-grid.usajobs-open-opps-search__title .usa-button-gray {
