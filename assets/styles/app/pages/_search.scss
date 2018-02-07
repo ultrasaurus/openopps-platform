@@ -150,6 +150,7 @@
     @include media($L) {
       flex: 1 0 calc(50% - 15px);
       margin-right: $size-default;
+      max-width: 49.2%; //Keeps last result card from taking up entire width
     }
 
     &:nth-child(2n) {

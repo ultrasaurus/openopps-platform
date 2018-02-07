@@ -46,7 +46,7 @@
   }
 
   &__detail-item {
-    color: $color-gray;
+    color: $color-base;
   }
 }
 
@@ -61,6 +61,14 @@
 
     @include media($L) {
       padding-bottom: 0;
+
+      img {
+        width: 4.6rem;
+        height: 4.6rem;
+        background-position: center;
+        background-size: contain;
+        border-radius: 100%;
+      }
     }
   }
 
@@ -73,18 +81,20 @@
   &__by {
     margin: 0;
     font-size: $small-font-size;
-    color: $color-gray;
+    color: $color-base;
+    display: block;
   }
 
   & &__name {
     margin: 0;
+    line-height: 0.75;
   }
 
   &__status {
     flex: 1;
 
     .usajobs-pill--opportunity-status {
-      margin: 0 auto;
+      margin: 0 0 0 auto;
     }
   }
 }
