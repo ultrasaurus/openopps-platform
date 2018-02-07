@@ -1,0 +1,32 @@
+<div id="profile-list">
+  <div class="usajobs-grid open-opps-people-row header">
+    <div class="col-name">Name</div>
+    <div class="col-title">Title</div>
+    <div class="col-agency" data-i18n="tag.Agency"></div>
+    <div class="col-location">Location</div>
+  </div>
+  <% _.each(people, function(person) { %>
+  <% if (!_.isUndefined(person.name)) { %>
+  <div class="usajobs-grid open-opps-people-row">
+    <div class="col-name">
+      <a href="/profile/<%= person.id %>">
+        <%= person.name %>
+      </a>
+    </div>
+    <div class="col-title">
+      <%= person.title %>
+    </div>
+    <div class="col-agency">
+      <% if (!_.isUndefined(person.agency)) { %>
+      <%= person.agency.name %>
+      <% } %>
+    </div>
+    <div class="col-location">
+      <% if (!_.isUndefined(person.location)) { %>
+      <%= person.location.name %>
+      <% } %>
+    </div>
+  </div>
+  <% } %>
+  <% }); %>
+</div>
