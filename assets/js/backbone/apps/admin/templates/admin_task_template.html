@@ -1,290 +1,32 @@
 <div class="alert alert-danger" style="display:none;">
 </div>
-<div class="row">
-  <div class="col-md-12 box box-pad-lr">
-    <div class="row">
-      <div class="col-md-12">
-
-        <div role="tabpanel">
-
-          <!-- Nav tabs -->
-          <ul class="nav nav-tabs box-pad-t" role="tablist">
-            <li role="presentation" class="active">
-              <a href="#submitted" aria-controls="open" role="tab" data-toggle="tab">
-                Submitted: <%- submitted.length %>
-              </a>
-            </li>
-            <li role="presentation">
-              <a href="#open" aria-controls="open" role="tab" data-toggle="tab">
-                Open: <%- open.length %>
-              </a>
-            </li>
-            <li role="presentation">
-              <a href="#assigned" aria-controls="assigned" role="tab" data-toggle="tab">
-                Assigned: <%- assigned.length %>
-              </a>
-            </li>
-            <li role="presentation">
-              <a href="#completed" aria-controls="completed" role="tab" data-toggle="tab">
-                Completed: <%- completed.length %>
-              </a>
-            </li>
-            <li role="presentation">
-              <a href="#draft" aria-controls="open" role="tab" data-toggle="tab">
-                Draft: <%- draft.length %>
-              </a>
-            </li>
-
-            <!-- Export button -->
-            <div class="export-button pull-right tip" data-toggle="tooltip" data-placement="left"
-                 title="Download list of tasks as a comma-separated file ready for import into Excel">
-              <a href="/api/task/export">
-                <i class="fa fa-download"></i>
-              </a>
-            </div>
-
-          </ul>
-
-          <!-- Tab panes -->
-          <div class="tab-content box-pad-t">
-            <div role="tabpanel" class="tab-pane active" id="submitted">
-            <% if ( submitted.length ) { %>
-             <table class="metrics-table">
-                <thead>
-                  <tr>
-                    <td class="metrics-table__header">State</td>
-                    <td class="metrics-table__header">Title</td>
-                    <td class="metrics-table__header">Author</td>
-                    <td class="metrics-table__header">Actions</td>
-                  </tr>
-                </thead>
-                <tbody>
-                  <% _(submitted).forEach(function(task) { %>
-                    <tr>
-                      <td class="metrics-table__label">
-                        <a href="/tasks/<%- task.id %>"
-                           class="task__label--<%= task.state %>">
-                           <%=
-                             task.state.charAt( 0 ).toUpperCase() + task.state.slice( 1 )
-                            %>
-                        </a>
-                      </td>
-                      <td class="metrics-table__title">
-                        <a href="/tasks/<%- task.id %>"><%- task.title %></a>
-                        <% if ( task.volunteers.length ) { %>
-                        <p><i>Sign-ups</i>
-                          <% _( task.volunteers ).forEach( function( vol ) { %>
-                            <a href="/profile/<%- vol.id %>"><%-vol.name || 'Unnamed'%></a><%-(vol == task.volunteers[task.volunteers.length-1]) ? '' : ', ' %>
-                          <% } ); %>
-                        </p>
-                        <% } %>
-                      </td>
-                      <td class="metrics-table__author">
-                        <% if (!task.owner) { console.log('no owner for task', task) } else { %>
-                        <a href="/profile/<%- task.owner.id %>">
-                          <%- task.owner.name || task.owner.username %>
-                        </a>
-                        <% } %>
-                      </td>
-                      <td class="metrics-table__button">
-                        <a href="#open/<%- task.id %>"
-                           data-task-id="<%- task.id %>"
-                           data-task-title="<%- task.title %>"
-                           class="js-tip js-task-open"
-                           data-toggle="tooltip"
-                           data-placement="top"
-                           data-original-title="Publish Task">
-                         <span class='fa fa-check'></span>
-                        </a>
-                        <a href="#delete/<%- task.id %>"
-                           data-task-id="<%- task.id %>"
-                           data-task-title="<%- task.title %>"
-                           class="js-tip delete-task"
-                           data-toggle="tooltip"
-                           data-placement="top"
-                           data-original-title="Delete Task">
-                         <span class='fa fa-times'></span>
-                        </a>
-                      </td>
-                    </tr>
-                  <% }); %>
-                </tbody>
-              </table>
-            <% } %>
-            </div>
-            <div role="tabpanel" class="tab-pane" id="open">
-              <table class="metrics-table">
-                <thead>
-                  <tr>
-                    <td class="metrics-table__header">State</td>
-                    <td class="metrics-table__header">Title</td>
-                    <td class="metrics-table__header">Author</td>
-                  </tr>
-                </thead>
-                <tbody>
-                  <% _(open).forEach(function(task) { %>
-                    <tr>
-                      <td class="metrics-table__label">
-                        <a href="/tasks/<%- task.id %>"
-                           class="task__label--<%= task.state %>">
-                           <%=
-                             task.state.charAt( 0 ).toUpperCase() + task.state.slice( 1 )
-                            %>
-                        </a>
-                      </td>
-                      <td class="metrics-table__title">
-                        <a href="/tasks/<%- task.id %>"><%- task.title %></a>
-                        <% if ( task.volunteers.length ) { %>
-                        <p><i>Sign-ups</i>
-                          <% _( task.volunteers ).forEach( function( vol ) { %>
-                            <a href="/profile/<%- vol.id %>"><%-vol.name || 'Unnamed'%></a><%-(vol == task.volunteers[task.volunteers.length-1]) ? '' : ', ' %>
-                          <% } ); %>
-                        </p>
-                        <% } %>
-                      </td>
-                      <td class="metrics-table__author">
-                        <% if (!task.owner) { console.log('no owner for task', task) } else { %>
-                        <a href="/profile/<%- task.owner.id %>">
-                          <%- task.owner.name || task.owner.username %>
-                        </a>
-                        <% } %>
-                      </td>
-                    </tr>
-                  <% }); %>
-                </tbody>
-              </table>
-            </div>
-            <div role="tabpanel" class="tab-pane" id="assigned">
-              <table class="metrics-table">
-                <thead>
-                  <tr>
-                    <td class="metrics-table__header">State</td>
-                    <td class="metrics-table__header">Title</td>
-                    <td class="metrics-table__header">Author</td>
-                  </tr>
-                </thead>
-                <tbody>
-                  <% _(assigned).forEach(function(task) { %>
-                    <tr>
-                      <td class="metrics-table__label">
-                        <a href="/tasks/<%- task.id %>"
-                           class="task__label--<%= task.state %>">
-                           <%=
-                             task.state.charAt( 0 ).toUpperCase() + task.state.slice( 1 )
-                            %>
-                        </a>
-                      </td>
-                      <td class="metrics-table__title">
-                        <a href="/tasks/<%- task.id %>"><%- task.title %></a>
-                        <% if ( task.volunteers.length ) { %>
-                        <p><i>Sign-ups</i>
-                          <% _( task.volunteers ).forEach( function( vol ) { %>
-                            <a href="/profile/<%- vol.id %>"><%-vol.name || 'Unnamed'%></a><%-(vol == task.volunteers[task.volunteers.length-1]) ? '' : ', ' %>
-                          <% } ); %>
-                        </p>
-                        <% } %>
-                      </td>
-                      <td class="metrics-table__author">
-                        <% if (!task.owner) { console.log('no owner for task', task) } else { %>
-                        <a href="/profile/<%- task.owner.id %>">
-                          <%- task.owner.name || task.owner.username %>
-                        </a>
-                        <% } %>
-                      </td>
-                    </tr>
-                  <% }); %>
-                </tbody>
-              </table>
-            </div>
-            <div role="tabpanel" class="tab-pane" id="completed">
-              <table class="metrics-table">
-                <thead>
-                  <tr>
-                    <td class="metrics-table__header">State</td>
-                    <td class="metrics-table__header">Title</td>
-                    <td class="metrics-table__header">Author</td>
-                  </tr>
-                </thead>
-                <tbody>
-                  <% _(completed).forEach(function(task) { %>
-                    <tr>
-                      <td class="metrics-table__label">
-                        <a href="/tasks/<%- task.id %>"
-                           class="task__label--<%= task.state %>">
-                           <%=
-                             task.state.charAt( 0 ).toUpperCase() + task.state.slice( 1 )
-                            %>
-                        </a>
-                      </td>
-                      <td class="metrics-table__title">
-                        <a href="/tasks/<%- task.id %>"><%- task.title %></a>
-                      </td>
-                      <td class="metrics-table__author">
-                        <% if (!task.owner) { console.log('no owner for task', task) } else { %>
-                        <a href="/profile/<%- task.owner.id %>">
-                          <%- task.owner.name || task.owner.username %>
-                        </a>
-                        <% } %>
-                      </td>
-                    </tr>
-                  <% }); %>
-                </tbody>
-              </table>
-            </div>
-            <div role="tabpanel" class="tab-pane" id="draft">
-            <% if ( draft.length ) { %>
-              <table class="metrics-table">
-                <thead>
-                  <tr>
-                    <td class="metrics-table__header">State</td>
-                    <td class="metrics-table__header">Title</td>
-                    <td class="metrics-table__header">Author</td>
-                    <td class="metrics-table__header">Actions</td>
-                  </tr>
-                </thead>
-                <tbody>
-                  <% _(draft).forEach(function(task) { %>
-                    <tr>
-                      <td class="metrics-table__label">
-                        <a href="/tasks/<%- task.id %>"
-                           class="task__label--<%= task.state %>">
-                           <%=
-                             task.state.charAt( 0 ).toUpperCase() + task.state.slice( 1 )
-                            %>
-                        </a>
-                      </td>
-                      <td class="metrics-table__title">
-                        <a href="/tasks/<%- task.id %>"><%- task.title %></a>
-                      </td>
-                      <td class="metrics-table__author">
-                        <% if (!task.owner) { console.log('no owner for task', task) } else { %>
-                        <a href="/profile/<%- task.owner.id %>">
-                          <%- task.owner.name || task.owner.username %>
-                        </a>
-                        <% } %>
-                      </td>
-                      <td class="metrics-table__button">
-                        <a href="#delete/<%- task.id %>"
-                           data-task-id="<%- task.id %>"
-                           data-task-title="<%- task.title %>"
-                           class="js-tip delete-task"
-                           data-toggle="tooltip"
-                           data-placement="top"
-                           data-original-title="Delete Task">
-                         <span class='fa fa-times'></span>
-                        </a>
-                      </td>
-                    </tr>
-                  <% }); %>
-                </tbody>
-              </table>
-            <% } %>
-            </div>
-          </div>
-
-        </div>
-
-      </div>
-    </div>
+<h2>Tasks</h2>
+<div class="task-filters">
+  <div class="filter">
+    <input id="submitted" type="checkbox" class="filter-ckbx" checked />
+    <label for="submitted">Submitted: (<%- submitted.length %>)</label>
+  </div>
+  <div class="filter">
+    <input id="open" type="checkbox" class="filter-ckbx" />
+    <label for="open">Open: (<%- open.length %>)</label>
+  </div>
+  <div class="filter">
+    <input id="assigned" type="checkbox" class="filter-ckbx" />
+    <label for="assigned">In progress: (<%- assigned.length %>)</label>
+  </div>
+  <div class="filter">
+    <input id="completed" type="checkbox" class="filter-ckbx" />
+    <label for="completed">Completed: (<%- completed.length %>)</label>
+  </div>
+  <div class="filter">
+    <input id="draft" type="checkbox" class="filter-ckbx" />
+    <label for="draft">Draft: (<%- draft.length %>)</label>
+  </div>
+  <div class="export-button tip" data-toggle="tooltip" data-placement="left"
+       title="Download list of tasks as a comma-separated file ready for import into Excel">
+    <a href="/api/task/export">
+      <i class="fa fa-download"></i><span class="box-icon-text">Download list (.csv)</span>
+    </a>
   </div>
 </div>
+<div id="task-table" class="table-responsive"></div>

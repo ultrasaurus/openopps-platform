@@ -6,6 +6,7 @@ var NavView = require('./apps/nav/views/nav_view');
 var FooterView = require('./apps/footer/views/footer_view');
 var BrowseListController = require('./apps/browse/controllers/browse_list_controller');
 var ProfileShowController = require('./apps/profiles/show/controllers/profile_show_controller');
+var ProfileListController = require('./apps/profiles/list/controllers/profile_list_controller');
 var TaskModel = require('./entities/tasks/task_model');
 var TaskCollection = require('./entities/tasks/tasks_collection');
 var TaskShowController = require('./apps/tasks/show/controllers/task_show_controller');
@@ -128,13 +129,19 @@ var BrowseRouter = Backbone.Router.extend({
 
   listProfiles: function (queryStr) {
     this.cleanupChildren();
-    this.browseListController = new BrowseListController({
-      target: 'profiles',
+    this.profileListController = new ProfileListController({
       el: '#container',
       router: this,
       queryParams: this.parseQueryParams(queryStr),
       data: this.data,
     });
+    // this.browseListController = new BrowseListController({
+    //   target: 'profiles',
+    //   el: '#container',
+    //   router: this,
+    //   queryParams: this.parseQueryParams(queryStr),
+    //   data: this.data,
+    // });
   },
 
   showTask: function (id, action) {

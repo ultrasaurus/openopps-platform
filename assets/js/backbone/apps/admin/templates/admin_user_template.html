@@ -1,48 +1,27 @@
 <div class="alert alert-danger" style="display:none;">
 </div>
 <div id="reset-password-container"></div>
-<div class="row">
-  <div class="col-md-12 box box-pad-lr">
-    <div class="row">
-      <div class="col-lg-8 col-md-7 col-sm-5 sm-nopadding md-nopadding">
-
-        <form class="form-inline fullwidth" role="form">
-          <div class="form-group fullwidth">
-            <label class="sr-only" for="user-filter">Filter</label>
-            <input type="text" class="form-control fullwidth" id="user-filter" placeholder="Filter">
-          </div>
-        </form>
-
-      </div>
-
-      <div class="col-lg-4 col-md-5 col-sm-7 sm-nopadding md-nopadding-right">
-        <div class="export-button pull-left tip" data-toggle="tooltip" data-placement="bottom"
-             title="Download list of all users as a comma-separated file ready for import into Excel">
-          <a href="/api/admin/export">
-            <i class="fa fa-download"></i>
-          </a>
-        </div>
-        <div class="pull-right" id="user-page">
-        </div>
-        <div id="filter-count-container" class="pull-right" style="clear:both;" >
-          <span id="filter-count" ></span> User(s)
-        </div>
-      </div>
-
-    </div>
-    <div class="row">
-      <div class="col-md-12 sm-nopadding md-nopadding">
-        <div class="fullwidth text-center spinner">
-          Loading... <i class="fa fa-spinner fa-spin"></i>
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-md-12 sm-nopadding md-nopadding">
-        <div class="table-responsive">
-
-        </div>
-      </div>
+<h2>Users</h2>
+<div class="usajobs-grid-full user-filter">
+  <div class="usa-width-one-half">
+    <label class="sr-only" for="user-filter">Filter</label>
+    <input type="text" class="" id="user-filter" placeholder="Filter by name or agency">
+  </div>
+  <div class="usa-width-one-fourth">
+    <div class="export-button tip" data-toggle="tooltip" data-placement="bottom"
+         title="Download list of all users as a comma-separated file ready for import into Excel">
+      <a href="/api/admin/export">
+        <i class="fa fa-download"></i><span class="box-icon-text">Download list (.csv)</span>
+      </a>
     </div>
   </div>
 </div>
+<div class="row">
+  <div class="col-md-12 sm-nopadding md-nopadding">
+    <div class="fullwidth text-center spinner">
+      Loading... <i class="fa fa-spinner fa-spin"></i>
+    </div>
+  </div>
+</div>
+<div id="user-table" class="table-responsive"></div>
+<div class="" id="user-page"></div>

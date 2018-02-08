@@ -1,4 +1,4 @@
-<table class="table table-hover table-condensed">
+<table class="usa-table-borderless user-table">
   <thead>
     <tr>
       <th class="admin-user-id">#</th>
@@ -6,22 +6,22 @@
       <th>Email</th>
       <th>Created At</th>
       <!-- <th><span data-i18n="ProjectPlural">Projects</span> (open / closed)</th> -->
-      <th><span data-i18n="TaskPlural">Tasks</span> (open / assigned / completed / archived)</th>
-      <th>Participant (open / assigned / completed / archived)</th>
+      <th><span data-i18n="TaskPlural">Tasks</span></th>
+      <th>Participant</th>
       <th class="admin-user-checkbox">Enabled</th>
       <% if (login.local.enabled === true) { %>
-        <th class="admin-user-checkbox">Password</th>
+        <th class="admin-user-checkbox">Reset<br/>Password</th>
       <% } %>
       <% if (user.isAdmin) { %>
         <th class="admin-user-checkbox">Admin</th>
       <% } %>
-      <th class="admin-user-checkbox">Agency Admin</th>
+      <th class="admin-user-checkbox">Agency<br/>Admin</th>
     </tr>
   </thead>
   <tbody>
     <% if (users.length === 0) { %>
       <tr class="empty-row">
-        <td colspan="5">
+        <td colspan="10">
           No users found.
         </td>
       </tr>
@@ -40,53 +40,48 @@
         <td class="admin-table-createdat">
           <!-- day -->
           <% var created = new Date(u.createdAt); %>
-          <%- created.toLocaleDateString() %>
+          <%- created.toLocaleDateString() %><br/>
           <!-- time -->
           <%- created.toLocaleTimeString() %>
         </td>
-        <!-- <td class="admin-table-projects">
-        <% if (u.projectsCreatedOpen !== 0 || u.projectsCreatedClosed !== 0) { %>
-          <a class="link-backbone" href="/profile/<%- u.id %>"><%- u.projectsCreatedOpen %> / <%- u.projectsCreatedClosed %></a>
-        <% } %>
-        </td> -->
         <td class="admin-table-tasks">
-          <% if (u.tasksCreatedOpen !== 0 || u.tasksCreatedAssigned !== 0 || u.tasksCreatedCompleted !== 0 || u.tasksCreatedArchived !== 0) { %>
-            <a class="link-backbone" href="/profile/<%- u.id %>"><%- u.tasksCreatedOpen %> / <%- u.tasksCreatedAssigned %> / <%- u.tasksCreatedCompleted %> / <%- u.tasksCreatedArchived %></a>
-          <% } %>
+          <% if (u.tasksCreatedOpen > 0) { %>Open: <%- u.tasksCreatedOpen %><br/><% } %>
+          <% if (u.tasksCreatedAssigned > 0) { %>Assigned: <%- u.tasksCreatedAssigned %><br/><% } %>
+          <% if (u.tasksCreatedCompleted > 0) { %>Completed: <%- u.tasksCreatedCompleted %><br/><% } %>
+          <% if (u.tasksCreatedArchived > 0) { %>Archived: <%- u.tasksCreatedArchived %><br/><% } %>
         </td>
         <td class="admin-table-volunteer">
-          <% if (u.volCountOpen !== 0 || u.volCountAssigned !== 0 || u.volCountCompleted !== 0 || u.volCountArchived !== 0) { %>
-            <a class="link-backbone" href="/profile/<%- u.id %>"><%- u.volCountOpen %> / <%- u.volCountAssigned %> / <%- u.volCountCompleted %> / <%- u.volCountArchived %></a>
-          <% } %>
+          <% if (u.volCountOpen > 0) { %>Open: <%- u.volCountOpen %><br/><% } %>
+          <% if (u.volCountAssigned > 0) { %>Assigned: <%- u.volCountAssigned %><br/><% } %>
+          <% if (u.volCountCompleted > 0) { %>Completed: <%- u.volCountCompleted %><br/><% } %>
+          <% if (u.volCountArchived > 0) { %>Archived: <%- u.volCountArchived %><br/><% } %>
         </td>
         <td>
           <% if (user.isAdmin || (user.isAgencyAdmin && !u.isAdmin)) { %>
-            <button type="button" class="btn btn-default btn-xs admin-user-enable" data-toggle="tooltip" data-placement="top" title="Enable" <% if (u.disabled !== true) { %>style="display:none;"<% } %>><i class="fa fa-remove-sign icon-red icon-center"></i></button>
-            <button type="button" class="btn btn-default btn-xs admin-user-disable" data-toggle="tooltip" data-placement="top" title="Disable" <% if (u.disabled === true) { %>style="display:none;"<% } %>><i class="fa fa-check icon-green icon-center"></i></button>
-            <button type="button" class="btn btn-default btn-xs btn-spin" style="display:none;"><i class="fa-spin fa fa-spinner icon-center"></i></button>
+            <input id="user-enable" type="checkbox" data-action='user' <% if (!u.disabled) { %> checked <% } %> />
+            <label class="no-label" for="user-enable"></label>
+            <div class="icon-spin" style="display:none;"><i class="fa-spin fa fa-spinner"></i></div>
           <% } %>
         </td>
         <% if (login.local.enabled === true) { %>
-          <td>
+          <td class="pull-center">
             <% if (user.isAdmin || (user.isAgencyAdmin && !u.isAdmin)) { %>
-              <button type="button" class="btn btn-default btn-xs admin-user-resetpw" data-toggle="tooltip" data-placement="top" title="Reset Password"><i class="fa fa-check fa-cog"></i></button>
-              <button type="button" class="btn btn-default btn-xs admin-user-unlock" data-toggle="tooltip" data-placement="top" title="Unlock User (clear password attempts)" <% if (u.locked !== true) { %>style="display:none;"<% } %>><i class="fa fa-check icon-red fa-lock"></i></button>
-              <button type="button" class="btn btn-default btn-xs btn-spin" style="display:none;"><i class="fa fa-spin fa-spinner icon-center"></i></button>
+              <i class="user-reset fa fa-sync-alt"></i>
             <% } %>
           </td>
         <% } %>
         <% if (user.isAdmin) { %>
           <td>
-            <button type="button" class="btn btn-default btn-xs admin-user-rmadmin" data-toggle="tooltip" data-placement="top" title="Remove Admin Privileges" <% if (u.isAdmin !== true) { %>style="display:none;"<% } %>><i class="fa fa-check icon-green icon-center"></i></button>
-            <button type="button" class="btn btn-default btn-xs admin-user-mkadmin" data-toggle="tooltip" data-placement="top" title="Make Admin" <% if (u.isAdmin === true) { %>style="display:none;"<% } %>><i class="fa fa-times-circle icon-red icon-center"></i></button>
-            <button type="button" class="btn btn-default btn-xs btn-spin" style="display:none;"><i class="fa fa-spin fa-spinner icon-center"></i></button>
+            <input id="user-admin" type="checkbox" data-action='admin' <% if (u.isAdmin) { %> checked <% } %> />
+            <label class="no-label" for="user-admin"></label>
+            <div class="icon-spin" style="display:none;"><i class="fa-spin fa fa-spinner"></i></div>
           </td>
         <% } %>
         <td>
           <% if (user.isAdmin || (user.isAgencyAdmin && !u.isAdmin)) { %>
-            <button type="button" class="btn btn-default btn-xs admin-user-rm-agencyadmin" data-toggle="tooltip" data-placement="top" title="Remove Agency Admin Privileges" <% if (u.isAgencyAdmin !== true) { %>style="display:none;"<% } %>><i class="fa fa-check icon-green icon-center"></i></button>
-            <button type="button" class="btn btn-default btn-xs admin-user-mk-agencyadmin" data-toggle="tooltip" data-placement="top" title="Make Agency Admin" <% if (u.isAgencyAdmin === true) { %>style="display:none;"<% } %>><i class="fa fa-times-circle icon-red icon-center"></i></button>
-            <button type="button" class="btn btn-default btn-xs btn-spin" style="display:none;"><i class="fa fa-spin fa-spinner icon-center"></i></button>
+            <input id="user-agency-admin" type="checkbox" data-action='agencyAdmin' <% if (u.isAgencyAdmin) { %> checked <% } %> />
+            <label class="no-label" for="user-agency-admin"></label>
+            <div class="icon-spin" style="display:none;"><i class="fa-spin fa fa-spinner"></i></div>
           <% } %>
         </td>
       </tr>
