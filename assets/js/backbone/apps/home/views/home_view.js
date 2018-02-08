@@ -87,7 +87,8 @@ var HomeView = Backbone.View.extend({
       this.loginController.cleanup();
     }
     this.loginController = new LoginController({
-      el: '#login-wrapper',
+      // el: '#login-wrapper',
+      el: '#container',
       message: message,
     });
   },

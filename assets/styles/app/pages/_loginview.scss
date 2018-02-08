@@ -1,0 +1,15 @@
+@import '../../base-shared';
+
+.usajobs-open-opps-opportunity.usajobs-open-opps-login {
+    margin-top: $size-M;
+    padding: $size-M;
+
+    h1, h2 {
+        margin-top: 0;
+    }
+}
+
+
+.usajobs-button_bar--slim .usajobs-button_bar__body {
+    text-align: right;
+}
