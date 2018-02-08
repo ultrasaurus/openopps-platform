@@ -1,10 +1,11 @@
 <section class="usajobs-canvas">
   <div class="usajobs-content-gutter usajobs-open-opps-search">
-  
+
   <main class="main-content usajobs-content-well" id="main-content" aria-label="Search results">
     <div class="usajobs-grid usajobs-open-opps-search__title">
       <div class="usa-width-one-whole">
-        <input type="text" id="search" title="Search" class="usajobs-open-opps-search__input" placeholder="<%- placeholder %>"><button class="usa-button usajobs-open-opps-search-button"><span class="fa fa-search"></span></button>
+        <input type="text" id="search" title="Search" class="usajobs-open-opps-search__input" placeholder="<%- placeholder %>">
+        <span class="fa fa-search search-icon"></span>
       </div>
     </div>
     <div id="browse-search-spinner" class="fullwidth text-center">
@@ -21,7 +22,9 @@
       <div class="usajobs-open-opps-opportunity">
           <% if (target === 'tasks') { %>
             <h3>Filters</h3>
-            
+            <h4 class="usajobs-search-filters__title">Status</h4>
+            <a class="usajobs-search-filters__select-toggle" href="javascript:void(0);">Select all</a>
+
             <ul id="stateFilters" class="usa-unstyled-list">
               <% _.each(ui.states, function (t) { %>
               <li>
@@ -45,9 +48,9 @@
             </div>
 
             <% if (agencyName) { %>
-            <h3>Agency Filters</h3>
+            <h4 class="usajobs-search-filters__title agency">Agency</h4>
               <input class="restrict-participation" type="checkbox" name="restrict">
-              <label id="js-restrict-task-filter">Restrict to <%- agencyName %> agency</label>
+              <label id="js-restrict-task-filter">Restrict to <%- agencyName %></label>
             <% } %>
           <% } %>
       </div>
