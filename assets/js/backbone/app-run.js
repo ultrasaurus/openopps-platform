@@ -7,12 +7,12 @@ var Application = {
   started: null,
 
   // Initialize and fire up the application.
-  initialize: function () {
+  initialize: function (user) {
     var self = this;
     // Cache user
     // Check if a user is already defined
-    if (backendUser != null) {
-      window.cache.currentUser = new User(backendUser);
+    if(user) {
+      window.cache.currentUser = new User(user);
     }
     if (!_.isUndefined(systemName)) {
       window.cache.system.name = systemName;
