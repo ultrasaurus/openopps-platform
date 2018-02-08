@@ -72,11 +72,11 @@ var AdminUserView = Backbone.View.extend({
     // render the pagination
     self.renderPagination(data);
     self.$('#filter-count').html(data.users.length);
-    self.$('.table-responsive').html(template);
+    self.$('#user-table').html(template);
     self.$('.btn').tooltip();
     // hide spinner and show results
     self.$('.spinner').hide();
-    self.$('.table-responsive').show();
+    self.$('#user-table').show();
     window.scrollTo(0, 0);
     self.$el.localize();
   },
@@ -127,7 +127,7 @@ var AdminUserView = Backbone.View.extend({
     }
     this.q = val;
     // hide the table and show the spinner
-    this.$('.table-responsive').hide();
+    this.$('#user-table').hide();
     this.$('.spinner').show();
     // fetch this query, starting from the beginning page
     this.fetchData(this, {
