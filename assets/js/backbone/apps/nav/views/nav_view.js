@@ -31,6 +31,7 @@ var NavView = Backbone.View.extend({
       self.doRender({ user: userData });
       this.idleModal = new IdleModal({ el: '#login-wrapper' }).render();
       this.idleModal.resetTimeout();
+      Backbone.history.navigate('/', {trigger: true});
     });
 
     this.listenTo(window.cache.userEvents, 'user:login:close', function () {
@@ -54,7 +55,7 @@ var NavView = Backbone.View.extend({
       // trigger the login modal
       $.getJSON('/csrfToken', function (t) {
         $('meta[name="csrf-token"]').attr('content', t._csrf);
-        self.login(message);
+        Backbone.history.navigate('/login', {trigger: true});
       });
     });
 
@@ -107,21 +108,7 @@ var NavView = Backbone.View.extend({
 
   loginClick: function (e) {
     if (e.preventDefault) e.preventDefault();
-    this.login();
-  },
-
-  login: function (message) {
-    if (this.doingLogin) return; // login modal already open, skip!
-    this.doingLogin = true;
-    if (this.loginController) {
-      this.loginController.cleanup();
-    }
-
-    this.loginController = new LoginController({
-      el: '#login-wrapper',
-      message: message,
-      navigate: ($(location).attr('pathname') === '/'),
-    });
+    Backbone.history.navigate('/login', {trigger: true});
   },
 
   logout: function (e) {

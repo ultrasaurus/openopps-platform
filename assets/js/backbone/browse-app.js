@@ -1,6 +1,7 @@
 var _ = require('underscore');
 var Backbone = require('backbone');
 var $ = require('jquery');
+
 var NavView = require('./apps/nav/views/nav_view');
 var FooterView = require('./apps/footer/views/footer_view');
 var BrowseListController = require('./apps/browse/controllers/browse_list_controller');
@@ -13,6 +14,7 @@ var TaskEditFormView = require('./apps/tasks/edit/views/task_edit_form_view');
 var TaskCreateFormView = require('./apps/tasks/new/views/task_form_view');
 var AdminMainController = require('./apps/admin/controllers/admin_main_controller');
 var HomeController = require('./apps/home/controllers/home_controller');
+var LoginController = require('./apps/login/controllers/login_controller');
 
 
 var BrowseRouter = Backbone.Router.extend({
@@ -29,7 +31,8 @@ var BrowseRouter = Backbone.Router.extend({
     'profile/:id(/)'                : 'showProfile',
     'profile/:id(/)/:action'        : 'showProfile',
     'admin(/)'                      : 'showAdmin',
-    'admin(/):action(/)(:agencyId)' : 'showAdmin'
+    'admin(/):action(/)(:agencyId)' : 'showAdmin',
+    'login(/)'                      : 'showLogin',
   },
 
   data: { saved: false },
@@ -73,6 +76,7 @@ var BrowseRouter = Backbone.Router.extend({
     if (this.taskShowController) { this.taskShowController.cleanup(); }
     if (this.taskCreateController) { this.taskCreateController.cleanup(); }
     if (this.homeController) { this.homeController.cleanup(); }
+    if (this.loginController) { this.loginController.cleanup(); }
     this.data = { saved: false };
   },
 
@@ -80,6 +84,16 @@ var BrowseRouter = Backbone.Router.extend({
     this.cleanupChildren();
     this.homeController = new HomeController({
       target: 'home',
+      el: '#container',
+      router: this,
+      data: this.data,
+    });
+  },
+
+  showLogin: function () {
+    this.cleanupChildren();
+    this.loginController = new LoginController({
+      target: 'login',
       el: '#container',
       router: this,
       data: this.data,
