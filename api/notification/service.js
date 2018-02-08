@@ -55,7 +55,7 @@ function renderTemplate (template, data, done) {
     to: _.template(template.to)(data),
     cc: _.template(template.cc)(data),
     bcc: _.template(template.bcc)(data),
-    subject: _.template(template.subject)(data)
+    subject: _.template(template.subject)(data),
   };
   fs.readFile(html, function (err, template) {
     if (err) {
@@ -63,13 +63,20 @@ function renderTemplate (template, data, done) {
       return done(err);
     }
     data._content = _.template(template)(data);
-    fs.readFile(layout, function (err, layout) {
+    fs.readFile('assets/img/logo/svg/open-opportunities-2x.svg', function (err, logo) {
       if (err) {
         log.info(err);
         return done(err);
       }
-      mailOptions.html = _.template(layout)(data);
-      return done(err, mailOptions);
+      data._logo = logo;
+      fs.readFile(layout, function (err, layout) {
+        if (err) {
+          log.info(err);
+          return done(err);
+        }
+        mailOptions.html = _.template(layout)(data);
+        return done(err, mailOptions);
+      });
     });
   });
 }
@@ -86,9 +93,20 @@ function sendEmail (mailOptions, done) {
   ]);
 
   log.info('Sending SMTP message', mailOptions);
+  //const sgMail = require('@sendgrid/mail');
+  // sgMail.setApiKey('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');
+  // sgMail.send(mailOptions, function (err, info) {
+  //   if (err) {
+  //     log.info('Failed to send mail. If this is unexpected, please check your email configuration in config/email.js.', err);
+  //   }
+  //   if (done) {
+  //     return done(err, info);
+  //   }
+  // });
   nodemailer.createTransport(transportConfig).sendMail(mailOptions, function (err, info) {
     if (err) {
       log.info('Failed to send mail. If this is unexpected, please check your email configuration in config/email.js.', err);
+      log.info('TransportConfig', transportConfig);
     }
     if (done) {
       return done(err, info);
