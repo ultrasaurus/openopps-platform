@@ -2,16 +2,123 @@
 
 @import '../../base-shared';
 
-.usajobs-grid.usajobs-open-opps-search__title {
-  @include media($L) { 
+.usajobs-open-opps-people {
+  position: relative;
+  background-color: #fff;
+  margin: $size-default 0;
+  padding: $size-default;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+
+  @include media($M) {
+    margin: $size-default $size-M;
+  }
+
+  @include media($L) {
+    padding: $size-default;
+  }
+
+  &::after {
+    clear: both;
+    content: "";
+    display: table;
+  }
+}
+
+.usajobs-opop-people__section-title {
+  padding-top: $size-default;
+}
+
+.usajobs-grid.usajobs-open-opps-people-search__title {
+  @include media($L) {
     padding: 0;
     margin: $size-M 0;
+  }
+
+  .usa-width-one-half {
+    position: relative;
+  }
+
+  .search-icon {
+    position: absolute;
+    top: 33%;
+    right: 15px;
+    fill-opacity: .5;
+  }
+
+  .usajobs-open-opps-people-search__input {
+    //border: none;
+    max-width: 100%;
+    float: left;
+    height: 4.3rem;
+    margin-bottom: 0;
+  }
+}
+
+#profile-list {
+  display: table;
+  overflow-x: auto;
+  padding-bottom: $size-M;
+}
+
+.open-opps-people-row {
+  display: table-row;
+
+  @include media($M) {
+    padding: $size-default 0;
+    text-align: left;
+  }
+
+  &.header {
+    font-weight: bold;
+  }
+
+  .col-name {
+    display: table-cell;
+    width: 15%;
+    padding: $size-default 0 $size-default $size-default;
+    border-bottom: 1.5px solid #c8c8c8;
+  }
+
+  .col-title {
+    display: table-cell;
+    width: 35%;
+    padding: $size-default 0;
+    border-bottom: 1.5px solid #c8c8c8;
+  }
+
+  .col-agency {
+    display: table-cell;
+    width: 35%;
+    padding: $size-default 0;
+    border-bottom: 1.5px solid #c8c8c8;
+  }
+
+  .col-location {
+    display: table-cell;
+    width: 15%;
+    padding: $size-default $size-default $size-default 0;
+    border-bottom: 1.5px solid #c8c8c8;
+  }
+}
+
+.usajobs-grid.usajobs-open-opps-search__title {
+  @include media($L) {
+    padding: 0;
+    margin: $size-M 0;
+    position: relative;
+  }
+
+  .search-icon {
+    position: absolute;
+    top: 33%;
+    right: 15px;
+    fill-opacity: .5;
   }
 }
 
 .usajobs-open-opps-search__input {
   border: none;
-  max-width: calc(100% - 72px);
+  max-width: 100%;
   float: left;
   height: 4.3rem;
   margin-bottom: 0;
@@ -43,6 +150,7 @@
     @include media($L) {
       flex: 1 0 calc(50% - 15px);
       margin-right: $size-default;
+      max-width: 49.2%; //Keeps last result card from taking up entire width
     }
 
     &:nth-child(2n) {

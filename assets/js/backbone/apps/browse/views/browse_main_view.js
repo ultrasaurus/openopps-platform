@@ -9,7 +9,7 @@ var UIConfig = require('../../../config/ui.json');
 var Popovers = require('../../../mixins/popovers');
 var TagConfig = require('../../../config/tag');
 var BrowseListView = require('./browse_list_view');
-var ProfileListView = require('./profile_list_view');
+//var ProfileListView = require('./profile_list_view');
 var ProfileMapView = require('./profile_map_view');
 var BrowseMainTemplate = require('../templates/browse_main_view_template.html');
 var BrowseSearchTag = require('../templates/browse_search_tag.html');
@@ -172,14 +172,15 @@ var BrowseMainView = Backbone.View.extend({
         .indexOf('draft').value() >= 0;
       $('.draft-filter').toggleClass('hidden', !draft);
 
-    } else {
-      // profiles are in a table
-      this.browseListView = new ProfileListView({
-        el: '#browse-list',
-        target: this.options.target,
-        collection: collection,
-      });
-    }
+     }
+     //else {
+    //   // profiles are in a table
+    //   this.browseListView = new ProfileListView({
+    //     el: '#browse-list',
+    //     target: this.options.target,
+    //     collection: collection,
+    //   });
+    // }
     $('#browse-search-spinner').hide();
     $('#browse-list').show();
     this.browseListView.render();
