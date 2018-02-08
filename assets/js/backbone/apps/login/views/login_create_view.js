@@ -2,11 +2,14 @@ var $ = require('jquery');
 var _ = require('underscore');
 var Backbone = require('backbone');
 var LoginPasswordView = require('./login_password_view');
+// var ModalComponent = require('../../../components/modal');
 var TagFactory = require('../../../components/tag_factory');
 var User = require('../../../../utils/user');
-var LoginTemplate = require('../templates/login_template.html');
 
-var LoginView = Backbone.View.extend({
+var LoginCreateTemplate = require('../templates/login_create_template.html');
+
+
+var LoginCreateView = Backbone.View.extend({
   el: '#container',
 
   events: {
@@ -23,7 +26,7 @@ var LoginView = Backbone.View.extend({
     'blur #rpassword-confirm'     : 'checkPasswordConfirm',
     'click #register-next'        : 'nextRegistrationView',
     'click #register-previous'    : 'previousRegistrationView',
-    'submit #login-password-form' : 'submitLogin',
+    'submit #registration-form'   : 'submitRegister',
   },
 
   initialize: function (options) {
@@ -37,7 +40,7 @@ var LoginView = Backbone.View.extend({
       login: this.options.login,
       message: this.options.message,
     };
-    var template = _.template(LoginTemplate)(data);
+    var template = _.template(LoginCreateTemplate)(data);
     this.$el.html(template);
     this.$el.localize();
     this.loginPasswordView = new LoginPasswordView({
@@ -66,11 +69,6 @@ var LoginView = Backbone.View.extend({
           blurOnChange: true,
         });
       }
-
-      this.$('#registration-footer-cancel-next').show();
-      this.$('#registration-footer-prev-submit').hide();
-      this.$('#optional-registration-view').hide();
-
     }
 
     setTimeout(function () {
@@ -82,21 +80,6 @@ var LoginView = Backbone.View.extend({
   // functions to switch out the primary and secondary registration views
   // this happens when either agency or location are configured to be required
   // for users to sign up for the system
-  nextRegistrationView: function () {
-    this.$('#default-registration-view').hide();
-    this.$('#optional-registration-view').show();
-
-    // this.$('#register-submit').attr('disabled', true);
-    this.$('#registration-footer-cancel-next').hide();
-    this.$('#registration-footer-prev-submit').show();
-  },
-  previousRegistrationView: function () {
-    this.$('#default-registration-view').show();
-    this.$('#optional-registration-view').hide();
-
-    this.$('#registration-footer-cancel-next').show();
-    this.$('#registration-footer-prev-submit').hide();
-  },
 
   link: function (e) {
     if (e.preventDefault) e.preventDefault();
@@ -106,39 +89,6 @@ var LoginView = Backbone.View.extend({
 
   validateField: function (e) {
     return validate(e);
-  },
-
-  submitLogin: function (e) {
-    var self = this;
-    if (e.preventDefault) e.preventDefault();
-    var data = {
-      identifier: this.$('#username').val(),
-      password: this.$('#password').val(),
-      json: true,
-    };
-    $.getJSON('/csrfToken', function (t) {
-      $('meta[name="csrf-token"]').attr('content', t._csrf);
-      $.ajax({
-        url: '/api/auth/local',
-        type: 'POST',
-        data: data,
-      }).done(function (success) {
-        $.ajax({
-          url: '/api/user',
-          dataType: 'json',
-        }).done(function (data) {
-          // Set the user object and trigger the user login event
-          var user = new User(data);
-          console.log('login', user);
-          window.cache.currentUser = user;
-          window.cache.userEvents.trigger('user:login:success', user);
-        });
-      }).fail(function (error) {
-        var d = JSON.parse(error.responseText);
-        self.$('#login-error').html(d.message);
-        self.$('#login-error').show();
-      });
-    });
   },
 
   submitRegister: function (e) {
@@ -251,29 +201,29 @@ var LoginView = Backbone.View.extend({
     });
   },
 
-  submitForgot: function (e) {
-    var self = this;
-    if (e.preventDefault) e.preventDefault();
-    var data = {
-      username: this.$('#fusername').val(),
-    };
-    // Post the registration request to the server
-    $.ajax({
-      url: '/api/auth/forgot',
-      type: 'POST',
-      data: data,
-    }).done(function (success) {
-      // Set the user object and trigger the user login event
-      self.$('#forgot-view').hide();
-      self.$('#forgot-footer').hide();
-      self.$('#forgot-done-view').show();
-      self.$('#forgot-done-footer').show();
-    }).fail(function (error) {
-      var d = JSON.parse(error.responseText);
-      self.$('#forgot-error').html(d.message);
-      self.$('#forgot-error').show();
-    });
-  },
+//   submitForgot: function (e) {
+//     var self = this;
+//     if (e.preventDefault) e.preventDefault();
+//     var data = {
+//       username: this.$('#fusername').val(),
+//     };
+//     // Post the registration request to the server
+//     $.ajax({
+//       url: '/api/auth/forgot',
+//       type: 'POST',
+//       data: data,
+//     }).done(function (success) {
+//       // Set the user object and trigger the user login event
+//       self.$('#forgot-view').hide();
+//       self.$('#forgot-footer').hide();
+//       self.$('#forgot-done-view').show();
+//       self.$('#forgot-done-footer').show();
+//     }).fail(function (error) {
+//       var d = JSON.parse(error.responseText);
+//       self.$('#forgot-error').html(d.message);
+//       self.$('#forgot-error').show();
+//     });
+//   },
 
   // following doesn't use regular validate() because we want to
   // display the .help-block instead of the .error-* blocks but
@@ -359,4 +309,4 @@ var LoginView = Backbone.View.extend({
 });
 
 
-module.exports = LoginView;
+module.exports = LoginCreateView;

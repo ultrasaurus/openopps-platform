@@ -1,4 +1,4 @@
-<div class="modal fade"
+<div class="usajobs-modal"
   id="<%- id %>"
   role="dialog"
   tabindex="-1"
@@ -7,18 +7,18 @@
   data-keyboard="false"
   <% } %>
   >
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
+  <div class="usajobs-modal__dialog">
+    <div class="usajobs-modal__content">
+      <div class="usajobs-modal__header">
         <% if (disableClose !== true) { %>
         <button type="button" class="close" data-dismiss="modal">&times;</button>
         <% } %>
-        <h4 class="modal-title"><%- modalTitle %></h4>
+        <h4 class="usajobs-modal__title"><%- modalTitle %></h4>
       </div>
 
       <div class="modal-template">
 
       </div>
-    </div><!-- /.modal-content -->
-  </div><!-- /.modal-dialog -->
-</div><!-- /.modal -->
+    </div>
+  </div>
+</div>
