@@ -11,7 +11,7 @@ router.get('/api/user/all', auth, async (ctx, next) => {
   ctx.body = await service.list();
 });
 
-router.get('/api/user', auth, async (ctx, next) => {
+router.get('/api/user', async (ctx, next) => {
   ctx.body = ctx.state.user;
 });
 
