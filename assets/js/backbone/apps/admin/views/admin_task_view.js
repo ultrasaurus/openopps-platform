@@ -49,7 +49,7 @@ var AdminTaskView = Backbone.View.extend({
       data.tasks = data.tasks.concat(tasks[item.id]);
     });
     var template = _.template(AdminTaskTable)(data);
-    self.$('.table-responsive').html(template);
+    self.$('#task-table').html(template);
   },
 
   filterChanged: function () {
