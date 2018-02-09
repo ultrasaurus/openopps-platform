@@ -127,7 +127,6 @@ module.exports = (config) => {
         draftAdminOnly: openopps.draftAdminOnly,
         version: openopps.version,
         alert: null,
-        user: ctx.state.user || null,
         jsHash: md5File.sync(path.join(__dirname, 'dist', 'js', 'bundle.min.js')),
       };
       await ctx.render('main/index', data);
