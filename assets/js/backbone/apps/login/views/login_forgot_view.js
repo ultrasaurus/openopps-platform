@@ -9,14 +9,13 @@ var LoginForgotView = Backbone.View.extend({
   el: '#container',
   
   events: {
-    'click .oauth-link' : 'link',
-    'keyup .validate'   : 'validateField',
-    'change .validate'  : 'validateField',
-    'blur .validate'    : 'validateField',
-    'keyup #rusername'  : 'checkUsername',
-    'change #rusername' : 'checkUsername',
-    'click #rusername-button'     : 'clickUsername',
-    'submit #forgot-form'         : 'submitForgot',
+    'click .oauth-link'       : 'link',
+    'keyup .validate'         : 'validateField',
+    'change .validate'        : 'validateField',
+    'blur .validate'          : 'validateField',
+    'keyup #fusername'        : 'checkUsername',
+    'change #fusername'       : 'checkUsername',
+    'submit #forgot-form'     : 'submitForgot',
   },
   
   initialize: function (options) {
@@ -36,7 +35,7 @@ var LoginForgotView = Backbone.View.extend({
     this.$el.localize();
   
     setTimeout(function () {
-      self.$('#username').focus();
+      self.$('#fusername').focus();
     }, 500);
     return this;
   },
@@ -49,6 +48,24 @@ var LoginForgotView = Backbone.View.extend({
   
   validateField: function (e) {
     return validate(e);
+  },
+
+  checkUsername: function (e) {
+    var username = $('#rusername').val();
+    $.ajax({
+      url: '/api/user/username/' + username,
+    }).done(function (data) {
+      if (data) {
+        // username is taken
+        $('#fusername').closest('.required-input').addClass('usa-input-error');
+        $('#fusername').closest('.required-input').find('.field-validation-error').show();
+  
+      } else {
+        // username is available
+        $('#fusername').closest('.required-input').removeClass('usa-input-error');
+        $('#fusername').closest('.required-input').find('.field-validation-error').hide();
+      }
+    });
   },
   
   submitForgot: function (e) {
