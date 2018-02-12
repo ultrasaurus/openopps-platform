@@ -291,9 +291,6 @@ var ProfileShowView = Backbone.View.extend({
     });
     this.listenTo(self.model, 'profile:input:changed', function (e) {
       $('#profile-save, #submit').button('reset');
-      $('#profile-save, #submit').removeAttr('disabled');
-      $('#profile-save, #submit').removeClass('btn-success');
-      $('#profile-save, #submit').addClass('btn-c2');
     });
   },
 

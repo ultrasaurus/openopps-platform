@@ -1,3 +1,31 @@
+<div class="usa-alert usajobs-alert usajobs-alert--error" role="alert" data-object="alert" id="forgot-done-view" style="display:none;">
+    <div class="usajobs-alert__figure">
+        <div class="usajobs-alert__icon">
+        </div>
+    </div>
+    <div class="usajobs-alert__body">
+            <h2>Reset Your Password</h2>
+        <p class="usa-alert-text">
+            Thank you! An email will arrive shortly with a link to reset your password.
+            If you don't receive an email shortly, check your spam folder.
+        </p>
+    </div>
+</div>
+
+<div class="usa-alert usajobs-alert usajobs-alert--error" role="alert" data-object="alert" style="display:none;">
+        <div class="usajobs-alert__figure">
+          <div class="usajobs-alert__icon">
+          </div>
+        </div>
+        <div class="usajobs-alert__body">
+          <p class="usa-alert-text" id="forgot-error"></p>
+        </div>
+      </div>
+
+<!-- <div class="form-group margin-bottom-none">
+        <div class="alert alert-danger" id="forgot-error" ></div>        
+    </div> -->
+
 <section class="usajobs-canvas">
     <div class="usajobs-content-gutter">
         <main id="main-content" role="main" aria-label="Forgot Password">
@@ -6,7 +34,7 @@
                     <div id="forgot-view">
                         <h2>Forgot password</h2>
             
-                        <p>Please enter your email address and we'll send you a link to reset your password</p>
+                        <p>Please enter your email address and we'll send you a link to reset your password.</p>
             
                         <div class="form-group">
                             <div class="required-input">
@@ -15,19 +43,10 @@
                                 <input type="text" class="form-control validate" id="fusername" name="username" placeholder="Email address" data-validate="email"/>
                             </div>
                         </div>
-                        <div class="form-group margin-bottom-none">
-                            <div class="alert alert-danger" id="forgot-error" style="display:none;"></div>        
-                        </div>
+
                         <button type="submit" class="usa-button usa-button-primary">Send email</button>
                     </div>
-                </form>
-                
-                <div id="forgot-done-view" style="display:none;">
-                    <h2>Reset Your Password</h2>
-                    <p>Thank you! An email will arrive shortly with a link to reset your password.</p>
-                    <p>If you don't receive an email shortly, check your spam folder.</p>
-                </div>
-               
+                </form>     
             </div>
         </main>
     </div>

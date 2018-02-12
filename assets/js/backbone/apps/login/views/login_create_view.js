@@ -71,7 +71,7 @@ var LoginCreateView = Backbone.View.extend({
     }
 
     setTimeout(function () {
-      self.$('#username').focus();
+      self.$('#rname').focus();
     }, 500);
     return this;
   },
@@ -92,7 +92,6 @@ var LoginCreateView = Backbone.View.extend({
     if (e.preventDefault) e.preventDefault();
 
     $submitButton.prop('disabled', true);
-    // this.$('#register-previous .error').hide();
 
     // validate input fields
     var validateIds = ['#rname', '#rusername', '#rpassword'];
@@ -113,7 +112,7 @@ var LoginCreateView = Backbone.View.extend({
       abort = abort || iAbort;
     }
     var passwordSuccess = this.checkPassword();
-    var parent = $(this.$('#rpassword').parents('.form-group')[0]);
+    var parent = $(this.$('#rpassword').parents('.required-input')[0]);
     if (passwordSuccess !== true) {
       parent.addClass('usa-input-error');
       $(parent.find('.error-password')[0]).show();
@@ -121,7 +120,7 @@ var LoginCreateView = Backbone.View.extend({
       $(parent.find('.error-password')[0]).hide();
     }
     var passwordConfirmSuccess = this.checkPasswordConfirm();
-    var passwordConfirmParent = $(this.$('#rpassword-confirm').parents('.form-group')[0]);
+    var passwordConfirmParent = $(this.$('#rpassword-confirm').parents('.required-input')[0]);
     if (passwordConfirmSuccess !== true) {
       passwordConfirmParent.addClass('usa-input-error');
       $(passwordConfirmParent.find('.error-password')[0]).show();
@@ -130,10 +129,7 @@ var LoginCreateView = Backbone.View.extend({
     }
     if (abort === true || passwordSuccess !== true || passwordConfirmSuccess !== true) {
       $submitButton.prop('disabled', false);
-      // this.$('#register-previous .error').show();
       return;
-    } else {
-      this.$('#register-previous .error').hide();
     }
 
     // Create a data object with the required fields
