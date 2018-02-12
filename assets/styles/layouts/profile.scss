@@ -251,22 +251,23 @@ form [type=submit], form [type=submit] {
 
 .skills-interests {
   position: relative;
-}
 
-.skill-aside p {
-  background-color: #e1f3f8;
-  width: 32rem;
-  padding: $size-S $size-default;
-  margin-right: $size-default;
-  position: absolute;
-  left: calc(100% + 19rem);
+  & p.skills, p.interests {
+    background-color: #e1f3f8;
+    width: 32rem;
+    padding: $size-S $size-default;
+    margin-top: 0;
+    margin-right: $size-default;
+    position: absolute;
+    left: calc(100% + 19rem);
 
-  &.skills {
-    top: 7rem;
-  }
+    &.skills {
+      top: 0;
+    }
 
-  &.interests {
-    top: 24.5rem;
+    &.interests {
+      top: 0;
+    }
   }
 }
 

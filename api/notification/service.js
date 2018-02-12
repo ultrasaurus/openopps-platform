@@ -93,16 +93,6 @@ function sendEmail (mailOptions, done) {
   ]);
 
   log.info('Sending SMTP message', mailOptions);
-  //const sgMail = require('@sendgrid/mail');
-  // sgMail.setApiKey('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');
-  // sgMail.send(mailOptions, function (err, info) {
-  //   if (err) {
-  //     log.info('Failed to send mail. If this is unexpected, please check your email configuration in config/email.js.', err);
-  //   }
-  //   if (done) {
-  //     return done(err, info);
-  //   }
-  // });
   nodemailer.createTransport(transportConfig).sendMail(mailOptions, function (err, info) {
     if (err) {
       log.info('Failed to send mail. If this is unexpected, please check your email configuration in config/email.js.', err);
