@@ -1,5 +1,5 @@
 var $ = require('jquery');
-window.jQuery = $;    // TODO: this is weird, but Boostrap wants it
+window.jQuery = $; 
 
 var _ = require('underscore');
 var Backbone = require('backbone');
@@ -9,7 +9,6 @@ var LoginView = require('../views/login_view');
 var LoginCreateView = require('../views/login_create_view');
 var LoginForgotView = require('../views/login_forgot_view');
 var login = require('../../../config/login.json');
-// var ModalComponent = require('../../../components/modal');
 
 var LoginController = BaseController.extend({
 

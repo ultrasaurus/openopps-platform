@@ -23,8 +23,6 @@ var LoginCreateView = Backbone.View.extend({
     'blur #rpassword'             : 'checkPassword',
     'keyup #rpassword-confirm'    : 'checkPasswordConfirm',
     'blur #rpassword-confirm'     : 'checkPasswordConfirm',
-    'click #register-next'        : 'nextRegistrationView',
-    'click #register-previous'    : 'previousRegistrationView',
     'submit #registration-form'   : 'submitRegister',
   },
 
@@ -91,8 +89,6 @@ var LoginCreateView = Backbone.View.extend({
         $submitButton = self.$('#registration-form [type="submit"]');
     if (e.preventDefault) e.preventDefault();
 
-    $submitButton.prop('disabled', true);
-
     // validate input fields
     var validateIds = ['#rname', '#rusername', '#rpassword'];
     // Only validate terms & conditions if it is enabled
@@ -126,10 +122,6 @@ var LoginCreateView = Backbone.View.extend({
       $(passwordConfirmParent.find('.error-password')[0]).show();
     } else {
       $(passwordConfirmParent.find('.error-password')[0]).hide();
-    }
-    if (abort === true || passwordSuccess !== true || passwordConfirmSuccess !== true) {
-      $submitButton.prop('disabled', false);
-      return;
     }
 
     // Create a data object with the required fields
@@ -182,13 +174,12 @@ var LoginCreateView = Backbone.View.extend({
         var user = new User(data);
         console.log('registered', user);
         window.cache.currentUser = user;
-        window.cache.userEvents.trigger('user:login', user);
+        window.cache.userEvents.trigger('user:login:success', user);
       });
     }).fail(function (error) {
       var d = JSON.parse(error.responseText);
-      self.$('#registration-error').html(d.message);
+      self.$('#registration-error-text').html(d.message);
       self.$('#registration-error').show();
-      $submitButton.prop('disabled', false);
     });
   },
 
@@ -200,12 +191,12 @@ var LoginCreateView = Backbone.View.extend({
       if (data) {
         // username is taken
         $('#rusername').closest('.required-input').addClass('usa-input-error');
-        $('#rusername').closest('.required-input').find('.field-validation-error').show();
+        $('#rusername').closest('.required-input').find('.field-validation-error.error-email').show();
   
       } else {
         // username is available
         $('#rusername').closest('.required-input').removeClass('usa-input-error');
-        $('#rusername').closest('.required-input').find('.field-validation-error').hide();
+        $('#rusername').closest('.required-input').find('.field-validation-error.error-email').hide();
       }
     });
   },

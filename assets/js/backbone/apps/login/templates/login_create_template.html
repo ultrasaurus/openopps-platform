@@ -1,17 +1,15 @@
-<div class="usa-alert usajobs-alert usajobs-alert--error" role="alert" data-object="alert" >
-    <div class="usajobs-alert__figure">
-      <div class="usajobs-alert__icon">
-      </div>
-    </div>
-    <div class="usajobs-alert__body">
-      <p class="usa-alert-text" id="registration-error">
-        
-      </p>
-    </div>
-  </div>
-
 <section class="usajobs-canvas">
   <div class="usajobs-content-gutter">
+    <div id="registration-error" class="usa-alert usajobs-alert usajobs-alert--error" role="alert" data-object="alert" style="display:none;">
+        <div class="usajobs-alert__figure">
+          <div class="usajobs-alert__icon">
+          </div>
+        </div>
+        <div class="usajobs-alert__body">
+          <div class="usa-alert-text" id="registration-error-text">
+          </div>
+        </div>
+      </div>
     <main id="main-content" role="main" aria-label="Create account">
       <div class="usajobs-open-opps-opportunity usajobs-open-opps-login">
         <form class="usa-form-large" id="registration-form">
@@ -33,8 +31,9 @@
             <div class="form-group">
               <div class="required-input">
               <label for="rusername" class="control-label">Official government email address</label>
-              <span class="field-validation-error error-button" style="display:none;">The email address is not valid or is already in use.</span>
-              <input type="text" class="form-control validate" id="rusername" name="username" placeholder="Email Address" data-validate="button"/>
+              <span class="field-validation-error error-empty" style="display:none;">The email address is required.</span>
+              <span class="field-validation-error error-email" style="display:none;">The email address is already in use.</span>
+              <input type="text" class="form-control validate" id="rusername" name="username" placeholder="Email Address" data-validate="empty,email"/>
             </div>
           </div>
     
@@ -72,16 +71,11 @@
               </div>
           <% } %>
         </div>
-    
-        <div class="form-group margin-bottom-none">
-              <!-- <div class="alert alert-danger" id="registration-error" style="display:none;"></div> -->
-        </div>
-    
         </div>
         <div id="registration-footer">
             <div class="pull-right">
               <button type="button" id="register-cancel" class="usa-button usa-button-secondary">Cancel</button>       
-              <button type="submit" id="registration-form" class="usa-button usajobs-button-primary">Create account</button>
+              <button type="submit" class="usa-button usajobs-button-primary">Create account</button>
             </div>
         </div>
         </form>
