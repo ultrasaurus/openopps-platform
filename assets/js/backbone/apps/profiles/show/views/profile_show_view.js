@@ -295,6 +295,11 @@ var ProfileShowView = Backbone.View.extend({
       $('#profile-save, #submit').removeClass('btn-success');
       $('#profile-save, #submit').addClass('btn-c2');
     });
+
+    setTimeout(function () {
+      $('.skill-aside .skills').appendTo('#s2id_tag_skill');
+      $('.skill-aside .interests').appendTo('#s2id_tag_topic');
+    }, 500);
   },
 
   initializeSelect2: function () {
