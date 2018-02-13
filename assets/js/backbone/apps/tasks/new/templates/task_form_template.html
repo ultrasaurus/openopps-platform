@@ -1,9 +1,21 @@
 <div class="alert alert-danger" style="display: none;"></div>
 <div class="box box-main">
   <h1>Create an <span data-i18n="task">opportunity</span></h1>
-  <div class="alert alert-info">
-    <p>If you’re new to posting opportunities, <a href="http://www.digitalgov.gov/resources/open-opportunities-task-creator-toolkit/10-tips-for-creating-the-perfect-open-opportunity-task/" target="_blank">10 Tips for Creating the Perfect Open Opportunity Task</a> will get you headed in the right direction.</p>
-    <p>Information on the task creation process is in the <a href="http://www.digitalgov.gov/resources/open-opportunities-task-creator-toolkit/" target="_blank">Task Creator Toolkit</a>.</p>
+
+  <div class="usa-alert usajobs-alert usajobs-alert--info " role="alert" data-object="alert">
+    <div class="usajobs-alert__figure">
+      <div class="usajobs-alert__icon">
+      </div>
+    </div>
+    <div class="usajobs-alert__body">
+      <p class="usa-alert-text">If you’re new to posting opportunities, <a href="http://www.digitalgov.gov/resources/open-opportunities-task-creator-toolkit/10-tips-for-creating-the-perfect-open-opportunity-task/" target="_blank">10 Tips for Creating the Perfect Open Opportunity Task</a> will get you headed in the right direction.</p>
+      <p class="usa-alert-text">Information on the task creation process is in the <a href="http://www.digitalgov.gov/resources/open-opportunities-task-creator-toolkit/" target="_blank">Task Creator Toolkit</a>.</p>
+    </div>
+    <% if (alert.dismiss) { %>
+    <button class="usajobs-alert__close" data-behavior="alert.close">
+      <span class="usajobs-assistive-text">Close</span>
+    </button>
+    <% } %>
   </div>
   <p>Optional fields are indicated.</p>
   <form id="task-form" class="create--task" action="/api/task">
@@ -66,7 +78,18 @@
               </label>
               <input id="estimated-completion-date" type="date">
               <span class="help-block error-empty" style="display:none;">You must enter a completion date for this one-time <span data-i18n="task">opportunity</span></span>
-              <div id="completedby-update-alert" class="alert alert-warning" style="display:none;"></div>
+              <!-- <div id="completedby-update-alert" class="alert alert-warning" style="display:none;"></div> -->
+              <div class="usa-alert usajobs-alert usajobs-alert--warning" role="alert" data-object="alert" style="display:none;">
+                <div class="usajobs-alert__figure">
+                  <div class="usajobs-alert__icon">
+                  </div>
+                </div>
+                <div class="usajobs-alert__body">
+                  <p class="usa-alert-text" id="completedby-update-alert">
+
+                  </p>
+                </div>
+              </div>
             </div>
             <div class="col-md-4"></div>
           </div>
@@ -133,7 +156,18 @@
             <span class="help-block error-empty" style="display:none;">You must enter headline for this <span data-i18n="task">opportunity</span></span>
             <span class="help-block error-count100" style="display:none;">The short description of the problem must be less than 100 characters.</span>
             <span class="help-block error-html" style="display:none;">The special characters '<' or '>' are not allowed</span>
-            <div id="title-update-alert" class="alert alert-warning" style="display:none;"></div>
+            <!-- <div id="title-update-alert" class="alert alert-warning" style="display:none;"></div> -->
+            <div class="usa-alert usajobs-alert usajobs-alert--warning" role="alert" data-object="alert" style="display:none;">
+              <div class="usajobs-alert__figure">
+                <div class="usajobs-alert__icon">
+                </div>
+              </div>
+              <div class="usajobs-alert__body">
+                <p class="usa-alert-text" id="title-update-alert">
+
+                </p>
+              </div>
+            </div>
           </div>
           <div class="col-md-4">
             <aside>
@@ -161,7 +195,18 @@
             <div class="markdown-edit"></div>
             <span class="help-block error-empty" style="display:none;">You must enter a description for this <span data-i18n="task">opportunity</span></span>
             <span class="help-block error-html" style="display:none;">The special characters '<' or '>' are not allowed</span>
-            <div id="description-update-alert" class="alert alert-warning" style="display:none;"></div>
+            <!-- <div id="description-update-alert" class="alert alert-warning" style="display:none;"></div> -->
+            <div class="usa-alert usajobs-alert usajobs-alert--warning" role="alert" data-object="alert" style="display:none;">
+              <div class="usajobs-alert__figure">
+                <div class="usajobs-alert__icon">
+                </div>
+              </div>
+              <div class="usajobs-alert__body">
+                <p class="usa-alert-text" id="description-update-alert">
+
+                </p>
+              </div>
+            </div>
           </div>
           <div class="col-md-4">
             <aside>
@@ -184,7 +229,18 @@
             </label>
             <div>
               <input type="hidden" id="js-task-tag" name="skills" class="fullwidth" />
-              <div id="tag-update-alert" class="alert alert-warning" style="display:none;"></div>
+              <!-- <div id="tag-update-alert" class="alert alert-warning" style="display:none;"></div> -->
+              <div class="usa-alert usajobs-alert usajobs-alert--warning" role="alert" data-object="alert" style="display:none;">
+                <div class="usajobs-alert__figure">
+                  <div class="usajobs-alert__icon">
+                  </div>
+                </div>
+                <div class="usajobs-alert__body">
+                  <p class="usa-alert-text" id="tag-update-alert">
+
+                  </p>
+                </div>
+              </div>
             </div>
           </div>
           <div class="col-md-4">

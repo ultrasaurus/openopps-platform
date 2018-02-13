@@ -1,14 +1,106 @@
+<% if (user.isAdmin || user.isAgencyAdmin) { %>
+<div class="usa-alert usajobs-alert usajobs-alert--info" role="alert" data-object="alert">
+  <div class="usajobs-alert__figure">
+    <div class="usajobs-alert__icon">
+    </div>
+  </div>
+  <div class="usajobs-alert__body">
+    <p class="usa-alert-text">
+      You are an <% if (user.isAgencyAdmin) { %> agency<% } %> administrator.
+      <% if (user.id !== data.id) { %>
+        You are editing another user's profile.
+      <% } %>
+    </p>
+  </div>
+</div>
+<% } %>
+
+<div class="usa-alert usajobs-alert usajobs-alert--error" role="alert" data-object="alert" style="display:none;">
+  <div class="usajobs-alert__figure">
+    <div class="usajobs-alert__icon">
+    </div>
+  </div>
+  <div class="usajobs-alert__body">
+    <p class="usa-alert-text">
+
+    </p>
+  </div>
+</div>
+
+<div class="usa-alert usajobs-alert usajobs-alert--warning" role="alert" data-object="alert" id="file-upload-alert" style="display:none;">
+  <div class="usajobs-alert__figure">
+    <div class="usajobs-alert__icon">
+    </div>
+  </div>
+  <div class="usajobs-alert__body">
+    <p class="usa-alert-text" id="file-upload-alert-message">
+
+    </p>
+  </div>
+</div>
+
+<div class="usa-alert usajobs-alert usajobs-alert--warning" role="alert" data-object="alert" id="name-update-alert" style="display:none;">
+  <div class="usajobs-alert__figure">
+    <div class="usajobs-alert__icon">
+    </div>
+  </div>
+  <div class="usajobs-alert__body">
+    <p class="usa-alert-text" id="name-update-alert-message">
+
+    </p>
+  </div>
+</div>
+
+<div class="usa-alert usajobs-alert usajobs-alert--warning" role="alert" data-object="alert" id="title-update-alert" style="display:none;">
+  <div class="usajobs-alert__figure">
+    <div class="usajobs-alert__icon">
+    </div>
+  </div>
+  <div class="usajobs-alert__body">
+    <p class="usa-alert-text" id="title-update-alert-message">
+
+    </p>
+  </div>
+</div>
+
+<div class="usa-alert usajobs-alert usajobs-alert--warning" role="alert" data-object="alert" id="bio-update-alert" style="display:none;">
+  <div class="usajobs-alert__figure">
+    <div class="usajobs-alert__icon">
+    </div>
+  </div>
+  <div class="usajobs-alert__body">
+    <p class="usa-alert-text" id="bio-update-alert-message">
+
+    </p>
+  </div>
+</div>
+
+<div class="usa-alert usajobs-alert usajobs-alert--warning" role="alert" data-object="alert" id="tag-update-alert" style="display:none;">
+  <div class="usajobs-alert__figure">
+    <div class="usajobs-alert__icon">
+    </div>
+  </div>
+  <div class="usajobs-alert__body">
+    <p class="usa-alert-text" id="tag-update-alert-message">
+
+    </p>
+  </div>
+</div>
+
+<div class="usa-alert usajobs-alert usajobs-alert--warning" role="alert" data-object="alert" id="email-update-alert" style="display:none;">
+  <div class="usajobs-alert__figure">
+    <div class="usajobs-alert__icon">
+    </div>
+  </div>
+  <div class="usajobs-alert__body">
+    <p class="usa-alert-text" id="email-update-alert-message">
+
+    </p>
+  </div>
+</div>
+
 <section class="usajobs-canvas usajobs-open-opps-profile">
   <main class="main-content usajobs-content-well" id="main-content" aria-label="Opportunity">
-    <div class="alert alert-danger" style="display: none;"></div>
-    <% if (user.isAdmin || user.isAgencyAdmin) { %>
-      <div class="alert alert-info">
-        You are an <% if (user.isAdmin) { %> administrator <% } else { %> agency administrator <% } %>.
-        <% if (user.id !== data.id) { %>
-          <strong>You are editing another user's profile.</strong>
-        <% } %>
-      </div>
-    <% } %>
     <div class="usajobs-open-opps-opportunity">
       <div class="usajobs-open-opps-profile__body">
         <h1 class="usajobs-opop-intro-hiring-paths__section-title">Edit profile</h1>
@@ -22,7 +114,6 @@
         <div id="file-upload-progress-container" style="display: none;" class="progress progress-striped active">
           <div id="file-upload-progress" class="progress-bar" style="width: 0"></div>
         </div>
-        <div id="file-upload-alert" class="alert alert-warning" style="display:none;"> </div>
       </div>
       <form action="" class="usajobs-form--narrow" role="form" id="profile-form">
         <fieldset class="usajobs-fieldset">
@@ -32,14 +123,12 @@
             <span class="help-block error-empty" style="display:none;">Please enter your full name</span>
             <span class="help-block error-count60" style="display:none;">Maximum of 60 characters</span>
             <span class="help-block error-html" style="display:none;">The special characters '<' or '>' are not allowed</span>
-            <div id="name-update-alert" class="alert alert-warning" style="display:none;"></div>
           </div>
           <div class="required-input">
             <label for="title">Title</label>
             <input type="text" class="validate" id="title" name="title" placeholder="Title" value="<%- data.title ? data.title : '' %>" data-validate="count150,html"/>
             <span class="help-block error-count150" style="display:none;">Maximum of 150 characters</span>
             <span class="help-block error-html" style="display:none;">The special characters '<' or '>' are not allowed</span>
-            <div id="title-update-alert" class="alert alert-warning" style="display:none;"></div>
           </div>
           <div class="required-input">
             <label for="company" data-i18n="tag.Agency"></label>
@@ -53,13 +142,11 @@
             <label for="bio">Biography</label>
             <div class="markdown-edit"></div>
             <span class="help-block error-html" style="display:none;">The special characters '<' or '>' are not allowed</span>
-            <div id="bio-update-alert" class="alert alert-warning" style="display:none;"></div>
           </div>
         </fieldset>
 
         <fieldset class="usajobs-fieldset skills-interests">
           <div class="tag-wrapper"></div>
-          <div id="tag-update-alert" class="alert alert-warning" style="display:none;"></div>
           <aside class="skill-aside">
             <p class="skills">List the skills you have and the skills you want to develop.</p>
             <p class="interests">List career areas, agencies, and other topics that you interest you.</p>
@@ -74,7 +161,6 @@
             <span class="help-block error-email" style="display:none;">Must be a valid email address</span>
             <span class="help-block error-count60" style="display:none;">Maximum of 60 characters</span>
             <span class="help-block error-html" style="display:none;">The special characters '<' or '>' are not allowed</span>
-            <div id="email-update-alert" class="alert alert-warning" style="display:none;">
             </div>
           </div>
         </fieldset>
