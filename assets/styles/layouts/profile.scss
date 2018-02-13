@@ -70,7 +70,7 @@
     clear: left;
 }
 
-.usajobs-open-opps-opportunity .usajobs-opop-profile-title .default-user-icon-profile {
+.usajobs-open-opps-opportunity .default-user-icon-profile {
     height: 15rem;
     width: 15rem;
     margin-top: 1rem;
@@ -294,5 +294,14 @@ form [type=submit], form [type=submit] {
       top: 0;
     }
   }
+}
+
+.center-upload {
+    text-align: center;
+}
+
+.fileinput-button {
+    color: #2574B6;
+    font-size: 1.7rem;
 }
 
