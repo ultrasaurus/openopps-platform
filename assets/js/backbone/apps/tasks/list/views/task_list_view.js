@@ -57,39 +57,39 @@ var TaskListView = Backbone.View.extend({
   },
 
   renderList: function () {
-    var self = this;
     $('#task-search-spinner').hide();
     $('#task-list').html('');
-    var start = 0;
-    var limit = Math.min(20, self.tasks.length);
-
-    if (self.tasks.length === 0) {
+    if (this.tasks.length === 0) {
       var settings = {
         ui: UIConfig,
       };
       compiledTemplate = _.template(NoListItem)(settings);
       $('#task-list').append(compiledTemplate);
     } else {
-      for (var i = start; i < limit; i++) {
-        var obj = self.tasks[i];
-        obj.userId = obj.owner.id;
-        var item = {
-          item: obj,
-          user: window.cache.currentUser,
-          tagConfig: TagConfig,
-          tagShow: ['location', 'skill', 'topic', 'task-time-estimate', 'task-time-required'],
-        };
-        if (self.tasks[i].tags) {
-          item.tags = self.organizeTags(self.tasks[i].tags);
-        } else {
-          item.tags = [];
-        }
-        if (self.tasks[i].description) {
-          item.item.descriptionHtml = marked(self.tasks[i].description);
-        }
-        $('#task-list').append(_.template(TaskListItem)(item));
+      for (var i = 0; i < this.tasks.length; i++) {
+        $('#task-list').append(this.renderItem(this.tasks[i]));
       }
     }
+  },
+
+  renderItem: function (task) {
+    var obj = task;
+    obj.userId = obj.owner.id;
+    var item = {
+      item: obj,
+      user: window.cache.currentUser,
+      tagConfig: TagConfig,
+      tagShow: ['location', 'skill', 'topic', 'task-time-estimate', 'task-time-required'],
+    };
+    if (task.tags) {
+      item.tags = this.organizeTags(task.tags);
+    } else {
+      item.tags = [];
+    }
+    if (task.description) {
+      item.item.descriptionHtml = marked(task.description);
+    }
+    return _.template(TaskListItem)(item);
   },
 
   organizeTags: function (tags) {
