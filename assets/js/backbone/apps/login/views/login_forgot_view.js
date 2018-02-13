@@ -9,14 +9,11 @@ var LoginForgotView = Backbone.View.extend({
   el: '#container',
   
   events: {
-    'click .oauth-link' : 'link',
-    'keyup .validate'   : 'validateField',
-    'change .validate'  : 'validateField',
-    'blur .validate'    : 'validateField',
-    'keyup #rusername'  : 'checkUsername',
-    'change #rusername' : 'checkUsername',
-    'click #rusername-button'     : 'clickUsername',
-    'submit #forgot-form'         : 'submitForgot',
+    'click .oauth-link'       : 'link',
+    'keyup .validate'         : 'validateField',
+    'change .validate'        : 'validateField',
+    'blur .validate'          : 'validateField',
+    'submit #forgot-form'     : 'submitForgot',
   },
   
   initialize: function (options) {
@@ -36,7 +33,7 @@ var LoginForgotView = Backbone.View.extend({
     this.$el.localize();
   
     setTimeout(function () {
-      self.$('#username').focus();
+      self.$('#fusername').focus();
     }, 500);
     return this;
   },
@@ -63,14 +60,11 @@ var LoginForgotView = Backbone.View.extend({
       type: 'POST',
       data: data,
     }).done(function (success) {
-    //   // Set the user object and trigger the user login event
-    //   self.$('#forgot-view').hide();
-    //   self.$('#forgot-footer').hide();
-    //   self.$('#forgot-done-view').show();
-    //   self.$('#forgot-done-footer').show();
+    // Set the user object and trigger the user login event
+      self.$('#forgot-done-view').show();
     }).fail(function (error) {
       var d = JSON.parse(error.responseText);
-      self.$('#forgot-error').html(d.message);
+      self.$('#forgot-error-text').html(d.message);
       self.$('#forgot-error').show();
     });
   },   

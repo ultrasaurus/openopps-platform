@@ -1,5 +1,5 @@
 var $ = require('jquery');
-window.jQuery = $;    // TODO: this is weird, but Boostrap wants it
+window.jQuery = $; 
 
 var _ = require('underscore');
 var Backbone = require('backbone');
@@ -9,7 +9,6 @@ var LoginView = require('../views/login_view');
 var LoginCreateView = require('../views/login_create_view');
 var LoginForgotView = require('../views/login_forgot_view');
 var login = require('../../../config/login.json');
-// var ModalComponent = require('../../../components/modal');
 
 var LoginController = BaseController.extend({
 
@@ -68,44 +67,6 @@ var LoginController = BaseController.extend({
       message: this.options.message,
     }).render();
   },
-
-  
-
-  // showRegister: function (e) {
-  //   if (e.preventDefault) e.preventDefault();
-  //   this.$('#login-view').hide();
-  //   this.$('#login-footer').hide();
-  //   this.$('#registration-view').show();
-  //   this.$('#registration-footer').show();
-  //   this.$('#forgot-view').hide();
-  //   this.$('#forgot-footer').hide();
-  //   this.$('#forgot-done-view').hide();
-  //   this.$('#forgot-done-footer').hide();
-  // },
-
-  // showLogin: function(e) {
-  //   if (e.preventDefault) e.preventDefault();
-  //   this.$('#login-view').show();
-  //   this.$('#login-footer').show();
-  //   // this.$('#registration-view').hide();
-  //   // this.$('#registration-footer').hide();
-  //   this.$('#forgot-view').hide();
-  //   this.$('#forgot-footer').hide();
-  //   this.$('#forgot-done-view').hide();
-  //   this.$('#forgot-done-footer').hide();
-  // },
-
-  // showForgot: function(e) {
-  //   if (e.preventDefault) e.preventDefault();
-  //   this.$('#forgot-view').show();
-  //   this.$('#forgot-footer').show();
-  //   // this.$('#registration-view').hide();
-  //   // this.$('#registration-footer').hide();
-  //   this.$('#login-view').hide();
-  //   this.$('#login-footer').hide();
-  //   this.$('#forgot-done-view').hide();
-  //   this.$('#forgot-done-footer').hide();
-  // },
 });
 
 module.exports = LoginController;

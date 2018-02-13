@@ -2,7 +2,6 @@ var $ = require('jquery');
 var _ = require('underscore');
 var Backbone = require('backbone');
 var LoginPasswordView = require('./login_password_view');
-// var ModalComponent = require('../../../components/modal');
 var TagFactory = require('../../../components/tag_factory');
 var User = require('../../../../utils/user');
 
@@ -24,8 +23,6 @@ var LoginCreateView = Backbone.View.extend({
     'blur #rpassword'             : 'checkPassword',
     'keyup #rpassword-confirm'    : 'checkPasswordConfirm',
     'blur #rpassword-confirm'     : 'checkPasswordConfirm',
-    'click #register-next'        : 'nextRegistrationView',
-    'click #register-previous'    : 'previousRegistrationView',
     'submit #registration-form'   : 'submitRegister',
   },
 
@@ -72,14 +69,10 @@ var LoginCreateView = Backbone.View.extend({
     }
 
     setTimeout(function () {
-      self.$('#username').focus();
+      self.$('#rname').focus();
     }, 500);
     return this;
   },
-
-  // functions to switch out the primary and secondary registration views
-  // this happens when either agency or location are configured to be required
-  // for users to sign up for the system
 
   link: function (e) {
     if (e.preventDefault) e.preventDefault();
@@ -95,9 +88,6 @@ var LoginCreateView = Backbone.View.extend({
     var self = this,
         $submitButton = self.$('#registration-form [type="submit"]');
     if (e.preventDefault) e.preventDefault();
-
-    $submitButton.prop('disabled', true);
-    // this.$('#register-previous .error').hide();
 
     // validate input fields
     var validateIds = ['#rname', '#rusername', '#rpassword'];
@@ -118,27 +108,20 @@ var LoginCreateView = Backbone.View.extend({
       abort = abort || iAbort;
     }
     var passwordSuccess = this.checkPassword();
-    var parent = $(this.$('#rpassword').parents('.form-group')[0]);
+    var parent = $(this.$('#rpassword').parents('.required-input')[0]);
     if (passwordSuccess !== true) {
-      parent.addClass('has-error');
+      parent.addClass('usa-input-error');
       $(parent.find('.error-password')[0]).show();
     } else {
       $(parent.find('.error-password')[0]).hide();
     }
     var passwordConfirmSuccess = this.checkPasswordConfirm();
-    var passwordConfirmParent = $(this.$('#rpassword-confirm').parents('.form-group')[0]);
+    var passwordConfirmParent = $(this.$('#rpassword-confirm').parents('.required-input')[0]);
     if (passwordConfirmSuccess !== true) {
-      passwordConfirmParent.addClass('has-error');
+      passwordConfirmParent.addClass('usa-input-error');
       $(passwordConfirmParent.find('.error-password')[0]).show();
     } else {
       $(passwordConfirmParent.find('.error-password')[0]).hide();
-    }
-    if (abort === true || passwordSuccess !== true || passwordConfirmSuccess !== true) {
-      $submitButton.prop('disabled', false);
-      // this.$('#register-previous .error').show();
-      return;
-    } else {
-      this.$('#register-previous .error').hide();
     }
 
     // Create a data object with the required fields
@@ -191,71 +174,29 @@ var LoginCreateView = Backbone.View.extend({
         var user = new User(data);
         console.log('registered', user);
         window.cache.currentUser = user;
-        window.cache.userEvents.trigger('user:login', user);
+        window.cache.userEvents.trigger('user:login:success', user);
       });
     }).fail(function (error) {
       var d = JSON.parse(error.responseText);
-      self.$('#registration-error').html(d.message);
+      self.$('#registration-error-text').html(d.message);
       self.$('#registration-error').show();
-      $submitButton.prop('disabled', false);
     });
   },
-
-//   submitForgot: function (e) {
-//     var self = this;
-//     if (e.preventDefault) e.preventDefault();
-//     var data = {
-//       username: this.$('#fusername').val(),
-//     };
-//     // Post the registration request to the server
-//     $.ajax({
-//       url: '/api/auth/forgot',
-//       type: 'POST',
-//       data: data,
-//     }).done(function (success) {
-//       // Set the user object and trigger the user login event
-//       self.$('#forgot-view').hide();
-//       self.$('#forgot-footer').hide();
-//       self.$('#forgot-done-view').show();
-//       self.$('#forgot-done-footer').show();
-//     }).fail(function (error) {
-//       var d = JSON.parse(error.responseText);
-//       self.$('#forgot-error').html(d.message);
-//       self.$('#forgot-error').show();
-//     });
-//   },
-
-  // following doesn't use regular validate() because we want to
-  // display the .help-block instead of the .error-* blocks but
-  // could change in the future and make validate() more general
-  // checkName: function (e) {
-  //   var name = this.$('#rname').val();
-  //   if (name && name !== '') {
-  //     $('#rname').closest('.form-group').find('.help-block').hide();
-  //   } else {
-  //     $('#rname').closest('.form-group').find('.help-block').show();
-  //   }
-  // },
 
   checkUsername: function (e) {
     var username = $('#rusername').val();
     $.ajax({
       url: '/api/user/username/' + username,
     }).done(function (data) {
-      $('#rusername-button').removeClass('btn-success');
-      $('#rusername-button').removeClass('btn-danger');
-      $('#rusername-check').removeClass('fa fa-check');
-      $('#rusername-check').removeClass('fa fa-times');
       if (data) {
         // username is taken
-        $('#rusername-button').addClass('btn-danger');
-        $('#rusername-check').addClass('fa fa-times');
+        $('#rusername').closest('.required-input').addClass('usa-input-error');
+        $('#rusername').closest('.required-input').find('.field-validation-error.error-email').show();
+  
       } else {
         // username is available
-        $('#rusername-button').addClass('btn-success');
-        $('#rusername-check').addClass('fa fa-check');
-        $('#rusername').closest('.form-group').removeClass('has-error');
-        $('#rusername').closest('.form-group').find('.help-block').hide();
+        $('#rusername').closest('.required-input').removeClass('usa-input-error');
+        $('#rusername').closest('.required-input').find('.field-validation-error.error-email').hide();
       }
     });
   },
@@ -266,8 +207,8 @@ var LoginCreateView = Backbone.View.extend({
     var validRules = _.every(valuesArray);
     var success = true;
     if (validRules === true) {
-      $('#rpassword').closest('.form-group').removeClass('has-error');
-      $('#rpassword').closest('.form-group').find('.help-block').hide();
+      $('#rpassword').closest('.required-input').removeClass('usa-input-error');
+      $('#rpassword').closest('.required-input').find('.field-validation-error').hide();
     }
     _.each(rules, function (value, key) {
       if (value === true) {
@@ -287,12 +228,11 @@ var LoginCreateView = Backbone.View.extend({
     var password = this.$('#rpassword').val();
     var confirm = this.$('#rpassword-confirm').val();
     if (password === confirm) {
-      $('#rpassword-confirm').closest('.form-group').removeClass('has-error');
-      $('#rpassword-confirm').closest('.form-group').find('.help-block').hide();
+      $('#rpassword-confirm').closest('.required-input').removeClass('usa-input-error');
+      $('#rpassword-confirm').closest('.required-input').find('.field-validation-error').hide();
     } else {
-      $('#rpassword-confirm').closest('.form-group').addClass('has-error');
-      $('#rpassword-confirm').closest('.form-group').find('.help-block').show();
-      $('#register-next').attr('disabled', true);
+      $('#rpassword-confirm').closest('.required-input').addClass('usa-input-error');
+      $('#rpassword-confirm').closest('.required-input').find('.field-validation-error').show();
       success = false;
     }
     return success;
@@ -304,9 +244,9 @@ var LoginCreateView = Backbone.View.extend({
 
   cleanup: function () {
     if (this.loginPasswordView) { this.loginPasswordView.cleanup(); }
+    if (this.loginCreateView) { this.loginCreateView.cleanup(); }
     removeView(this);
   },
 });
-
 
 module.exports = LoginCreateView;
