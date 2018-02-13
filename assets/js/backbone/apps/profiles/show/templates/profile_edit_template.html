@@ -80,7 +80,7 @@
   </div>
 
     <main class="main-content usajobs-content-well" id="main-content" aria-label="Opportunity">
-      <div class="usajobs-open-opps-opportunity usajobs-open-opps-profile">
+      <div class="usajobs-open-opps-opportunity usajobs-open-opps-section usajobs-open-opps-profile">
         <div class="usajobs-open-opps-profile__body">
           <h1 class="usajobs-opop-intro-hiring-paths__section-title">Edit profile</h1>
           <div class="usajobs-form">
@@ -145,14 +145,14 @@
           <div class="usajobs-button_bar--slim">
             <div class="usajobs-button_bar__body">
               <a href="#" class="usa-button usa-button-secondary" id="profile-cancel">Discard Changes</a>
-              <button id="profile-save" type="submit" class="usa-button" disabled="disabled" data-loading-text="<i class='fa fa-spinner fa-spin'></i> Saving..." data-success-text="Saved!" data-fail-text="Save Failed.">Save Profile</button>
+              <button id="profile-save" type="submit" class="usa-button" data-loading-text="<i class='fa fa-spinner fa-spin'></i> Saving..." data-success-text="Saved!" data-fail-text="Save Failed.">Save Profile</button>
             </div>
           </div>
         </form>
       </div>
     </main>
     <aside class="usajobs-rightrail" id="rightrail">
-      <div class="usajobs-open-opps-opportunity">
+      <div class="usajobs-open-opps-opportunity usajobs-open-opps-section usajobs-open-opps-profile">
         <h2>Badges</h2>
         <% if (data.badges.length > 0) { %>
         <ul class="profile-badges">

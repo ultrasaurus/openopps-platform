@@ -58,8 +58,12 @@ body {
     }
 }
 
-h1, h2, h3 {
-    color: $color-primary-darker;
+h1, h2 {
+  color: $color-primary-darker;
+}
+
+h3 {
+  color: $color-base;
 }
 
 @media screen and (min-width: 62em) {

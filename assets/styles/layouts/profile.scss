@@ -4,6 +4,10 @@
   margin-bottom: $size-SM;
 }
 
+.usajobs-open-opps-opportunity.usajobs-open-opps-section {
+    margin-top: $size-M;
+}
+
 .usajobs-open-opps-opportunity.usajobs-open-opps-profile {
     padding: $size-M;
 
@@ -28,10 +32,6 @@
     }
 
 .usajobs-open-opps-participated__body {
-    @include media($ML) {
-        padding: 0 $size-M $size-default $size-M;
-    }
-
     h2 {
       margin-bottom: $size-default;
     }
@@ -284,7 +284,7 @@ form [type=submit], form [type=submit] {
     margin-top: 0;
     margin-right: $size-default;
     position: absolute;
-    left: calc(100% + 19rem);
+    left: calc(100% + 16rem);
 
     &.skills {
       top: 0;

@@ -36,7 +36,6 @@
     </div>
 
     <% if (saved) { %>
-      <!-- <div class="alert alert-success">Your profile has been successfully updated.</div> -->
       <div class="usa-alert usajobs-alert usajobs-alert--success" role="alert" data-object="alert">
         <div class="usajobs-alert__figure">
           <div class="usajobs-alert__icon">
@@ -52,8 +51,8 @@
 
 
     <main class="main-content usajobs-content-well" id="main-content" aria-label="Opportunity">
-      <div class="usajobs-open-opps-opportunity usajobs-open-opps-profile">
-        <div class="usajobs-open-opps-profile__body usajobs-grid">
+      <div class="usajobs-open-opps-opportunity usajobs-open-opps-section usajobs-open-opps-profile">
+        <div class="usajobs-open-opps-profile__body usajobs-grid-full">
           <% if (data.isOwner || data.canEditProfile) { %>
           <div class="usajobs-opop-section-edit">
               <% if (login.profile.edit === true) { %>
@@ -100,8 +99,8 @@
         </div>
       </div>
       <% if (tags.length > 0) { %>
-      <div class="usajobs-open-opps-opportunity">
-        <div class="usajobs-open-opps-participated__body usajobs-grid">
+      <div class="usajobs-open-opps-opportunity usajobs-open-opps-profile">
+        <div class="usajobs-open-opps-participated__body usajobs-grid-full">
           <h2>Skills &amp; Interests</h2>
           <div>
             <% _.each(tags, function (t) { %>
@@ -111,7 +110,7 @@
         </div>
       </div>
       <% } %>
-      <div class="usajobs-open-opps-opportunity">
+      <div class="usajobs-open-opps-opportunity usajobs-open-opps-profile">
         <div class="usajobs-open-opps-participated__body">
           <h2>Opportunities</h2>
           <h3>Participated</h3>
@@ -122,7 +121,7 @@
       </div>
     </main>
     <aside class="usajobs-rightrail" id="rightrail">
-      <div class="usajobs-open-opps-opportunity">
+      <div class="usajobs-open-opps-opportunity usajobs-open-opps-section usajobs-open-opps-profile">
         <h2>Badges</h2>
         <% if (data.badges.length > 0) { %>
         <ul class="profile-badges">

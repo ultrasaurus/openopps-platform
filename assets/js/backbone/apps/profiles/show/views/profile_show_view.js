@@ -108,7 +108,7 @@ var ProfileShowView = Backbone.View.extend({
   validateField: function (e) {
     return validate(e);
   },
-  
+
   render: function () {
     var data = {
       login: Login,
@@ -284,9 +284,9 @@ var ProfileShowView = Backbone.View.extend({
         window.cache.userEvents.trigger('user:profile:save', data.toJSON());
       }
 
-      setTimeout(function () { $('#profile-save, #submit').attr('disabled', 'disabled'); },0);
-      $('#profile-save, #submit').removeClass('btn-primary');
-      $('#profile-save, #submit').addClass('btn-success');
+      setTimeout(function () { 
+        $('#profile-save, #submit').removeClass('btn-primary');
+        $('#profile-save, #submit').addClass('btn-success');
       self.data.saved = true;
       Backbone.history.navigate('profile/' + self.model.toJSON().id, { trigger: true });
 
@@ -376,7 +376,6 @@ var ProfileShowView = Backbone.View.extend({
     }
 
     $('#profile-save, #submit').button('loading');
-    setTimeout(function () { $('#profile-save, #submit').attr('disabled', 'disabled'); }, 0);
 
     var newTags = [].concat(
           $('#company').select2('data'),
