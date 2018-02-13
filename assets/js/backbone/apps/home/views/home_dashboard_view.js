@@ -8,8 +8,9 @@ var TaskCollection = require('../../../entities/tasks/tasks_collection');
 var UIConfig = require('../../../config/ui.json');
 
 // templates
-var BrowseMainView = require('../../browse/views/browse_main_view');
-var BrowseListView = require('../../browse/views/browse_list_view');
+//var BrowseMainView = require('../../browse/views/browse_main_view');
+//var BrowseListView = require('../../browse/views/browse_list_view');
+var TaskListView = require('../../tasks/list/views/task_list_view');
 var TasksCollection = require('../../../entities/tasks/tasks_collection');
 var DashboardTemplate = require('../templates/home_dashboard_template.html');
 var BadgesTemplate = require('../templates/home_badges_feed_template.html');
@@ -35,15 +36,14 @@ var DashboardView = Backbone.View.extend({
   },
 
   initializeView: function () {
-    if (this.browseMainView) {
-      this.browseMainView.cleanup();
+    if (this.taskListView) {
+      this.taskListView.cleanup();
     }
-    this.browseMainView = new BrowseMainView({
-      el: '#container',
-      target: 'tasks',
+    this.taskListView = new TaskListView({
+      el: '#task-list',
       collection: this.collection,
       queryParams: this.queryParams,
-    }).render();
+    });
   },
 
   fireUpCollection: function () {
@@ -54,11 +54,11 @@ var DashboardView = Backbone.View.extend({
         success: function (collection) {
           var userAgency;
           self.collection = collection;
-          self.browseMainView.collection = collection;
+          self.taskListView.collection = collection;
           if (window.cache.currentUser) {
             userAgency = _.where(window.cache.currentUser.tags, { type: 'agency' })[0];
           }
-          self.browseMainView.filter( undefined, { state: 'open' }, userAgency );
+          self.taskListView.filter( undefined, { state: 'open' }, userAgency );
         },
       });
     });
@@ -157,11 +157,10 @@ var DashboardView = Backbone.View.extend({
       return test.length === _.compact(test).length;
     }).value();
 
-    this.browseListView = new BrowseListView({
-      el: '#browse-list',
-      target: 'project',
-      collection: collection,
-    });
+    // this.taskListView = new TaskListView({
+    //   el: '#browse-list',
+    //   collection: collection,
+    // });
 
     this.$el.localize();
     return this;

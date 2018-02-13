@@ -16,17 +16,17 @@
     <section class="usajobs-content-well">
       <div class="usajobs-opop-badges__body">
         <div data-target="badges-feed" class="badges-feed"></div>
-      </div> 
+      </div>
     </section>
     <aside class="usajobs-rightrail">
       <div data-target="users-feed" class="users-feed"></div>
       <div data-target="network-stats" class="network-stats"></div>
       <div class="dashboard__task-list">
           <h2><%= window.cache.currentUser.agency.abbr  %> Opportunities</h2>
-          <div id="browse-search-spinner" class="fullwidth text-center">
+          <div id="task-search-spinner" class="fullwidth text-center">
             Loading... <i class="fa fa-spinner fa-spin"></i>
           </div>
-          <div id="browse-list" class="dashboard__task-list__item"></div>
+          <div id="task-list" class="dashboard__task-list__item"></div>
           See more <a class="see-more-tasks" href="/tasks?agency=<%= window.cache.currentUser.agency.abbr %>"><%= window.cache.currentUser.agency.name %></a> opportunities.
         </div>
     </aside>
