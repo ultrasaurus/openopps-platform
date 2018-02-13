@@ -26,6 +26,9 @@ var ShareTemplate = require('../templates/profile_share_template.txt');
 
 var ProfileShowView = Backbone.View.extend({
   events: {
+    'keyup .validate'            : 'validateField',
+    'change .validate'           : 'validateField',
+    'blur .validate'             : 'validateField',
     'submit #profile-form'       : 'profileSubmit',
     'click #profile-save'        : 'profileSave',
     'click .link-backbone'       : linkBackbone,
@@ -101,6 +104,11 @@ var ProfileShowView = Backbone.View.extend({
     });
     return result;
   },
+
+  validateField: function (e) {
+    return validate(e);
+  },
+  
   render: function () {
     var data = {
       login: Login,
