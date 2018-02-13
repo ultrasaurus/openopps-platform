@@ -82,7 +82,8 @@ var ProfileShowView = Backbone.View.extend({
         for (var item in error.invalidAttributes) {
           if (error.invalidAttributes[item]) {
             message = _(error.invalidAttributes[item]).pluck('message').join(',<br /> ');
-            self.$('#' + item + '-update-alert').html(message).show();
+            self.$('#' + item + '-update-alert-message').html(message);
+            self.$('#' + item + '-update-alert').show();
           }
         }
       } else if (error) {
@@ -179,7 +180,7 @@ var ProfileShowView = Backbone.View.extend({
         if (data.jqXHR.status == 413) {
           message = 'The uploaded file exceeds the maximum file size.';
         }
-        self.$('#file-upload-alert').html(message);
+        self.$('#file-upload-alert-message').html(message);
         self.$('#file-upload-alert').show();
       },
     });

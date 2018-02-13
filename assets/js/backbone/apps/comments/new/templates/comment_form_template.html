@@ -1,10 +1,22 @@
-<div class="row">
+<div class="usa-alert usajobs-alert usajobs-alert--error comment-alert-empty" role="alert" data-object="alert">
+  <div class="usajobs-alert__figure">
+    <div class="usajobs-alert__icon">
+    </div>
+  </div>
+  <div class="usajobs-alert__body">
+    <p class="usa-alert-text">
+      You must enter text before submitting a comment.
+    </p>
+  </div>
+</div>
+
+<!-- <div class="row">
   <div class="col-lg-12 ">
     <div class="alert alert-danger comment-alert-empty">
       You must enter text before submitting a comment.
     </div>
   </div>
-</div>
+</div> -->
 <div class="row">
   <div class="col-lg-12 ">
     <% if ( !form.disable ) { %>
@@ -15,7 +27,7 @@
           <span class="input-group-btn">
             <button class="usa-button" type="submit" value="<% if (form.topic ) { %> Post Comment <% } else if (form.depth == 1) { %> Reply <% } else { %>Add Comment<% } %>" title="<% if (form.topic) { %> Post Comment <% } else if (form.depth == 1) { %> Reply <% } else { %>Add Comment<% } %>">
               <% if (form.topic ) { %> Post Comment <% } else if (form.depth == 1) { %> Reply <% } else { %>Add Comment<% } %></button>
-          </span>                   
+          </span>
         </div>
         <span class="help-block error-html" style="display:none;">The special characters '<' or '>' are not allowed</span>
         <div id="comment-update-alert" class="alert alert-warning" style="display:none;"></div>
