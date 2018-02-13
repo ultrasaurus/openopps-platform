@@ -177,22 +177,47 @@
   }
 
 //Markdown edit buttons
+.usajobs-open-opps-profile .markdown-edit .btn-toolbar::after {
+  clear: both;
+  content: "";
+  display: block;
+}
+
+.usajobs-open-opps-profile .markdown-edit .btn-group {
+  margin-right: 0.2rem;
+  display: inline-block;
+}
+
 .usajobs-open-opps-profile .markdown-edit button {
   margin-right: 0;
   background-color: #dfdfdf;
   color: #505050;
-}
+  font-size: 1.2rem;
+  padding: 1rem 1.2rem;
+  float: left;
+  border-radius: 0;
 
-.usajobs-open-opps-profile .markdown-edit button:hover {
-  margin-right: 0;
-  background-color: #505050;
-  color: #dfdfdf;
-}
+  &:first-child {
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+  }
 
-.usajobs-open-opps-profile .markdown-edit button.btn-preview {
-  margin-right: 0;
-  background-color: #dd361a;
-  color: #fff;
+  &:last-child {
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+  }
+
+  &:hover {
+    margin-right: 0;
+    background-color: #505050;
+    color: #dfdfdf;
+  }
+
+  &.btn-preview {
+    margin-right: 0;
+    background-color: #dd361a;
+    color: #fff;
+  }
 }
 
 .usajobs-open-opps-profile .markdown-edit textarea#bio {
