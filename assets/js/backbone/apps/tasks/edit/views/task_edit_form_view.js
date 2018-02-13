@@ -53,7 +53,8 @@ var TaskEditFormView = Backbone.View.extend({
         for (var item in error.invalidAttributes) {
           if (error.invalidAttributes[item]) {
             message = _(error.invalidAttributes[item]).pluck('message').join(',<br /> ');
-            $('#' + item + '-update-alert').html(message).show();
+            $('#' + item + '-update-alert-message').html(message);
+            $('#' + item + '-update-alert').show();
           }
         }
       } else if (error) {
