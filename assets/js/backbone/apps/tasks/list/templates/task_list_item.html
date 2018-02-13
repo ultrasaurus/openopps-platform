@@ -45,8 +45,8 @@
         </p>
       </div>
       <div class="usajobs-open-opps-opportunity-requestor__status">
-        <div class="usajobs-pill--opportunity-status status-open">
-          Open
+        <div class="usajobs-pill--opportunity-status status-<%= item.state.toLowerCase() %>">
+          <%= item.state.charAt( 0 ).toUpperCase() + item.state.slice( 1 ) %>
         </div>
       </div>
     </div>

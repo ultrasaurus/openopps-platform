@@ -19,16 +19,6 @@ var ProfileController = BaseController.extend({
       collection: new ProfilesCollection(),
       el: self.el,
     }).render();
-    // self.profilesCollection =
-    // self.profilesCollection.fetch({
-    //   success: function (collection) {
-    //     self.collection = collection.chain().pluck('attributes').value();
-    //     new ProfileListView({
-    //       collection: new ProfilesCollection();,
-    //       el: self.el,
-    //     }).render();
-    //   },
-    // });
   },
 
   // Cleanup controller and views
