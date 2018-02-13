@@ -98,10 +98,15 @@ background-color: #ffffff;
 
 .users-feed {
   margin-top: $size-M;
-}
 
-.users-feed li {
-  margin-bottom: 0.2rem;
+  .list-unstyled {
+    list-style: none;
+    padding-left: 0;
+  }
+
+  li {
+    margin-bottom: 0.2rem;
+  }
 }
 
 .tasks-completed {
