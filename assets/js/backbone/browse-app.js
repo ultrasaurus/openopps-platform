@@ -4,11 +4,11 @@ var $ = require('jquery');
 
 var NavView = require('./apps/nav/views/nav_view');
 var FooterView = require('./apps/footer/views/footer_view');
-var BrowseListController = require('./apps/browse/controllers/browse_list_controller');
 var ProfileShowController = require('./apps/profiles/show/controllers/profile_show_controller');
 var ProfileListController = require('./apps/profiles/list/controllers/profile_list_controller');
 var TaskModel = require('./entities/tasks/task_model');
 var TaskCollection = require('./entities/tasks/tasks_collection');
+var TaskListController = require('./apps/tasks/list/controllers/task_list_controller');
 var TaskShowController = require('./apps/tasks/show/controllers/task_show_controller');
 var TaskEditFormView = require('./apps/tasks/edit/views/task_edit_form_view');
 var TaskCreateFormView = require('./apps/tasks/new/views/task_form_view');
@@ -118,8 +118,7 @@ var BrowseRouter = Backbone.Router.extend({
 
   listTasks: function (queryStr) {
     this.cleanupChildren();
-    this.browseListController = new BrowseListController({
-      target: 'tasks',
+    this.taskListController = new TaskListController({
       el: '#container',
       router: this,
       queryParams: this.parseQueryParams(queryStr),

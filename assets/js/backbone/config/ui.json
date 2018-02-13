@@ -18,11 +18,13 @@
   "states" : [
     {
       "value": "draft",
-      "label":"Draft"
+      "label":"Draft",
+      "hide": true
     },
     {
       "value": "submitted",
-      "label":"Submitted"
+      "label":"Submitted",
+      "hide": true
     },
     {
       "value": "open",
@@ -30,7 +32,7 @@
     },
     {
       "value":"assigned",
-      "label":"Assigned"
+      "label":"In Progress"
     },
     {
       "value": "completed",
@@ -38,7 +40,7 @@
     },
     {
       "value":"archived",
-      "label":"Archived"
+      "label":"Canceled"
     }
   ],
   "modalHome" : {
