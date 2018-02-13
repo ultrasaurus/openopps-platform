@@ -67,14 +67,19 @@ var ModalIdle = BaseComponent.extend({
         this.warningID = setTimeout(function () {
           this.logout();
         }.bind(this), 3 * 60 * 1000); // Logout after 3 minutes
-        $('#' + this.data.id).modal('show');
+        this.toggleModal(true);
       }.bind(this), 27 * 60 * 1000); // 27 minutes then show 3 minute warning
-      $('#' + this.data.id).modal('hide');
+      this.toggleModal(false);
     }.bind(this));
   },
 
+  toggleModal (show) {
+    $('#' + this.data.id).attr('data-state', show ? 'is-open' : 'is-closed');
+    $('#' + this.data.id).attr('aria-hidden', !show);
+  },
+
   logout: function () {
-    $('#' + this.data.id).modal('hide');
+    this.toggleModal(false);
     setTimeout(function () {
       window.cache.userEvents.trigger('user:request:logout');
     }, 500);

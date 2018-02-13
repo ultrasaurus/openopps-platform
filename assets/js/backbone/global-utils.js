@@ -106,7 +106,7 @@ global.validatePassword = function (username, password) {
  * emaildomain requires a data-emaildomain variable in the HTML tag
  *    it will validate against the value there
  *
- * The input should be in a `form-group` component,
+ * The input should be in a `required-input` component,
  * and the component should have a .help-text element
  * with a class `.error-[code]` where [code] is the
  * validation rule (eg, `empty`);
@@ -116,7 +116,7 @@ global.validatePassword = function (username, password) {
 global.validate = function (e) {
   var opts = String($(e.currentTarget).data('validate')).split(',');
   var val = ($(e.currentTarget).prop('tagName') == 'DIV' ? $(e.currentTarget).text() : $(e.currentTarget).val());
-  var parent = $(e.currentTarget).parents('.form-group, .checkbox')[0];
+  var parent = $(e.currentTarget).parents('.required-input, .checkbox')[0];
   var result = false;
   _.each(opts, function (o) {
     if (o == 'empty') {
@@ -224,13 +224,13 @@ global.validate = function (e) {
     }
   });
   if (result === true) {
-    $(parent).addClass('has-error');
+    $(parent).addClass('usa-input-error');
     $(':button.disable').attr('disabled', 'disabled');
     $(':submit.disable').attr('disabled', 'disabled');
     
   } else {
-    $(parent).removeClass('has-error');
-    if ($('form').find('*').hasClass('has-error')) {
+    $(parent).removeClass('usa-input-error');
+    if ($('form').find('*').hasClass('usa-input-error')) {
       $(':button.disable').attr('disabled', 'disabled');
       $(':submit.disable').attr('disabled', 'disabled');
     } else {

@@ -354,3 +354,9 @@ select[disabled] {
 .usa-input-error .usa-datefield input {
   width: 100%;
 }
+
+.field-validation-error {
+  color: $color-secondary-dark;
+  font-size: 1.7rem;
+  font-weight: 700;
+}
