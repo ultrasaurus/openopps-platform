@@ -20,4 +20,12 @@ if(!_.isEmpty(psqlConnection)) {
   config.port = psqlConnection.port;
 }
 
+var config = {
+  host: process.env.RDS_HOSTNAME,
+  db: 'midas',
+  user: process.env.RDS_USERNAME,
+  password: process.env.RDS_PASSWORD,
+  port: process.env.RDS_PORT,
+};
+
 module.exports = gen(config);
