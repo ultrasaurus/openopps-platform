@@ -6,12 +6,14 @@ var TagConfig = require('../../../../config/tag');
 var TaskListTemplate = require('../templates/task_list_template.html');
 var TaskListItem = require('../templates/task_list_item.html');
 var NoListItem = require('../templates/no_search_results.html');
+var Pagination = require('../../../../components/pagination.html');
 
 var TaskListView = Backbone.View.extend({
   events: {
-    'keyup #search': 'search',
-    'change #stateFilters input': 'stateFilter',
-    'change #js-restrict-task-filter': 'agencyFilter',
+    'keyup #search'                   : 'search',
+    'change #stateFilters input'      : 'stateFilter',
+    'change #js-restrict-task-filter' : 'agencyFilter',
+    'click a.page'                    : 'clickPage',
   },
 
   initialize: function (options) {
@@ -45,18 +47,19 @@ var TaskListView = Backbone.View.extend({
     var self = this;
     self.collection.fetch({
       success: function (collection) {
+        self.collection = collection;
         self.tasks = collection.chain()
           .pluck('attributes')
           .filter( _.bind( filterTaskByAgency, self, self.agency ) )
           .filter( _.bind( filterTaskByTerm, self, self.term ) )
           .filter( _.bind( filterTaskByFilter, self, self.filters ) )
           .value();
-        self.renderList();
+        self.renderList(1);
       },
     });
   },
 
-  renderList: function () {
+  renderList: function (page) {
     $('#task-search-spinner').hide();
     $('#task-list').html('');
     if (this.tasks.length === 0) {
@@ -66,9 +69,17 @@ var TaskListView = Backbone.View.extend({
       compiledTemplate = _.template(NoListItem)(settings);
       $('#task-list').append(compiledTemplate);
     } else {
-      for (var i = 0; i < this.tasks.length; i++) {
-        $('#task-list').append(this.renderItem(this.tasks[i]));
-      }
+      var pageSize = 20;
+      var start = (page - 1) * pageSize;
+      var stop = page * pageSize;
+      $('#task-list').append(this.tasks.slice(start, stop).map(function (task) {
+        return this.renderItem(task);
+      }.bind(this)));
+      this.renderPagination({
+        page: page,
+        numberOfPages: Math.ceil(this.tasks.length/pageSize),
+        pages: [],
+      });
     }
   },
 
@@ -90,6 +101,29 @@ var TaskListView = Backbone.View.extend({
       item.item.descriptionHtml = marked(task.description);
     }
     return _.template(TaskListItem)(item);
+  },
+
+  clickPage: function (e) {
+    if (e.preventDefault) e.preventDefault();
+    this.renderList($(e.currentTarget).data('page'));
+    window.scrollTo(0, 0);
+  },
+
+  renderPagination: function (data) {
+    if(data.numberOfPages < 8) {
+      for (var j = 1; j <= data.numberOfPages; j++)
+        data.pages.push(j);
+    } else if (data.page < 5) {
+      data.pages = [1, 2, 3, 4, 5, 0, data.numberOfPages];
+    } else if (data.page >= data.numberOfPages - 3) {
+      data.pages = [1, 0];
+      for (var i = data.numberOfPages - 4; i <= data.numberOfPages; i++)
+        data.pages.push(i);
+    } else {
+      data.pages = [1, 0, data.page - 1, data.page, data.page + 1, 0, data.numberOfPages];
+    }
+    var pagination = _.template(Pagination)(data);
+    $('#task-page').html(pagination);
   },
 
   organizeTags: function (tags) {
@@ -155,7 +189,7 @@ var TaskListView = Backbone.View.extend({
       .filter( _.bind( filterTaskByTerm, this, this.term ) )
       .filter( _.bind( filterTaskByFilter, this, this.filters ) )
       .value();
-    this.renderList();
+    this.renderList(1);
   },
 
   empty: function () {
