@@ -63,20 +63,14 @@ function renderTemplate (template, data, done) {
       return done(err);
     }
     data._content = _.template(template)(data);
-    fs.readFile('assets/img/logo/svg/open-opportunities-2x.svg', function (err, logo) {
+    data._logo = '/img/logo/png/open-opportunities-2x.png';
+    fs.readFile(layout, function (err, layout) {
       if (err) {
         log.info(err);
         return done(err);
       }
-      data._logo = logo;
-      fs.readFile(layout, function (err, layout) {
-        if (err) {
-          log.info(err);
-          return done(err);
-        }
-        mailOptions.html = _.template(layout)(data);
-        return done(err, mailOptions);
-      });
+      mailOptions.html = _.template(layout)(data);
+      return done(err, mailOptions);
     });
   });
 }

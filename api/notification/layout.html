@@ -24,6 +24,10 @@
       margin-left: 1.3rem;
     }
 
+    .header img {
+      width: 100%;
+    }
+
     .content {
       width: calc(100% - 4rem);
       margin: 2rem 2rem 3rem 2rem;
@@ -55,7 +59,7 @@
 <body>
   <div class="wrapper">
     <div class="header">
-      <%= _logo %>
+      <img src="<%- globals.urlPrefix %><%= _logo %>" />
     </div>
     <div class="content">
       <%= _content %>
