@@ -90,11 +90,8 @@ var LoginCreateView = Backbone.View.extend({
     if (e.preventDefault) e.preventDefault();
 
     // validate input fields
-    var validateIds = ['#rname', '#rusername', '#rpassword'];
-    // Only validate terms & conditions if it is enabled
-    if (this.options.login.terms.enabled === true) {
-      validateIds.push('#rterms');
-    }
+    var validateIds = ['#rname', '#rusername', '#rpassword', '#rterms'];
+
     if (this.options.login.agency.enabled === true) {
       validateIds.push('#ragency');
     }
@@ -129,6 +126,7 @@ var LoginCreateView = Backbone.View.extend({
       name: this.$('#rname').val(),
       username: this.$('#rusername').val(),
       password: this.$('#rpassword').val(),
+      terms: (this.$('#rterms').val() === 'on'),
       tags: [],
       json: true,
     };
@@ -139,11 +137,6 @@ var LoginCreateView = Backbone.View.extend({
 
     if (this.options.login.location.enabled === true) {
       data.tags.push(this.$('#rlocation').select2('data'));
-    }
-
-    // Add in additional, optional fields
-    if (this.options.login.terms.enabled === true) {
-      data.terms = (this.$('#rterms').val() === 'on');
     }
 
     // Process tags
