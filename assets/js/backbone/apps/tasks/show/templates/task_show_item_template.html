@@ -19,43 +19,54 @@
 
 
 <main class="main-content usajobs-content-well" id="main-content" aria-label="Opportunity">
-        <div class="usajobs-open-opps-opportunity-item">
-          <div class="usajobs-grid">
-              <div class="usa-width-two-thirds">
-                <h3><%- model.title %></h3>
-                <span class="usajobs-pill--opportunity-status status-<%- state.value %>"><%- state.humanReadable %></span>
-                <% if (madlibTags['skill']) { %>
-                <div class="py1">
-                  <% _.each(madlibTags['skill'], function (t) { %>
-                    <a class="px2 bg-yellow black rounded" href="/tasks?search=<%= t.name %>"><%= t.name %></a>
-                  <% }) %>
-                </div>
-                <% } %>
-              </div>
-            
-          
-          <div class="usa-width-one-third">
-              <% if (user) { %>
-                <div class="center" data-userid="<%- model.userId %>">
-              <% } else { %>
-                <div class="center">
-              <% } %>
-                          
-              <img class="circle" width="50" src="/api/user/photo/<%- model.userId %>" alt="Profile pic of <%- model.owner.name %>"/>
-              <p>Posted by</p>
-              <div><%- model.owner.name %></div>
-              <div class="usajobs-opop-actions usajobs-opop-actions--v1-5">
-                <div class="usajobs-opop-actions__col-sub-actions usajobs-opop-actions--v1-5__col-sub-actions">
-                  <a class="usajobs-opop-actions__duplicate" href="#duplicate"><i class="fa fa-print"></i> Duplicate</a>           
-                  <a class="usajobs-opop-actions__save" href="#save" data-behavior="opop-actions.toggle-save" data-state="is-unsaved"> Save</a>
-                  <a class="usajobs-opop-actions__share usajobs-opop-actions-share" href="#" id="email"><i class="fa fa-share-alt"></i> Share</a>
-                </div>
-              </div>
-            </div>
-          </div>
+  <div class="usajobs-open-opps-opportunity-item">
+    <div class="usajobs-grid-full">
+      <div class="usajobs-width-five-sixths">
+        <h1 class="usajobs-open-opps-opportunity-item__title"><%- model.title %></h1>
+        <span class="usajobs-pill--opportunity-status status-<%- state.value %>"><%- state.humanReadable %></span>
+        <% if (madlibTags['skill']) { %>
+        <div class="py1">
+          <% _.each(madlibTags['skill'], function (t) { %>
+            <a class="px2 bg-yellow black rounded" href="/tasks?search=<%= t.name %>"><%= t.name %></a>
+          <% }) %>
+        </div>
+        <% } %>
+      </div>
+
+      <div class="usajobs-width-one-sixth">
+      <% if (user) { %>
+        <div class="center" data-userid="<%- model.userId %>">
+      <% } else { %>
+        <div class="center">
+      <% } %>
+          <img class="circle" width="50" src="/api/user/photo/<%- model.userId %>" alt="Profile pic of <%- model.owner.name %>"/>
+          <p>Posted by</p>
+          <div><%- model.owner.name %></div>
+          <div><%- model.publishedAt ? moment(model.publishedAt).format('MM/DD/YY') : '-/-/-' %></div>
+      <% if (user) { %>
+        </div>
+      <% } else { %>
+        </div>
+      <% } %>
+      </div>
+    </div>
+
+    <div class="usajobs-grid-full">
+      <div class="usajobs-opop-task-tags usajobs-width-two-thirds">
+        <% _.each(tags, function (t) { %>
+          <a class="skill-label" href="/tasks?search=<%= t.name %>"><%= t.name %></a>
+        <% }) %>
+      </div>
+
+      <div class="usajobs-opop-actions usajobs-opop-actions--v1-5 usajobs-width-one-third">
+        <div class="usajobs-opop-actions__col-sub-actions usajobs-opop-actions--v1-5__col-sub-actions">
+          <a class="usajobs-opop-actions__duplicate" href="#duplicate"><i class="fa fa-copy"></i> Duplicate</a>
+          <a class="usajobs-opop-actions__save" href="#save" data-behavior="opop-actions.toggle-save" data-state="is-unsaved"><i class="fa fa-bookmark"></i> Save</a>
+          <a class="usajobs-opop-actions__share usajobs-opop-actions-share" href="#" id="email"><i class="fa fa-share-alt"></i> Share</a>
         </div>
       </div>
     </div>
+  </div>
 
 
       <div class="usajobs-open-opps-opportunity-item">
@@ -86,7 +97,7 @@
                   <%- madlibTags['task-time-estimate'][0].name %>
                 <% } %>
                 <% if (madlibTags['task-time-required'] && madlibTags['task-length']) { %>
-                  <% if (madlibTags['task-time-required'][0].name === "Ongoing") { %> 
+                  <% if (madlibTags['task-time-required'][0].name === "Ongoing") { %>
                     <%- madlibTags['task-length'][0].name.toLowerCase() %>
                   <% } %>
                 <% } %>
@@ -137,7 +148,7 @@
                 <a href="#" id="volunteer" class="usa-button usa-button-primary"><span class="box-icon-text" data-i18n="taskPage.volunteerButton">Apply</span></a>
               </li>
               <li>
-                
+
               </li>
             </ul>
           </div>
