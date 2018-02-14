@@ -26,6 +26,9 @@ var ShareTemplate = require('../templates/profile_share_template.txt');
 
 var ProfileShowView = Backbone.View.extend({
   events: {
+    'keyup .validate'            : 'validateField',
+    'change .validate'           : 'validateField',
+    'blur .validate'             : 'validateField',
     'submit #profile-form'       : 'profileSubmit',
     'click #profile-save'        : 'profileSave',
     'click .link-backbone'       : linkBackbone,
@@ -101,6 +104,11 @@ var ProfileShowView = Backbone.View.extend({
     });
     return result;
   },
+
+  validateField: function (e) {
+    return validate(e);
+  },
+  
   render: function () {
     var data = {
       login: Login,
@@ -276,7 +284,7 @@ var ProfileShowView = Backbone.View.extend({
         window.cache.userEvents.trigger('user:profile:save', data.toJSON());
       }
 
-      setTimeout(function () { $('#profile-save, #submit').attr('disabled', 'disabled'); },0);
+      // setTimeout(function () { $('#profile-save, #submit').attr('disabled', 'disabled'); },0);
       $('#profile-save, #submit').removeClass('btn-primary');
       $('#profile-save, #submit').addClass('btn-success');
       self.data.saved = true;
@@ -290,9 +298,9 @@ var ProfileShowView = Backbone.View.extend({
     this.listenTo(self.model, 'profile:removeAuth:success', function (data, id) {
       self.render();
     });
-    this.listenTo(self.model, 'profile:input:changed', function (e) {
-      $('#profile-save, #submit').button('reset');
-    });
+    // this.listenTo(self.model, 'profile:input:changed', function (e) {
+    //   $('#profile-save, #submit').button('reset');
+    // });
 
     setTimeout(function () {
       $('.skill-aside .skills').appendTo('#s2id_tag_skill');
@@ -368,7 +376,7 @@ var ProfileShowView = Backbone.View.extend({
     }
 
     $('#profile-save, #submit').button('loading');
-    setTimeout(function () { $('#profile-save, #submit').attr('disabled', 'disabled'); }, 0);
+    // setTimeout(function () { $('#profile-save, #submit').attr('disabled', 'disabled'); }, 0);
 
     var newTags = [].concat(
           $('#company').select2('data'),
@@ -378,7 +386,7 @@ var ProfileShowView = Backbone.View.extend({
         ),
         data = {
           name:  $('#name').val(),
-          title: $('#title').val(),
+          title: $('#jobtitle').val(),
           bio: $('#bio').val(),
           username: $('#profile-email').val(),
         },
