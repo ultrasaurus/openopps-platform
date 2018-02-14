@@ -22,7 +22,7 @@ if(!_.isEmpty(psqlConnection)) {
 
 var config = {
   host: process.env.RDS_HOSTNAME,
-  db: 'midas',
+  db: 'ebdb',
   user: process.env.RDS_USERNAME,
   password: process.env.RDS_PASSWORD,
   port: process.env.RDS_PORT,

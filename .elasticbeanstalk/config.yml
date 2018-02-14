@@ -2,6 +2,8 @@ branch-defaults:
   docker:
     environment: openopps-platform-dev
     group_suffix: null
+  docker-aws:
+    environment: openopps-test
 global:
   application_name: openopps-platform
   branch: null
