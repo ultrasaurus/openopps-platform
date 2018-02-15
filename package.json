@@ -36,16 +36,6 @@
     "gulp-eslint": "^4.0.2",
     "gulp-rename": "^1.2.2",
     "gulp-sass": "^3.1.0",
-<<<<<<< HEAD
-    "gulp-sourcemaps": "^2.6.1",
-    "gulp-uglify-es": "^0.1.3",
-    "i18next": "^3.x.x",
-    "i18next-xhr-backend": "^1.x.x",
-    "jquery": "^3.x.x",
-    "jquery-i18next": "^1.x.x",
-    "json2csv": "^3.3.0",
-    "koa": "^2.3.0",
-=======
     "gulp-sourcemaps": "^2.6.4",
     "gulp-uglify-es": "^1.0.0",
     "i18next": "^10.3.0",
@@ -54,7 +44,6 @@
     "jquery-i18next": "^1.2.1",
     "json2csv": "^3.11.5",
     "koa": "^2.4.1",
->>>>>>> a2fe0d2a5322be646eb2135fc19a425069201fcc
     "koa-better-body": "^3.0.4",
     "koa-better-flash": "^0.0.3",
     "koa-cache-control": "^2.0.0",
@@ -91,22 +80,7 @@
     "validator": "^9.4.0"
   },
   "devDependencies": {
-<<<<<<< HEAD
     "@octopusdeploy/gulp-octo": "0.0.10",
-    "babel-core": "6.14.0",
-    "babel-loader": "6.2.5",
-    "babel-preset-es2015": "6.14.0",
-    "casperjs": "1.1.3",
-    "chai": "^3.5.0",
-    "chai-datetime": "^1.4.1",
-    "co": "3.1.0",
-    "istanbul": "^0.4.2",
-    "mocha": "^3.x.x",
-    "mocha-casperjs": "^0.5.6",
-    "mocha-junit-reporter": "^1.15.0",
-    "nodemon": "^1.12.1",
-    "nyc": "^11.3.0",
-=======
     "chai": "^4.1.2",
     "chai-datetime": "^1.5.0",
     "istanbul": "^0.4.5",
@@ -115,7 +89,6 @@
     "nodemon": "^1.14.12",
     "npm-run-all": "^4.1.2",
     "nyc": "^11.5.0",
->>>>>>> a2fe0d2a5322be646eb2135fc19a425069201fcc
     "pgtools": "^0.3.0",
     "replay": "^2.0.6",
     "when": "^3.7.8"
@@ -136,7 +109,7 @@
     "migrate:up": "node ./node_modules/db-migrate/bin/db-migrate up",
     "migrate:down": "node ./node_modules/db-migrate/bin/db-migrate down",
     "migrate:check": "node ./node_modules/db-migrate/bin/db-migrate up --dry-run",
-    "publish": "npm run migrate:up && npm run start",
+    "release": "npm install && gulp release",
     "start": "node app.js",
     "test": "npm run test:unit",
     "test:unit": "node ./node_modules/mocha/bin/mocha test/bootstrap.test.js test/unit/setup.js test/unit/*.test.js test/unit/**/*.test.js --opts test/test/mocha.opts",

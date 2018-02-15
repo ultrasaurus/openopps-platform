@@ -1,6 +1,8 @@
 lib-cov
 coverage/*
 
+package-lock.json
+
 # don't want to check it in temporary import data
 tools/import/*
 

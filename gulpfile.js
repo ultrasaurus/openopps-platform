@@ -10,7 +10,8 @@ var babel = require('gulp-babel');
 var uglify = require('gulp-uglify-es').default;
 var sourcemaps = require('gulp-sourcemaps');
 var rename = require('gulp-rename');
-<<<<<<< HEAD
+var bourbon 	= require('bourbon').includePaths;
+var neat		= require('bourbon-neat').includePaths;
 var octo = require('@octopusdeploy/gulp-octo');
 
 var releaseFiles = [
@@ -23,10 +24,6 @@ var releaseFiles = [
   '!./{docs,docs/**}',
   '!./{test,test/**}',
 ];
-=======
-var bourbon 	= require('bourbon').includePaths;
-var neat		= require('bourbon-neat').includePaths;
->>>>>>> a2fe0d2a5322be646eb2135fc19a425069201fcc
 
 // Lint Task
 gulp.task('lint', function () {
