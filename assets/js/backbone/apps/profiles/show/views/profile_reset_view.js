@@ -59,11 +59,11 @@ var ProfileResetView = Backbone.View.extend({
     var password = this.$('#rpassword').val();
     var confirm = this.$('#rpassword-confirm').val();
     if (password === confirm) {
-      $('#rpassword-confirm').closest('.form-group').removeClass('has-error');
-      $('#rpassword-confirm').closest('.form-group').find('.help-block').hide();
+      $('#rpassword-confirm').closest('.required-input').removeClass('usa-input-error');
+      $('#rpassword-confirm').closest('.required-input').find('.field-validation-error').hide();
     } else {
-      $('#rpassword-confirm').closest('.form-group').addClass('has-error');
-      $('#rpassword-confirm').closest('.form-group').find('.help-block').show();
+      $('#rpassword-confirm').closest('.required-input').addClass('usa-input-error');
+      $('#rpassword-confirm').closest('.required-input').find('.field-validation-error').show();
       success = false;
     }
     return success;
