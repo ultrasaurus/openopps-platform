@@ -45,6 +45,7 @@ var CommentFormView = Backbone.View.extend({
     }
 
     this.$('[type="submit"]').prop('disabled', false);
+    this.$('.comment-alert-empty').hide();
 
     var genTemplate = function (template, data) {
       if (!data) {

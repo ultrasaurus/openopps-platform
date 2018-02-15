@@ -103,8 +103,8 @@
   }
 }
 
-.usajobs-open-opps-opportunity-item {
-  @include card-v4();
+.usajobs-open-opps-opportunity {
+  // @include card-v4();
 
 
 
@@ -113,11 +113,12 @@
   // }
 
   & &__title {
-    @include h3();
-    display: block;
+    @include h1();
     margin: 0;
+    display: block;
     font-weight: bold;
-    color: $color-primary;
+    color: #205493;
+    line-height: 1;
     text-decoration: none;
   }
 
@@ -148,6 +149,258 @@
   }
 
   .usajobs-pill--opportunity-status {
-    margin: 0 auto;
+    margin: $size-M auto;
+    display: inline-block;
+  }
+
+  &::after {
+    clear: both;
+    content: "";
+    display: block;
+  }
+
+  .center {
+    text-align: center;
+    padding-top: 8px;
+
+    .circle {
+      width: 6.5rem;
+      height: 6.5rem;
+      border-radius: 50%;
+    }
+
+    p {
+      font-size: 1.4rem;
+      line-height: 1;
+      margin: 0.5rem 0;
+    }
+  }
+
+  .skill-label {
+    margin: 0 0.5rem 0.8rem 0;
+    display: inline-block;
+  }
+
+  .usajobs-opop-actions__col-sub-actions {
+    text-align: right;
+
+    a {
+      margin-right: $size-default;
+    }
+
+    :last-child {
+      margin-right: 0;
+    }
+  }
+
+  .comment-list-wrapper {
+
+    h3 {
+      margin-top: 0;
+      margin-bottom: $size-S;
+    }
+
+    blockquote {
+      padding: 10px 20px;
+      margin: 0 0 20px;
+      font-size: 1.7rem;
+      border-left: 5px solid $color-gray-lighter;
+      background-color: $color-gray-lightest;
+
+      blockquote {
+        border-color: $color-gray-light;
+        background-color: $color-gray-lighter;
+      }
+    }
+
+    .comment-form-container {
+      position: relative;
+
+      div.comment-input {
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+        border: 0.1rem solid #5b616b;
+        border-radius: 0;
+        box-sizing: border-box;
+        color: #212121;
+        display: block;
+        font-size: 1.7rem;
+        min-height: 4.4rem;
+        height: auto;
+        line-height: 1.3;
+        margin: 0.2em 0;
+        padding: 1rem 0.7em;
+
+        float: left;
+        width: calc(100% - 15rem);
+        max-width: calc(100% - 15rem);
+      }
+
+      .comment-submit {
+        border-bottom-left-radius: 0;
+        border-top-left-radius: 0;
+        margin: 0.3rem 0 0 0;
+        padding: 1.3rem 2rem 1.4rem 2rem;
+        float: left;
+        width: 15rem;
+      }
+
+      &::after {
+        clear: both;
+        content: "";
+        display: table;
+      }
+    }
+
+    #comment-list {
+      list-style: none;
+      padding: 0;
+
+
+      .project-people {
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+      }
+
+      li[data-topic='true'] {
+        cursor: pointer;
+        cursor: hand;
+      }
+
+      ul.comment-list > li {
+        list-style: none;
+        position: relative;
+      }
+
+      .comment-list-wrapper ul {
+        margin: 0;
+        padding: 0;
+        list-style-type: none;
+      }
+
+      .comment-form {
+        margin-left: 40px;
+        margin-bottom: 10px;
+      }
+
+      .comment-form-topic {
+        margin-bottom: 20px;
+      }
+
+      li.border-left {
+        margin-bottom: 5px;
+      }
+
+      .add-comment-button {
+        float: right;
+      }
+
+      .user-username {
+        font-weight: bold;
+      }
+
+      .comment-metadata {
+        font-size: 1.4rem;
+        padding-top: 3px;
+        color: $color-gray;
+      }
+
+      .comment-item {
+        width: 100%;
+        overflow: hidden;
+        // display: inline-table;
+        padding-top: 5px;
+      }
+
+      .comment-image {
+        float: left;
+        // display: table-cell;
+        vertical-align: top;
+        max-height: 40px;
+        max-width: 40px;
+        height: 40px;
+        width: 40px;
+      }
+
+      .comment-inner {
+        padding: 5px;
+        // display: table-cell;
+        width: 100%;
+        vertical-align: top;
+        margin-left: 45px;
+      }
+
+      .comment-alert-empty {
+        display: none;
+      }
+
+      .comment-content {
+        position: relative;
+        -ms-word-break: break-all;
+        /* Be VERY careful with this, breaks normal words wh_erever */
+        word-break: break-all;
+        /* Non standard for webkit */
+        word-break: break-word;
+        -webkit-hyphens: auto;
+        -moz-hyphens: auto;
+        hyphens: auto;
+      }
+
+      .comment-expand,
+      .comment-contract {
+        position: absolute;
+        top: 0;
+        right: 0;
+        cursor: pointer;
+      }
+
+      .comment-expand > .content,
+      .comment-contract > .content {
+        font-size: 10px;
+      }
+
+      .comment-expand {
+        display: none;
+      }
+
+      // .comment-input {
+      //   padding-top: 5px;
+      //   padding-bottom: 5px;
+      //   position: relative;
+      //   height: auto;
+      //   min-height: 30px;
+      // }
+
+      form.comment-submit .input-group-btn {
+        vertical-align: bottom;
+      }
+
+      #comment-empty {
+        border-left: 2px solid #cd2026;
+        padding-top: 0.8rem;
+        padding-bottom: 0.8rem;
+        padding-left: $size-default;
+      }
+
+      a.delete-comment {
+        float: right;
+        margin-top: 5px;
+        background-color: $color-gray-light;
+        border-radius: 50%;
+        // border: 1px solid $color-gray;
+        color: #fff;
+        // font-size: 7px;
+        width: 3rem;
+        height: 3rem;
+        line-height: 3rem;
+        padding: 1px 9px;
+      }
+
+      #comment-form-target {
+        margin-top: 5px;
+      }
+    }
   }
 }
