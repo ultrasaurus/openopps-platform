@@ -13,6 +13,7 @@ var rename = require('gulp-rename');
 var bourbon 	= require('bourbon').includePaths;
 var neat		= require('bourbon-neat').includePaths;
 var octo = require('@octopusdeploy/gulp-octo');
+var bump = require('gulp-bump');
 
 var releaseFiles = [
   '**/*',
@@ -24,6 +25,12 @@ var releaseFiles = [
   '!./{docs,docs/**}',
   '!./{test,test/**}',
 ];
+
+var versionBumps = {
+  '--patch': 'patch',
+  '--minor': 'minor',
+  '--major': 'major',
+};
 
 // Lint Task
 gulp.task('lint', function () {
@@ -82,8 +89,19 @@ gulp.task('watch', function () {
 // Build task
 gulp.task('build', ['lint', 'sass', 'scripts', 'move']);
 
+// Bump package version number
+gulp.task('bump', function () {
+  var type = versionBumps[process.argv[3]];
+  if(!type) {
+    throw new Error('When calling `gulp bump` you must specify one of these options: ' + Object.keys(versionBumps));
+  }
+  gulp.src('./package.json')
+    .pipe(bump({ type: type }))
+    .pipe(gulp.dest('./'));
+});
+
 // Build a release
-gulp.task('release', ['build'], function () {
+gulp.task('release', ['build', 'bump --patch'], function () {
   var pack = gulp.src(releaseFiles)
     .pipe(octo.pack('zip'));
   if(process.env.OctoHost && process.env.OctoKey) {
