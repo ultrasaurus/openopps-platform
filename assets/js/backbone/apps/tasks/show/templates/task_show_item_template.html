@@ -1,76 +1,78 @@
-<div class="usa-alert usajobs-alert usajobs-alert--error" role="alert" data-object="alert"  id="alert-closed" style="<% if (model.state != 'closed') { %>display: none;<% } %>">
-  <div class="usajobs-alert__figure">
-    <div class="usajobs-alert__icon">
-    </div>
-  </div>
-  <div class="usajobs-alert__body">
-    <p class="usa-alert-text">
-      This <span data-i18n="task">opportunity</span> is <strong>closed</strong>.  It is no longer active, and no more modifications may be made.
-    </p>
-  </div>
-  <% if (alert.dismiss) { %>
-  <button class="usajobs-alert__close" data-behavior="alert.close">
-    <span class="usajobs-assistive-text">Close</span>
-  </button>
-  <% } %>
-</div>
-<div class="edit-task-container edit-task-section"></div>
 <section class="usajobs-canvas">
-
-
-<main class="main-content usajobs-content-well" id="main-content" aria-label="Opportunity">
-  <div class="usajobs-open-opps-opportunity-item">
-    <div class="usajobs-grid-full">
-      <div class="usajobs-width-five-sixths">
-        <h1 class="usajobs-open-opps-opportunity-item__title"><%- model.title %></h1>
-        <span class="usajobs-pill--opportunity-status status-<%- state.value %>"><%- state.humanReadable %></span>
-        <% if (madlibTags['skill']) { %>
-        <div class="py1">
-          <% _.each(madlibTags['skill'], function (t) { %>
-            <a class="px2 bg-yellow black rounded" href="/tasks?search=<%= t.name %>"><%= t.name %></a>
-          <% }) %>
+  <div class="usajobs-content-gutter">
+    <div class="usa-alert usajobs-alert usajobs-alert--error" role="alert" data-object="alert"  id="alert-closed" style="<% if (model.state != 'closed') { %>display: none;<% } %>">
+      <div class="usajobs-alert__figure">
+        <div class="usajobs-alert__icon">
         </div>
-        <% } %>
       </div>
-
-      <div class="usajobs-width-one-sixth">
-      <% if (user) { %>
-        <div class="center" data-userid="<%- model.userId %>">
-      <% } else { %>
-        <div class="center">
+      <div class="usajobs-alert__body">
+        <p class="usa-alert-text">
+          This <span data-i18n="task">opportunity</span> is <strong>closed</strong>.  It is no longer active, and no more modifications may be made.
+        </p>
+      </div>
+      <% if (alert.dismiss) { %>
+      <button class="usajobs-alert__close" data-behavior="alert.close">
+        <span class="usajobs-assistive-text">Close</span>
+      </button>
       <% } %>
-          <img class="circle" width="50" src="/api/user/photo/<%- model.userId %>" alt="Profile pic of <%- model.owner.name %>"/>
-          <p>Posted by</p>
-          <div><%- model.owner.name %></div>
-          <div><%- model.publishedAt ? moment(model.publishedAt).format('MM/DD/YY') : '-/-/-' %></div>
-      <% if (user) { %>
-        </div>
-      <% } else { %>
-        </div>
-      <% } %>
-      </div>
     </div>
+    <div class="edit-task-container edit-task-section"></div>
 
-    <div class="usajobs-grid-full">
-      <div class="usajobs-opop-task-tags usajobs-width-two-thirds">
-        <% _.each(tags, function (t) { %>
-          <a class="skill-label" href="/tasks?search=<%= t.name %>"><%= t.name %></a>
-        <% }) %>
-      </div>
 
-      <div class="usajobs-opop-actions usajobs-opop-actions--v1-5 usajobs-width-one-third">
-        <div class="usajobs-opop-actions__col-sub-actions usajobs-opop-actions--v1-5__col-sub-actions">
-          <a class="usajobs-opop-actions__duplicate" href="#duplicate"><i class="fa fa-copy"></i> Duplicate</a>
-          <a class="usajobs-opop-actions__save" href="#save" data-behavior="opop-actions.toggle-save" data-state="is-unsaved"><i class="fa fa-bookmark"></i> Save</a>
-          <a class="usajobs-opop-actions__share usajobs-opop-actions-share" href="#" id="email"><i class="fa fa-share-alt"></i> Share</a>
+
+    <main class="main-content usajobs-content-well" id="main-content" aria-label="Opportunity">
+      <div class="usajobs-open-opps-opportunity usajobs-open-opps-section usajobs-open-opps-profile">
+        <div class="usajobs-grid-full">
+          <div class="usajobs-width-five-sixths">
+            <h1 class="usajobs-open-opps-opportunity-item__title"><%- model.title %></h1>
+            <span class="usajobs-pill--opportunity-status status-<%- state.value %>"><%- state.humanReadable %></span>
+            <% if (madlibTags['skill']) { %>
+            <div class="py1">
+              <% _.each(madlibTags['skill'], function (t) { %>
+                <a class="px2 bg-yellow black rounded" href="/tasks?search=<%= t.name %>"><%= t.name %></a>
+              <% }) %>
+            </div>
+            <% } %>
+          </div>
+
+          <div class="usajobs-width-one-sixth">
+          <% if (user) { %>
+            <div class="center" data-userid="<%- model.userId %>">
+          <% } else { %>
+            <div class="center">
+          <% } %>
+              <img class="circle" width="50" src="/api/user/photo/<%- model.userId %>" alt="Profile pic of <%- model.owner.name %>"/>
+              <p>Posted by</p>
+              <div><%- model.owner.name %></div>
+              <div><%- model.publishedAt ? moment(model.publishedAt).format('MM/DD/YY') : '-/-/-' %></div>
+          <% if (user) { %>
+            </div>
+          <% } else { %>
+            </div>
+          <% } %>
+          </div>
+        </div>
+
+        <div class="usajobs-grid-full">
+          <div class="usajobs-opop-task-tags usajobs-width-two-thirds">
+            <% _.each(tags, function (t) { %>
+              <a class="skill-label" href="/tasks?search=<%= t.name %>"><%= t.name %></a>
+            <% }) %>
+          </div>
+
+          <div class="usajobs-opop-actions usajobs-opop-actions--v1-5 usajobs-width-one-third">
+            <div class="usajobs-opop-actions__col-sub-actions usajobs-opop-actions--v1-5__col-sub-actions">
+              <a class="usajobs-opop-actions__duplicate" href="#duplicate"><i class="fa fa-copy"></i> Duplicate</a>
+              <a class="usajobs-opop-actions__save" href="#save" data-behavior="opop-actions.toggle-save" data-state="is-unsaved"><i class="fa fa-bookmark"></i> Save</a>
+              <a class="usajobs-opop-actions__share usajobs-opop-actions-share" href="#" id="email"><i class="fa fa-share-alt"></i> Share</a>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
-  </div>
 
 
-      <div class="usajobs-open-opps-opportunity-item">
-        <div class="usajobs-grid">
+      <div class="usajobs-open-opps-opportunity usajobs-open-opps-profile">
+        <div class="usajobs-grid-full">
           <div class="usa-width-two-thirds">
             <div class="usajobs-open-opps-opportunity__desc">
               <%= model.descriptionHtml %>
@@ -123,22 +125,22 @@
         </div>
       </div>
 
-  <div class="usajobs-open-opps-opportunity-item">
-          <div class="comment-list-wrapper" style="clear: both;">
-            <h2>Discussion
-            <% if (user) { %>
-            <button class="btn btn-c0 btn-sm file-add new-topic" id="project-topic-new">New Topic</button>
-            <% } %>
-            </h2>
-            <div class="py2 topic-form-wrapper"></div>
-            <ul id="comment-list-null"></ul>
-          </div>
-      <div class="col col-12 md-col-3 px2"></div>
-    </div>
-</main>
-<aside class="usajobs-rightrail" id="rightrail">
+      <div class="usajobs-open-opps-opportunity usajobs-open-opps-profile">
+        <div class="comment-list-wrapper">
+          <% if (user) { %>
+          <button class="file-add new-topic" id="project-topic-new">New Topic</button>
+          <% } %>
+          <div class="topic-form-wrapper"></div>
+          <ul id="comment-list-null"></ul>
+        </div>
+        <div class="usajobs-grid-full">
+          <div class="usajobs-width-one-whole"></div>
+        </div>
+      </div>
+    </main>
 
-    <div class="usajobs-open-opps-opportunity-item">
+    <aside class="usajobs-rightrail" id="rightrail">
+      <div class="usajobs-open-opps-opportunity usajobs-open-opps-section usajobs-open-opps-profile">
         <div class="p2 mb3 bg-white">
           <div <% if (!vol) {%>style="display: none;"<%}%>>
             <div id="modal-volunteer"></div>
@@ -212,7 +214,7 @@
         </div>
       <% } %>
       </div>
-</aside>
+    </aside>
 
-
+  </div>
 </section>
