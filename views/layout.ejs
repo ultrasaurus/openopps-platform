@@ -1,49 +1,70 @@
 <!DOCTYPE html>
-<html>
+<html class="flexbox">
   <head>
     <title><%=typeof title == 'undefined' ? 'Open Opportunities' : title%></title>
-
-    <!-- Application data -->
     <script type="text/javascript">
     systemName = <%- JSON.stringify(systemName) %>;
     draftAdminOnly = <%- JSON.stringify(draftAdminOnly) %>;
     version = <%- JSON.stringify(version) %>;
-    backendUser = <%- JSON.stringify(user) %>;
     </script>
+    <script defer src="/js/fontawesome-all.js"></script>
 
     <!-- Viewport mobile tag for sensible mobile support -->
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
     <!-- CSRF token -->
     <meta name="csrf-token" content="">
-
-    <!--STYLES-->
     <link rel="stylesheet" href="/styles/main.css">
-    <!--STYLES END-->
   </head>
 
-  <body class="site">
+  <body>
     <script type="text/javascript">
       // this will only return true for IE <= 8.
       if (window.attachEvent && !window.addEventListener) {
-        document.write('<div class="alert alert-danger"><strong>You are using an old, unsupported version of Internet Explorer.</strong>  This website may not work correctly in your browser.  For the best experience, you should use <a href="http://www.google.com/chrome" class="alert-link">Google Chrome</a> or <a href="http://www.microsoft.com/InternetExplorer" class="alert-link">update Internet Explorer</a>.</div>');
+        document.write('<div class="usa-alert usajobs-alert usajobs-alert--error" role="alert" data-object="alert"><div class="usajobs-alert__figure"><div class="usajobs-alert__icon"></div></div><div class="usajobs-alert__body"><p class="usa-alert-text">You are using an old, unsupported version of Internet Explorer. This website may not work correctly in your browser. For the best experience, you should use <a href="http://www.google.com/chrome" class="alert-link">Google Chrome</a> or <a href="http://www.microsoft.com/InternetExplorer" class="alert-link">update Internet Explorer</a>.</p></div></div>');
       }
     </script>
-
-    <div class="site-wrap">
-      <div class="navigation">
-      </div>
+    <header class="usajobs-site-header" aria-label="header" id="title">
+        <div class="usa-banner">
+            <div class="usa-accordion">
+              <div class="usa-banner-header">
+                <div class="usa-grid usa-banner-inner usajobs-nav--full_bleed__banner-inner">
+                <img src="/img/favicons/favicon-57.png" alt="U.S. flag">
+                <p>An official website of the United States government</p>
+                </div>
+              </div>
+            </div>
+          </div>
+    </header>
+    <section class="usajobs-shell">
+      <div class="navigation"></div>
       <% if (alert) { %>
       <div class="container">
-        <div class="alert alert-danger server-alert">
-          <%- alert.message %>
+        <div class="usa-alert usajobs-alert usajobs-alert--error server-alert" role="alert" data-object="alert">
+          <div class="usajobs-alert__figure">
+            <div class="usajobs-alert__icon">
+            </div>
+          </div>
+          <div class="usajobs-alert__body">
+            <p class="usa-alert-text">
+              <%- alert.message %>
+            </p>
+          </div>
         </div>
+        <!-- <div class="alert alert-danger server-alert">
+          <%- alert.message %>
+        </div> -->
       </div>
       <% } %>
       <%- body %>
+<<<<<<< HEAD
     </div>
     <footer class="bg-white p1" id="footer"></footer>
     <script src="/js/bundle.min.js?v=<%- version %>"></script>
+=======
+    <footer id="footer"></footer>
+    <script src="/js/bundle.min.js?v=<%- jsHash %>"></script>
+>>>>>>> a2fe0d2a5322be646eb2135fc19a425069201fcc
 
   </body>
 </html>

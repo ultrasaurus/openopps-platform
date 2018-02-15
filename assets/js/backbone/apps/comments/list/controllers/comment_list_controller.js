@@ -235,7 +235,7 @@ Comment = Backbone.View.extend({
 
     if ( window.cache.currentUser && window.cache.currentUser.isAdmin ) {
       $.ajax({
-        url: '/api/comment/'+id,
+        url: '/api/comment/' + id,
         type: 'DELETE',
       }).done( function (data){
         $(e.currentTarget).parent().parent().remove('li.comment-item');

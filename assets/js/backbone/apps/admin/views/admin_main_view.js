@@ -15,7 +15,7 @@ var AdminMainTemplate = require('../templates/admin_main_template.html');
 var AdminMainView = Backbone.View.extend({
 
   events: {
-    'click .link-admin' : 'link',
+    'click .usajobs-nav-secondary__item' : 'link',
   },
 
   initialize: function (options) {
@@ -57,9 +57,11 @@ var AdminMainView = Backbone.View.extend({
     }
     var t = $((this.$('[data-target=' + target + ']'))[0]);
     // remove active classes
-    $($(t.parents('ul')[0]).find('li')).removeClass('active');
+    $('.usajobs-nav-secondary__item.is-active').removeClass('is-active');
+    //$($(t.parents('ul')[0]).find('li')).removeClass('active');
     // make the current link active
-    $(t.parent('li')[0]).addClass('active');
+    t.addClass('is-active');
+    //$(t.parent('li')[0]).addClass('active');
 
     if (target == 'users') {
       if (!this.adminUserView) {

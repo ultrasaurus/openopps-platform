@@ -1,3 +1,40 @@
+// USAJOBS Design
+.usajobs-opop-tasklist {
+    background-color: #f1f1f1;
+}
+
+@media screen and (min-width: 62em) {
+    .usajobs-opop__task-intro {
+        float: none;
+        width: 100%;
+        padding: 3rem 1.5rem 1.5rem;
+    }
+}
+
+
+.usajobs-opop__task-intro {
+    position: relative;
+}
+
+@media screen and (min-width: 62em) {
+
+    .usajobs-opop__task-intro {
+        float: right;
+        display: block;
+        margin-right: 2.3576520234%;
+        width: 23.5rem;
+        margin-right: 0;
+    }
+}
+
+.usajobs-opop__task-intro {
+    padding: 1.5rem;
+    background-color: #dce4ef;
+}
+
+
+
+
 .task-scroll {
     max-height: 350px;
     overflow-y: auto;
@@ -128,6 +165,8 @@ ul.task-tags > li {
 #stateFilters label {
     display: block;
     font-weight: normal;
+    margin-top: 0;
+    margin-bottom: 1rem;
 }
 
 aside a,

@@ -1,4 +1,4 @@
-const log = require('blue-ox')('app:autocomplete:service');
+const log = require('log')('app:autocomplete:service');
 const db = require('../../db');
 const dao = require('./dao')(db);
 

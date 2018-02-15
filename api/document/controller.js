@@ -1,4 +1,4 @@
-const log = require('blue-ox')('app:document');
+const log = require('log')('app:document');
 const Router = require('koa-router');
 const _ = require('lodash');
 const service = require('./service');
@@ -8,7 +8,8 @@ var router = new Router();
 router.get('/api/upload/get/:id', async (ctx, next) => {
   var result = await service.findOne(ctx.params.id);
   if(result) {
-    ctx.body = result;
+    ctx.type = result.ContentType;
+    ctx.body = result.Body;
   } else {
     ctx.status = 404;
   }

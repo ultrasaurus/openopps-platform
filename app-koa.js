@@ -1,15 +1,17 @@
+const log = require('log')('app-koa');
 const koa = require('koa');
 const cfenv = require('cfenv');
-const blueox = require('blue-ox');
 const render = require('koa-ejs');
 const serve = require('koa-static');
 const path = require('path');
 const parser = require('koa-better-body');
 const CSRF = require('koa-csrf');
-const session = require('koa-session');
+const session = require('koa-generic-session');
 const redisStore = require('koa-redis');
 const passport = require('koa-passport');
+const cacheControl = require('koa-cache-control');
 const flash = require('koa-better-flash');
+const md5File = require('md5-file');
 const _ = require('lodash');
 
 module.exports = (config) => {
@@ -24,6 +26,7 @@ module.exports = (config) => {
   _.extend(openopps, require('./config/application'));
   _.extend(openopps, require('./config/session'));
   _.extend(openopps, require('./config/settings/auth'));
+  _.extend(openopps, require('./config/cache'));
   _.extend(openopps, require('./config/version'));
   _.extend(openopps, require('./config/fileStore'));
   _.extend(openopps, require('./config/email'));
@@ -31,22 +34,17 @@ module.exports = (config) => {
     _.extend(openopps, config);
   }
 
-  // configure logging
-  blueox.beGlobal();
-  blueox.useColor = true;
-  blueox.level('info');
-
-  var log = blueox('app');
-  var qlog = blueox('db');
-  var rlog = blueox('app:http');
-
   const app = new koa();
+  require('./lib/log/middleware')(app);
 
   // initialize flash
   app.use(flash());
 
   // initialize body parser
   app.use(parser());
+
+  // initialize cache controller
+  app.use(cacheControl(openopps.cache.public));
 
   // configure session
   app.proxy = true;
@@ -56,11 +54,11 @@ module.exports = (config) => {
   // configure CSRF
   app.use(new CSRF({
     invalidSessionSecretMessage: { message: 'Invalid session' },
-    invalidSessionSecretStatusCode: 403,
-    invalidTokenMessage: { message: 'Invalid CSRF token' },
-    invalidTokenStatusCode: 403,
+    invalidSessionSecretStatusCode: 401,
+    invalidTokenMessage: JSON.stringify({ message: 'Invalid CSRF token' }),
+    invalidTokenStatusCode: 401,
     excludedMethods: [ 'GET', 'HEAD', 'OPTIONS' ],
-    disableQuery: false,
+    disableQuery: true,
   }));
 
   // initialize authentication
@@ -82,24 +80,16 @@ module.exports = (config) => {
     return require(path.join(__dirname, 'api', name, 'controller'));
   };
 
-  // log request to console
+  // redirect any request coming other than openopps.hostName
   app.use(async (ctx, next) => {
-    var start = Date.now(), str = ctx.method + ' ' + ctx.protocol + '://' + ctx.host + ctx.path + (ctx.querystring ? '?' + ctx.querystring : '') + '\n';
-    str += 'from ' + ctx.ip;
-    try {
+    var hostParts = ctx.host.split(':');
+    if(!openopps.redirect || hostParts[0] === openopps.hostName) {
       await next();
-      str += ' -- took ' + qlog.color('warn', (Date.now() - start) + 'ms') + ' -- ' + qlog.color(ctx.status >= 200 && ctx.status < 400 ? 'debug' : 'error', ctx.status) + qlog.color('custom', ' (' + (ctx.length || 'unknown') + ')');
-      rlog.info(str);
-    } catch (e) {
-      str += ' -- took ' + qlog.color('warn', (Date.now() - start) + 'ms');
-      str += ' and failed -- ' + qlog.color('error', ctx.status) + ': ';
-      if (e.stack) {
-        str += e.message + '\n';
-        str += e.stack;
-      } else {
-        str += e;
-      }
-      rlog.error(str);
+    } else {
+      log.info('Redirecting from ' + ctx.host);
+      var url = ctx.protocol + '://' + openopps.hostName + (hostParts[1] ? ':' + hostParts[1] : '') + ctx.path + (ctx.querystring ? '?' + ctx.querystring : '');
+      ctx.status = 301;
+      ctx.redirect(url);
     }
   });
 
@@ -118,6 +108,7 @@ module.exports = (config) => {
   // CSRF Token
   app.use(async (ctx, next) => {
     if(ctx.path === '/csrfToken') {
+      ctx.cacheControl = openopps.cache.noStore;
       ctx.body = { _csrf: ctx.csrf };
     } else await next();
   });
@@ -128,6 +119,7 @@ module.exports = (config) => {
     if(ctx.path.match('^/api/.*')) {
       // JSON request for better-body parser are in request.fields
       ctx.request.body = ctx.request.body || ctx.request.fields;
+      ctx.cacheControl = openopps.cache.noStore;
       await next();
     } else {
       var data = {
@@ -135,7 +127,7 @@ module.exports = (config) => {
         draftAdminOnly: openopps.draftAdminOnly,
         version: openopps.version,
         alert: null,
-        user: ctx.state.user || null,
+        jsHash: md5File.sync(path.join(__dirname, 'dist', 'js', 'bundle.min.js')),
       };
       await ctx.render('main/index', data);
     }

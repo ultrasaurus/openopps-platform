@@ -3,7 +3,7 @@ const crypto = require('crypto');
 const bcrypt = require('bcryptjs');
 const validator = require('validator');
 const uuid = require('uuid');
-const log = require('blue-ox')('app:auth:service');
+const log = require('log')('app:auth:service');
 const db = require('../../db');
 const dao = require('./dao')(db);
 const notification = require('../notification/service');
@@ -29,8 +29,10 @@ async function register (attributes, done) {
   if (!attributes.password || attributes.password === '') {
     return done(new Error('password may not be blank'));
   }
-  await dao.User.insert(_.extend(baseUser, attributes)).then(async (user) => {
-    log.info('created user', user);
+  attributes.username = attributes.username.toLowerCase().trim();
+  await dao.User.insert(_.extend(_.clone(baseUser), attributes)).then(async (user) => {
+    log.info('created user', _.omit(user, 'password'));
+
     var tags = attributes.tags || attributes['tags[]'] || [];
     await userService.processUserTags(user, tags).then(tags => {
       user.tags = tags;
@@ -40,8 +42,8 @@ async function register (attributes, done) {
       password: await bcrypt.hash(attributes.password, 10),
       accessToken: crypto.randomBytes(48).toString('base64'),
     };
-    await dao.Passport.insert(_.extend(basePassport, passport)).then(passport => {
-      log.info('created passport', passport);
+    await dao.Passport.insert(_.extend(_.clone(basePassport), passport)).then(passport => {
+      log.info('created passport', _.omit(passport, ['password', 'accessToken']));
     }).catch(err => {
       log.info('register: failed to create passport ', attributes.username, err);
     });
@@ -128,7 +130,7 @@ async function checkToken (token, done) {
   expiry.setTime(expiry.getTime() - openopps.auth.local.tokenExpiration);
   await dao.UserPasswordReset.findOne('token = ? and "createdAt" > ? and "deletedAt" is null', [token, expiry]).then(async (passwordReset) => {
     await dao.User.findOne('id = ?', passwordReset.userId).then((user) => {
-      return done(null, _.extend(passwordReset, { email: user.username }));
+      return done(null, _.extend(_.clone(passwordReset), { email: user.username }));
     }).catch((err) => {
       return ({ message: 'Error looking up user.', err: err }, null);
     });

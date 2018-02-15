@@ -1,5 +1,5 @@
 const _ = require ('lodash');
-const log = require('blue-ox')('app:opportunity:service');
+const log = require('log')('app:opportunity:service');
 const db = require('../../db');
 const dao = require('./dao')(db);
 const notification = require('../notification/service');
@@ -13,6 +13,10 @@ const baseTask = {
   createdAt: new Date(),
   updatedAt: new Date(),
 };
+
+function findOne (id) {
+  return dao.Task.findOne('id = ?', id);
+}
 
 async function findById (id, loggedIn) {
   var results = await dao.Task.query(dao.query.task + ' where task.id = ?', id, dao.options.task);
@@ -116,7 +120,7 @@ async function canAdministerTask (user, id) {
 async function checkAgency (user, ownerId) {
   var owner = await dao.clean.user((await dao.User.query(dao.query.user, ownerId, dao.options.user))[0]);
   if (owner && owner.agency) {
-    return _.find(user.tags, { 'type': 'agency' }).name == owner.agency.name;
+    return user.tags ? _.find(user.tags, { 'type': 'agency' }).name == owner.agency.name : false;
   }
   return false;
 }
@@ -143,8 +147,8 @@ async function updateOpportunity (attributes, done) {
           return done(task, origTask.state !== task.state);
         });
       }).catch (err => { return done(null, false, {'message':'Error updating task.'}); });
-  }).catch (err => { 
-    return done(null, false, {'message':'Error updating task.'}); 
+  }).catch (err => {
+    return done(null, false, {'message':'Error updating task.'});
   });
 }
 
@@ -153,7 +157,7 @@ async function publishTask (attributes, done) {
   attributes.updatedAt = new Date();
   await dao.Task.update(attributes).then(async (task) => {
     return done(true);
-  }).catch (err => { 
+  }).catch (err => {
     return done(false);
   });
 }
@@ -232,10 +236,7 @@ async function copyOpportunity (attributes, adminAttributes, done) {
     description: results.description,
   };
 
-  var newTask = _.extend(baseTask, task);
-  delete(newTask.id);
-  delete(newTask.completedBy);
-  delete(newTask.completedAt);
+  var newTask = _.extend(_.clone(baseTask), task);
   await dao.Task.insert(newTask)
     .then(async (task) => {
       tags.map(tag => {
@@ -329,6 +330,7 @@ async function sendTasksDueNotifications (action, i) {
 }
 
 module.exports = {
+  findOne: findOne,
   findById: findById,
   list: list,
   commentsByTaskId: commentsByTaskId,

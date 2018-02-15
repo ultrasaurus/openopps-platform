@@ -1,0 +1,60 @@
+<section class="usajobs-canvas">
+  <div class="usajobs-content-gutter usajobs-open-opps-search">
+
+  <main class="main-content usajobs-content-well" id="main-content" aria-label="Search results">
+    <div class="usajobs-grid usajobs-open-opps-search__title">
+      <div class="usa-width-one-whole">
+        <input type="text" id="search" title="Search" class="usajobs-open-opps-search__input" placeholder="<%- placeholder %>" value="<%- term %>">
+        <span class="fa fa-search search-icon"></span>
+      </div>
+    </div>
+    <div id="task-search-spinner" class="fullwidth text-center">
+        Loading... <i class="fa fa-spinner fa-spin"></i>
+    </div>
+    <div class="usajobs-open-opps-search-results" id="task-list"></div>
+    <div class="" id="task-page"></div>
+  </main>
+    <aside class="usajobs-rightrail" id="rightrail">
+      <div class="usajobs-grid usajobs-open-opps-search__title">
+        <div class="usa-width-one-whole">
+          <a href="#addTask" class="usa-button usa-button-gray add-opportunity" data-toggle="modal" data-backdrop="static" style="<% if (!user) { %>display: none;<% } %>"><i class="fa fa-plus"></i> <span data-i18n="Task">Post opportunity</span></a>
+        </div>
+      </div>
+      <div class="usajobs-open-opps-opportunity">
+        <h3>Filters</h3>
+        <h4 class="usajobs-search-filters__title">Status</h4>
+        <a class="usajobs-search-filters__select-toggle" href="javascript:void(0);">Select all</a>
+
+        <ul id="stateFilters" class="usa-unstyled-list">
+          <% _.each(ui.states, function (t) { %>
+            <% if (!t.hide || (user && user.isAdmin)) { %>
+              <li>
+                <input type='checkbox' id='state<%- t.label %>' value='<%- t.value %>' <% if(filters.indexOf(t.value) > -1) { %>checked<% } %>>
+                <label for='state<%- t.label %>' class="<%- t.value %>-filter">
+                  <%- t.label %>
+                </label>
+              </li>
+            <% } %>
+          <% }); %>
+        </ul>
+
+        <ul id="search-projs" class="nav nav-pills nav-stacked nav-search">
+        </ul>
+        <ul id="search-tags" class="nav nav-pills nav-stacked nav-search">
+        </ul>
+
+        <div class="search-clear" style="display: none;">
+          <div class="align-right">
+            <a href="#" id="search-clear" class="btn btn-sm btn-c0"><i class="fa fa-remove"></i> Clear Search Criteria</a>
+          </div>
+        </div>
+
+        <% if (agencyName) { %>
+        <h4 class="usajobs-search-filters__title agency">Agency</h4>
+          <input id="js-restrict-task-filter" class="restrict-participation" type="checkbox" name="restrict">
+          <label for="js-restrict-task-filter">Restricted to <%- agencyName %></label>
+        <% } %>
+      </div>
+    </aside>
+  </div>
+</section>

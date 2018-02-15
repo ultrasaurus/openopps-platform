@@ -104,7 +104,7 @@ var AttachmentShowView = Backbone.View.extend({
         if (data.jqXHR.status == 413) {
           message = 'The uploaded file exceeds the maximum file size.';
         }
-        self.$('.file-upload-alert > span').html(message);
+        self.$('.file-upload-alert-message').html(message);
         self.$('.file-upload-alert').show();
       },
     });

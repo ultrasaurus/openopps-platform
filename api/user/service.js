@@ -1,6 +1,6 @@
 const db = require('../../db');
 const dao = require('./dao')(db);
-const log = require('blue-ox')('app:user:service');
+const log = require('log')('app:user:service');
 const bcrypt = require('bcryptjs');
 const _ = require('lodash');
 const User = require('../model/User');
@@ -10,7 +10,9 @@ async function list () {
 }
 
 async function findOne (id) {
-  return await dao.User.findOne('id = ?', id);
+  return await dao.User.findOne('id = ?', id).catch(err => {
+    return null;
+  });
 }
 
 async function findOneByUsername (username, done) {
@@ -52,6 +54,9 @@ function processUserTags (user, tags) {
       return await createUserTag(tag, user);
     } else {
       _.extend(tag, { 'createdAt': new Date(), 'updatedAt': new Date() });
+      if (tag.id) {
+        return await createUserTag(tag.id, user);
+      }
       return await createNewUserTag(tag, user);
     }
   }));
@@ -88,16 +93,25 @@ async function updateProfile (attributes, done) {
         await processUserTags(user, tags).then(tags => {
           user.tags = tags;
         });
-        return done(null);
+        return done(null, user);
       }).catch (err => { return done({'message':'Error updating profile.'}); });
   }).catch (err => { return done({'message':'Error updating profile.'}); });
 }
 
-async function updateProfileStatus (attributes, done) {
-  attributes.updatedAt = new Date();
-  await dao.User.update(attributes).then(async (user) => {
-    return done(null);
-  }).catch (err => { return done({'message':'Error updating profile status.'}); });
+async function updateProfileStatus (opts, done) {
+  if (await canAdministerAccount(opts.user, { id: opts.id })) {
+    var user = await getProfile(opts.id);
+    user.disabled = opts.disable ? 't' : 'f';
+    user.updatedAt = new Date();
+    await dao.User.update(user).then(async (result) => {
+      return done(result, null);
+    }).catch (err => {
+      log.info('Error updating profile status', err);
+      return done(null, { 'message': 'Error updating profile status' });
+    });
+  } else {
+    done(null, {'message': 'Forbidden'});
+  }
 }
 
 async function canUpdateProfile (ctx) {

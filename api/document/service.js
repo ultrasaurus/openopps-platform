@@ -1,5 +1,5 @@
 const _ = require('lodash');
-const log = require('blue-ox')('app:document:service');
+const log = require('log')('app:document:service');
 const db = require('../../db');
 const dao = require('./dao')(db);
 const AWS = require('aws-sdk');
@@ -39,19 +39,24 @@ s3 = {
     var s3 = new AWS.S3();
     var params = {
       Bucket: config.s3.bucket,
-      Key: p.join(config.s3.prefix || '', name),
+      Key: path.join(config.s3.prefix || '', name),
       Body: data,
     };
     s3.upload(params, cb);
   },
-  get: function (file, res) {
-    res.type(file.mimeType);
+  get: function (name, cb) {
     var s3 = new AWS.S3();
     var params = {
       Bucket: config.s3.bucket,
-      Key: p.join(config.s3.prefix || '', file.fd),
+      Key: path.join(config.s3.prefix || '', name),
     };
-    s3.getObject(params, cb);
+    s3.getObject(params, (err, data) => {
+      if(err) {
+        cb(err, null);
+      } else {
+        cb(null, data.Body);
+      }
+    });
   },
 };
 
@@ -175,7 +180,7 @@ function findOne (id) {
           log.info('Error retrieving file ', file.name, err);
           resolve(false);
         }
-        resolve(data);
+        resolve({ Body: data, ContentType: file.mimeType });
       });
     }).catch((err) => {
       resolve(false);

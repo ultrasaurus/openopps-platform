@@ -55,7 +55,7 @@ module.exports = {
 };
 
 function validateCompletedBy (obj, attributes) {
-  if (attributes.completedBy && (!validator.isDate(attributes.completedBy) || attributes.completedBy.match(/[<>]/g))) {
+  if (attributes.completedBy && (!validator.isISO8601(attributes.completedBy) || attributes.completedBy.match(/[<>]/g))) {
     obj['invalidAttributes']['completedby'] = [];
     obj['invalidAttributes']['completedby'].push({'message': 'Estimated completion date must be a date.'});
   }

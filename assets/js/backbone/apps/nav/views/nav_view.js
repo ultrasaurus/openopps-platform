@@ -11,6 +11,8 @@ var UIConfig = require('../../../config/ui.json');
 var Login = require('../../../config/login.json');
 var LoginController = require('../../login/controllers/login_controller');
 var NavTemplate = require('../templates/nav_template.html');
+var IdleModal = require('../../../components/modal_idle');
+var User = require('../../../../utils/user');
 
 var NavView = Backbone.View.extend({
   events: {
@@ -18,6 +20,7 @@ var NavView = Backbone.View.extend({
     'click .nav-link': linkBackbone,
     'click .login': 'loginClick',
     'click .logout': 'logout',
+    'click .menu-toggle': 'toggleMenu',
   },
 
   initialize: function (options) {
@@ -26,22 +29,34 @@ var NavView = Backbone.View.extend({
 
     this.listenTo(window.cache.userEvents, 'user:login:success', function (userData) {
       self.doRender({ user: userData });
+      this.idleModal = new IdleModal({ el: '#login-wrapper' }).render();
+      this.idleModal.resetTimeout();
+      Backbone.history.navigate('/', {trigger: true});
     });
 
     this.listenTo(window.cache.userEvents, 'user:login:close', function () {
       self.doingLogin = false;
     });
 
+    this.listenTo(window.cache.userEvents, 'user:request:logout', function () {
+      if(this.idleModal) this.idleModal.cleanup();
+      self.logout({});
+    });
+
     this.listenTo(window.cache.userEvents, 'user:logout', function () {
       self.doRender({ user: null });
       Backbone.history.navigate('', {trigger: true});
+      this.idleModal.cleanup();
       window.cache.userEvents.trigger('user:logout:success');
     });
 
     // request that the user log in to see the page
     this.listenTo(window.cache.userEvents, 'user:request:login', function (message) {
       // trigger the login modal
-      self.login(message);
+      $.getJSON('/csrfToken', function (t) {
+        $('meta[name="csrf-token"]').attr('content', t._csrf);
+        Backbone.history.navigate('/login', {trigger: true});
+      });
     });
 
     // update the navbar when the profile changes
@@ -51,7 +66,7 @@ var NavView = Backbone.View.extend({
         dataType: 'json',
       }).done(function (data) {
         // reset the currentUser object
-        window.cache.currentUser = data;
+        window.cache.currentUser = new User(data);
         // re-render the view
         self.render();
       });
@@ -66,6 +81,10 @@ var NavView = Backbone.View.extend({
   render: function () {
     var self = this;
     this.doRender({ user: window.cache.currentUser, systemName: window.cache.system.name });
+    if(window.cache.currentUser) {
+      this.idleModal = new IdleModal({ el: '#login-wrapper' }).render();
+      this.idleModal.resetTimeout();
+    }
     return this;
   },
 
@@ -77,23 +96,19 @@ var NavView = Backbone.View.extend({
     this.$el.localize();
   },
 
-  loginClick: function (e) {
+  toggleMenu: function (e) {
     if (e.preventDefault) e.preventDefault();
-    this.login();
+    $('.usajobs-nav__account').attr('data-state', function (i, attr) {
+      return attr == 'is-open' ? 'is-closed' : 'is-open';
+    });
+    $('.usajobs-nav__secondary-menu').attr('aria-expanded', function (i, attr) {
+      return attr == 'true' ? 'false' : 'true';
+    });
   },
 
-  login: function (message) {
-    if (this.doingLogin) return; // login modal already open, skip!
-    this.doingLogin = true;
-    if (this.loginController) {
-      this.loginController.cleanup();
-    }
-
-    this.loginController = new LoginController({
-      el: '#login-wrapper',
-      message: message,
-      navigate: ($(location).attr('pathname') === '/'),
-    });
+  loginClick: function (e) {
+    if (e.preventDefault) e.preventDefault();
+    Backbone.history.navigate('/login', {trigger: true});
   },
 
   logout: function (e) {
@@ -111,6 +126,9 @@ var NavView = Backbone.View.extend({
   cleanup: function () {
     if (this.loginController) {
       this.loginController.cleanup();
+    }
+    if (this.idleModal) {
+      this.idleModal.cleanup();
     }
     removeView(this);
   },

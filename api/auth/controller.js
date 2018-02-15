@@ -1,4 +1,4 @@
-const log = require('blue-ox')('app:authentication');
+const log = require('log')('app:authentication');
 const Router = require('koa-router');
 const _ = require('lodash');
 const service = require('./service');
@@ -26,7 +26,7 @@ router.post('/api/auth/local', async (ctx, next) => {
         message = getMessage(err);
       }
       if (ctx.accepts('json')) {
-        ctx.status = 403;
+        ctx.status = 401;
         return ctx.body = { message: message };
       } else {
         ctx.flash('message', message);
@@ -40,7 +40,7 @@ router.post('/api/auth/local', async (ctx, next) => {
 });
 
 router.post('/api/auth/local/register', async (ctx, next) => {
-  log.info('Register user', ctx.request.body);
+  log.info('Register user', _.omit(ctx.request.body, 'password'));
 
   delete(ctx.request.body.isAdmin);
   delete(ctx.request.body.isAgencyAdmin);
@@ -58,14 +58,14 @@ router.post('/api/auth/local/register', async (ctx, next) => {
 
   await service.register(ctx.request.body, function (err, user) {
     if (err) {
-      req.flash('error', 'Error.Passport.Registration.Failed');
+      ctx.flash('error', 'Error.Passport.Registration.Failed');
       ctx.status = 400;
       return ctx.body = { message: err.message || 'Registration failed.' };
     }
     try {
       service.sendUserCreateNotification(user, 'user.create.welcome');
     } finally {
-      ctx.body = { success: true };     
+      ctx.body = { success: true };
     }
     return ctx.login(user);
   });
@@ -78,13 +78,13 @@ router.post('/api/auth/forgot', async (ctx, next) => {
     return ctx.body = { message: 'You must enter an email address.'};
   }
 
-  await service.forgotPassword(ctx.request.body.username, function (token, err) {
+  await service.forgotPassword(ctx.request.body.username.toLowerCase().trim(), function (token, err) {
     if (err) {
       ctx.status = 400;
       return ctx.body = { message: err };
     }
     try {
-      service.sendUserPasswordResetNotification(ctx.request.body.username, token, 'userpasswordreset.create.token');
+      service.sendUserPasswordResetNotification(ctx.request.body.username.toLowerCase().trim(), token, 'userpasswordreset.create.token');
     } finally {
       ctx.body = { success: true, email: ctx.request.body.username };
     }

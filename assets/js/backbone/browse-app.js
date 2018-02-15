@@ -1,17 +1,20 @@
 var _ = require('underscore');
 var Backbone = require('backbone');
 var $ = require('jquery');
+
 var NavView = require('./apps/nav/views/nav_view');
 var FooterView = require('./apps/footer/views/footer_view');
-var BrowseListController = require('./apps/browse/controllers/browse_list_controller');
 var ProfileShowController = require('./apps/profiles/show/controllers/profile_show_controller');
+var ProfileListController = require('./apps/profiles/list/controllers/profile_list_controller');
 var TaskModel = require('./entities/tasks/task_model');
 var TaskCollection = require('./entities/tasks/tasks_collection');
+var TaskListController = require('./apps/tasks/list/controllers/task_list_controller');
 var TaskShowController = require('./apps/tasks/show/controllers/task_show_controller');
 var TaskEditFormView = require('./apps/tasks/edit/views/task_edit_form_view');
 var TaskCreateFormView = require('./apps/tasks/new/views/task_form_view');
 var AdminMainController = require('./apps/admin/controllers/admin_main_controller');
 var HomeController = require('./apps/home/controllers/home_controller');
+var LoginController = require('./apps/login/controllers/login_controller');
 
 
 var BrowseRouter = Backbone.Router.extend({
@@ -28,7 +31,8 @@ var BrowseRouter = Backbone.Router.extend({
     'profile/:id(/)'                : 'showProfile',
     'profile/:id(/)/:action'        : 'showProfile',
     'admin(/)'                      : 'showAdmin',
-    'admin(/):action(/)(:agencyId)' : 'showAdmin'
+    'admin(/):action(/)(:agencyId)' : 'showAdmin',
+    'login(/)'                      : 'showLogin',
   },
 
   data: { saved: false },
@@ -53,6 +57,7 @@ var BrowseRouter = Backbone.Router.extend({
         .closest('li')
         .addClass('active');
       $.getJSON('/csrfToken', function (t) {
+        window.cache.userEvents.trigger('idle:reset');
         $('meta[name="csrf-token"]').attr('content', t._csrf);
         $.ajaxPrefilter(function (options, originalOptions, jqXHR) {
           var token;
@@ -71,6 +76,7 @@ var BrowseRouter = Backbone.Router.extend({
     if (this.taskShowController) { this.taskShowController.cleanup(); }
     if (this.taskCreateController) { this.taskCreateController.cleanup(); }
     if (this.homeController) { this.homeController.cleanup(); }
+    if (this.loginController) { this.loginController.cleanup(); }
     this.data = { saved: false };
   },
 
@@ -78,6 +84,16 @@ var BrowseRouter = Backbone.Router.extend({
     this.cleanupChildren();
     this.homeController = new HomeController({
       target: 'home',
+      el: '#container',
+      router: this,
+      data: this.data,
+    });
+  },
+
+  showLogin: function () {
+    this.cleanupChildren();
+    this.loginController = new LoginController({
+      target: 'login',
       el: '#container',
       router: this,
       data: this.data,
@@ -102,8 +118,7 @@ var BrowseRouter = Backbone.Router.extend({
 
   listTasks: function (queryStr) {
     this.cleanupChildren();
-    this.browseListController = new BrowseListController({
-      target: 'tasks',
+    this.taskListController = new TaskListController({
       el: '#container',
       router: this,
       queryParams: this.parseQueryParams(queryStr),
@@ -113,13 +128,19 @@ var BrowseRouter = Backbone.Router.extend({
 
   listProfiles: function (queryStr) {
     this.cleanupChildren();
-    this.browseListController = new BrowseListController({
-      target: 'profiles',
+    this.profileListController = new ProfileListController({
       el: '#container',
       router: this,
       queryParams: this.parseQueryParams(queryStr),
       data: this.data,
     });
+    // this.browseListController = new BrowseListController({
+    //   target: 'profiles',
+    //   el: '#container',
+    //   router: this,
+    //   queryParams: this.parseQueryParams(queryStr),
+    //   data: this.data,
+    // });
   },
 
   showTask: function (id, action) {

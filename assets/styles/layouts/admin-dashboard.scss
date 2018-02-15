@@ -1,0 +1,144 @@
+/*****************
+= Admin Dashboard
+******************/
+
+.usajobs-open-opps-admin-dashboard {
+  max-width: 154rem;
+  min-height: 84rem;
+  margin: auto;
+  margin-top: 3rem;
+  background: #ffffff;
+  padding: 1rem 3rem 3rem 3rem;
+
+  hr {
+    border-top: 1px solid #212121;
+  }
+
+  .box-icon-text {
+    margin-left: 0.5rem;
+  }
+
+  .overflow-x {
+    overflow-x: auto;
+  }
+
+  .task-metrics {
+    .usajobs-form {
+      text-align: right;
+
+      label {
+        display: inline-block;
+        margin: 0 1rem;
+      }
+
+      select {
+        display: inline-block;
+        width: 15rem;
+      }
+    }
+  }
+
+  .task-metrics-table {
+    width: 100%;
+
+    :first-child {
+      margin-top: 0;
+    }
+
+    th {
+      font-weight: bold;
+
+      small {
+        display: block;
+        font-size: 80%;
+        font-weight: normal;
+      }
+    }
+  }
+
+  .activity-feed {
+    li {
+      margin-bottom: 1.5em;
+    }
+  }
+
+  .agency-details {
+    p {
+      margin: 0.5rem 0rem;
+    }
+    a, a:visited {
+      color: #0071BA;
+    }
+  }
+
+  .user-filter {
+    input {
+      max-width: initial;
+    }
+
+    .export-button {
+      margin-top: 1rem;
+
+      a, a:visited {
+        color: #0071BA;
+      }
+    }
+  }
+
+  .user-table {
+    width: 100%;
+
+    th {
+      vertical-align: bottom;
+    }
+
+    .admin-user-checkbox {
+      text-align: center;
+    }
+
+    .pull-center {
+      text-align: center;
+    }
+
+    .icon-spin {
+      text-align: center;
+    }
+
+    .user-reset {
+      cursor: pointer;
+    }
+
+    .no-label {
+      margin: auto;
+      width: 1.8rem;
+    }
+  }
+
+  .task-filters {
+    .filter {
+      display: inline-block;
+      margin-right: 3rem;
+    }
+
+    .export-button {
+      display: inline-block;
+      margin-left: 3rem;
+
+      a, a.visited {
+        color: #0071BA;
+      }
+    }
+  }
+
+  .task-table {
+    width: 100%;
+
+    .task-open {
+      color: #487E40;
+    }
+
+    .delete-task {
+      color: #CD2026;
+    }
+  }
+}

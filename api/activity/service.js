@@ -1,5 +1,5 @@
 const _ = require ('lodash');
-const log = require('blue-ox')('app:activity:service');
+const log = require('log')('app:activity:service');
 const db = require('../../db');
 const dao = require('./dao')(db);
 

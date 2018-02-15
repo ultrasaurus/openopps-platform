@@ -55,7 +55,7 @@ module.exports = {
     },
 
     'task-time-required': {
-      'icon': 'fa fa-calendar-o',
+      'icon': 'fa fa-calendar',
       'class': 'task-time-required',
       'id': 'task-time-required',
       'type': 'task-time-required',
@@ -82,7 +82,7 @@ module.exports = {
     },
 
     'task-time-estimate': {
-      'icon': 'fa fa-cogs',
+      'icon': 'fa fa-clock',
       'class': 'task-time-estimate',
       'id': 'task-time-estimate',
       'type': 'task-time-estimate',

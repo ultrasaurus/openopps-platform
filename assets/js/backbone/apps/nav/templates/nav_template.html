@@ -1,66 +1,64 @@
 <div id="login-wrapper"></div>
-<div class="navbar navbar-default navbar-static-top">
-  <div class="container">
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-      <a class="navbar-brand" href="/" title="<%- systemName %> Home">
-        <img src="/images/logo@2x.png">
-      </a>
+<nav class="usajobs-nav usajobs-nav--openopps" role="navigation" aria-label="main navigation">
+  <div class="usajobs-nav__body usajobs-nav--openopps">
+    <div  class="usajobs-nav__header-container">
+      <div class="usajobs-nav__header usajobs-nav--openopps">
+        <div class="usajobs-nav__brand-container usajobs-nav--openopps__brand-container">     
+          <a class="usajobs-nav__brand usajobs-nav--openopps__brand" href="/" title="Open Opportunities - Home">
+            <img src="/img/logo/svg/open-opportunities.svg" alt="Open Opportunities logo">
+        </a>
     </div>
-    <div class="navbar-collapse collapse pull-right">
-      <ul class="nav navbar-nav">
-
-        <li class="tasks">
-          <a href="/tasks" class="nav-link">
-            <div class="navbar-title">
-              <i class="fa fa-rocket"></i>
-              <span data-i18n="TaskPlural">Tasks</span>
-            </div>
-          </a>
-        </li>
-        <% if (user) { %>
-        <li class="profiles">
-          <a href="/profiles" class="nav-link">
-            <div class="navbar-title">
-              <i class="fa fa-user"></i>
-              <span data-i18n="ProfilePlural">People</span>
-            </div>
-          </a>
-        </li>
-        <% } %>
-        <li class="navbar-divider navbar-text"></li>
-        <% if (user) { %>
-          <li class="profile dropdown">
-            <a href="/profile" id="navbar-profile" role="button" class="dropdown-toggle" data-toggle="dropdown">
-            <img src="/api/user/photo/<%- user.id %>" class="navbar-people" alt="" /> &nbsp;
-              <% if (user.name) { %><%- user.name %>
-              <% } else { %><%- user.username %>
+    <div class="usajobs-nav__menu" id="usajobs-menu">
+          <ul>
+            <% if (user) { %>
+              <li class="usajobs-nav__menu-container usajobs-nav__account usajobs-nav--openopps__menu-container" data-state="is-closed">
+                <a class="usajobs-nav__section-link usajobs-nav--openopps__section-link menu-toggle" href="#" title="Account" aria-haspopup="true">
+                  <div class="usajobs-nav--openopps__icon-center">
+                    <span class="fas fa-user fa-fw"></span>
+                  </div>
+                  <% if (user.name) { %>
+                    <span class="usajobs-nav__first_name usajobs-nav--openopps__first-name"><%- user.name %></span>
+                  <% } else { %>
+                    <span class="usajobs-nav__account_name"><%- user.username %></span>
+                  <% } %>
+                </a>
+                <ul class="usajobs-nav__secondary-menu" aria-expanded="false" aria-label="submenu" role="menu">
+                  <li><a href="/profile/<%- user.id %>" id="profileLink" role="menuitem">Profile</a></li>
+                  <% if (user.isAdmin === true || user.isAgencyAdmin === true) { %>
+                  <li><a href="/admin">Administration</a></li>
+                  <% } %>
+                  <% if (login.local.logout) { %>
+                  <li><a href="/auth/logout" class="logout">Sign Out</a></li>
+                  <% } %>
+                </ul>
+              </li>
+              <li class="usajobs-nav__menu-container usajobs-nav--openopps__people">
+                <a class="usajobs-nav__section-link usajobs-nav--openopps__section-link is-active" href="/profiles" title="People">
+                  <span class="usajobs-nav--openopps__section-active">
+                    <span class="fas fa-users fa-fw" data-fa-transform="right-10"></span>People
+                  </span>
+                </a>
+              </li>
+            <% } else { %>
+              <% if (login.signin !== false) { %>
+              <li class="usajobs-nav__menu-container usajobs-nav__account">
+                  <a href="/login" class="usajobs-nav__section-link usajobs-nav--openopps__section-link">
+                    <span class="fas fa-sign-in-alt fa-fw" data-fa-transform="right-6"></span>
+                    Sign In
+                  </a>
+                </li>
               <% } %>
-            </a>
-            <ul class="dropdown-menu" role="menu" aria-labelledby="navbar-profile">
-              <li role="presentation"><a id="profileLink" role="menuitem" class="nav-link" tabindex="-1" href="/profile/<%- user.id %>">Profile</a></li>
-              <% if (user.isAdmin === true || user.isAgencyAdmin === true) { %>
-              <li role="presentation" class="divider"></li>
-              <li role="presentation"><a role="menuitem"
-                 tabindex="-1" href="/admin" class="nav-link">Administration</a></li>
-              <% } %>
-              <% if (login.local.logout) { %>
-              <li role="presentation" class="divider"></li>
-              <li role="presentation"><a role="menuitem"
-                 tabindex="-1" href="/auth/logout" class="logout">Logout</a></li>
-              <% } %>
-            </ul>
-          </li>
-        <% } else { %>
-          <% if (login.signin !== false) { %>
-          <li><a href="/auth" class="login"><i class="fa fa-plus-circle"></i> Sign In</a></li>
-          <% } %>
-        <% }; %>
-      </ul>
+            <% }; %>
+            <li class="usajobs-nav__menu-container usajobs-nav__menu-search">
+                <a href="/tasks" class="usajobs-nav__section-link usajobs-nav--openopps__section-link" title="Search Opportunities">
+                  <span class="fas fa-search fa-fw" data-fa-transform="right-8"></span> Search
+                </a>
+              </li>
+          </ul>
+        </div>
+      </div>
     </div>
   </div>
-</div>
+</nav>
+
+

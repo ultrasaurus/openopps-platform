@@ -5,10 +5,12 @@ var TaskModel = require( '../../../entities/tasks/task_model' );
 
 // templates
 var AdminTaskTemplate = require('../templates/admin_task_template.html');
+var AdminTaskTable = require('../templates/admin_task_table.html');
 var AdminTaskView = Backbone.View.extend({
   events: {
-    'click .delete-task'  : 'deleteTask',
-    'click .js-task-open' : 'openTask',
+    'click .delete-task'            : 'deleteTask',
+    'click .task-open'              : 'openTask',
+    'click input[type="checkbox"]'  : 'filterChanged',
   },
 
   initialize: function (options) {
@@ -29,14 +31,29 @@ var AdminTaskView = Backbone.View.extend({
       data: this.data,
       dataType: 'json',
       success: function (data) {
+        view.tasks = data;
         var template = _.template(AdminTaskTemplate)(data);
         view.$el.html(template);
         view.$el.show();
         $('.tip').tooltip();
         $('.js-tip').tooltip();
+        view.renderTasks(view.tasks);
       },
     });
     return this;
+  },
+
+  renderTasks: function (tasks) {
+    var data = { tasks: [] };
+    $('.filter-ckbx:checked').each(function (index, item) {
+      data.tasks = data.tasks.concat(tasks[item.id]);
+    });
+    var template = _.template(AdminTaskTable)(data);
+    self.$('#task-table').html(template);
+  },
+
+  filterChanged: function () {
+    this.renderTasks(this.tasks);
   },
 
   /*
