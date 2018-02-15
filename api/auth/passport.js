@@ -65,6 +65,13 @@ passport.use(new LocalStrategy(localStrategyOptions, async (username, password, 
             done(err, false);
           });
         } else {
+          await dao.User.update({
+            id: user.id,
+            passwordAttempts: 0,
+            updatedAt: new Date(),
+          }).catch(err => {
+            log.info('Error resetting password attempts');
+          });
           done(null, user);
         }
       } else {
