@@ -12,6 +12,26 @@ var sourcemaps = require('gulp-sourcemaps');
 var rename = require('gulp-rename');
 var bourbon 	= require('bourbon').includePaths;
 var neat		= require('bourbon-neat').includePaths;
+var octo = require('@octopusdeploy/gulp-octo');
+var bump = require('gulp-bump');
+
+var releaseFiles = [
+  '**/*',
+  '!.nyc_output/**/*',
+  '!./{assets,assets/**}',
+  '!./{bin,bin/**}',
+  '!./{coverage,coverage/**}',
+  '!dist/js/{maps,maps/**}',
+  '!./{docs,docs/**}',
+  '!./{node_modules,node_modules/**}',
+  '!./{test,test/**}',
+];
+
+var versionBumps = {
+  '--patch': 'patch',
+  '--minor': 'minor',
+  '--major': 'major',
+};
 
 // Lint Task
 gulp.task('lint', function () {
@@ -69,6 +89,37 @@ gulp.task('watch', function () {
 
 // Build task
 gulp.task('build', ['lint', 'sass', 'scripts', 'move']);
+
+// Bump package version number
+gulp.task('bump', function () {
+  var type = versionBumps[process.argv[3]];
+  if(!type) {
+    throw new Error('When calling `gulp bump` you must specify one of these options: ' + Object.keys(versionBumps));
+  }
+  gulp.src('./package.json')
+    .pipe(bump({ type: type }))
+    .pipe(gulp.dest('./'));
+});
+
+gulp.task('bump:patch', function () {
+  gulp.src('./package.json')
+    .pipe(bump({ type: 'patch' }))
+    .pipe(gulp.dest('./'));
+});
+
+// Build a release
+gulp.task('release', ['build', 'bump:patch'], function () {
+  var pack = gulp.src(releaseFiles)
+    .pipe(octo.pack('zip'));
+  if(process.env.OctoHost && process.env.OctoKey) {
+    pack.pipe(octo.push({
+      host: process.env.OctoHost,
+      apiKey: process.env.OctoKey,
+    }));
+  } else {
+    pack.pipe(gulp.dest('./bin'));
+  }
+});
 
 //Default task
 gulp.task('default', ['lint', 'sass', 'scripts', 'move', 'watch']);
