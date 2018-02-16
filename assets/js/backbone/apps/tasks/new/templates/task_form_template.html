@@ -1,114 +1,106 @@
 <section class="usajobs-canvas">
-  <div class="usajobs-content-gutter">      
+  <div class="usajobs-content-gutter">
     <main class="main-content usajobs-content-well" id="main-content" aria-label="Opportunity">
       <div class="usajobs-open-opps-opportunity usajobs-open-opps-section usajobs-open-opps-profile">
-          
-      <form id="task-form" class="usa-form-xl" action="/api/task">
-        <h1>Create an opportunity</h1>
-        <fieldset>
-          <div class="tips">
-            First time creating an opportunity? Read our 
-            <a href="http://www.digitalgov.gov/resources/open-opportunities-task-creator-toolkit/10-tips-for-creating-the-perfect-open-opportunity-task/" target="_blank">
-              10 Tips for Creating the Perfect Open Opportunity</a>.
-          </div>
-        </fieldset>
-        <fieldset id="step-1">
-          <h2>Step 1 - Define who, when, and where</h2>
-          <div>
+        <form id="task-form" class="usa-form-xl" action="/api/task">
+          <h1>Create an opportunity</h1>
+          <fieldset class="usajobs-fieldset">
+            <div class="tips">
+              First time creating an opportunity? Read our
+              <a href="http://www.digitalgov.gov/resources/open-opportunities-task-creator-toolkit/10-tips-for-creating-the-perfect-open-opportunity-task/"
+                target="_blank">
+                10 Tips for Creating the Perfect Open Opportunity</a>.
+            </div>
+          </fieldset>
+          <fieldset id="step-1" class="usajobs-fieldset">
+            <h2>Step 1 - Define who, when, and where</h2>
+            <div class="form-group">
               <label for="time-required">
                 <h3>What type of effort is needed?</h3>
               </label>
               <ul class="usa-unstyled-list__radio">
                 <% _.each(tags['task-time-required'], function (time) { %>
-                <li>
-                  <input id="<%- time.id %>" type="radio" name="task-time-required" value="<%- time.id %>" <%- time.name == 'One time' ? 'checked' : ''%>>
-                  <label for="<%- time.id %>"><%- time.name %><% if (time.description) { %> &mdash; <%= time.description %> <% } %></label>
-                </li>
-                <% }); %>
+                  <li>
+                    <input id="<%- time.id %>" type="radio" name="task-time-required" value="<%- time.id %>" <%- time.name=='One time' ?
+                      'checked' : ''%>>
+                    <label for="<%- time.id %>">
+                      <%- time.name %>
+                        <% if (time.description) { %> &mdash;
+                          <%= time.description %>
+                            <% } %>
+                    </label>
+                  </li>
+                  <% }); %>
               </ul>
               <% if ( agency ) { %>
-              <input type="checkbox" id="task-restrict-agency" name="task-restrict-agency" value="task-restrict-agency">
-              <label for="task-restrict-agency">Limit Participation to <%- agency.abbr %> Employees</label>
-              <% } %>
+                <input type="checkbox" id="task-restrict-agency" name="task-restrict-agency" value="task-restrict-agency">
+                <label for="task-restrict-agency">Limit Participation to
+                  <%- agency.abbr %> Employees</label>
+                <% } %>
             </div>
-                
-            <div>
+            <div class="form-group">
               <label for="participant-location">
                 <h3>Where can participants be located?</h3>
               </label>
-              <ul class="usa-unstyled-list__radio"> 
-                <li>      
-                  <input id="anywhere" type="radio" name="participant-location" value="anywhere" checked>               
+              <ul class="usa-unstyled-list__radio">
+                <li>
+                  <input id="anywhere" type="radio" name="participant-location" value="anywhere" checked>
                   <label for="anywhere">Anywhere</label>
                 </li>
                 <li>
                   <input id="specific-location" type="radio" name="participant-location" value="specific-location" />
-                  <label for="specific-location">At specific locations</label> 
+                  <label for="specific-location">At specific locations</label>
                 </li>
               </ul>
               <input type="hidden" id="js-task-location" name="location" />
-              <label for="participants">How many people are needed?</label>
+            </div>
+            <div class="form-group">
+              <label for="js-participant-selection">How many people are needed?</label>
               <div class="select-small">
                 <select id="js-participant-selection">
                   <% _.each(tags['task-people'], function (person) { %>
-                    <option value="<%- person.id %>"><%- person.name %></option>
-                  <% }); %>
+                    <option value="<%- person.id %>">
+                      <%- person.name %>
+                    </option>
+                    <% }); %>
                 </select>
               </div>
             </div>
-        </fieldset>
-
-        <fieldset id="step-2" class="usajobs-fieldset">
-          <h2>Step 2 - Create a headline</h2>
-          <div id="headline"></div>
-          <div class="required-input">
-            <h3>Headline</h3>
-            <span class="field-validation-error error-empty" style="display:none;">You must enter headline for this opportunity.</span>
-            <span class="field-validation-error error-count100" style="display:none;">The short description of the problem must be less than 100 characters.</span>
-            <span class="field-validation-error error-html" style="display:none;">The special characters '<' or '>' are not allowed</span>  
-            <p>Write a catchy, but descriptive title. Include a specific skill or outcome to entices participants to click on the opportunity.</p>              
-
-            <input type="text" id="task-title" class="fullwidth form-control validate" data-validate="empty,count100,html"/>
-            <p class="usajobs-form__help-brief">Maximum of 100 characters</p>
-          </div>
-
-          <div class="usa-alert usajobs-alert usajobs-alert--warning" role="alert" data-object="alert" style="display:none;">
-            <div class="usajobs-alert__figure">
-              <div class="usajobs-alert__icon"></div>
+          </fieldset>
+          <fieldset id="step-2" class="usajobs-fieldset">
+            <h2>Step 2 - Create a headline</h2>
+            <div id="headline"></div>
+            <div class="required-input">
+              <h3>Headline</h3>
+              <span class="field-validation-error error-empty" style="display:none;">You must enter headline for this opportunity.</span>
+              <span class="field-validation-error error-count100" style="display:none;">The short description of the problem must be less than 100 characters.</span>
+              <span class="field-validation-error error-html" style="display:none;">The special characters '
+                < ' or '>' are not allowed</span>
+              <p>Write a catchy, but descriptive title. Include a specific skill or outcome to entices participants to click
+                on the opportunity.</p>
+              <input type="text" id="task-title" class="fullwidth form-control validate" data-validate="empty,count100,html" />
+              <p class="usajobs-form__help-brief">Maximum of 100 characters</p>
             </div>
-            <div class="usajobs-alert__body">
-              <p class="usa-alert-text" id="title-update-alert"></p>
-            </div>
-          </div>   
-          <aside class="tips-left" id="tag_headline">
+            <aside class="tips-left" id="tag_headline">
               <h4>Headline examples</h4>
               <p>"Team up to Produce a Set of Videos About the Nat'l Networking for Manufactoring Innovation"</p>
               <p>"Let your inner "Data Detective" Out and Get to Know Arizona"</p>
-          </aside>
-        </fieldset>
-        <fieldset id="step-3">
-          <h2>Step 3 - Describe the opportunity</h2>
-          <div id="description"></div>
-          <div class="required-input">
-            <h3>Description</h3>
-            <span class="field-validation-error error-empty" style="display:none;">You must enter a description for this opportunity.</span>
-            <span class="field-validation-error error-html" style="display:none;">The special characters '<' or '>' are not allowed.</span>
-            <p>Describe the opportunity. Include what people will do, the expected outcome and how their work will make an impact.
-              Recommend 200 words or less.</p> 
-            <span class="show-markdown"></span>
-            <div class="markdown-edit"></div>
-          </div>         
-          <!-- <div id="description-update-alert" class="alert alert-warning" style="display:none;"></div> -->
-          <div class="usa-alert usajobs-alert usajobs-alert--warning" role="alert" data-object="alert" style="display:none;">
-            <div class="usajobs-alert__figure">
-              <div class="usajobs-alert__icon">
-              </div>
+            </aside>
+          </fieldset>
+          <fieldset id="step-3" class="usajobs-fieldset">
+            <h2>Step 3 - Describe the opportunity</h2>
+            <div id="description"></div>
+            <div class="required-input">
+              <h3>Description</h3>
+              <span class="field-validation-error error-empty" style="display:none;">You must enter a description for this opportunity.</span>
+              <span class="field-validation-error error-html" style="display:none;">The special characters '
+                < ' or '>' are not allowed.</span>
+              <p>Describe the opportunity. Include what people will do, the expected outcome and how their work will make an
+                impact. Recommend 200 words or less.</p>
+              <span class="show-markdown"></span>
+              <div class="markdown-edit"></div>
             </div>
-            <div class="usajobs-alert__body">
-              <p class="usa-alert-text" id="description-update-alert"></p>
-            </div>
-          </div>
-          <aside id="tag_description" class="tips-left">
+            <aside id="tag_description" class="tips-left">
               <h4>The description should answer:</h4>
               <ul>
                 <li>Why is this work important?</li>
@@ -116,60 +108,51 @@
                 <li>How does this work fit into the bigger picture?</li>
                 <li>What does success look like?</li>
               </ul>
-          </aside>
-              
-          <label for="skills">
-            <div id="tags"></div>
-            <h3>Tags</h3>
-            <span>Use keywords to describe the opportunity, such as the career or focus area, skills and mission of work.</span>                 
-          </label>      
-          <input type="hidden" id="js-task-tag" name="skills" class="fullwidth" />
-          <p class="usajobs-form__help-brief">Put a comma between each one. Example: Cyber Security, Research, employee engagement.</p>
-
-          <div class="usa-alert usajobs-alert usajobs-alert--warning" role="alert" data-object="alert" style="display:none;">
-            <div class="usajobs-alert__figure">
-              <div class="usajobs-alert__icon">
-              </div>
+            </aside>
+            <label for="skills">
+              <div id="tags"></div>
+              <h3>Tags</h3>
+              <span>Use keywords to describe the opportunity, such as the career or focus area, skills and mission of work.</span>
+            </label>
+            <input type="hidden" id="js-task-tag" name="skills" class="fullwidth" />
+            <p class="usajobs-form__help-brief">Put a comma between each one. Example: Cyber Security, Research, employee engagement.</p>
+            <div id="tag_tags" class="tips-left">
+              <h4>What are tags?</h4>
+              <p>Tags are keywords you can add to help describe an opportunity. Tags are also useful for searching topic and
+                interests.
+              </p>
             </div>
-            <div class="usajobs-alert__body">
-              <p class="usa-alert-text" id="tag-update-alert"></p>
-            </div>
-          </div>
-          
-          <div id="tag_tags" class="tips-left">
-            <h4>What are tags?</h4>
-            <p>Tags are keywords you can add to help describe an opportunity. 
-            Tags are also useful for searching topic and interests.</p>
-          </div>         
-        </fieldset>
-
-        <fieldset id="step-4">
+          </fieldset>
+          <fieldset id="step-4" class="usajobs-fieldset">
             <h2>Step 4 - Submit for review</h2>
             <div id="review"></div>
-            <p>Once you submit your opportunity, we'll review it. We'll email within two business days with recommended edits or approval.</p>
-              <div class="usajobs-button_bar task-footer">
-                <button type="button" id="js-task-draft" class="usa-button usa-button-secondary" data-state="draft">
-                    Save as draft
-                </button>
-                <button type="button" id="js-task-create" class="usa-button usa-button-primary" data-state="submit">
-                  Submit for review
-                </button>
-              </div>
-              <!-- <div class="create__success-message js-success-message">
-                <div class="success-message__head">
-                  <span class="fa fa-check-circle"></span>
-                </div>
-                <div class="success-message__body">
-                  <h4>Saved</h4>
-                  <p>Your draft has been saved. You can find your draft <a class="js-profile-link" target="_blank" href="javascript:void(0);">on your profile page</a>.</p>
-                </div>
-              </div> -->
+            <p>Once you submit your opportunity, we'll review it. We'll email within two business days with recommended edits
+              or approval.</p>
+            <div class="usajobs-button_bar task-footer">
+              <button type="button" id="js-task-draft" class="usa-button usa-button-secondary" data-state="draft">
+                Save as draft
+              </button>
+              <button type="button" id="js-task-create" class="usa-button usa-button-primary" data-state="submit">
+                Submit for review
+              </button>
+            </div>
             <div id="tag_review" class="tips-left">
               <h4>What happens next?</h4>
-              <p>Please see the <a href="http://www.digitalgov.gov/resources/open-opportunities-task-creator-toolkit/" target="_blank">Task creator toolkit</a>.</p>
+              <p>Please see the
+                <a href="http://www.digitalgov.gov/resources/open-opportunities-task-creator-toolkit/" target="_blank">Task creator toolkit</a>.</p>
             </div>
-        </fieldset>
-      </form>
+            <!-- <div class="create__success-message js-success-message">
+              <div class="success-message__head">
+                <span class="fa fa-check-circle"></span>
+              </div>
+              <div class="success-message__body">
+                <h4>Submitted</h4>
+                <p>Your draft has been saved. You can find your draft
+                  <a class="js-profile-link" target="_blank" href="javascript:void(0);">on your profile page</a>.</p>
+              </div>
+            </div> -->
+          </fieldset>
+        </form>
       </div>
     </main>
   </div>

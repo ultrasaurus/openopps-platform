@@ -1,307 +1,163 @@
-<div class="usa-alert usajobs-alert usajobs-alert--error" role="alert" data-object="alert" id="completedby-update-alert" style="display:none;">
-  <div class="usajobs-alert__figure">
-    <div class="usajobs-alert__icon">
-    </div>
-  </div>
-  <div class="usajobs-alert__body">
-    <p class="usa-alert-text" id="completedby-update-alert-message"></p>
-  </div>
-</div>
-
-<div class="usa-alert usajobs-alert usajobs-alert--warning" role="alert" data-object="alert" id="title-update-alert" style="display:none;">
-  <div class="usajobs-alert__figure">
-    <div class="usajobs-alert__icon">
-    </div>
-  </div>
-  <div class="usajobs-alert__body">
-    <p class="usa-alert-text" id="title-update-alert-message"></p>
-  </div>
-</div>
-
-<div class="usa-alert usajobs-alert usajobs-alert--warning" role="alert" data-object="alert" id="description-update-alert" style="display:none;">
-  <div class="usajobs-alert__figure">
-    <div class="usajobs-alert__icon">
-    </div>
-  </div>
-  <div class="usajobs-alert__body">
-    <p class="usa-alert-text" id="description-update-alert-message"></p>
-  </div>
-</div>
-
-<div class="usa-alert usajobs-alert usajobs-alert--warning" role="alert" data-object="alert" id="tag-update-alert" style="display:none;">
-  <div class="usajobs-alert__figure">
-    <div class="usajobs-alert__icon">
-    </div>
-  </div>
-  <div class="usajobs-alert__body">
-    <p class="usa-alert-text" id="tag-update-alert-message">
-
-    </p>
-  </div>
-</div>
-
-<form action="" id="task-edit-form">
-
-<div class="p2 mt2 mb3 bg-white">
-  <div>
-    <% if ( 'draft' === data.state ) { %>
-    <button type="submit" id="js-task-create" class="usa-button wizard-submit" data-state="submit">
-      Submit for Review
-    </button>
-    <button type="button" class="js-task-draft usa-button wizard-submit" data-state="draft">
-      Save as Draft
-    </button>
-    <% } else { %>
-    <button type="submit" id="js-task-create" class="usa-button wizard-submit" data-state="save">
-      Save Changes
-    </button>
-    <% } %>
-    <button class="btn btn-c0" id="task-view">Discard Changes</button>
-  </div>
-  <% if ( 'draft' === data.state ) { %>
-  <div class="create__success-message js-success-message">
-    <div class="success-message__head">
-      <span class="fa fa-check-circle"></span>
-    </div>
-    <div class="success-message__body">
-      <h4>Saved</h4>
-      <p>
-        Your draft has been saved. You can find your draft
-        <a class="js-profile-link" target="_blank" href="/profile/<%= data.userId %>"> on your profile page</a>.
-      </p>
-    </div>
-  </div>
-  <% } %>
-</div>
-
-<div class="clearfix mxn2 mb3">
-  <div class="col col-12 md-col-9 px2">
-    <div class="p2 bg-white">
-      <div class="form-group">
-        <label for="time-required">
-          <h3>What type of effort is needed?</h3>
-        </label>
-        <% _.each(tagTypes['task-time-required'], function (t) { %>
-          <div class="radio">
-            <label>
-              <% var selected = madlibTags['task-time-required'] && (madlibTags['task-time-required'][0].id == t.id); %>
-              <input type="radio" name="task-time-required" value="<%- t.id %>" data-descr="<%- t.name %>"
-                <% if (selected) { %>checked<%}%> >
-              <%- t.name %><% if (t.description) { %> &mdash; <%= t.description %> <% } %>
-            </label>
-          </div>
-        <% }); %>
-        <% // README: Checking if agency exists. %>
-        <% if ( agency ) { %>
-        <div class="py2" id="task-restrict-agency-area" >
-          <label>
-            <input
-              type="checkbox"
-              <% if (agency.projectNetwork ) { %>
-              checked="checked"
-              <% } %>
-              id="task-restrict-agency"
-              name="task-restrict-agency">
-            Limit Participation to <%- agency.abbr %> Employees
-          </label>
-        </div>
-        <% } %>
-      </div>
-
-      <div class="form-group" id="time-options-time-required">
-        <label for="time-estimate">
-          <h3>How much time is needed?</h3>
-        </label>
-        <select id="time-estimate" class="dropdown">
-          <% _.each(tagTypes['task-time-estimate'], function (t) { %>
-            <% var selected = madlibTags['task-time-estimate'] && (madlibTags['task-time-estimate'][0].id == t.id); %>
-            <option value=<%- t.id %> <% if (selected) { %>selected<% } %>><%- t.name %></option>
-          <% }); %>
-        </select>
-      </div>
-      <div class="form-group" id="time-options-completion-date">
-        <label for="estimated-completion-date">
-          <h3>Estimated completion date (optional)</h3>
-        </label>
-        <input id="estimated-completion-date" type="date" <% if (data.completedBy) { %> value="<%- moment(data.completedBy).format('YYYY-MM-DD') %>" <% } %> >
-      </div>
-      <div class="form-group" id="time-options-time-frequency">
-        <label for="js-time-frequency-estimate">
-          <h3>How often is this time needed?</h3>
-        </label>
-        <select id="js-time-frequency-estimate" class="dropdown">
-          <% _.each(tagTypes['task-length'], function (timeEstimate) { %>
-            <option value="<%- timeEstimate.id %>"><%- timeEstimate.name %></option>
-          <% }); %>
-        </select>
-      </div>
-
-      <div class="form-group">
-        <label for="time-required">
-          <h3>Where can participants be located?</h3>
-        </label>
-        <div class="radio">
-          <% var somewhere = madlibTags['location']; %>
-          <label>
-            <input type="radio" name="time-required" id="anywhere" <% if (_.isUndefined(somewhere)) { %> checked <% } %> >
-            Anywhere
-          </label>
-        </div>
-        <div class="radio">
-          <label>
-            <input type="radio" name="time-required" id="specific-location" <% if (somewhere) { %> checked <% } %> >
-            At specific locations:
-            <div>
+<section class="usajobs-canvas">
+  <div class="usajobs-content-gutter">
+    <main class="main-content usajobs-content-well" id="main-content" aria-label="Opportunity">
+      <div class="usajobs-open-opps-opportunity usajobs-open-opps-section usajobs-open-opps-profile">
+        <form id="task-edit-form" class="usa-form-xl" action="">
+          <h1>Edit opportunity</h1>
+          <fieldset class="usajobs-fieldset">
+            <div class="tips">
+              First time creating an opportunity? Read our
+              <a href="http://www.digitalgov.gov/resources/open-opportunities-task-creator-toolkit/10-tips-for-creating-the-perfect-open-opportunity-task/"
+                target="_blank">
+                10 Tips for Creating the Perfect Open Opportunity</a>.
+            </div>
+          </fieldset>
+          <fieldset id="step-1" class="usajobs-fieldset">
+            <h2>Step 1 - Define who, when, and where</h2>
+            <div class="form-group">
+              <label for="time-required">
+                <h3>What type of effort is needed?</h3>
+              </label>
+              <ul class="usa-unstyled-list__radio">
+                <% _.each(tagTypes['task-time-required'], function (t) { %>
+                  <li>
+                    <% var selected = madlibTags['task-time-required'] && (madlibTags['task-time-required'][0].id == t.id); %>
+                      <input id="<%- t.id %>" type="radio" name="task-time-required" value="<%- t.id %>" data-descr="<%- t.name %>" <% if (selected)
+                        { %>checked
+                      <% } %> />
+                        <label for="<%- t.id %>">
+                          <%- t.name %>
+                            <% if (t.description) { %> &mdash;
+                              <%= t.description %>
+                                <% } %>
+                        </label>
+                  </li>
+                  <% }); %>
+              </ul>
+              <% if ( agency ) { %>
+              <input type="checkbox" id="task-restrict-agency" name="task-restrict-agency" value="task-restrict-agency" <% if (agency.projectNetwork ) { %> checked="checked" <% } %> >
+              <label for="task-restrict-agency"> Limit Participation to
+                    <%- agency.abbr %> Employees</label>
+                  <% } %>
+            </div>
+            <div class="form-group">
+              <label for="participant-location">
+                <h3>Where can participants be located?</h3>
+              </label>
+              <ul class="usa-unstyled-list__radio">
+                <li>
+                    <% var somewhere = madlibTags['location']; %>
+                    <input type="radio" name="participant-location" id="anywhere" value="anywhere" <% if (_.isUndefined(somewhere)) { %> checked <% } %> /> 
+                    <label for="anywhere">Anywhere</label>
+                </li>
+                <li>
+                  <input type="radio" name="participant-location" id="specific-location" value="specific-location" <% if (somewhere) { %> checked <% } %> />
+                  <label for="specific-location">At specific locations</label> 
+                </li>
+              </ul>
               <input type="hidden" id="task_tag_location" name="location" />
             </div>
-          </label>
-        </div>
+            <div class="form-group">
+              <label for="people">How many people are needed?</label>
+              <select id="people" class="dropdown">
+                <% _.each(tagTypes['task-people'], function (t) { %>
+                  <% var selected = madlibTags['task-people'] && (madlibTags['task-people'][0].id == t.id); %>
+                    <option value=<%- t.id %>
+                      <% if (selected) { %>selected<% } %>>
+                          <%- t.name %>
+                    </option>
+                    <% }); %>
+              </select>
+            </div>
+          </fieldset>
+          <fieldset id="step-2" class="usajobs-fieldset">
+            <h2>Step 2 - Create a headline</h2>
+            <div id="headline"></div>
+            <div class="required-input">
+              <h3>Headline</h3>
+              <span class="field-validation-error error-empty" style="display:none;">You must enter headline for this opportunity.</span>
+              <span class="field-validation-error error-count100" style="display:none;">The short description of the problem must be less than 100 characters.</span>
+              <span class="field-validation-error error-html" style="display:none;">The special characters '
+                < ' or '>' are not allowed</span>
+              <p>Write a catchy, but descriptive title. Include a specific skill or outcome to entices participants to click
+                on the opportunity.</p>
+              <input type="text" id="task-title" class="fullwidth form-control validate" value="<%- data.title %>" data-validate="empty,count100,html" />
+              <p class="usajobs-form__help-brief">Maximum of 100 characters</p>
+            </div>
+            <aside class="tips-left" id="tag_headline">
+                <h4>Headline examples</h4>
+                <p>"Team up to Produce a Set of Videos About the Nat'l Networking for Manufactoring Innovation"</p>
+                <p>"Let your inner "Data Detective" Out and Get to Know Arizona"</p>
+              </aside>
+          </fieldset>
+          <fieldset id="step-3" class="usajobs-fieldset">
+            <h2>Step 3 - Describe the opportunity</h2>
+            <div id="description"></div>
+            <div class="required-input">
+              <h3>Description</h3>
+              <span class="field-validation-error error-empty" style="display:none;">You must enter a description for this opportunity.</span>
+              <span class="field-validation-error error-html" style="display:none;">The special characters '
+                < ' or '>' are not allowed.</span>
+              <p>Describe the opportunity. Include what people will do, the expected outcome and how their work will make an
+                impact. Recommend 200 words or less.</p>
+              <span class="show-markdown"></span>
+              <div class="markdown-edit"></div>
+            </div>
+            <aside id="tag_description" class="tips-left">
+              <h4>The description should answer:</h4>
+              <ul>
+                <li>Why is this work important?</li>
+                <li>Who will benefit from this work?</li>
+                <li>How does this work fit into the bigger picture?</li>
+                <li>What does success look like?</li>
+              </ul>
+            </aside>
+            <label for="skills">
+              <div id="tags"></div>
+              <h3>Tags</h3>
+              <span>Use keywords to describe the opportunity, such as the career or focus area, skills and mission of work.</span>
+            </label>
+            <input type="hidden" id="task_tag_skills" name="skills" class="fullwidth" />
+            <p class="usajobs-form__help-brief">Put a comma between each one. Example: Cyber Security, Research, employee engagement.</p>
+            <aside id="tag_tags" class="tips-left">
+              <h4>What are tags?</h4>
+              <p>Tags are keywords you can add to help describe an opportunity. Tags are also useful for searching topic and
+                interests.
+              </p>
+            </aside>
+          </fieldset>
+          <fieldset id="step-4" class="usajobs-fieldset">
+            <h2>Step 4 - Submit for review</h2>
+            <div id="review"></div>
+            <p>Once you submit your opportunity, we'll review it. We'll email within two business days with recommended edits
+                or approval.</p>
+            <div class="usajobs-button_bar task-footer">
+                <button class="usa-button usa-button-secondary" id="task-view">Discard Changes</button>
+                <button type="submit" class="usa-button usa-button-primary" data-state="submit">Save</button>    
+            </div>
+            <aside id="tag_review" class="tips-left">
+              <h4>What happens next?</h4>
+              <p>Please see the
+                <a href="http://www.digitalgov.gov/resources/open-opportunities-task-creator-toolkit/" target="_blank">Task creator toolkit</a>.</p>
+            </aside>
+            <!-- <% if ( 'draft' === data.state ) { %>
+              <div class="create__success-message js-success-message">
+                <div class="success-message__head">
+                  <span class="fa fa-check-circle"></span>
+                </div>
+                <div class="success-message__body">
+                  <h4>Saved</h4>
+                  <p>
+                    Your draft has been saved. You can find your draft
+                    <a class="js-profile-link" target="_blank" href="/profile/<%= data.userId %>"> on your profile page</a>.
+                  </p>
+                </div>
+
+                <% } %>
+              </div> -->
+          </fieldset>
+        </form>
       </div>
-      <div class="form-group">
-        <label for="people">
-          <h3>How many people are needed?</h3>
-        </label>
-        <select id="people" class="dropdown">
-          <% _.each(tagTypes['task-people'], function (t) { %>
-            <% var selected = madlibTags['task-people'] && (madlibTags['task-people'][0].id == t.id); %>
-            <option value=<%- t.id %> <% if (selected) { %>selected<% } %>><%- t.name %></option>
-          <% }); %>
-        </select>
-      </div>
-      <div class="form-group">
-        <h3>Headline</h3>
-        <p>Write a few words that describe what needs to happen, inspires someone about the outcome, or entices them to learn something new.</p>
-        <p><em>(Maximum of 100 characters)</em></p>
-        <input id="task-title" type="text" placeholder="A short description of the problem." value="<%- data.title %>" class="form-control input-lg validate" data-validate="empty,count100,html"/>
-        <span class="help-block error-empty" style="display:none;">You must enter a title for this <span data-i18n="task">opportunity</span></span>
-        <span class="help-block error-count100" style="display:none;">The short description of the problem must be less than 100 characters.</span>
-        <span class="help-block error-html" style="display:none;">The special characters '<' or '>' are not allowed</span>
-      </div>
-      <div class="form-group">
-        <h3>Description</h3>
-        <p>Write a description that explains the <span data-i18n="task">opportunity</span>. Add details so that people can imagine the impact or outcome of this opportunity.<span class="show-markdown"></span>
-        </p>
-        <p><em>(There is no limit on length, but we recommend 200 words or less.)</em></p>
-        <div class="markdown-edit"></div>
-        <span class="help-block error-empty" style="display:none;">You must enter a description for this <span data-i18n="task">opportunity</span></span>
-        <span class="help-block error-html" style="display:none;">The special characters '<' or '>' are not allowed</span>
-      </div>
-      <div class="form-group">
-        <h3>Tags</h3>
-        <p>Create tags using keywords that describe the opportunity. Include the focus area, mission of the work and skills they will develop through as part of the <span data-i18n="task">opportunity</span>.</p>
-        <p><em>(Put a comma between each one. Example: Cyber Security, Research, employee engagement)</em></p>
-        <input type="hidden" id="task_tag_skills" class="task-skills fullwidth"/>
-      </div>
-    </div>
+    </main>
   </div>
-  <div class="col col-12 md-col-3 px2">
-    <div class="p2 bg-white">
-      <div>
-        <h3 style="display: inline-block;">Requestor</h3>
-        <a id="change-owner" href="#">Change</a>
-      </div>
-      <div class="project-people-show-div project-owner" data-userid="<%- data.owner.id %>">
-        <img src="/api/user/photo/<%- data.owner.id %>" alt="<%- data.owner.name %>" class="project-people"/>
-        <label class="project-people-show-label"><%- data.owner.name %></label>
-      </div>
-      <div class="change-project-owner" style="display: none;">
-        <input style="width: 100%" id="owner" name="owner" type="hidden" value="Edit Owner"/>
-      </div>
-      <div>
-        <h3 style="display: inline-block;">Participants</h3>
-        <% if (window.cache.currentUser.isAdmin) { %>
-        <a id="add-participant" href="#">Add</a>
-        <% } %>
-      </div>
-      <% if (data.volunteers.length > 0) { %>
-        <% _.each(data.volunteers, function (v) { %>
-        <div class="project-people-show-div" data-userid="<%- v.userId %>" data-voluserid="<%- v.userId %>">
-          <a href="#" class="volunteer-delete fa fa-times" data-uid="<%- v.userId %>" data-vid="<%- v.id %>"></a>
-          <img src="/api/user/photo/<%- v.userId %>" alt="<%- v.name %>"  class="project-people"/>
-          <label class="project-people-show-label"><%- v.name %></label>
-        </div>
-        <% }); %>
-      <% } else { %>
-        <div class="project-no-people">
-          None assigned
-        </div>
-      <% } %>
-      <div class="add-participant" style="display: none;">
-        <input style="width: 100%" id="participant" name="participant" type="hidden" value="Add participant"/>
-        <div>
-          <input type="checkbox" id="participant-notify" name="participant-notify">Notify participant</input>
-        </div>
-      </div>
-
-      <h3>Progress</h3>
-
-      <div class="progress--date">
-        <label for="submittedAt">Submitted date</label>
-        <input id="js-edit-date-submitted" class="form-control timepicker" type="date" name="submittedAt">
-      </div>
-
-      <div id="div-publishedAt">
-        <label for="publishedAt">Published date</label>
-        <input id="publishedAt" name="publishedAt" class="form-control timepicker" type="date">
-      </div>
-
-      <div id="div-assignedAt">
-        <label for="assignedAt">Assigned date</label>
-        <% if (data.assignedAt) { %>
-          <input id="assignedAt" name="assignedAt" class="form-control timepicker" type="date">
-        <% } else { %>
-          Not yet assigned.
-        <% } %>
-      </div>
-
-      <div id="div-completedAt">
-        <label for="completedAt">Completed date</label>
-        <% if (data.completedAt) { %>
-          <input id="completedAt" name="completedAt" class="form-control timepicker" type="date">
-        <% } else { %>
-          Not yet completed.
-        <% } %>
-      </div>
-
-    </div>
-    <aside>
-      <h4>Guidance for Creating Tasks</h4>
-      <p>If you're new to posting opportunities, <a href="http://www.digitalgov.gov/resources/open-opportunities-task-creator-toolkit/10-tips-for-creating-the-perfect-open-opportunity-task/" target="_blank">10 Tips for Creating the Perfect Open Opportunity Task</a> will get you headed in the right direction.</p>
-      <p>Information on the task creation process is in the <a href="http://www.digitalgov.gov/resources/open-opportunities-task-creator-toolkit/" target="_blank">Task Creator Toolkit</a>.</p>
-    </aside>
-  </div>
-</div>
-
-<div class="p2 mb3 bg-white">
-  <div>
-    <% if ( 'draft' === data.state ) { %>
-    <button type="submit" class="usa-button wizard-submit" data-state="submit">
-      Submit for Review
-    </button>
-    <button type="button" class="js-task-draft disable btn btn-border wizard-submit" data-state="draft">
-      Save as Draft
-    </button>
-    <% } else { %>
-    <button type="submit" class="usa-button wizard-submit" data-state="save">
-      Save Changes
-    </button>
-    <% } %>
-    <button class="btn btn-c0" id="task-view">Discard Changes</button>
-  </div>
-  <% if ( 'draft' === data.state ) { %>
-  <div class="create__success-message js-success-message">
-    <div class="success-message__head">
-      <span class="fa fa-check-circle"></span>
-    </div>
-    <div class="success-message__body">
-      <h4>Saved</h4>
-      <p>
-        Your draft has been saved. You can find your draft
-        <a class="js-profile-link" target="_blank" href="/profile/<%= data.userId %>"> on your profile page</a>.
-      </p>
-    </div>
-  </div>
-  <% } %>
-</div>
-
-</form>
+</section>
