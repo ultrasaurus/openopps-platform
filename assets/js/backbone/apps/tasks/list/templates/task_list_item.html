@@ -32,21 +32,23 @@
       <% } %>
       <% }); %>
     </ul>
-    <div class="usajobs-open-opps-opportunity-requestor">
-      <div class="usajobs-open-opps-opportunity-requestor__figure" <% if (user) { %> data-userid="<%- item.owner.id %>" <% } %>>
-        <img src="/api/user/photo/<%- item.owner.id %>">
-      </div>
-      <div class="usajobs-open-opps-opportunity-requestor__body">
-        <span class="usajobs-open-opps-opportunity-requestor__by">
-          Requested by
-        </span>
-        <p class="usajobs-open-opps-opportunity-requestor__name">
-          <%- item.owner.name %>
-        </p>
-      </div>
-      <div class="usajobs-open-opps-opportunity-requestor__status">
-        <div class="usajobs-pill--opportunity-status status-<%= item.state.toLowerCase() %>">
-          <%= item.state.charAt( 0 ).toUpperCase() + item.state.slice( 1 ) %>
+    <div class="usajobs-open-opps-opportunity-requestor__wrapper">
+      <div class="usajobs-open-opps-opportunity-requestor">
+        <div class="usajobs-open-opps-opportunity-requestor__figure" <% if (user) { %> data-userid="<%- item.owner.id %>" <% } %>>
+          <img src="/api/user/photo/<%- item.owner.id %>">
+        </div>
+        <div class="usajobs-open-opps-opportunity-requestor__body">
+          <span class="usajobs-open-opps-opportunity-requestor__by">
+            Requested by
+          </span>
+          <p class="usajobs-open-opps-opportunity-requestor__name">
+            <%- item.owner.name %>
+          </p>
+        </div>
+        <div class="usajobs-open-opps-opportunity-requestor__status">
+          <div class="usajobs-pill--opportunity-status status-<%= item.state.toLowerCase() %>">
+            <%= item.state.charAt( 0 ).toUpperCase() + item.state.slice( 1 ) %>
+          </div>
         </div>
       </div>
     </div>

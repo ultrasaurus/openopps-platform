@@ -25,7 +25,7 @@
         <div class="usajobs-grid-full">
           <div class="usajobs-width-five-sixths">
             <h1 class="usajobs-open-opps-opportunity-item__title"><%- model.title %></h1>
-            <span class="usajobs-pill--opportunity-status status-<%- state.value %>"><%- state.humanReadable %></span>
+            <span class="usajobs-pill--opportunity-status opportunity-page status-<%- state.value %>"><%- state.humanReadable %></span>
             <% if (madlibTags['skill']) { %>
             <div class="py1">
               <% _.each(madlibTags['skill'], function (t) { %>
