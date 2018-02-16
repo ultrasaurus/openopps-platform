@@ -23,6 +23,7 @@ var releaseFiles = [
   '!./{coverage,coverage/**}',
   '!dist/js/{maps,maps/**}',
   '!./{docs,docs/**}',
+  '!./{node_modules,node_modules/**}',
   '!./{test,test/**}',
 ];
 
@@ -100,8 +101,14 @@ gulp.task('bump', function () {
     .pipe(gulp.dest('./'));
 });
 
+gulp.task('bump:patch', function () {
+  gulp.src('./package.json')
+    .pipe(bump({ type: 'patch' }))
+    .pipe(gulp.dest('./'));
+});
+
 // Build a release
-gulp.task('release', ['build', 'bump --patch'], function () {
+gulp.task('release', ['build', 'bump:patch'], function () {
   var pack = gulp.src(releaseFiles)
     .pipe(octo.pack('zip'));
   if(process.env.OctoHost && process.env.OctoKey) {
