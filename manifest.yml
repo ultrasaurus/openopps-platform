@@ -2,8 +2,8 @@
 applications:
 - name: openopps
   buildpack: https://github.com/cloudfoundry/nodejs-buildpack
-  command: node app.js
-domain: 18f.gov
+  command: npm run release:run
+domain: openopps.usajobs.gov
 services:
 - env-openopps
 - psql-openopps
