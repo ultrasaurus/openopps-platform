@@ -2,7 +2,8 @@ FROM node:carbon
 
 
 RUN apt-get update && \
-  apt-get install -y postgresql-client graphicsmagick
+  apt-get install -y postgresql-client graphicsmagick && \
+  apt-get install vim -y
 
 ENV DATABASE_URL postgresql://$RDS_USERNAME:$RDS_PASSWORD@$RDS_HOSTNAME:$RDS_PORT/midas
 
