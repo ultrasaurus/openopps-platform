@@ -43,4 +43,4 @@ eb open   # opens current app in a browser
 
 * We have the ElasticBeanstalk configuration checked in [.elasticbeanstalk/config.yml](.elasticbeanstalk/config.yml)
 -- is that a good idea?
-
+* How do we restart the app server on a container? (for debugging)

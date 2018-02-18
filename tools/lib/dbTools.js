@@ -3,30 +3,23 @@ var _ = require('lodash');
 var fs = require('fs');
 var pgp = require('pg-promise')();
 var parse = require('csv-parse/lib/sync');
+var appConfig = require('../../db/config');
+const path = require('path');
 
+global.openopps = require(path.resolve(__dirname, '../../config'));
+console.log('appConfig', appConfig);
 // load db config file
 try {
   var pgConfig = process.env.DATABASE_URL;
   console.log('DATABASE_URL =', pgConfig);
   if (typeof(pgConfig) == 'undefined') {
-    var connections = require('../../config/connections').connections;
-    var config = process.env.NODE_ENV !== 'test' ? connections.postgresql : connections.postgresqlTest;
-    pgConfig = {
-      user: config.user,
-      password: config.password,
-      database: config.database,
-      db: config.database,
-      host: config.host,
-      port: 5432,
-    };
-    global.openopps = {
-      appPath: __dirname,
-    };
-    _.extend(openopps, { dbConnection: pgConfig });
+    pgConfig = appConfig;
+  }
+  if (typeof(pgConfig) != 'undefined') {
     var register = require('../../api/auth/service').register;
     var createOpportunity = require('../../api/opportunity/service').createOpportunity;
-    console.log('using local config: ', pgConfig);
   }
+  console.log('using config: ', pgConfig);
   var db = pgp(pgConfig);
 } catch(e) {
   console.log('Please create postgresql configuration in config/connections file, err: ', e);
@@ -44,7 +37,7 @@ module.exports = {
     // check that the tag table is set up, fail and close db connection if not
     return this.hasTable(tableName).then(function (hasTable) {
       if (!hasTable) {
-        console.log("\n Database 'midas' needs to have 'tagentity' table.\n Maybe you need to run: npm run migrate\n" );
+        console.log("\n Database needs to have 'tagentity' table.\n Maybe you need to run: npm run migrate\n" );
         pgp.end();
         reject(new Error('Missing table: tagentity'));
       }
@@ -57,11 +50,12 @@ module.exports = {
     });
   },
   hasTable: function (tableName) {
-    var query = "SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' \
-                    AND table_name = $1)";
-    return db.any(query, tableName).then(function (data) {
-      return data[0].exists;
-    });
+    return Promise.resolve(true);    // TODO: fix
+    // var query = "SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' \
+    //                 AND table_name = $1)";
+    // return db.any(query, tableName).then(function (data) {
+    //   return data[0].exists;
+    // });
   },
   parseFile: function (file) {
     if (fs.existsSync(file)) {

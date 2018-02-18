@@ -4,14 +4,9 @@ const cfenv = require('cfenv');
 const appEnv = cfenv.getAppEnv();
 const psqlConnection = appEnv.getServiceCreds('psql-openopps');
 const gen = require('postgres-gen');
+let config = require('./config.js');
 
-var config = openopps.dbConnection || {
-  host: 'localhost',
-  db: 'midas',
-  user: 'midas',
-  password: 'midas',
-  port: '5432',
-};
+// Write Github Issue: openopps.dbConnection -- not loaded from anywhere, always undefined
 
 if(!_.isEmpty(psqlConnection)) {
   config.host = psqlConnection.host;
@@ -21,13 +16,13 @@ if(!_.isEmpty(psqlConnection)) {
   config.port = psqlConnection.port;
 }
 
-var config = {
-  host: process.env.RDS_HOSTNAME,
-  db: 'ebdb',
-  user: process.env.RDS_USERNAME,
-  password: process.env.RDS_PASSWORD,
-  port: process.env.RDS_PORT
-};
+// var config = {
+//   host: process.env.RDS_HOSTNAME,
+//   db: 'ebdb',
+//   user: process.env.RDS_USERNAME,
+//   password: process.env.RDS_PASSWORD,
+//   port: process.env.RDS_PORT
+// };
 
 console.log('--------------');
 console.log(config);

@@ -5,8 +5,6 @@ RUN apt-get update && \
   apt-get install -y postgresql-client graphicsmagick && \
   apt-get install vim -y
 
-ENV DATABASE_URL postgresql://$RDS_USERNAME:$RDS_PASSWORD@$RDS_HOSTNAME:$RDS_PORT/midas
-
 # if we run npm install as root, it causes a warning
 # so we set up a user and group for the app
 ENV USER openopps
@@ -26,6 +24,8 @@ COPY tools/docker/wait-for-migrate-db-container.sh ./
 
 # copy ignores USER directive, so fixup file ownership:
 RUN chown -R $USER:$GROUP $HOME/app
+
+ENV DATABASE_URL postgresql://$RDS_USERNAME:$RDS_PASSWORD@$RDS_HOSTNAME:$RDS_PORT/$RDS_DB_NAME
 
 USER $USER
 RUN npm install

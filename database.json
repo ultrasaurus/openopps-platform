@@ -4,6 +4,6 @@
     "user": "midas",
     "password": "midas",
     "host": "localhost",
-    "database": "midas"
+    "database": "midasempty"
   }
 }

@@ -20,16 +20,7 @@ module.exports = (config) => {
   if (envVars) _.extend(process.env, envVars);
 
   // load configs
-  global.openopps = {
-    appPath: __dirname,
-  };
-  _.extend(openopps, require('./config/application'));
-  _.extend(openopps, require('./config/session'));
-  _.extend(openopps, require('./config/settings/auth'));
-  _.extend(openopps, require('./config/cache'));
-  _.extend(openopps, require('./config/version'));
-  _.extend(openopps, require('./config/fileStore'));
-  _.extend(openopps, require('./config/email'));
+  global.openopps = require('./config')
   if(config) {
     _.extend(openopps, config);
   }
