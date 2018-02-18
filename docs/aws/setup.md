@@ -10,6 +10,7 @@ pip install --upgrade awsebcli
 
 ```
 eb init
+eb deploy
 eb ssh    # ssh to EC2 instance
 ```
 

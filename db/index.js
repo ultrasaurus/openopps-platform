@@ -1,3 +1,4 @@
+console.log('...db/index.js')
 const _ = require('lodash');
 const cfenv = require('cfenv');
 const appEnv = cfenv.getAppEnv();

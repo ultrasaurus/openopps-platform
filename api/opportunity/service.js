@@ -1,3 +1,5 @@
+console.log('...opportunity/service.js')
+
 const _ = require ('lodash');
 const log = require('log')('app:opportunity:service');
 const db = require('../../db');
@@ -31,7 +33,9 @@ async function findById (id, loggedIn) {
 
 async function list () {
   console.log('service.list')
-  return dao.clean.tasks(await dao.Task.query(dao.query.task + ' order by task."createdAt" desc', {}, dao.options.task));
+  let result = await dao.Task.query(dao.query.task + ' order by task."createdAt" desc', {}, dao.options.task);
+  console.log('result', result);
+  return dao.clean.tasks(result);
 }
 
 async function commentsByTaskId (id) {
