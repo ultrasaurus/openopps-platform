@@ -30,6 +30,7 @@ async function findById (id, loggedIn) {
 }
 
 async function list () {
+  console.log('service.list')
   return dao.clean.tasks(await dao.Task.query(dao.query.task + ' order by task."createdAt" desc', {}, dao.options.task));
 }
 

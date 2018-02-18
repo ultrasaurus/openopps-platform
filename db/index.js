@@ -28,4 +28,7 @@ var config = {
   port: process.env.RDS_PORT
 };
 
+console.log('--------------');
+console.log(config);
+console.log('--------------');
 module.exports = gen(config);
