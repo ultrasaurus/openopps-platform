@@ -12,8 +12,6 @@ var sourcemaps = require('gulp-sourcemaps');
 var rename = require('gulp-rename');
 var bourbon 	= require('bourbon').includePaths;
 var neat		= require('bourbon-neat').includePaths;
-var octo = require('@octopusdeploy/gulp-octo');
-var bump = require('gulp-bump');
 
 var releaseFiles = [
   '**/*',
@@ -96,19 +94,22 @@ gulp.task('bump', function () {
   if(!type) {
     throw new Error('When calling `gulp bump` you must specify one of these options: ' + Object.keys(versionBumps));
   }
+  var bump = require('gulp-bump');
   gulp.src('./package.json')
     .pipe(bump({ type: type }))
     .pipe(gulp.dest('./'));
 });
 
 gulp.task('bump:patch', function () {
+  var bump = require('gulp-bump');
   gulp.src('./package.json')
     .pipe(bump({ type: 'patch' }))
     .pipe(gulp.dest('./'));
 });
 
-// Build a release
+// Build an octopus release
 gulp.task('release', ['build', 'bump:patch'], function () {
+  var octo = require('@octopusdeploy/gulp-octo');
   var pack = gulp.src(releaseFiles)
     .pipe(octo.pack('zip'));
   if(process.env.OctoHost && process.env.OctoKey) {
