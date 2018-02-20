@@ -49,11 +49,15 @@ var TaskFormView = Backbone.View.extend({
     this.model = this.collection.first();
 
     if ( _.isUndefined( this.model ) ) {
-
       this.model = new TaskModel();
-
     }
 
+    setTimeout(function () {
+      $('#tag_headline').appendTo('#headline');
+      $('#tag_description').appendTo('#description');
+      $('#tag_tags').appendTo('#tags');
+      $('#tag_review').appendTo('#review');
+    }, 500);
   },
 
   /*
@@ -107,6 +111,7 @@ var TaskFormView = Backbone.View.extend({
       view.renderSaveSuccessModal(true);
     });
   },
+  
 
   /*
    * Render the View
