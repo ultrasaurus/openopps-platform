@@ -139,26 +139,43 @@
     <aside class="usajobs-rightrail" id="rightrail">
       <div class="usajobs-open-opps-opportunity usajobs-open-opps-section usajobs-open-opps-profile">
         <h3>Progress</h3>
-        <div class="usajobs-open-opps-opportunity-progress__step">
-          <div class="usajobs-open-opps-opportunity-progress__assigned">
-            <span class="usajobs-assistive-text">Assigned</span>
+        <div class="usajobs-open-opps-opportunity-progress__container">
+          <div class="usajobs-open-opps-opportunity-progress__step">
+            <div class="usajobs-open-opps-opportunity-progress__assigned">
+              <span class="usajobs-assistive-text">Assigned</span>
+            </div>
+            <label class="progress-label">Assigned</label>
           </div>
-          <label class="progress-label">Assigned</label>
-        </div>
-        <span class="progress-spacer"></span>
-        <div class="usajobs-open-opps-opportunity-progress__step">
-          <div class="usajobs-open-opps-opportunity-progress__in-progress">
-            <span class="usajobs-assistive-text">In progress</span>
+
+          <span class="progress-spacer"></span>
+
+          <div class="usajobs-open-opps-opportunity-progress__step">
+            <div class="usajobs-open-opps-opportunity-progress__in-progress">
+              <span class="usajobs-assistive-text">In progress</span>
+            </div>
+            <label class="progress-label">In progress</label>
           </div>
-          <label class="progress-label">In progress</label>
-        </div>
-        <span class="progress-spacer"></span>
-        <div class="usajobs-open-opps-opportunity-progress__step">
-          <div class="usajobs-open-opps-opportunity-progress__completed">
-            <span class="usajobs-assistive-text">Completed</span>
+
+          <span class="progress-spacer"></span>
+
+          <div class="usajobs-open-opps-opportunity-progress__step">
+            <div class="usajobs-open-opps-opportunity-progress__completed">
+              <span class="usajobs-assistive-text">Completed</span>
+            </div>
+            <label class="progress-label">Completed</label>
           </div>
-          <label class="progress-label">Completed</label>
         </div>
+
+        <div class="continue-accepting-applicants">
+          <a href="javascript:void(0);" class="continue-accepting-applicants__toggle">
+            <span class="continue-accepting-applicants__label">Continue accepting applicants</span>
+            <div class="continue-accepting-applicants__toggle-container">
+              <span class="continue-accepting-applicants__toggle-labeloff">Off</span>
+              <span class="continue-accepting-applicants__toggle-labelon">On</span>
+            </div>
+          </a>
+        </div>
+
 
         <% if (model.volunteers) { %>
           <div>
