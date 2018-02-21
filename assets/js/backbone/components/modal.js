@@ -1,10 +1,24 @@
 /**
- * The Modal component needs to be set to the el: of the parent view
- * you are trying to init it within, then you will be appending the modal-template to that
- * view (this).  Then the form view has an el of $(".modal-body") so that the form will render
- * within that body area.
- * Then all you have to do is set the ID of the modal to the ID of the link you are trying
- * to trigger from as per bootstrap BP.
+ * Modal component
+ * 
+ * {
+ *    el: [parent element],
+ *    id: [#id],
+ *    modalTitle: [header title],
+ *    modalBody: [body content],
+ *    disableClose: [true|false],
+ *    secondary: { // secondary button (optional)
+ *      text: [button text],
+ *      action: [function]
+ *    },
+ *    primary: { // primary button
+ *      text: [button text],
+ *      action: [function]
+ *    }
+ * }
+ * 
+ * var modal = new Modal({ el: '#site-modal' ... }).render();
+ * modal.cleanup();
  */
 
 var $ = require('jquery');
@@ -16,23 +30,32 @@ var ModalTemplate = require('./modal_template.html');
 var Modal = BaseComponent.extend({
   events: {
     'click .link-backbone': 'link',
+    'click #primary-btn': 'primaryAction',
+    'click #secondary-btn': 'secondaryAction',
+    'click .usajobs-modal__close': 'cleanup',
   },
 
   initialize: function (options) {
     this.options = options;
+    this.options.secondary = this.options.secondary || false;
+    this.options.disableClose = this.disableClose || false;
   },
 
   render: function () {
-    var data = {
-      id: this.options.id,
-      modalTitle: this.options.modalTitle,
-      disableClose: this.options.disableClose,
-    };
-
-    var compiledTemplate = _.template(ModalTemplate)(data);
-    this.$el.append(compiledTemplate);
+    var compiledTemplate = _.template(ModalTemplate)(this.options);
+    this.$el.html(compiledTemplate);
 
     return this;
+  },
+
+  primaryAction: function (e) {
+    if (e.preventDefault) e.preventDefault();
+    this.options.primary.action();
+  },
+
+  secondaryAction: function (e) {
+    if (e.preventDefault) e.preventDefault();
+    this.options.secondary.action();
   },
 
   link: function (e) {
