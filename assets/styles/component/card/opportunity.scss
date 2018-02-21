@@ -334,119 +334,128 @@
 
 .usajobs-rightrail {
 
-  .usajobs-open-opps-opportunity-progress__step {
-    display: inline-block;
-    text-align: center;
-    width: 9rem;
-    margin-bottom: $size-default;
+  .usajobs-open-opps-opportunity-progress__container {
+    display: flex;
 
-    .progress-label {
-      line-height: 1;
-      margin: $size-S auto 0 auto;
-      max-width: 90px;
-    }
-  }
+    .usajobs-open-opps-opportunity-progress__step {
+      //display: inline-block;
+      text-align: center;
+      width: 9rem;
+      margin-bottom: $size-default;
+      flex-grow: 1;
+      flex-shrink: 1;
 
-  .usajobs-open-opps-opportunity-progress__assigned {
-    background-color: $color-gray-lighter;
-    -webkit-font-smoothing: antialiased;
-    margin: $size-default 0 0 0;
-    padding: 0;
-    display: inline-block;
-    width: 65px;
-    height: 65px;
-    line-height: 65px;
-    border-radius: 50%;
-    color: #fff;
-    //box-shadow: 0 0 0 2px none inset;
-    text-decoration: none;
-    text-align: center;
-
-    &.has-step {
-      background-color: $color-green;
+      .progress-label {
+        line-height: 1;
+        margin: $size-S auto 0 auto;
+        max-width: 90px;
+      }
     }
 
-    &::after {
-      position: relative;
+    .usajobs-open-opps-opportunity-progress__assigned {
+      background-color: $color-gray-lighter;
+      -webkit-font-smoothing: antialiased;
+      margin: $size-default 0 0 0;
+      padding: 0;
       display: inline-block;
-      width: 4.1rem;
-      height: 4.1rem;
-      padding-top: 0.9rem;
-      margin-left: 0;
-      content: url(../img/icons/white/svg/user-plus.svg);
+      width: 65px;
+      height: 65px;
+      line-height: 65px;
+      border-radius: 50%;
       color: #fff;
-    }
-  }
+      //box-shadow: 0 0 0 2px none inset;
+      text-decoration: none;
+      text-align: center;
 
-  .usajobs-open-opps-opportunity-progress__in-progress {
-    background-color: $color-gray-lighter;
-    -webkit-font-smoothing: antialiased;
-    margin: $size-default 0 0 0;
-    padding: 0;
-    display: inline-block;
-    width: 65px;
-    height: 65px;
-    line-height: 65px;
-    border-radius: 50%;
-    color: #fff;
-    //box-shadow: 0 0 0 2px none inset;
-    text-decoration: none;
-    text-align: center;
+      &.has-step {
+        background-color: $color-green;
+      }
 
-    &.has-step {
-      background-color: $color-gold-light;
+      &::after {
+        position: relative;
+        display: inline-block;
+        width: 4.1rem;
+        height: 4.1rem;
+        padding-top: 0.9rem;
+        margin-left: 0;
+        content: url(../img/icons/white/svg/user-plus.svg);
+        color: #fff;
+      }
     }
 
-    &::after {
-      position: relative;
+    .usajobs-open-opps-opportunity-progress__in-progress {
+      background-color: $color-gray-lighter;
+      -webkit-font-smoothing: antialiased;
+      margin: $size-default 0 0 0;
+      padding: 0;
       display: inline-block;
-      width: 3.6rem;
-      height: 3.6rem;
-      padding-top: 1.3rem;
-      margin-left: 0;
-      content: url(../img/icons/white/svg/sync.svg);
+      width: 65px;
+      height: 65px;
+      line-height: 65px;
+      border-radius: 50%;
       color: #fff;
-    }
-  }
+      //box-shadow: 0 0 0 2px none inset;
+      text-decoration: none;
+      text-align: center;
 
-  .usajobs-open-opps-opportunity-progress__completed {
-    background-color: $color-gray-lighter;
-    -webkit-font-smoothing: antialiased;
-    margin: $size-default 0 0 0;
-    padding: 0;
-    display: inline-block;
-    width: 65px;
-    height: 65px;
-    line-height: 65px;
-    border-radius: 50%;
-    color: #fff;
-    //box-shadow: 0 0 0 2px none inset;
-    text-decoration: none;
-    text-align: center;
+      &.has-step {
+        background-color: $color-gold-light;
+      }
 
-    &.has-step {
-      background-color: $color-primary-alt;
+      &::after {
+        position: relative;
+        display: inline-block;
+        width: 3.6rem;
+        height: 3.6rem;
+        padding-top: 1.3rem;
+        margin-left: 0;
+        content: url(../img/icons/white/svg/sync.svg);
+        color: #fff;
+      }
     }
 
-    &::after {
-      position: relative;
+    .usajobs-open-opps-opportunity-progress__completed {
+      background-color: $color-gray-lighter;
+      -webkit-font-smoothing: antialiased;
+      margin: $size-default 0 0 0;
+      padding: 0;
       display: inline-block;
-      width: 3.6rem;
-      height: 3.6rem;
-      padding-top: 1.2rem;
-      margin-left: 0;
-      content: url(../img/icons/white/svg/check.svg);
+      width: 65px;
+      height: 65px;
+      line-height: 65px;
+      border-radius: 50%;
       color: #fff;
-    }
-  }
+      //box-shadow: 0 0 0 2px none inset;
+      text-decoration: none;
+      text-align: center;
 
-  .progress-spacer {
-    height: 0.3rem;
-    width: 7.2rem;
-    background-color: $color-gray-lighter;
-    content: ' ';
-    display: inline-block;
-    margin-bottom: 5.4rem;
+      &.has-step {
+        background-color: $color-primary-alt;
+      }
+
+      &::after {
+        position: relative;
+        display: inline-block;
+        width: 3.6rem;
+        height: 3.6rem;
+        padding-top: 1.2rem;
+        margin-left: 0;
+        content: url(../img/icons/white/svg/check.svg);
+        color: #fff;
+      }
+    }
+
+    .progress-spacer {
+      height: 0.3rem;
+      width: 7.2rem;
+      background-color: $color-gray-lighter;
+      content: ' ';
+      //display: inline-block;
+      margin-bottom: 3rem;
+      flex-grow: 8;
+      flex-shrink: 8;
+      align-self: center;
+    }
   }
 
   .continue-accepting-applicants {
