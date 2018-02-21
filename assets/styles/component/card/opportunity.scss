@@ -112,6 +112,14 @@
     }
   }
 
+  .usajobs-opop__task-intro {
+    display: inline-block;
+    float: right;
+    padding: 1.5rem;
+    padding-top: 0;
+    background-color: $color-cool-blue-lightest;
+  }
+
   .comment-list-wrapper {
 
     h3 {
@@ -340,7 +348,7 @@
   }
 
   .usajobs-open-opps-opportunity-progress__assigned {
-    background-color: $color-green;
+    background-color: $color-gray-lighter;
     -webkit-font-smoothing: antialiased;
     margin: $size-default 0 0 0;
     padding: 0;
@@ -353,6 +361,10 @@
     //box-shadow: 0 0 0 2px none inset;
     text-decoration: none;
     text-align: center;
+
+    &.has-step {
+      background-color: $color-green;
+    }
 
     &::after {
       position: relative;
@@ -367,7 +379,7 @@
   }
 
   .usajobs-open-opps-opportunity-progress__in-progress {
-    background-color: $color-gold-light;
+    background-color: $color-gray-lighter;
     -webkit-font-smoothing: antialiased;
     margin: $size-default 0 0 0;
     padding: 0;
@@ -380,6 +392,10 @@
     //box-shadow: 0 0 0 2px none inset;
     text-decoration: none;
     text-align: center;
+
+    &.has-step {
+      background-color: $color-gold-light;
+    }
 
     &::after {
       position: relative;
@@ -394,7 +410,7 @@
   }
 
   .usajobs-open-opps-opportunity-progress__completed {
-    background-color: $color-primary-alt;
+    background-color: $color-gray-lighter;
     -webkit-font-smoothing: antialiased;
     margin: $size-default 0 0 0;
     padding: 0;
@@ -407,6 +423,10 @@
     //box-shadow: 0 0 0 2px none inset;
     text-decoration: none;
     text-align: center;
+
+    &.has-step {
+      background-color: $color-primary-alt;
+    }
 
     &::after {
       position: relative;
@@ -427,6 +447,42 @@
     content: ' ';
     display: inline-block;
     margin-bottom: 5.4rem;
+  }
+
+  .continue-accepting-applicants {
+    background-color: $color-primary-alt-lightest;
+    margin-top: $size-default;
+    margin-bottom: $size-M;
+
+    .continue-accepting-applicants__toggle {
+      color: #000;
+      text-decoration: none;
+      display: flex;
+      padding: $size-default;
+
+      .continue-accepting-applicants__label {
+        flex: 1;
+      }
+
+      .continue-accepting-applicants__toggle-container {
+        position: relative;
+        width: 86px;
+
+        &:after {
+          display: inline-block;
+          height: 2.4rem;
+          width: 27.4375px;
+          content: url(../img/toggle-on.svg);
+          position: absolute;
+          right: 2.8rem;
+        }
+
+        .continue-accepting-applicants__toggle-labelon {
+          float: right;
+          font-weight: 600;
+        }
+      }
+    }
   }
 
   .project-people__assign {
