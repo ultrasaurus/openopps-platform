@@ -46,7 +46,7 @@ router.get('/api/comment/findAllBytaskId/:id', async (ctx, next) => {
 });
 
 router.post('/api/task', auth, async (ctx, next) => {
-  ctx.request.body.userId = ctx.session.passport.user;
+  ctx.request.body.userId = ctx.state.user.id;
   var opportunity = await service.createOpportunity(ctx.request.body, function (errors, task) {
     if (errors) {
       ctx.status = 400;

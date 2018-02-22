@@ -29,7 +29,7 @@ const userTasksQuery = 'select count(*) as "completedTasks", midas_user.id, mida
   'where midas_user.id in ? ' +
   'group by midas_user.id, midas_user.username, midas_user.name';
 
-const volunteerQuery = 'select volunteer.id, volunteer."userId", midas_user.name ' +
+const volunteerQuery = 'select volunteer.id, volunteer."userId", volunteer.assigned, midas_user.name ' +
   'from volunteer ' +
   'join midas_user on midas_user.id = volunteer."userId" ' +
   'where volunteer."taskId" = ?';
@@ -96,11 +96,11 @@ const options = {
     },
   },
   user: {
-    fetch: { 
+    fetch: {
       agency: [],
     },
     exclude: {
-      midas_user: [ 'deletedAt', 'passwordAttempts', 'isAdmin', 'isAgencyAdmin', 'disabled', 'bio', 
+      midas_user: [ 'deletedAt', 'passwordAttempts', 'isAdmin', 'isAgencyAdmin', 'disabled', 'bio',
         'createdAt', 'photoId', 'title', 'updatedAt', 'username' ],
       agency: [ 'deletedAt' ],
     },
@@ -118,7 +118,7 @@ const options = {
     },
   },
   taskVolunteer: {
-    fetch: { 
+    fetch: {
       user: '',
     },
   },

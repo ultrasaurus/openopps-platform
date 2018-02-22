@@ -476,6 +476,7 @@
       .continue-accepting-applicants__toggle-container {
         position: relative;
         width: 86px;
+        cursor: pointer;
 
         &:after {
           display: inline-block;
@@ -491,10 +492,25 @@
           font-weight: 600;
         }
       }
+
+      .toggle-off {
+
+        &:after {
+          content: url(../img/toggle-off.svg);
+        }
+
+        .continue-accepting-applicants__toggle-labeloff {
+          font-weight: 600;
+        }
+
+        .continue-accepting-applicants__toggle-labelon {
+          font-weight: normal;
+        }
+      }
     }
   }
 
-  .project-people__assign {
+  .project-people__assign, .project-people__remove {
     margin: 0.5rem 0 0 0;
     padding: 0;
     display: inline-block;
@@ -517,8 +533,22 @@
       //background-size: 12px 12px;
       margin-top: 0.3rem;
       margin-left: 0;
-      content: url(../img/icons/white/svg/plus.svg);
       color: #fff;
+    }
+  }
+
+  .project-people__assign {
+    &:after {
+      content: url(../img/icons/white/svg/plus.svg);
+    }
+  }
+
+  .project-people__remove {
+    background-color: $color-gray-lighter;
+
+    &:after {
+      margin-top: 0;
+      content: url(../img/icons/close/times.svg);
     }
   }
 
@@ -609,6 +639,12 @@
     margin-top: 15px;
     margin-bottom: $size-default;
 
+    &::after {
+      clear: both;
+      content: "";
+      display: block;
+    }
+
     .project-people-show-div {
       text-align: center;
       padding-top: 8px;
@@ -633,7 +669,7 @@
         max-width: 90px;
       }
 
-      .project-people__assign {
+      .project-people__assign, .project-people__remove {
         position: absolute;
         top: -0.4rem;
         right: 1rem;

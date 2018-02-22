@@ -46,6 +46,7 @@ var TaskItemView = BaseView.extend({
         humanReadable: taskState,
         value: taskState.toLowerCase(),
       },
+      hasStep: this.hasStep.bind(this),
     };
 
     self.data['madlibTags'] = organizeTags(self.data.tags);
@@ -58,7 +59,7 @@ var TaskItemView = BaseView.extend({
 
     self.data.ui = UIConfig;
     self.data.vol = vol;
-    self.data.model.userId = self.data.model.owner.id; 
+    self.data.model.userId = self.data.model.owner.id;
     var compiledTemplate = _.template(TaskShowTemplate)(self.data);
 
     self.$el.html(compiledTemplate);
@@ -74,6 +75,19 @@ var TaskItemView = BaseView.extend({
         trigger: false,
         replace: true,
       });
+    }
+  },
+
+  hasStep: function (step) {
+    switch (step) {
+      case 'assigning':
+        return _.contains(['assigned', 'completed'], this.data.state.value);
+      case 'inProgress':
+        return _.contains(['assigned', 'completed'], this.data.state.value);
+      case 'complete':
+        return this.data.state.value === 'completed';
+      default:
+        return false;
     }
   },
 
