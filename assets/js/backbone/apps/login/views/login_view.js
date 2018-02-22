@@ -78,7 +78,7 @@ var LoginView = Backbone.View.extend({
         });
       }).fail(function (error) {
         var d = JSON.parse(error.responseText);
-        self.$('#login-error').html(d.message);
+        self.$('#login-error-text').html(d.message);
         self.$('#login-error').show();
       });
     });
