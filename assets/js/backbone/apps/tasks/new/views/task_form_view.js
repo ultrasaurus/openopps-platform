@@ -9,6 +9,7 @@ var ShowMarkdownMixin = require('../../../../components/show_markdown_mixin');
 var TagFactory = require('../../../../components/tag_factory');
 var TaskModel = require('../../../../entities/tasks/task_model');
 var TaskFormViewHelper = require('../../task-form-view-helper');
+var Modal = require('../../../../components/modal');
 
 // templates
 var TaskFormTemplate = require('../templates/task_form_template.html');

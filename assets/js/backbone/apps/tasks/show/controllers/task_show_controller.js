@@ -77,9 +77,10 @@ var TaskShowController = BaseView.extend({
       return;
     }
 
+    if (this.taskItemView) this.taskItemView.cleanup();
     if (this.taskEditFormView) this.taskEditFormView.cleanup();
     this.taskEditFormView = new TaskEditFormView({
-      el: '.edit-task-container',
+      el: this.el,
       elVolunteer: '#task-volunteers',
       edit: true,
       taskId: this.model.attributes.id,
@@ -88,11 +89,11 @@ var TaskShowController = BaseView.extend({
       madlibTags: this.madlibTags,
       tagTypes: this.tagTypes,
     }).render();
-    this.$('.task-show-madlib').hide();
-    this.$('.li-task-view').show();
-    this.$('.li-task-edit').hide();
+    // this.$('.task-show-madlib').hide();
+    // this.$('.li-task-view').show();
+    // this.$('.li-task-edit').hide();
     this.$('.task-container').hide();
-    this.$('.li-task-copy').hide();
+    // this.$('.li-task-copy').hide();
   },
 
   initializeChildren: function () {
@@ -176,8 +177,9 @@ var TaskShowController = BaseView.extend({
 
   edit: function (e) {
     if (e.preventDefault) e.preventDefault();
+    
     this.initializeEdit();
-    popovers.popoverPeopleInit('.project-people-div');
+    // popovers.popoverPeopleInit('.project-people-div');
     Backbone.history.navigate('tasks/' + this.model.id + '/edit');
   },
 
