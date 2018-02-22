@@ -43,6 +43,7 @@ var TaskShowController = BaseView.extend({
     'click .link-backbone'                : linkBackbone,
     'click .volunteer-delete'             : 'removeVolunteer',
     'click .project-people__remove'       : 'toggleAssign',
+    'click #apply'                        : 'apply',
     'mouseenter .project-people-show-div' : popovers.popoverPeopleOn,
     'click .project-people-show-div'      : popovers.popoverClick,
   },
@@ -177,7 +178,7 @@ var TaskShowController = BaseView.extend({
 
   edit: function (e) {
     if (e.preventDefault) e.preventDefault();
-    
+
     this.initializeEdit();
     // popovers.popoverPeopleInit('.project-people-div');
     Backbone.history.navigate('tasks/' + this.model.id + '/edit');

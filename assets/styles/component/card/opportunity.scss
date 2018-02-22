@@ -35,6 +35,10 @@
     overflow-wrap: break-word; // This prevents whack titles from breaking the card
   }
 
+  &-item__header {
+    min-height: 17rem;
+  }
+
   &-item__title {
     line-height: 1;
   }
@@ -563,6 +567,16 @@
     clip: rect(0 0 0 0) !important;
   }
 
+  .project-people__not-available {
+    color: $color-gray-light;
+    font-size: 1.9rem;
+    font-style: italic;
+    font-weight: 600;
+    margin-top: $size-XXL;
+    margin-bottom: $size-XXL;
+    text-align: center;
+  }
+
   .assigned-participants-wrapper {
 
     .project-people__assign-instruction {
@@ -625,14 +639,29 @@
     }
   }
 
-  #nextstep {
+  #nextstep, #complete {
     display: block;
+    margin-right: 0;
+
+    &.disabled {
+      background-color: $color-gray-lightest;
+      color: $color-gray-light;
+      cursor: default;
+    }
+
+    &.hidden {
+      display: none;
+    }
   }
 
-  #nextstep.disabled {
-    background-color: $color-gray-lightest;
-    color: $color-gray-light;
-    cursor: default;
+  #complete {
+    background-color: $color-primary-alt;
+    color: #000;
+  }
+
+  #apply {
+    display: block;
+    margin-right: 0;
   }
 
   .project-people__wrapper {

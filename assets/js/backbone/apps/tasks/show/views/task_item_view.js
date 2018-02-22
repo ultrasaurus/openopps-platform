@@ -76,12 +76,30 @@ var TaskItemView = BaseView.extend({
         replace: true,
       });
     }
+
+    this.initializeStateButtons(taskState.toLowerCase());
+  },
+
+  initializeStateButtons (state) {
+    $('#nextstep').hide();
+    $('#complete').hide();
+    if(this.data.model.canEditTask) {
+      switch (state) {
+        case 'open':
+          $('#nextstep').show();
+          break;
+        case 'assigned':
+        case 'completed':
+          $('#complete').show();
+          break;
+      }
+    }
   },
 
   hasStep: function (step) {
     switch (step) {
       case 'assigning':
-        return _.contains(['assigned', 'completed'], this.data.state.value);
+        return _.contains(['open', 'assigned', 'completed'], this.data.state.value);
       case 'inProgress':
         return _.contains(['assigned', 'completed'], this.data.state.value);
       case 'complete':

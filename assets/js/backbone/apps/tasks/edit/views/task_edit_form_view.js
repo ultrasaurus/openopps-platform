@@ -185,7 +185,7 @@ var TaskEditFormView = Backbone.View.extend({
     this.tagFactory.createTagDropDown({
       type: 'location',
       selector: '#task_tag_location',
-      width: '40%',
+      width: '100%',
       data: this.data['madlibTags'].location,
     });
 
@@ -202,11 +202,6 @@ var TaskEditFormView = Backbone.View.extend({
     $('#js-time-frequency-estimate').select2({
       placeholder: 'time-frequency',
       width: '130px',
-    });
-
-    $('#people').select2({
-      placeholder: 'people',
-      width: '150px',
     });
 
     $('#length').select2({
@@ -249,7 +244,7 @@ var TaskEditFormView = Backbone.View.extend({
     this.on( 'task:tags:save:done', function ( event ) {
       var owner          = this.$( '#owner' ).select2( 'data' );
       var completedBy    = this.$('[name=task-time-required]:checked').attr('data-descr') == 'One time' ? this.$( '#estimated-completion-date' ).val() : null;
-      var newParticipant = this.$( '#participant' ).select2( 'data' );
+      //var newParticipant = this.$( '#participant' ).select2( 'data' );
       var silent         = true;
 
       var modelData = {
@@ -284,24 +279,6 @@ var TaskEditFormView = Backbone.View.extend({
         modelData.owner = owner;
       }
       if ( completedBy !== '' ) { modelData[ 'completedBy' ] = completedBy; }
-      if ( newParticipant ) {
-        if ( this.$( '#participant-notify:checked' ).length > 0 ) { silent = false; }
-        $.ajax( {
-          url: '/api/volunteer',
-          method: 'POST',
-          data: {
-            taskId: view.model.get( 'id' ),
-            userId: newParticipant.id,
-            silent: silent,
-          },
-          success: function ( e ) {
-            console.log( 'success adding participant', e );
-          },
-          error: function ( e ) {
-            console.log( 'error adding participant', e );
-          },
-        } );
-      }
 
       var tags = _( this.getTagsFromPage() )
         .chain()
