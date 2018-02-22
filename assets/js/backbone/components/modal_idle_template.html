@@ -1,4 +1,4 @@
-<div class="usajobs-modal" id="<%- id %>" role="dialog" aria-hidden="true" tabindex="-1">
+<div class="usajobs-modal" id="<%- id %>" role="dialog" aria-hidden="true" aria-labelledby="usajobs-modal-heading" aria-describedby="usajobs-modal-description">
   <div class="usajobs-modal__dialog">
     <div class="usajobs-modal__content">
 
@@ -14,11 +14,11 @@
         </p>
       </div>
 
-      <div class="modal-footer modal-footer-grey">
-        <button type="button" id="idle-logout-button" class="usa-button idle-logout">
+      <div class="usajobs-modal__footer">
+        <button type="button" id="idle-logout-button" class="usa-button usa-button-secondary">
           Logoff
         </button>
-        <button type="button" id="idle-reset-button" class="usa-button idle-reset">
+        <button type="button" id="idle-reset-button" class="usa-button usa-button-primary">
           Stay Logged In
         </button>
       </div>

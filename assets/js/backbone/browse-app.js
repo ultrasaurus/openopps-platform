@@ -15,7 +15,7 @@ var TaskCreateFormView = require('./apps/tasks/new/views/task_form_view');
 var AdminMainController = require('./apps/admin/controllers/admin_main_controller');
 var HomeController = require('./apps/home/controllers/home_controller');
 var LoginController = require('./apps/login/controllers/login_controller');
-
+var Modal = require('./components/modal');
 
 var BrowseRouter = Backbone.Router.extend({
 
@@ -168,8 +168,21 @@ var BrowseRouter = Backbone.Router.extend({
 
     this.listenTo(tasks, 'task:save:success', function (data) {
 
-      Backbone.history.navigate('/tasks/' + data, { trigger: true });
-
+      Backbone.history.navigate('/tasks/' + data.attributes.id, { trigger: true });
+      setTimeout(function () {
+        this.modal = new Modal({
+          el: '#site-modal',
+          id: 'submit-opp',
+          modalTitle: 'Submitted',
+          modalBody: 'Thanks for submitting the <strong>' + data.attributes.title + '</strong>. We\'ll review it and let you know if it\'s approved or if we need more information.',
+          primary: {
+            text: 'Close',
+            action: function () {
+              this.modal.cleanup();
+            }.bind(this),
+          }
+        }).render();
+      }, 500);
     });
 
     this.listenTo(tasks, 'task:save:error', function (model, response, options) {
