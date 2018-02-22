@@ -170,6 +170,8 @@ var BrowseRouter = Backbone.Router.extend({
 
       Backbone.history.navigate('/tasks/' + data.attributes.id, { trigger: true });
       setTimeout(function () {
+        $('body').addClass('modal-is-open');
+        
         this.modal = new Modal({
           el: '#site-modal',
           id: 'submit-opp',
