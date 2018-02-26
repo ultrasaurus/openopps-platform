@@ -160,7 +160,9 @@
           </div>
         </div>
 
-
+        <% if (!user || (model.owner.id !== user.id)) { %>
+          <a href="javascript:void(0);" id="apply" class="usa-button-big usa-button-primary disabled"><span class="box-icon-text">Apply</span></a>
+        <% } %>
 
         <% if (model.canEditTask && !_.contains(['draft', 'submitted'], state.value)) { %>
         <div class="continue-accepting-applicants">
@@ -172,10 +174,6 @@
             </div>
           </div>
         </div>
-        <% } %>
-
-        <% if (!model.canEditTask) { %>
-          <a href="javascript:void(0);" id="apply" class="usa-button-big usa-button-primary disabled"><span class="box-icon-text">Apply</span></a>
         <% } %>
 
         <% if (model.volunteers) { %>
@@ -199,14 +197,18 @@
                   <% }); %>
                 <% } else { %>
                   <p class="project-people__assign-instruction">
-                    <% if (model.canEditTask) { %>
-                      Click
-                      <button class="project-people__assign-empty" data-behavior="">
-                        <span class="usajobs-assistive-text">Assign participant</span>
-                      </button>
-                      to assign participants
+                    <% if (model.volunteers.length > 0) { %>
+                      <% if (model.canEditTask) { %>
+                        Click
+                        <button class="project-people__assign-empty" data-behavior="">
+                          <span class="usajobs-assistive-text">Assign participant</span>
+                        </button>
+                        to assign participants
+                      <% } else { %>
+                        None assigned
+                      <% } %>
                     <% } else { %>
-                      None assigned
+                      <p class="project-people__not-available">None applied</p>
                     <% } %>
                   </p>
                 <% } %>

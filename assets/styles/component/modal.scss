@@ -79,6 +79,19 @@ $modal-width-large: 930px;
     @include media($ML) {
       padding: $size-M;
     }
+
+    .check-list {
+      display: flex;
+
+      &:not(:last-child) {
+        margin-bottom: $size-M;
+      }
+
+      .check {
+        margin-right: $size-S;
+        color: $color-green;
+      }
+    }
   }
 
   &__header {
