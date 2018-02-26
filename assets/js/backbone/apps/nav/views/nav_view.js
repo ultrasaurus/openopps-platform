@@ -94,6 +94,31 @@ var NavView = Backbone.View.extend({
     var template = _.template(NavTemplate)(data);
     this.$el.html(template);
     this.$el.localize();
+    this.activePage();
+  },
+
+  activePage: function () {
+    if (window.cache.currentUser && window.location.pathname.match('profile/' + window.cache.currentUser.id)) {
+      //set Profile to active
+      $('a[title="Account"]').addClass('is-active');
+      $('a[title="Account"] > span').removeClass('usajobs-nav--openopps__section');
+      $('a[title="Account"] > span').addClass('usajobs-nav--openopps__section-active');
+    }
+    else if (window.location.pathname.match(/profiles\/?$/)) {
+      //set People to active
+      $('a[title="People"]').addClass('is-active');
+      $('a[title="People"] > span').removeClass('usajobs-nav--openopps__section');
+      $('a[title="People"] > span').addClass('usajobs-nav--openopps__section-active');
+    }
+    else if (window.location.pathname.match(/tasks\/?$/)) {
+      //set Search to active
+      $('a[title="Search Opportunities"]').addClass('is-active');
+      $('a[title="Search Opportunities"] > span').removeClass('usajobs-nav--openopps__section');
+      $('a[title="Search Opportunities"] > span').addClass('usajobs-nav--openopps__section-active');
+    }
+    else {
+      //do nothing
+    }
   },
 
   toggleMenu: function (e) {
