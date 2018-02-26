@@ -6,7 +6,7 @@ var i18n = require('i18next');
 var i18nextJquery = require('jquery-i18next');
 
 // internal dependencies
-var ModalComponent = require('../../../components/modal');
+var Modal = require('../../../components/modal');
 var AdminUserPasswordView = require('./admin_user_password_view');
 var LoginConfig = require('../../../config/login.json');
 
@@ -20,9 +20,9 @@ var AdminUserView = Backbone.View.extend({
   events: {
     'click a.page'              : 'clickPage',
     'click .link-backbone'      : linkBackbone,
-    'click #user-admin'         : 'toggleCheckbox',
-    'click #user-agency-admin'  : 'toggleCheckbox',
-    'click #user-enable'        : 'toggleCheckbox',
+    'click .user-admin'         : 'toggleCheckbox',
+    'click .user-agency-admin'  : 'toggleCheckbox',
+    'click .user-enable'        : 'toggleCheckbox',
     'click .admin-user-unlock'  : 'adminUnlock',
     'click .user-reset'         : 'resetPassword',
     'keyup #user-filter'        : 'filter',
@@ -218,11 +218,33 @@ var AdminUserView = Backbone.View.extend({
     };
 
     // set up the modal
-    this.modalComponent = new ModalComponent({
-      el: '#reset-password-container',
-      id: 'reset-password-modal',
-      modalTitle: 'Reset Password',
-    }).render();
+    // this.modalComponent = new ModalComponent({
+    //   el: '#reset-password-container',
+    //   id: 'reset-password-modal',
+    //   modalTitle: 'Reset Password',
+    // }).render();
+
+
+      $('body').addClass('modal-is-open');
+
+      this.modal = new Modal({
+        el: '#site-modal',
+        id: 'reset-password',
+        modalTitle: 'Reset Password',
+        modalBody: 'An email has been sent to <strong>' + user.name + '</strong> to reset their password.',
+        primary: {
+          text: 'Send email',
+          action: function () {
+            this.modal.cleanup();
+          }.bind(this)
+        },
+        secondary: {
+          text: 'Close',
+          action: function () {
+            this.modal.cleanup();
+          }.bind(this)
+        },
+      }).render();
 
     // initialize the view inside the modal
     this.passwordView = new AdminUserPasswordView({

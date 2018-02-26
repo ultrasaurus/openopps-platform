@@ -5,14 +5,27 @@
         <form class="usa-form-large" id="login-password-form">
           <fieldset class="usajobs-fieldset" id="login-view">
             <% if (message && !_.isUndefined(message.message)) { %>
-            <div class="alert alert-warning">
-              <% /* Escaped in calling views */ %>
-              <%= message.message %>
-            </div>
+              <div class="usa-alert usajobs-alert usajobs-alert--warning" role="alert" data-object="alert" id="file-upload-alert" style="display:none;">
+                  <div class="usajobs-alert__figure">
+                    <div class="usajobs-alert__icon">
+                    </div>
+                  </div>
+                  <div class="usajobs-alert__body">
+                    <p class="usa-alert-text"><%= message.message %></p>
+                  </div>
+                </div>
             <% } %>
-
             <% if (login.local.enabled === true) { %>
-            <div class="alert alert-danger" id="login-error" style="display:none;"></div>
+            <div id="login-error" class="usa-alert usajobs-alert usajobs-alert--error" role="alert" data-object="alert" style="display:none;">
+                <div class="usajobs-alert__figure">
+                  <div class="usajobs-alert__icon">
+                  </div>
+                </div>
+                <div class="usajobs-alert__body">
+                  <p class="usa-alert-text" id="login-error-text">
+                  </p>
+                </div>
+              </div>
               <h2>Sign in</h2>
                 <label for="username" class="control-label">Official government email address</label>
                 <input type="email" class="form-control" id="username" name="identifier" placeholder="Email address"/>
@@ -32,7 +45,6 @@
             <% } %>
           </fieldset>
         </form>
-
     </div>
     </main>
   </div>

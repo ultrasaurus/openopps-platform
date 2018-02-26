@@ -126,3 +126,24 @@ h3 {
       padding-left: 0;
     }
   }
+
+*:focus, .usa-focus {
+  outline: 0;
+  box-shadow: 0 0 3px #3e94cf, 0 0 7px #3e94cf;
+}
+
+[type=radio]:focus + label::before {
+  outline: 0;
+  box-shadow: 0 0 3px #3e94cf, 0 0 7px #3e94cf;
+}
+
+
+[type=checkbox]:focus + label::before {
+  outline: 0;
+  box-shadow: 0 0 3px #3e94cf, 0 0 7px #3e94cf;
+}
+
+a:focus {
+  outline: 0;
+  box-shadow: 0 0 3px #3e94cf, 0 0 7px #3e94cf;
+}
