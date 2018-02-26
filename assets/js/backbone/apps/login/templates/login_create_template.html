@@ -29,10 +29,10 @@
 
               <div class="form-group">
                 <div class="required-input">
-                <label for="rusername" class="control-label">Official government email address</label>
-                <span class="field-validation-error error-empty" style="display:none;">The email address is required.</span>
-                <span class="field-validation-error error-email" style="display:none;">The email address is already in use.</span>
-                <input type="text" class="form-control validate" id="rusername" name="username" placeholder="Email Address" data-validate="empty,email"/>
+                  <label for="rusername" class="control-label">Official government email address</label>
+                  <span class="field-validation-error error-empty" style="display:none;">The email address is required.</span>
+                  <span class="field-validation-error error-email" style="display:none;">The email address is not valid or is already in use.</span>
+                  <input type="text" class="form-control" id="rusername" name="username" placeholder="Email Address" />
               </div>
             </div>
             <div class="password-view">
@@ -47,7 +47,7 @@
                     </div>
                   </div>
               <% } %>
-        
+
               <% if (login.location.enabled === true) { %>
                 <div class="form-group">
                     <div class="required-input">
@@ -59,7 +59,7 @@
               <% } %>
             </div>
             <div class="required-input checkbox">
-                <input type="checkbox" id="rterms" class="validate" data-validate="checked"> 
+                <input type="checkbox" id="rterms" class="validate" data-validate="checked">
                 <label for="rterms"><span>I am a federal employee and agree to the </span><a href="<%- login.terms.link %>"><%- login.terms.name %></a>.</label>
                 <span class="field-validation-error error-checked" style="display:none;">You must accept the Terms and Conditions to register.</span>
               </div>
@@ -67,7 +67,7 @@
           </div>
           <div class="usajobs-button_bar--slim">
               <div class="usajobs-button_bar__body">
-              <button type="button" id="register-cancel" class="usa-button usa-button-secondary">Cancel</button>       
+              <button type="button" id="register-cancel" class="usa-button usa-button-secondary">Cancel</button>
               <button type="submit" class="usa-button usajobs-button-primary">Create account</button>
             </div>
         </div>
@@ -75,4 +75,4 @@
       </div>
     </main>
   </div>
-</section>  
+</section>
