@@ -20,13 +20,10 @@
   }
 
   .usajobs-opop-discover__body hr {
-      position: absolute;
-      margin-left: -65px;
-      margin-top: -10px;
       box-sizing: border-box;
       height: 2px;
-      width: 600px;
-      border: 1px solid #FFFFFF;
+      width: 100%;
+      border: 1px solid $color-white;
   }
 
   // @media screen and (min-width: 48em) {
@@ -47,7 +44,8 @@
     font-size: 2.0rem;
   }
 
-  .usajobs-opop-discover__body .usajobs-grid div {
+  .usajobs-opop-discover__body .usajobs-grid div,
+  .usajobs-opop-discover__body .usajobs-grid-full div {
     padding-top: 1.15rem;
     padding-bottom: 1.15rem;
   }

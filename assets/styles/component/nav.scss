@@ -281,7 +281,8 @@ $nav_item_height: 17px + 24px;
         display: block;
         width: 100%;
         clear: both;
-        padding: $size-S $size-M;
+        // padding: $size-S $size-M;
+        padding: $size-S 4.1rem;
         white-space: nowrap;
       }
     }
@@ -526,7 +527,7 @@ $nav_item_height: 17px + 24px;
       }
 
       @include media($M) {
-        padding-top: 2.2rem;
+        padding-top: 2.4rem;
       }
     }
 
@@ -614,7 +615,7 @@ $nav_item_height: 17px + 24px;
     @include media($M) {
       display: inline-block;
       padding-top: 2.2rem;
-      padding-bottom: 2.2rem;
+      padding-bottom: 2.5rem;
     }
 
     @include media($ML) {
@@ -630,7 +631,7 @@ $nav_item_height: 17px + 24px;
       }
 
       @include media($M) {
-        padding-top: 2.2rem;
+        padding-top: 2.7rem;
       }
     }
 
@@ -656,18 +657,26 @@ $nav_item_height: 17px + 24px;
   }
 
 
-  &__section-link.is-active &__section-active,
-  &__menu-container[data-state="is-open"] &__first-name {
+  &__section-link.is-active &__section-active {
     border-bottom: 0.7rem solid $color-primary;
     padding-bottom: 0.2rem;
 
     @include media($M) {
-      padding-bottom: 1.4rem;
+      padding-bottom: 1.6rem;
+    }
+  }
+
+  &__menu-container[data-state="is-open"] &__first-name {
+    border-bottom: 0;
+    padding-bottom: 0.2rem;
+
+    @include media($M) {
+      padding-bottom: 1.6rem;
     }
   }
 
   &__menu-container[data-state="is-open"] &__section-link.menu-toggle {
-    padding-bottom: 0;
+    padding-bottom: 2.5rem;
     background-color: $color-primary-darkest;
     box-shadow: none;
   }
@@ -690,13 +699,7 @@ $nav_item_height: 17px + 24px;
   }
 
   &__first-name {
-    /* this continues to screw up the line logo_height
-       I suggest we truncate the first name to 12 characters on the way out of the DB
-    display: inherit;
-    max-width: 5.4rem;
-    text-overflow: ellipsis;
-    overflow: hidden;
-    */
+    border-bottom: none;
   }
 
   &__icon-center {
