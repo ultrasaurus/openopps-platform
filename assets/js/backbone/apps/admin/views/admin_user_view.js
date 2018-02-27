@@ -7,7 +7,6 @@ var i18nextJquery = require('jquery-i18next');
 
 // internal dependencies
 var Modal = require('../../../components/modal');
-var AdminUserPasswordView = require('./admin_user_password_view');
 var LoginConfig = require('../../../config/login.json');
 
 // templates
@@ -183,7 +182,6 @@ var AdminUserView = Backbone.View.extend({
       passwordAttempts: 0,
       url: '/api/admin/unlock/' + id,
     });
-
   },
 
   updateUser: function (t, data) {
@@ -215,45 +213,55 @@ var AdminUserView = Backbone.View.extend({
     var user = {
       id: tr.data('id'),
       name: $(tr.find('td.admin-table-name')[0]).text().trim(),
+      email: $(tr.find('td.admin-table-username')[0]).text().trim(),
     };
 
-    // set up the modal
-    // this.modalComponent = new ModalComponent({
-    //   el: '#reset-password-container',
-    //   id: 'reset-password-modal',
-    //   modalTitle: 'Reset Password',
-    // }).render();
+    $('body').addClass('modal-is-open');
 
-
-      $('body').addClass('modal-is-open');
-
-      this.modal = new Modal({
-        el: '#site-modal',
-        id: 'reset-password',
-        modalTitle: 'Reset Password',
-        modalBody: 'An email has been sent to <strong>' + user.name + '</strong> to reset their password.',
-        primary: {
-          text: 'Send email',
-          action: function () {
-            this.modal.cleanup();
-          }.bind(this)
-        },
-        secondary: {
-          text: 'Close',
-          action: function () {
-            this.modal.cleanup();
-          }.bind(this)
-        },
-      }).render();
-
-    // initialize the view inside the modal
-    this.passwordView = new AdminUserPasswordView({
-      el: '.modal-template',
-      user: user,
+    this.modal = new Modal({
+      el: '#site-modal',
+      id: 'reset-password',
+      modalTitle: 'Reset Password',
+      alert: {
+        type: 'error',
+        text: 'Error sending email',
+      },
+      modalBody: 'Click <strong>Send email</strong> below to send an email to <strong>' + user.name + '</strong> to reset their password.',
+      primary: {
+        text: 'Send email',
+        action: function () {
+          this.submitReset.bind(this)(user.email);
+        }.bind(this)
+      },
+      secondary: {
+        text: 'Close',
+        action: function () {
+          this.modal.cleanup();
+        }.bind(this)
+      },
     }).render();
+  },
 
-    // render the modal
-    this.$('#reset-password-modal').modal('show');
+  submitReset: function (email) {
+    var data = {
+      username: email,
+    };
+    $.ajax({
+      url: '/api/auth/forgot',
+      type: 'POST',
+      data: data,
+    }).done(function (success) {
+      $('.usajobs-modal__canvas-blackout').remove();
+      $('.modal-is-open').removeClass();
+      this.modal.cleanup();
+    }.bind(this)).fail(function (error) {
+      var d = JSON.parse(error.responseText);
+      $('#reset-password').addClass('usajobs-modal--error');
+      $('.usajobs-modal__body').html('There was an error sending the Reset password email.');
+      $('#usajobs-modal-heading').hide();
+      $('#alert-modal__heading').show();
+      $('#primary-btn').hide();
+    }.bind(this));
   },
 
   cleanup: function () {

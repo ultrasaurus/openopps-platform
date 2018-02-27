@@ -1,10 +1,14 @@
 /**
  * Modal component
- * 
+ *
  * {
  *    el: [parent element],
  *    id: [#id],
  *    modalTitle: [header title],
+ *    alert: { // alert message
+ *      type: [info|error|warning],
+ *      text: [body text]
+ *    },
  *    modalBody: [body content],
  *    disableClose: [true|false],
  *    secondary: { // secondary button (optional)
@@ -16,7 +20,7 @@
  *      action: [function]
  *    }
  * }
- * 
+ *
  * var modal = new Modal({ el: '#site-modal' ... }).render();
  * modal.cleanup();
  */
@@ -38,6 +42,7 @@ var Modal = BaseComponent.extend({
   initialize: function (options) {
     this.options = options;
     this.options.secondary = this.options.secondary || false;
+    this.options.modalAlert = this.options.alert || false;
     this.options.disableClose = this.disableClose || false;
   },
 
@@ -46,7 +51,7 @@ var Modal = BaseComponent.extend({
     this.$el.html(compiledTemplate);
 
     $('.modal-is-open').append('<div class="usajobs-modal__canvas-blackout" tabindex="-1" aria-hidden="true"></div>');
-    
+
     return this;
   },
 
