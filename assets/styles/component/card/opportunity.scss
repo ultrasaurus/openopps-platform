@@ -69,6 +69,20 @@
     color: $color-gray;
   }
 
+  #apply {
+    margin: $size-M 0;
+  }
+
+  #apply-thanks {
+    background-color: #E1F3F8;
+    padding: $size-S;
+    margin: $size-M 0;
+  }
+
+  #apply-cancel {
+    color: $color-secondary-dark;
+  }
+
   .usajobs-pill--opportunity-status.opportunity-page {
     margin: $size-M auto;
     display: inline-block;

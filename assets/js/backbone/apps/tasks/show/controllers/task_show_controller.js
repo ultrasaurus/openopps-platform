@@ -22,7 +22,6 @@ var ChangeStateTemplate = require('../templates/change_state_template.html').toS
 var UpdateLocationAgencyTemplate = require('../templates/update_location_agency_template.html').toString();
 var UpdateNameTemplate = require('../templates/update_name_template.html').toString();
 var CopyTaskTemplate = require('../templates/copy_task_template.html').toString();
-var ParticipateCheckList = require('../templates/participate_check_list.html').toString();
 
 var popovers = new Popovers();
 
@@ -43,7 +42,6 @@ var TaskShowController = BaseView.extend({
     'click .link-backbone'                : linkBackbone,
     'click .volunteer-delete'             : 'removeVolunteer',
     'click .project-people__remove'       : 'toggleAssign',
-    'click #apply'                        : 'apply',
     'mouseenter .project-people-show-div' : popovers.popoverPeopleOn,
     'click .project-people-show-div'      : popovers.popoverClick,
   },
@@ -187,25 +185,6 @@ var TaskShowController = BaseView.extend({
   view: function (e) {
     if (e.preventDefault) e.preventDefault();
     Backbone.history.navigate('tasks/' + this.model.id, { trigger: true });
-  },
-
-  apply: function (e) {
-    if (e.preventDefault) e.preventDefault();
-    this.modalComponent = new ModalComponent({
-      el: '#site-modal',
-      id: 'volunteer',
-      modalTitle: 'Do you want to participate?',
-      modalBody: ParticipateCheckList,
-      disableClose: false,
-      secondary: null,
-      primary: {
-        text: 'Yes, submit my name',
-        action: function () {
-          // do stuff
-          this.modalComponent.cleanup();
-        }.bind(this),
-      },
-    }).render();
   },
 
   volunteer: function (e) {

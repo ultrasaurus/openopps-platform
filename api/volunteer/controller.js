@@ -9,7 +9,7 @@ var router = new Router();
 router.post('/api/volunteer', auth, async (ctx, next) => {
   if (await service.canAddVolunteer(ctx.request.body, ctx.state.user)) {
     var attributes = ctx.request.body;
-    attributes.userId = +attributes.userId || ctx.state.user.id;
+    attributes.userId = ctx.state.user.id;
     await service.addVolunteer(attributes, function (err, volunteer) {
       if (err) {
         return ctx.body = err;
@@ -17,6 +17,7 @@ router.post('/api/volunteer', auth, async (ctx, next) => {
       if (volunteer.silent == null || volunteer.silent == 'false') {
         service.sendAddedVolunteerNotification(ctx.state.user, volunteer, 'volunteer.create.thanks');
       }
+      volunteer.name = ctx.state.user.name;
       return ctx.body = volunteer;
     });
   } else {

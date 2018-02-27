@@ -52,11 +52,7 @@ var NavView = Backbone.View.extend({
 
     // request that the user log in to see the page
     this.listenTo(window.cache.userEvents, 'user:request:login', function (message) {
-      // trigger the login modal
-      $.getJSON('/csrfToken', function (t) {
-        $('meta[name="csrf-token"]').attr('content', t._csrf);
-        Backbone.history.navigate('/login', {trigger: true});
-      });
+      Backbone.history.navigate('/login', {trigger: true});
     });
 
     // update the navbar when the profile changes
