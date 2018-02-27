@@ -1,5 +1,5 @@
 <% if (!user || (model.owner.id !== user.id)) { %>
-  <% if (_.findWhere(model.volunteers, { userId: user.id })) { %>
+  <% if (user && _.findWhere(model.volunteers, { userId: user.id })) { %>
     <div id="apply-thanks">
       <h3>Thanks for applying</h3>
       <div>We’ll email you with next steps. You can also check your profile for status updates.</div>
