@@ -1,10 +1,11 @@
 var $ = require('jquery');
-window.jQuery = $; 
+window.jQuery = $;
 
 var _ = require('underscore');
 var Backbone = require('backbone');
 var Bootstrap = require('bootstrap');
 var BaseController = require('../../../base/base_controller');
+var UIConfig = require('../../../config/ui.json');
 var LoginView = require('../views/login_view');
 var LoginCreateView = require('../views/login_create_view');
 var LoginForgotView = require('../views/login_forgot_view');
@@ -21,9 +22,13 @@ var LoginController = BaseController.extend({
   },
 
   initialize: function (options) {
-    this.options = options;
-    this.cleanupViews();
-    this.renderLogin();
+    if(window.cache.currentUser) {
+      Backbone.history.navigate(UIConfig.home.logged_in_path, { trigger: true, replaceState: true });
+    } else {
+      this.options = options;
+      this.cleanupViews();
+      this.renderLogin();
+    }
   },
 
   cleanupViews: function () {

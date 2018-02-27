@@ -3,7 +3,7 @@
   <div class="usajobs-nav__body usajobs-nav--openopps">
     <div  class="usajobs-nav__header-container">
       <div class="usajobs-nav__header usajobs-nav--openopps">
-        <div class="usajobs-nav__brand-container usajobs-nav--openopps__brand-container">     
+        <div class="usajobs-nav__brand-container usajobs-nav--openopps__brand-container">
           <a class="usajobs-nav__brand usajobs-nav--openopps__brand" href="/" title="Open Opportunities - Home">
             <img src="/img/logo/svg/open-opportunities.svg" alt="Open Opportunities logo">
         </a>
@@ -13,14 +13,14 @@
             <% if (user) { %>
               <li class="usajobs-nav__menu-container usajobs-nav__account usajobs-nav--openopps__menu-container" data-state="is-closed">
                 <a class="usajobs-nav__section-link usajobs-nav--openopps__section-link menu-toggle" href="#" title="Account" aria-haspopup="true">
-                  <div class="usajobs-nav--openopps__icon-center">
+                  <span class="usajobs-nav--openopps__section">
                     <span class="fas fa-user fa-fw"></span>
-                  </div>
                   <% if (user.name) { %>
                     <span class="usajobs-nav__first_name usajobs-nav--openopps__first-name"><%- user.name %></span>
                   <% } else { %>
                     <span class="usajobs-nav__account_name"><%- user.username %></span>
                   <% } %>
+                  </span>
                 </a>
                 <ul class="usajobs-nav__secondary-menu" aria-expanded="false" aria-label="submenu" role="menu">
                   <li><a href="/profile/<%- user.id %>" id="profileLink" role="menuitem">Profile</a></li>
@@ -33,9 +33,9 @@
                 </ul>
               </li>
               <li class="usajobs-nav__menu-container usajobs-nav--openopps__people">
-                <a class="usajobs-nav__section-link usajobs-nav--openopps__section-link is-active" href="/profiles" title="People">
-                  <span class="usajobs-nav--openopps__section-active">
-                    <span class="fas fa-users fa-fw" data-fa-transform="right-10"></span>People
+                <a class="usajobs-nav__section-link usajobs-nav--openopps__section-link" href="/profiles" title="People">
+                  <span class="usajobs-nav--openopps__section">
+                    <span class="fas fa-users fa-fw" data-fa-transform="right-4 down-2" style="width:1.8em;height:0.9em;"></span>People
                   </span>
                 </a>
               </li>
@@ -50,8 +50,10 @@
               <% } %>
             <% }; %>
             <li class="usajobs-nav__menu-container usajobs-nav__menu-search">
-                <a href="/tasks" class="usajobs-nav__section-link usajobs-nav--openopps__section-link" title="Search Opportunities">
-                  <span class="fas fa-search fa-fw" data-fa-transform="right-8"></span> Search
+                <a class="usajobs-nav__section-link usajobs-nav--openopps__section-link" href="/tasks" title="Search Opportunities">
+                  <span class="usajobs-nav--openopps__section">
+                    <span class="fas fa-search fa-fw" style="margin-top:0.5rem;"></span>Search
+                  </span>
                 </a>
               </li>
           </ul>
@@ -60,5 +62,3 @@
     </div>
   </div>
 </nav>
-
-

@@ -35,6 +35,10 @@
     overflow-wrap: break-word; // This prevents whack titles from breaking the card
   }
 
+  &-item__header {
+    min-height: 17rem;
+  }
+
   &-item__title {
     line-height: 1;
   }
@@ -63,6 +67,20 @@
 
   &__detail-item {
     color: $color-gray;
+  }
+
+  #apply {
+    margin: $size-M 0;
+  }
+
+  #apply-thanks {
+    background-color: #E1F3F8;
+    padding: $size-S;
+    margin: $size-M 0;
+  }
+
+  #apply-cancel {
+    color: $color-secondary-dark;
   }
 
   .usajobs-pill--opportunity-status.opportunity-page {
@@ -476,6 +494,7 @@
       .continue-accepting-applicants__toggle-container {
         position: relative;
         width: 86px;
+        cursor: pointer;
 
         &:after {
           display: inline-block;
@@ -491,10 +510,25 @@
           font-weight: 600;
         }
       }
+
+      .toggle-off {
+
+        &:after {
+          content: url(../img/toggle-off.svg);
+        }
+
+        .continue-accepting-applicants__toggle-labeloff {
+          font-weight: 600;
+        }
+
+        .continue-accepting-applicants__toggle-labelon {
+          font-weight: normal;
+        }
+      }
     }
   }
 
-  .project-people__assign {
+  .project-people__assign, .project-people__remove {
     margin: 0.5rem 0 0 0;
     padding: 0;
     display: inline-block;
@@ -517,8 +551,22 @@
       //background-size: 12px 12px;
       margin-top: 0.3rem;
       margin-left: 0;
-      content: url(../img/icons/white/svg/plus.svg);
       color: #fff;
+    }
+  }
+
+  .project-people__assign {
+    &:after {
+      content: url(../img/icons/white/svg/plus.svg);
+    }
+  }
+
+  .project-people__remove {
+    background-color: $color-gray-lighter;
+
+    &:after {
+      margin-top: 0;
+      content: url(../img/icons/close/times.svg);
     }
   }
 
@@ -531,6 +579,16 @@
     height: 1px !important;
     overflow: hidden !important;
     clip: rect(0 0 0 0) !important;
+  }
+
+  .project-people__not-available {
+    color: $color-gray-light;
+    font-size: 1.9rem;
+    font-style: italic;
+    font-weight: 600;
+    margin-top: $size-XXL;
+    margin-bottom: $size-XXL;
+    text-align: center;
   }
 
   .assigned-participants-wrapper {
@@ -595,19 +653,40 @@
     }
   }
 
-  #nextstep {
+  #nextstep, #complete {
     display: block;
+    margin-right: 0;
+
+    &.disabled {
+      background-color: $color-gray-lightest;
+      color: $color-gray-light;
+      cursor: default;
+    }
+
+    &.hidden {
+      display: none;
+    }
   }
 
-  #nextstep.disabled {
-    background-color: $color-gray-lightest;
-    color: $color-gray-light;
-    cursor: default;
+  #complete {
+    background-color: $color-primary-alt;
+    color: #000;
+  }
+
+  #apply {
+    display: block;
+    margin-right: 0;
   }
 
   .project-people__wrapper {
     margin-top: 15px;
     margin-bottom: $size-default;
+
+    &::after {
+      clear: both;
+      content: "";
+      display: block;
+    }
 
     .project-people-show-div {
       text-align: center;
@@ -633,7 +712,7 @@
         max-width: 90px;
       }
 
-      .project-people__assign {
+      .project-people__assign, .project-people__remove {
         position: absolute;
         top: -0.4rem;
         right: 1rem;
@@ -695,7 +774,6 @@
 
   & &__name {
     margin: 0;
-    line-height: 0.75;
   }
 
   &__status {

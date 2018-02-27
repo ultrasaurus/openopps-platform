@@ -49,8 +49,7 @@ var Modal = BaseComponent.extend({
   render: function () {
     var compiledTemplate = _.template(ModalTemplate)(this.options);
     this.$el.html(compiledTemplate);
-
-    $('.modal-is-open').append('<div class="usajobs-modal__canvas-blackout" tabindex="-1" aria-hidden="true"></div>');
+    $('body').append('<div class="usajobs-modal__canvas-blackout" tabindex="-1" aria-hidden="true"></div>');
 
     return this;
   },

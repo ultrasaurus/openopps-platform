@@ -1,0 +1,78 @@
+<% if (!user || (model.owner.id !== user.id)) { %>
+  <% if (user && _.findWhere(model.volunteers, { userId: user.id })) { %>
+    <div id="apply-thanks">
+      <h3>Thanks for applying</h3>
+      <div>We’ll email you with next steps. You can also check your profile for status updates.</div>
+      <a href="javascript:void(0);" id="apply-cancel">Cancel your application</a>
+    </div>
+  <% } else { %>
+    <a href="javascript:void(0);" id="apply" class="usa-button-big usa-button-primary"><span class="box-icon-text">Apply</span></a>
+  <% } %>
+<% } %>
+
+<% if (model.volunteers) { %>
+  <h3>Assigned Participants</h3>
+  <div class="assigned-participants-wrapper project-people__wrapper">
+    <% if (_.contains(['draft', 'submitted'], state.value)) { %>
+      <p class="project-people__not-available">Not available</p>
+    <% } else { %>
+      <% if (_.where(model.volunteers, { assigned: true }).length > 0) { %>
+        <% _.each(_.where(model.volunteers, { assigned: true }), function (v) { %>
+          <div class="project-people-show-div" data-userid="<%- v.userId %>" data-voluserid="<%- v.userId %>">
+            <img src="/api/user/photo/<%- v.userId %>" alt="<%- v.name %>" class="project-people" />
+            <label class="project-people-show-label"><%- v.name %></label>
+            <% if (model.canEditTask) { %>
+              <button class="project-people__remove" data-behavior="participant.remove">
+                <span class="usajobs-assistive-text">Remove participant</span>
+              </button>
+            <% } %>
+          </div>
+        <% }); %>
+      <% } else { %>
+        <p class="project-people__assign-instruction">
+          <% if (model.volunteers.length > 0) { %>
+            <% if (model.canEditTask) { %>
+              Click
+              <button class="project-people__assign-empty" data-behavior="">
+                <span class="usajobs-assistive-text">Assign participant</span>
+              </button>
+              to assign participants
+            <% } else { %>
+              None assigned
+            <% } %>
+          <% } else { %>
+            <p class="project-people__not-available">None applied</p>
+          <% } %>
+        </p>
+      <% } %>
+    <% } %>
+  </div>
+
+  <% if (model.canEditTask) { %>
+    <a href="javascript:void(0);" id="nextstep" class="usa-button-big usa-button-primary disabled"><span class="box-icon-text">Next step</span></a>
+    <a href="javascript:void(0);" id="complete" class="usa-button-big usa-button-primary disabled"><span class="box-icon-text">Complete opportunity</span></a>
+  <% } %>
+
+  <h3>Applicants</h3>
+  <div class="project-people__wrapper">
+    <% if (_.contains(['draft', 'submitted'], state.value)) { %>
+      <p class="project-people__not-available">Not available</p>
+    <% } else { %>
+      <% if (model.volunteers.length > 0) { %>
+        <% _.each(_.where(model.volunteers, { assigned: false }), function (v) { %>
+          <div class="project-people-show-div" data-userid="<%- v.userId %>" data-voluserid="<%- v.userId %>">
+            <img src="/api/user/photo/<%- v.userId %>" alt="<%- v.name %>" class="project-people" />
+            <label class="project-people-show-label"><%- v.name %></label>
+            <% if (model.canEditTask) { %>
+              <button class="project-people__assign" data-behavior="participant.assign">
+                <span class="usajobs-assistive-text">Assign participant</span>
+              </button>
+            <% } %>
+          </div>
+        <% }); %>
+      <% } else { %>
+        <p class="project-people__not-available">None applied</p>
+      <% } %>
+    <% } %>
+  </div>
+<% } %>

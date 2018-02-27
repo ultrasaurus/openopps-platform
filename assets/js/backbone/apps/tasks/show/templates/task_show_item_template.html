@@ -18,17 +18,10 @@
     </div>
     <main class="main-content usajobs-content-well" id="main-content" aria-label="Opportunity">
       <div class="usajobs-open-opps-opportunity usajobs-open-opps-section usajobs-open-opps-profile">
-        <div class="usajobs-grid-full">
+        <div class="usajobs-grid-full usajobs-open-opps-opportunity-item__header">
           <div class="usajobs-width-five-sixths">
             <h1 class="usajobs-open-opps-opportunity-item__title"><%- model.title %></h1>
             <span class="usajobs-pill--opportunity-status opportunity-page status-<%- state.value %>"><%- state.humanReadable %></span>
-            <% if (madlibTags['skill']) { %>
-            <div class="py1">
-              <% _.each(madlibTags['skill'], function (t) { %>
-                <a class="px2 bg-yellow black rounded" href="/tasks?search=<%= t.name %>"><%= t.name %></a>
-              <% }) %>
-            </div>
-            <% } %>
           </div>
 
           <div class="usajobs-width-one-sixth">
@@ -51,16 +44,19 @@
 
         <div class="usajobs-grid-full">
           <div class="usajobs-opop-task-tags usajobs-width-two-thirds">
-            <% _.each(tags, function (t) { %>
+            &nbsp;
+            <% _.each(madlibTags['skill'], function (t) { %>
               <a class="skill-label" href="/tasks?search=<%= t.name %>"><%= t.name %></a>
             <% }) %>
           </div>
 
           <div class="usajobs-opop-actions usajobs-opop-actions--v1-5 usajobs-width-one-third">
             <div class="usajobs-opop-actions__col-sub-actions usajobs-opop-actions--v1-5__col-sub-actions">
-              <a class="usajobs-opop-actions__duplicate" href="#duplicate"><i class="fa fa-copy"></i> Duplicate</a>
+              <a class="usajobs-opop-actions__duplicate" href="#duplicate" id="task-copy"><i class="fa fa-copy"></i> Duplicate</a>
               <!-- <a class="usajobs-opop-actions__save" href="#save" data-behavior="opop-actions.toggle-save" data-state="is-unsaved"><i class="fa fa-bookmark"></i> Save</a> -->
-              <a class="usajobs-opop-actions__save" href="#edit" id="task-edit"><i class="fas fa-edit"></i> Edit</a>
+              <% if (model.canEditTask) { %>
+                <a class="usajobs-opop-actions__save" href="#edit" id="task-edit"><i class="fas fa-edit"></i> Edit</a>
+              <% } %>
               <a class="usajobs-opop-actions__share usajobs-opop-actions-share" href="#" id="email"><i class="fa fa-share-alt"></i> Share</a>
             </div>
           </div>
@@ -141,16 +137,16 @@
         <h3>Progress</h3>
         <div class="usajobs-open-opps-opportunity-progress__container">
           <div class="usajobs-open-opps-opportunity-progress__step">
-            <div class="usajobs-open-opps-opportunity-progress__assigned">
-              <span class="usajobs-assistive-text">Assigned</span>
+            <div class="usajobs-open-opps-opportunity-progress__assigned <% if (hasStep('assigning')) { %>has-step<% } %>">
+              <span class="usajobs-assistive-text">Assigning</span>
             </div>
-            <label class="progress-label">Assigned</label>
+            <label class="progress-label">Assigning</label>
           </div>
 
           <span class="progress-spacer"></span>
 
           <div class="usajobs-open-opps-opportunity-progress__step">
-            <div class="usajobs-open-opps-opportunity-progress__in-progress">
+            <div class="usajobs-open-opps-opportunity-progress__in-progress <% if (hasStep('inProgress')) { %>has-step<% } %>">
               <span class="usajobs-assistive-text">In progress</span>
             </div>
             <label class="progress-label">In progress</label>
@@ -159,62 +155,30 @@
           <span class="progress-spacer"></span>
 
           <div class="usajobs-open-opps-opportunity-progress__step">
-            <div class="usajobs-open-opps-opportunity-progress__completed">
-              <span class="usajobs-assistive-text">Completed</span>
+            <div class="usajobs-open-opps-opportunity-progress__completed <% if (hasStep('complete')) { %>has-step<% } %>">
+              <span class="usajobs-assistive-text">Complete</span>
             </div>
-            <label class="progress-label">Completed</label>
+            <label class="progress-label">Complete</label>
           </div>
         </div>
 
+        <% if (model.canEditTask && !_.contains(['draft', 'submitted'], state.value)) { %>
         <div class="continue-accepting-applicants">
-          <a href="javascript:void(0);" class="continue-accepting-applicants__toggle">
+          <div class="continue-accepting-applicants__toggle">
             <span class="continue-accepting-applicants__label">Continue accepting applicants</span>
-            <div class="continue-accepting-applicants__toggle-container">
+            <div class="continue-accepting-applicants__toggle-container <% if (!model.acceptingApplicants) { %>toggle-off<% } %>">
               <span class="continue-accepting-applicants__toggle-labeloff">Off</span>
               <span class="continue-accepting-applicants__toggle-labelon">On</span>
             </div>
-          </a>
-        </div>
-
-
-        <% if (model.volunteers) { %>
-          <div>
-            <h3>Assigned Participants</h3>
-            <div class="assigned-participants-wrapper">
-              <p class="project-people__assign-instruction">
-                Click
-                <button class="project-people__assign-empty" data-behavior="">
-                  <span class="usajobs-assistive-text">Assign participant</span>
-                </button>
-                 to assign participants
-              </p>
-              <a href="javascript:void(0);" id="nextstep" class="usa-button-big usa-button-primary disabled"><span class="box-icon-text" data-i18n="taskPage.nextStep">Next step</span></a>
-            </div>
-
-            <h3>Applicants</h3>
-            <div class="project-people__wrapper">
-            <% if (model.volunteers.length > 0) { %>
-              <% _.each(model.volunteers, function (v) { %>
-                <% if (user) { %>
-                  <div class="project-people-show-div" data-userid="<%- v.userId %>" data-voluserid="<%- v.userId %>">
-                <% } else { %>
-                  <div style="width: 70px; position: relative; display: inline-block; text-align: center; padding: 0 3px;">
-                <% } %>
-                <img src="/api/user/photo/<%- v.userId %>" alt="<%- v.name %>" class="project-people" />
-                <label class="project-people-show-label"><%- v.name %></label>
-                <button class="project-people__assign" data-behavior="participant.assign">
-                  <span class="usajobs-assistive-text">Assign participant</span>
-                </button>
-              </div>
-              <% }); %>
-            <% } else { %>
-              None assigned
-            <% } %>
-              <a class="usajobs-open-opps-opportunity__cancel" href="javascript:void();">Cancel this opportunity</a>
-            </div>
           </div>
         </div>
-      <% } %>
+        <% } %>
+
+        <div id="participants"></div>
+
+        <% if (model.canEditTask) { %>
+          <a class="usajobs-open-opps-opportunity__cancel" href="javascript:void();">Cancel this opportunity</a>
+        <% } %>
       </div>
     </aside>
 
