@@ -41,6 +41,7 @@ var TaskShowController = BaseView.extend({
     'click #task-copy'                    : 'copy',
     'click .link-backbone'                : linkBackbone,
     'click .volunteer-delete'             : 'removeVolunteer',
+    'click .project-people__remove'       : 'toggleAssign',
     'mouseenter .project-people-show-div' : popovers.popoverPeopleOn,
     'click .project-people-show-div'      : popovers.popoverClick,
   },
@@ -175,7 +176,7 @@ var TaskShowController = BaseView.extend({
 
   edit: function (e) {
     if (e.preventDefault) e.preventDefault();
-    
+
     this.initializeEdit();
     // popovers.popoverPeopleInit('.project-people-div');
     Backbone.history.navigate('tasks/' + this.model.id + '/edit');
@@ -340,6 +341,13 @@ var TaskShowController = BaseView.extend({
   volunteered: function (e) {
     if (e.preventDefault) e.preventDefault();
     // Not able to un-volunteer, so do nothing
+  },
+
+  toggleAssign: function (e) {
+    if (e.stopPropagation) e.stopPropagation();
+    if (e.preventDefault) e.preventDefault();
+    var t = $(e.currentTarget);
+    var userId = $(t.parent()).data('userid');
   },
 
   removeVolunteer: function (e) {

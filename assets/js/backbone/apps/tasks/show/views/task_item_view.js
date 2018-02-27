@@ -10,13 +10,31 @@ var TimeAgo = require('../../../../../vendor/jquery.timeago');
 
 var BaseView = require('../../../../base/base_view');
 var UIConfig = require('../../../../config/ui.json');
+var ModalComponent = require('../../../../components/modal');
 
 var TaskShowTemplate = require('../templates/task_show_item_template.html');
+var ParticipantsTemplate = require('../templates/participants_template.html');
 var AlertTemplate = require('../../../../components/alert_template.html');
+var ParticipateCheckList = require('../templates/participate_check_list.html').toString();
+var ProfileCheckList = require('../templates/profile_check_list.html');
 var ShareTemplate = require('../templates/task_share_template.txt');
 
 
 var TaskItemView = BaseView.extend({
+  events: {
+    'click #apply' : 'apply',
+  },
+
+  modalOptions: {
+    el: '#site-modal',
+    id: 'volunteer',
+    modalTitle: '',
+    modalBody: '',
+    disableClose: false,
+    secondary: { },
+    primary: { },
+  },
+
   initialize: function (options) {
     var self = this;
     this.options = options;
@@ -46,6 +64,7 @@ var TaskItemView = BaseView.extend({
         humanReadable: taskState,
         value: taskState.toLowerCase(),
       },
+      hasStep: this.hasStep.bind(this),
     };
 
     self.data['madlibTags'] = organizeTags(self.data.tags);
@@ -58,7 +77,7 @@ var TaskItemView = BaseView.extend({
 
     self.data.ui = UIConfig;
     self.data.vol = vol;
-    self.data.model.userId = self.data.model.owner.id; 
+    self.data.model.userId = self.data.model.owner.id;
     var compiledTemplate = _.template(TaskShowTemplate)(self.data);
 
     self.$el.html(compiledTemplate);
@@ -66,14 +85,40 @@ var TaskItemView = BaseView.extend({
     $('time.timeago').timeago();
     self.updateTaskEmail();
     self.model.trigger('task:show:render:done');
+    this.initializeParticipants();
+    this.initializeStateButtons(taskState.toLowerCase());
+  },
 
-    if ('?volunteer' === window.location.search && !self.model.attributes.volunteer) {
-      $('#volunteer').click();
+  initializeParticipants () {
+    $('#participants').html(_.template(ParticipantsTemplate)(this.data));
+  },
 
-      Backbone.history.navigate(window.location.pathname, {
-        trigger: false,
-        replace: true,
-      });
+  initializeStateButtons (state) {
+    if(this.data.model.canEditTask) {
+      $('#nextstep').hide();
+      $('#complete').hide();
+      switch (state) {
+        case 'open':
+          $('#nextstep').show();
+          break;
+        case 'assigned':
+        case 'completed':
+          $('#complete').show();
+          break;
+      }
+    }
+  },
+
+  hasStep: function (step) {
+    switch (step) {
+      case 'assigning':
+        return _.contains(['open', 'assigned', 'completed'], this.data.state.value);
+      case 'inProgress':
+        return _.contains(['assigned', 'completed'], this.data.state.value);
+      case 'complete':
+        return this.data.state.value === 'completed';
+      default:
+        return false;
     }
   },
 
@@ -115,6 +160,62 @@ var TaskItemView = BaseView.extend({
     async.each(types, requestAllTagsByType, function (err) {
       self.model.trigger('task:tag:types', self.tagSources);
       self.render(self);
+    });
+  },
+
+  apply: function (e) {
+    if (e.preventDefault) e.preventDefault();
+    if (!window.cache.currentUser) {
+      window.cache.userEvents.trigger('user:request:login');
+    } else {
+      var requiredTags = window.cache.currentUser.tags.filter(function (t) {
+        return t.type === 'location' || t.type === 'agency';
+      });
+      if(requiredTags.length < 2) {
+        this.completeProfile(requiredTags);
+      } else {
+        var options = _.extend(_.clone(this.modalOptions), {
+          modalTitle: 'Do you want to participate?',
+          modalBody: ParticipateCheckList,
+          primary: {
+            text: 'Yes, submit my name',
+            action: this.volunteer.bind(this),
+          },
+        });
+        this.modalComponent = new ModalComponent(options).render();
+      }
+    }
+  },
+
+  completeProfile: function (tags) {
+    var options = _.extend(_.clone(this.modalOptions), {
+      modalTitle: 'Please complete your profile.',
+      modalBody: _.template(ProfileCheckList)({ tags: tags }),
+      primary: {
+        text: 'Go to profile',
+        action: function () {
+          this.modalComponent.cleanup();
+          Backbone.history.navigate('/profile/' + window.cache.currentUser.id, { trigger: true });
+        }.bind(this),
+      },
+    });
+    this.modalComponent = new ModalComponent(options).render();
+  },
+
+  volunteer: function () {
+    var self = this;
+    $.ajax({
+      url: '/api/volunteer/',
+      type: 'POST',
+      data: {
+        taskId: self.model.attributes.id,
+      },
+    }).done( function (data) {
+      if(!_.findWhere(self.data.model.volunteers, { userId: data.userId })) {
+        self.data.model.volunteers.push(data);
+        self.initializeParticipants();
+      }
+      self.modalComponent.cleanup();
     });
   },
 

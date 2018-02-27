@@ -11,8 +11,8 @@ var ModalIdleTemplate = require('./modal_idle_template.html');
 
 var ModalIdle = BaseComponent.extend({
   events: {
-    'click .idle-reset'  : 'resetTimeout',
-    'click .idle-logout' : 'logout',
+    'click #idle-reset-button'  : 'resetTimeout',
+    'click #idle-logout-button' : 'logout',
   },
 
   initialize: function (options) {
@@ -39,15 +39,14 @@ var ModalIdle = BaseComponent.extend({
   render: function () {
     var compiledTemplate = _.template(ModalIdleTemplate)(this.data);
     this.$el.html(compiledTemplate);
-    
-    $('.modal-is-open').append('<div class="usajobs-modal__canvas-blackout" tabindex="-1" aria-hidden="true"></div>');
-    
+
+    $('body').append('<div class="usajobs-modal__canvas-blackout" tabindex="-1" aria-hidden="true"></div>');
+
     return this;
   },
 
   cleanup: function () {
     $('.usajobs-modal__canvas-blackout').remove();
-    $('.modal-is-open').removeClass();
     removeView(this);
   },
 
@@ -73,13 +72,19 @@ var ModalIdle = BaseComponent.extend({
           this.logout();
         }.bind(this), 3 * 60 * 1000); // Logout after 3 minutes
         this.toggleModal(true);
-      }.bind(this), 27 * 60 * 1000); // 27 minutes then show 3 minute warning
+      }.bind(this), 12 * 60 * 1000); // 12 minutes then show 3 minute warning
       this.toggleModal(false);
     }.bind(this));
   },
 
   toggleModal: function (show) {
-    $('#' + this.data.id).attr('data-state', show ? 'is-open' : 'is-closed');
+    if(show) {
+      $('#' + this.data.id).attr('data-state', 'is-open');
+      $('body').append('<div class="usajobs-modal__canvas-blackout" tabindex="-1" aria-hidden="true"></div>');
+    } else {
+      $('#' + this.data.id).attr('data-state', 'is-closed');
+      $('.usajobs-modal__canvas-blackout').remove();
+    }
     $('#' + this.data.id).attr('aria-hidden', !show);
   },
 

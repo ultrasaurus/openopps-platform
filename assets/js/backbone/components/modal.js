@@ -1,6 +1,6 @@
 /**
  * Modal component
- * 
+ *
  * {
  *    el: [parent element],
  *    id: [#id],
@@ -16,7 +16,7 @@
  *      action: [function]
  *    }
  * }
- * 
+ *
  * var modal = new Modal({ el: '#site-modal' ... }).render();
  * modal.cleanup();
  */
@@ -45,8 +45,8 @@ var Modal = BaseComponent.extend({
     var compiledTemplate = _.template(ModalTemplate)(this.options);
     this.$el.html(compiledTemplate);
 
-    $('.modal-is-open').append('<div class="usajobs-modal__canvas-blackout" tabindex="-1" aria-hidden="true"></div>');
-    
+    $('body').append('<div class="usajobs-modal__canvas-blackout" tabindex="-1" aria-hidden="true"></div>');
+
     return this;
   },
 
