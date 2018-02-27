@@ -78,7 +78,7 @@ var ModalIdle = BaseComponent.extend({
     }.bind(this));
   },
 
-  toggleModal (show) {
+  toggleModal: function (show) {
     $('#' + this.data.id).attr('data-state', show ? 'is-open' : 'is-closed');
     $('#' + this.data.id).attr('aria-hidden', !show);
   },
