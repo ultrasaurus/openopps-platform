@@ -77,7 +77,7 @@ var ModalIdle = BaseComponent.extend({
     }.bind(this));
   },
 
-  toggleModal (show) {
+  toggleModal: function (show) {
     if(show) {
       $('#' + this.data.id).attr('data-state', 'is-open');
       $('body').append('<div class="usajobs-modal__canvas-blackout" tabindex="-1" aria-hidden="true"></div>');
