@@ -132,7 +132,7 @@ async function updateOpportunityState (attributes, done) {
   attributes.publishedAt = attributes.state === 'open' && !origTask.publishedAt ? new Date : origTask.publishedAt;
   attributes.completedAt = attributes.state === 'completed' && !origTask.completedAt ? new Date : origTask.completedAt;
   await dao.Task.update(attributes).then(async (task) => {
-    return done(task, origTask.state !== task.state);
+    return done(await dao.Task.findOne('id = ?', task.id), origTask.state !== task.state);
   }).catch (err => {
     return done(null, false, {'message':'Error updating task.'});
   });
