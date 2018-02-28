@@ -21,7 +21,7 @@
         <div class="usajobs-grid-full usajobs-open-opps-opportunity-item__header">
           <div class="usajobs-width-five-sixths">
             <h1 class="usajobs-open-opps-opportunity-item__title"><%- model.title %></h1>
-            <span class="usajobs-pill--opportunity-status opportunity-page status-<%- state.value %>"><%- state.humanReadable %></span>
+            <span class="usajobs-pill--opportunity-status opportunity-page status-<%- state.value.replace(' ', '-') %>"><%- state.humanReadable %></span>
           </div>
 
           <div class="usajobs-width-one-sixth">
@@ -166,7 +166,7 @@
         <div class="continue-accepting-applicants">
           <div class="continue-accepting-applicants__toggle">
             <span class="continue-accepting-applicants__label">Continue accepting applicants</span>
-            <div class="continue-accepting-applicants__toggle-container <% if (!model.acceptingApplicants) { %>toggle-off<% } %>">
+            <div id="accept-toggle" class="continue-accepting-applicants__toggle-container <% if (!model.acceptingApplicants) { %>toggle-off<% } %>">
               <span class="continue-accepting-applicants__toggle-labeloff">Off</span>
               <span class="continue-accepting-applicants__toggle-labelon">On</span>
             </div>
