@@ -115,11 +115,11 @@ module.exports = (config) => {
 
   // load main/index.ejs unless api request
   app.use(async function (ctx, next) {
+    ctx.cacheControl = openopps.cache.noStore;
     // Throw 404 for undefined api routes
     if(ctx.path.match('^/api/.*')) {
       // JSON request for better-body parser are in request.fields
       ctx.request.body = ctx.request.body || ctx.request.fields;
-      ctx.cacheControl = openopps.cache.noStore;
       await next();
     } else {
       var data = {
