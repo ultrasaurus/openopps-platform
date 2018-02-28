@@ -147,3 +147,8 @@ a:focus {
   outline: 0;
   box-shadow: 0 0 3px #3e94cf, 0 0 7px #3e94cf;
 }
+
+a.usa-button-secondary:focus {
+  outline: 0;
+  box-shadow: inset 0 0 0 2px #aeb0b5, 0 0 3px #3e94cf, 0 0 7px #3e94cf;
+}
