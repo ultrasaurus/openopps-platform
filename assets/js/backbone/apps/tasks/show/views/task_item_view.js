@@ -22,7 +22,8 @@ var ShareTemplate = require('../templates/task_share_template.txt');
 
 var TaskItemView = BaseView.extend({
   events: {
-    'click #apply' : 'apply',
+    'click #accept-toggle'  : 'toggleAccept',
+    'click #apply'          : 'apply',
   },
 
   modalOptions: {
@@ -89,16 +90,17 @@ var TaskItemView = BaseView.extend({
     this.initializeStateButtons(taskState.toLowerCase());
   },
 
-  initializeParticipants () {
+  initializeParticipants: function () {
     $('#participants').html(_.template(ParticipantsTemplate)(this.data));
   },
 
-  initializeStateButtons (state) {
+  initializeStateButtons: function (state) {
     if(this.data.model.canEditTask) {
       $('#nextstep').hide();
       $('#complete').hide();
       switch (state) {
         case 'open':
+        case 'not open':
           $('#nextstep').show();
           break;
         case 'assigned':
@@ -112,7 +114,7 @@ var TaskItemView = BaseView.extend({
   hasStep: function (step) {
     switch (step) {
       case 'assigning':
-        return _.contains(['open', 'assigned', 'completed'], this.data.state.value);
+        return _.contains(['open', 'not open', 'assigned', 'completed'], this.data.state.value);
       case 'inProgress':
         return _.contains(['assigned', 'completed'], this.data.state.value);
       case 'complete':
@@ -160,6 +162,44 @@ var TaskItemView = BaseView.extend({
     async.each(types, requestAllTagsByType, function (err) {
       self.model.trigger('task:tag:types', self.tagSources);
       self.render(self);
+    });
+  },
+
+  toggleAccept: function (e) {
+    var toggleOn = $(e.currentTarget).hasClass('toggle-off');
+    var state = this.model.attributes.state.toLowerCase();
+    if(state == 'open' && !toggleOn) {
+      state = 'not open';
+    } else if (state == 'not open' && toggleOn) {
+      state = 'open';
+    }
+    $.ajax({
+      url: '/api/task/state/' +  this.model.attributes.id,
+      type: 'PUT',
+      data: {
+        id: this.model.attributes.id,
+        state: state,
+        acceptingApplicants: toggleOn,
+      },
+      success: function (data) {
+        if(toggleOn) {
+          $(e.currentTarget).removeClass('toggle-off');
+        } else {
+          $(e.currentTarget).addClass('toggle-off');
+        }
+        var pillElem = $('.status-' + this.data.state.value.replace(' ', '-'));
+        pillElem.removeClass('status-' + this.data.state.value.replace(' ', '-'));
+        this.data.state = {
+          humanReadable: state.charAt(0).toUpperCase() + state.slice(1),
+          value: state,
+        };
+        pillElem.addClass('status-' + this.data.state.value.replace(' ', '-'));
+        pillElem.html(this.data.state.humanReadable);
+      }.bind(this),
+      error: function (err) {
+        // display modal alert type error
+        alert(err);
+      }.bind(this),
     });
   },
 

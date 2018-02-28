@@ -5,7 +5,7 @@
       <div>We’ll email you with next steps. You can also check your profile for status updates.</div>
       <a href="javascript:void(0);" id="apply-cancel">Cancel your application</a>
     </div>
-  <% } else { %>
+  <% } else if (model.acceptingApplicants) { %>
     <a href="javascript:void(0);" id="apply" class="usa-button-big usa-button-primary"><span class="box-icon-text">Apply</span></a>
   <% } %>
 <% } %>

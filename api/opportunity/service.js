@@ -125,6 +125,19 @@ async function checkAgency (user, ownerId) {
   return false;
 }
 
+async function updateOpportunityState (attributes, done) {
+  var origTask = await dao.Task.findOne('id = ?', attributes.id);
+  attributes.updatedAt = new Date();
+  attributes.assignedAt = attributes.state === 'assigned' && !origTask.assignedAt ? new Date : origTask.assignedAt;
+  attributes.publishedAt = attributes.state === 'open' && !origTask.publishedAt ? new Date : origTask.publishedAt;
+  attributes.completedAt = attributes.state === 'completed' && !origTask.completedAt ? new Date : origTask.completedAt;
+  await dao.Task.update(attributes).then(async (task) => {
+    return done(await dao.Task.findOne('id = ?', task.id), origTask.state !== task.state);
+  }).catch (err => {
+    return done(null, false, {'message':'Error updating task.'});
+  });
+}
+
 async function updateOpportunity (attributes, done) {
   var errors = await Task.validateOpportunity(attributes);
   if (!_.isEmpty(errors.invalidAttributes)) {
@@ -335,6 +348,7 @@ module.exports = {
   list: list,
   commentsByTaskId: commentsByTaskId,
   createOpportunity: createOpportunity,
+  updateOpportunityState: updateOpportunityState,
   updateOpportunity: updateOpportunity,
   publishTask: publishTask,
   copyOpportunity: copyOpportunity,

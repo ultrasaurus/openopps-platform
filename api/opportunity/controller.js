@@ -57,6 +57,25 @@ router.post('/api/task', auth, async (ctx, next) => {
   });
 });
 
+router.put('/api/task/state/:id', auth, async (ctx, next) => {
+  if (await service.canUpdateOpportunity(ctx.state.user, ctx.request.body.id)) {
+    await service.updateOpportunityState(ctx.request.body, function (task, stateChange, errors) {
+      if (errors) {
+        ctx.status = 400;
+        return ctx.body = errors;
+      }
+      try {
+        checkTaskState(stateChange, ctx.state.user, task);
+      } finally {
+        ctx.body = { success: true };
+      }
+    });
+  } else {
+    ctx.status = 403;
+    ctx.body = null;
+  }
+});
+
 router.put('/api/task/:id', auth, async (ctx, next) => {
   if (await service.canUpdateOpportunity(ctx.state.user, ctx.request.body.id)) {
     ctx.status = 200;
@@ -67,7 +86,7 @@ router.put('/api/task/:id', auth, async (ctx, next) => {
       }
       try {
         awardBadge(task);
-        checkTaskState(stateChange, ctx.state.user, ctx.request.body, task);
+        checkTaskState(stateChange, ctx.state.user, task);
       } finally {
         ctx.body = { success: true };
       }
@@ -113,9 +132,9 @@ function awardBadge (task) {
   }
 }
 
-function checkTaskState (stateChange, user, body, task) {
+function checkTaskState (stateChange, user, task) {
   if (stateChange) {
-    service.sendTaskStateUpdateNotification(user, body);
+    service.sendTaskStateUpdateNotification(user, task);
     if(task.state === 'completed') {
       service.volunteersCompleted(task);
     }
