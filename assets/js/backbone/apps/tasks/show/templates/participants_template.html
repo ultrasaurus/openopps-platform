@@ -22,7 +22,7 @@
             <img src="/api/user/photo/<%- v.userId %>" alt="<%- v.name %>" class="project-people" />
             <label class="project-people-show-label"><%- v.name %></label>
             <% if (model.canEditTask) { %>
-              <button class="project-people__remove" data-behavior="participant.remove">
+              <button class="project-people__remove" data-volunteerid="<%- v.id %>" data-behavior="remove">
                 <span class="usajobs-assistive-text">Remove participant</span>
               </button>
             <% } %>
@@ -49,7 +49,7 @@
   </div>
 
   <% if (model.canEditTask) { %>
-    <a href="javascript:void(0);" id="nextstep" class="usa-button-big usa-button-primary disabled"><span class="box-icon-text">Next step</span></a>
+    <a href="javascript:void(0);" id="nextstep" class="usa-button-big usa-button-primary <% if (_.where(model.volunteers, { assigned: true }).length < 1) { %>disabled<% } %>"><span class="box-icon-text">Next step</span></a>
     <a href="javascript:void(0);" id="complete" class="usa-button-big usa-button-primary disabled"><span class="box-icon-text">Complete opportunity</span></a>
   <% } %>
 
@@ -64,7 +64,7 @@
             <img src="/api/user/photo/<%- v.userId %>" alt="<%- v.name %>" class="project-people" />
             <label class="project-people-show-label"><%- v.name %></label>
             <% if (model.canEditTask) { %>
-              <button class="project-people__assign" data-behavior="participant.assign">
+              <button class="project-people__assign" data-volunteerid="<%- v.id %>" data-behavior="assign">
                 <span class="usajobs-assistive-text">Assign participant</span>
               </button>
             <% } %>

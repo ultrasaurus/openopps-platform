@@ -22,8 +22,11 @@ var ShareTemplate = require('../templates/task_share_template.txt');
 
 var TaskItemView = BaseView.extend({
   events: {
-    'click #accept-toggle'  : 'toggleAccept',
-    'click #apply'          : 'apply',
+    'click #accept-toggle'          : 'toggleAccept',
+    'click #apply'                  : 'apply',
+    'click #nextstep'               : 'nextstep',
+    'click .project-people__assign' : 'assignParticipant',
+    'click .project-people__remove' : 'assignParticipant',
   },
 
   modalOptions: {
@@ -87,23 +90,23 @@ var TaskItemView = BaseView.extend({
     self.updateTaskEmail();
     self.model.trigger('task:show:render:done');
     this.initializeParticipants();
-    this.initializeStateButtons(taskState.toLowerCase());
   },
 
   initializeParticipants: function () {
     $('#participants').html(_.template(ParticipantsTemplate)(this.data));
+    this.initializeStateButtons();
   },
 
-  initializeStateButtons: function (state) {
+  initializeStateButtons: function () {
     if(this.data.model.canEditTask) {
       $('#nextstep').hide();
       $('#complete').hide();
-      switch (state) {
+      switch (this.model.attributes.state.toLowerCase()) {
         case 'open':
         case 'not open':
           $('#nextstep').show();
           break;
-        case 'assigned':
+        case 'in progress':
         case 'completed':
           $('#complete').show();
           break;
@@ -114,9 +117,9 @@ var TaskItemView = BaseView.extend({
   hasStep: function (step) {
     switch (step) {
       case 'assigning':
-        return _.contains(['open', 'not open', 'assigned', 'completed'], this.data.state.value);
+        return _.contains(['open', 'not open', 'in progress', 'completed'], this.data.state.value);
       case 'inProgress':
-        return _.contains(['assigned', 'completed'], this.data.state.value);
+        return _.contains(['in progress', 'completed'], this.data.state.value);
       case 'complete':
         return this.data.state.value === 'completed';
       default:
@@ -165,6 +168,17 @@ var TaskItemView = BaseView.extend({
     });
   },
 
+  updatePill: function (state) {
+    var pillElem = $('.status-' + this.data.state.value.replace(' ', '-'));
+    pillElem.removeClass('status-' + this.data.state.value.replace(' ', '-'));
+    this.data.state = {
+      humanReadable: state.charAt(0).toUpperCase() + state.slice(1),
+      value: state,
+    };
+    pillElem.addClass('status-' + this.data.state.value.replace(' ', '-'));
+    pillElem.html(this.data.state.humanReadable);
+  },
+
   toggleAccept: function (e) {
     var toggleOn = $(e.currentTarget).hasClass('toggle-off');
     var state = this.model.attributes.state.toLowerCase();
@@ -187,18 +201,52 @@ var TaskItemView = BaseView.extend({
         } else {
           $(e.currentTarget).addClass('toggle-off');
         }
-        var pillElem = $('.status-' + this.data.state.value.replace(' ', '-'));
-        pillElem.removeClass('status-' + this.data.state.value.replace(' ', '-'));
-        this.data.state = {
-          humanReadable: state.charAt(0).toUpperCase() + state.slice(1),
-          value: state,
-        };
-        pillElem.addClass('status-' + this.data.state.value.replace(' ', '-'));
-        pillElem.html(this.data.state.humanReadable);
+        this.updatePill(state);
       }.bind(this),
       error: function (err) {
         // display modal alert type error
-        alert(err);
+      }.bind(this),
+    });
+  },
+
+  assignParticipant: function (e) {
+    if (e.preventDefault) e.preventDefault();
+    if (e.stopPropagation) e.stopPropagation();
+    var assign = $(e.currentTarget).data('behavior') == 'assign';
+    $.ajax({
+      url: '/api/volunteer/assign',
+      type: 'POST',
+      data: {
+        taskId: this.model.attributes.id,
+        volunteerId: $(e.currentTarget).data('volunteerid'),
+        assign: assign,
+      },
+      success: function (data) {
+        _.findWhere(this.data.model.volunteers, { id: data.id }).assigned = assign;
+        this.initializeParticipants();
+      }.bind(this),
+      error: function (err) {
+        // display modal alert type error
+      }.bind(this),
+    });
+  },
+
+  nextstep: function (e) {
+    var state = 'in progress';
+    $.ajax({
+      url: '/api/task/state/' +  this.model.attributes.id,
+      type: 'PUT',
+      data: {
+        id: this.model.attributes.id,
+        state: state,
+        acceptingApplicants: false,
+      },
+      success: function (data) {
+        this.updatePill(state);
+        this.initializeStateButtons();
+      }.bind(this),
+      error: function (err) {
+        // display modal alert type error
       }.bind(this),
     });
   },
