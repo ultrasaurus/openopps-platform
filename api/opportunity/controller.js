@@ -65,7 +65,7 @@ router.put('/api/task/state/:id', auth, async (ctx, next) => {
         return ctx.body = errors;
       }
       try {
-        checkTaskState(stateChange, ctx.state.user, ctx.request.body, task);
+        checkTaskState(stateChange, ctx.state.user, task);
       } finally {
         ctx.body = { success: true };
       }
@@ -86,7 +86,7 @@ router.put('/api/task/:id', auth, async (ctx, next) => {
       }
       try {
         awardBadge(task);
-        checkTaskState(stateChange, ctx.state.user, ctx.request.body, task);
+        checkTaskState(stateChange, ctx.state.user, task);
       } finally {
         ctx.body = { success: true };
       }
@@ -132,9 +132,9 @@ function awardBadge (task) {
   }
 }
 
-function checkTaskState (stateChange, user, body, task) {
+function checkTaskState (stateChange, user, task) {
   if (stateChange) {
-    service.sendTaskStateUpdateNotification(user, body);
+    service.sendTaskStateUpdateNotification(user, task);
     if(task.state === 'completed') {
       service.volunteersCompleted(task);
     }
