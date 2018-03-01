@@ -68,6 +68,7 @@ var TaskListView = Backbone.View.extend({
       };
       compiledTemplate = _.template(NoListItem)(settings);
       $('#task-list').append(compiledTemplate);
+      $('#task-page').hide();
     } else {
       var pageSize = 20;
       var start = (page - 1) * pageSize;
@@ -124,6 +125,7 @@ var TaskListView = Backbone.View.extend({
     }
     var pagination = _.template(Pagination)(data);
     $('#task-page').html(pagination);
+    $('#task-page').show();
   },
 
   organizeTags: function (tags) {
