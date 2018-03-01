@@ -70,6 +70,11 @@
                   <button class="project-people__remove" data-volunteerid="<%- v.id %>" data-behavior="remove">
                     <span class="usajobs-assistive-text">Remove participant</span>
                   </button>
+                  <% if (state.value == 'in progress') { %>
+                    <a href="javascript:void(0);" class="task-complete">Task complete</a>
+                  <% } else if (v.taskComplete) { %>
+                    <span class="task-complete-check"><i class="fa fa-check"></i>Task complete</span>
+                  <% } %>
                 <% } %>
               </div>
             <% }); %>
@@ -98,27 +103,35 @@
         <a href="javascript:void(0);" id="complete" class="usa-button-big usa-button-primary disabled"><span class="box-icon-text">Complete opportunity</span></a>
       <% } %>
 
-      <h3>Applicants</h3>
-      <div class="project-people__wrapper">
-        <% if (_.contains(['draft', 'submitted'], state.value)) { %>
-          <p class="project-people__not-available">Not available</p>
-        <% } else { %>
-          <% if (model.volunteers.length > 0) { %>
-            <% _.each(_.where(model.volunteers, { assigned: false }), function (v) { %>
-              <div class="project-people-show-div" data-userid="<%- v.userId %>" data-voluserid="<%- v.userId %>">
-                <img src="/api/user/photo/<%- v.userId %>" alt="<%- v.name %>" class="project-people" />
-                <label class="project-people-show-label"><%- v.name %></label>
-                <% if (model.canEditTask) { %>
-                  <button class="project-people__assign" data-volunteerid="<%- v.id %>" data-behavior="assign">
-                    <span class="usajobs-assistive-text">Assign participant</span>
-                  </button>
-                <% } %>
-              </div>
-            <% }); %>
+      <% if (accordion.show) { %>
+      <div class="usa-accordion">
+        <h3 class="usa-accordion-button" aria-expanded="<%- accordion.open %>">Applicants</h3>
+        <div class="usa-accordion-content project-people__wrapper" aria-hidden="<%- !accordion.open %>">
+      <% } else { %>
+        <div>
+          <h3>Applicants</h3>
+          <div class="project-people__wrapper">
+      <% } %>
+          <% if (_.contains(['draft', 'submitted'], state.value)) { %>
+            <p class="project-people__not-available">Not available</p>
           <% } else { %>
-            <p class="project-people__not-available">None applied</p>
+            <% if (model.volunteers.length > 0) { %>
+              <% _.each(_.where(model.volunteers, { assigned: false }), function (v) { %>
+                <div class="project-people-show-div" data-userid="<%- v.userId %>" data-voluserid="<%- v.userId %>">
+                  <img src="/api/user/photo/<%- v.userId %>" alt="<%- v.name %>" class="project-people" />
+                  <label class="project-people-show-label"><%- v.name %></label>
+                  <% if (model.canEditTask) { %>
+                    <button class="project-people__assign" data-volunteerid="<%- v.id %>" data-behavior="assign">
+                      <span class="usajobs-assistive-text">Assign participant</span>
+                    </button>
+                  <% } %>
+                </div>
+              <% }); %>
+            <% } else { %>
+              <p class="project-people__not-available">None applied</p>
+            <% } %>
           <% } %>
-        <% } %>
+        </div>
       </div>
     <% } %>
   </div>
