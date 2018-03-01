@@ -40,7 +40,7 @@
 
   .search-icon {
     position: absolute;
-    top: 33%;
+    top: 13px;
     right: 15px;
     fill-opacity: .5;
   }
@@ -51,6 +51,7 @@
     float: left;
     height: 4.3rem;
     margin-bottom: 0;
+    padding-right: 4rem;
   }
 }
 
@@ -110,7 +111,7 @@
 
   .search-icon {
     position: absolute;
-    top: 33%;
+    top: 13px;
     right: 15px;
     fill-opacity: .5;
   }
@@ -167,15 +168,16 @@
       overflow: hidden;
     }
 
-    &__desc:after {
+    &__desc:before {
       content: "";
-      position: absolute;
-      bottom: 0;
-      right: 0;
-      text-align: right;
       width: 100%;
-      height: #{$base-line-height}em;
-      background: linear-gradient(#FFF0, #FFF);
+      height: #{$base-line-height * 4}em;
+      position: absolute;
+      left: 0px;
+      bottom: 0px;
+      display: block;
+      background: linear-gradient(rgba(255,255,255,.001),#fff);
+      transition: height .5s;
     }
   }
 }

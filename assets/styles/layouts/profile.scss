@@ -68,6 +68,16 @@
 
 .profile-jobtitle {
     clear: left;
+    // display: flex;
+}
+
+.profile-icon {
+  display: inline-block;
+  width: 2rem;
+  height: 2.2rem;
+  margin-right: 0.5rem;
+  text-align: center;
+  vertical-align: text-bottom;
 }
 
 .usajobs-open-opps-opportunity .default-user-icon-profile {
@@ -283,12 +293,12 @@ form [type=submit], form [type=submit] {
 
   & p.skills, p.interests {
     background-color: #e1f3f8;
-    width: 32rem;
+    width: 100%;
     padding: $size-S $size-default;
-    margin-top: 0;
+    margin-top: $size-default;
     margin-right: $size-default;
-    position: absolute;
-    left: calc(100% + 16rem);
+    position: relative;
+    left: 0;
 
     &.skills {
       top: 0;
@@ -296,6 +306,46 @@ form [type=submit], form [type=submit] {
 
     &.interests {
       top: 0;
+    }
+  }
+
+  @media screen and (min-width: $XXL-screen) {
+    & p.skills, p.interests {
+      background-color: #e1f3f8;
+      width: 32rem;
+      padding: $size-S $size-default;
+      margin-top: 0;
+      margin-right: $size-default;
+      position: absolute;
+      left: calc(100% + 6rem);
+
+      &.skills {
+        top: 0;
+      }
+
+      &.interests {
+        top: 0;
+      }
+    }
+  }
+
+  @media screen and (min-width: $XXXL-screen) {
+    & p.skills, p.interests {
+      background-color: #e1f3f8;
+      width: 32rem;
+      padding: $size-S $size-default;
+      margin-top: 0;
+      margin-right: $size-default;
+      position: absolute;
+      left: calc(100% + 16rem);
+
+      &.skills {
+        top: 0;
+      }
+
+      &.interests {
+        top: 0;
+      }
     }
   }
 }

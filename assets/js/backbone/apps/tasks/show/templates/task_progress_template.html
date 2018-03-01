@@ -3,6 +3,7 @@
   <div class="usajobs-open-opps-opportunity-progress__container">
     <div class="usajobs-open-opps-opportunity-progress__step">
       <div class="usajobs-open-opps-opportunity-progress__assigned <% if (hasStep('assigning')) { %>has-step<% } %>">
+        <span class="progress-icon"><i class="fas fa-user-plus"></i></span>
         <span class="usajobs-assistive-text">Assigning</span>
       </div>
       <label class="progress-label">Assigning</label>
@@ -12,6 +13,7 @@
 
     <div class="usajobs-open-opps-opportunity-progress__step">
       <div class="usajobs-open-opps-opportunity-progress__in-progress <% if (hasStep('inProgress')) { %>has-step<% } %>">
+        <span class="progress-icon"><i class="fas fa-sync"></i></span>
         <span class="usajobs-assistive-text">In progress</span>
       </div>
       <label class="progress-label">In progress</label>
@@ -21,6 +23,7 @@
 
     <div class="usajobs-open-opps-opportunity-progress__step">
       <div class="usajobs-open-opps-opportunity-progress__completed <% if (hasStep('complete')) { %>has-step<% } %>">
+        <span class="progress-icon"><i class="fas fa-check"></i></span>
         <span class="usajobs-assistive-text">Complete</span>
       </div>
       <label class="progress-label">Complete</label>
