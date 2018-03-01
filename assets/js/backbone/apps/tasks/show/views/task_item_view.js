@@ -28,6 +28,7 @@ var TaskItemView = BaseView.extend({
     'click #nextstep'               : 'nextstep',
     'click .project-people__assign' : 'assignParticipant',
     'click .project-people__remove' : 'assignParticipant',
+    'click .usa-accordion-button'   : 'toggleAccordion',
   },
 
   modalOptions: {
@@ -70,7 +71,15 @@ var TaskItemView = BaseView.extend({
         value: taskState.toLowerCase(),
       },
       hasStep: this.hasStep.bind(this),
+      accordion: {
+        show: false,
+        open: false,
+      },
     };
+
+    if (['in progress', 'complete'].indexOf(taskState.toLowerCase()) > -1) {
+      self.data.accordion.show = true;
+    }
 
     self.data['madlibTags'] = organizeTags(self.data.tags);
     self.data.model.descriptionHtml = marked(self.data.model.description || '');
@@ -169,6 +178,13 @@ var TaskItemView = BaseView.extend({
     });
   },
 
+  toggleAccordion: function (e) {
+    var element = $(e.currentTarget);
+    this.data.accordion.open = !this.data.accordion.open;
+    element.attr('aria-expanded', this.data.accordion.open);
+    element.siblings('.usa-accordion-content').attr('aria-hidden', !this.data.accordion.open);
+  },
+
   updatePill: function (state) {
     var pillElem = $('.status-' + this.data.state.value.replace(' ', '-'));
     pillElem.removeClass('status-' + this.data.state.value.replace(' ', '-'));
@@ -246,6 +262,9 @@ var TaskItemView = BaseView.extend({
       },
       success: function (data) {
         this.updatePill(state);
+        this.model.attributes.acceptingApplicants = false;
+        this.data.model.acceptingApplicants = false;
+        this.data.accordion.show = true;
         this.initializeProgress();
         var options = _.extend(_.clone(this.modalOptions), {
           modalTitle: 'Let\'s get started',

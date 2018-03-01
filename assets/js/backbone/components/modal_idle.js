@@ -83,7 +83,9 @@ var ModalIdle = BaseComponent.extend({
       $('body').append('<div class="usajobs-modal__canvas-blackout" tabindex="-1" aria-hidden="true"></div>');
     } else {
       $('#' + this.data.id).attr('data-state', 'is-closed');
-      $('.usajobs-modal__canvas-blackout').remove();
+      if(_.isEmpty($('#site-modal').html())) { // only remove if their is not another modal
+        $('.usajobs-modal__canvas-blackout').remove();
+      }
     }
     $('#' + this.data.id).attr('aria-hidden', !show);
   },

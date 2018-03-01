@@ -189,7 +189,7 @@ var LoginCreateView = Backbone.View.extend({
   },
 
   checkUsername: function (e) {
-    if(e.keyCode == 9) {
+    if(e && e.keyCode == 9) {
       return; // ignore tab key
     }
     var username = $('#rusername').val();
@@ -216,7 +216,7 @@ var LoginCreateView = Backbone.View.extend({
   },
 
   checkPassword: function (e) {
-    if(e.keyCode == 9) {
+    if(e && e.keyCode == 9) {
       return; // ignore tabs
     }
     var rules = validatePassword($('#rusername').val(), $('#rpassword').val());

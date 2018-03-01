@@ -154,7 +154,12 @@
                 or approval.</p>
             <div class="usajobs-button_bar task-footer">
                 <button class="usa-button usa-button-secondary" id="task-view">Discard Changes</button>
-                <button type="submit" class="usa-button usa-button-primary" data-state="submit">Save</button>
+                <% if (data.state === 'draft') { %>
+                  <button class="usa-button usa-button-primary draft-button" data-state="save">Save as draft</button>
+                  <button class="usa-button usa-button-primary draft-button" data-state="submit">Submit for review</button>
+                <% } else { %>
+                  <button type="submit" class="usa-button usa-button-primary" data-state="submit">Save</button>
+                <% } %>
             </div>
             <aside id="tag_review" class="tips-left">
               <h4>What happens next?</h4>
