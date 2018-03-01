@@ -451,37 +451,38 @@ var TaskShowController = BaseView.extend({
     // if (this.modalAlert) { this.modalAlert.cleanup(); }
     if (this.modalComponent) { this.modalComponent.cleanup(); }
 
-    var modalContent = _.template(CopyTaskTemplate)();
+    var modalContent = _.template(CopyTaskTemplate)({ title: 'COPY ' + self.model.attributes.title});
 
     this.modalComponent = new ModalComponent({
-      el: '#modal-copy',
+      el: '#site-modal',
       id: 'check-copy',
       modalTitle: 'Copy This Opportunity',
+      modalBody: modalContent,
+      validateBeforeSubmit: true,
+      secondary: {
+        text: 'Cancel',
+        action: function () {
+          this.modalComponent.cleanup();
+        }.bind(this),
+      },
+      primary: {
+        text: 'Copy Opportunity',
+        action: function () {
+          $.ajax({
+            url: '/api/task/copy',
+            method: 'POST',
+            data: {
+              taskId: self.model.attributes.id,
+              title: $('#task-copy-title').val(),
+            },
+          }).done(function (data) {
+            self.modalComponent.cleanup();
+            self.options.router.navigate('/tasks/' + data.taskId + '/edit',
+              { trigger: true });
+          });
+        },
+      },
     }).render();
-
-    // this.modalAlert = new ModalAlert({
-    //   el: '#check-copy .modal-template',
-    //   modalDiv: '#check-copy',
-    //   content: modalContent,
-    //   validateBeforeSubmit: true,
-    //   cancel: 'Cancel',
-    //   submit: 'Copy Opportunity',
-    //   callback: function (e) {
-    //     $.ajax({
-    //       url: '/api/task/copy',
-    //       method: 'POST',
-    //       data: {
-    //         taskId: self.model.attributes.id,
-    //         title: $('#task-copy-title').val(),
-    //       },
-    //     }).done(function (data) {
-    //       self.options.router.navigate('/tasks/' + data.taskId + '/edit',
-    //         { trigger: true });
-    //     });
-    //   },
-    // }).render();
-
-    $('#task-copy-title').val('COPY ' + self.model.attributes.title);
   },
 
   cleanup: function () {

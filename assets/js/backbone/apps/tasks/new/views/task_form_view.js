@@ -109,10 +109,11 @@ var TaskFormView = Backbone.View.extend({
 
     _.extend(this, Backbone.Events);
     this.collection.on( 'task:draft:success', function (task) {
-      view.renderSaveSuccessModal(true);
+      Backbone.history.navigate('/tasks/' + task.attributes.id, { trigger: true });
+      //view.renderSaveSuccessModal(true);
     });
   },
-  
+
 
   /*
    * Render the View

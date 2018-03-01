@@ -32,7 +32,8 @@
     },
     {
       "value": "not open",
-      "label":"Not Open"
+      "label":"Not Open",
+      "hide": true
     },
     {
       "value":"in progress",
