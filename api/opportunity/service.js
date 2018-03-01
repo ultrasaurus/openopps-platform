@@ -197,7 +197,7 @@ function volunteersCompleted (task) {
 
 function sendTaskStateUpdateNotification (user, task) {
   switch (task.state) {
-    case 'assigned':
+    case 'in progress':
       sendTaskAssignedNotification(user, task);
       break;
     case 'completed':

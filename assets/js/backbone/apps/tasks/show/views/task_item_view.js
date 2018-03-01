@@ -13,8 +13,9 @@ var UIConfig = require('../../../../config/ui.json');
 var ModalComponent = require('../../../../components/modal');
 
 var TaskShowTemplate = require('../templates/task_show_item_template.html');
-var ParticipantsTemplate = require('../templates/participants_template.html');
+var ProgressTemplate = require('../templates/task_progress_template.html');
 var AlertTemplate = require('../../../../components/alert_template.html');
+var NextStepTemplate = require('../templates/next_step_template.html');
 var ParticipateCheckList = require('../templates/participate_check_list.html').toString();
 var ProfileCheckList = require('../templates/profile_check_list.html');
 var ShareTemplate = require('../templates/task_share_template.txt');
@@ -89,11 +90,11 @@ var TaskItemView = BaseView.extend({
     $('time.timeago').timeago();
     self.updateTaskEmail();
     self.model.trigger('task:show:render:done');
-    this.initializeParticipants();
+    this.initializeProgress();
   },
 
-  initializeParticipants: function () {
-    $('#participants').html(_.template(ParticipantsTemplate)(this.data));
+  initializeProgress: function () {
+    $('#rightrail').html(_.template(ProgressTemplate)(this.data));
     this.initializeStateButtons();
   },
 
@@ -175,6 +176,8 @@ var TaskItemView = BaseView.extend({
       humanReadable: state.charAt(0).toUpperCase() + state.slice(1),
       value: state,
     };
+    this.data.model.state = state;
+    this.model.attributes.state = state;
     pillElem.addClass('status-' + this.data.state.value.replace(' ', '-'));
     pillElem.html(this.data.state.humanReadable);
   },
@@ -223,7 +226,7 @@ var TaskItemView = BaseView.extend({
       },
       success: function (data) {
         _.findWhere(this.data.model.volunteers, { id: data.id }).assigned = assign;
-        this.initializeParticipants();
+        this.initializeProgress();
       }.bind(this),
       error: function (err) {
         // display modal alert type error
@@ -243,7 +246,18 @@ var TaskItemView = BaseView.extend({
       },
       success: function (data) {
         this.updatePill(state);
-        this.initializeStateButtons();
+        this.initializeProgress();
+        var options = _.extend(_.clone(this.modalOptions), {
+          modalTitle: 'Let\'s get started',
+          modalBody: NextStepTemplate,
+          primary: {
+            text: 'Okay',
+            action: function () {
+              this.modalComponent.cleanup();
+            }.bind(this),
+          },
+        });
+        this.modalComponent = new ModalComponent(options).render();
       }.bind(this),
       error: function (err) {
         // display modal alert type error
@@ -301,7 +315,7 @@ var TaskItemView = BaseView.extend({
     }).done( function (data) {
       if(!_.findWhere(self.data.model.volunteers, { userId: data.userId })) {
         self.data.model.volunteers.push(data);
-        self.initializeParticipants();
+        self.initializeProgress();
       }
       self.modalComponent.cleanup();
     });
