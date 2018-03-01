@@ -39,9 +39,6 @@ var ProfileResetView = Backbone.View.extend({
   },
 
   checkPassword: function (e) {
-    if(e.keyCode == 9) {
-      return; // ignore tabs
-    }
     var rules = validatePassword(this.token.email, this.$('#rpassword').val());
     var valuesArray = _.values(rules);
     var validRules = _.every(valuesArray);
