@@ -73,7 +73,7 @@
           </div>
           <div class="usa-width-one-third">
             <div class="usajobs-opop__task-intro">
-              <h4>Personnel Needed</h4>
+              <h4>Personnel needed</h4>
               <div>
                 <% if (madlibTags['task-people']) { %>
                   <%= madlibTags['task-people'][0].name %>
@@ -81,7 +81,7 @@
                   None
                 <% } %>
               </div>
-              <h4>Time Commitment</h4>
+              <h4>Time commitment</h4>
               <div>
                 <% if (madlibTags['task-time-required']) { %>
                   <%= madlibTags['task-time-required'][0].name %>
@@ -103,7 +103,7 @@
                   <%= moment(model.completedBy).format('ddd, MMM D, YYYY') %>
               </div>
               <% } %>
-              <h4>Duty Location</h4>
+              <h4>Duty location</h4>
               <div>
                 <% if (madlibTags.location) { %>
                   <% _.each(madlibTags.location, function (s, i) { %>
