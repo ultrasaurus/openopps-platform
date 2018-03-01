@@ -132,13 +132,14 @@ background-color: #ffffff;
   overflow: hidden;
 }
 
-.dashboard__task-list__item .usajobs-open-opps-opportunity .usajobs-open-opps-opportunity__desc::after {
+.dashboard__task-list__item .usajobs-open-opps-opportunity .usajobs-open-opps-opportunity__desc::before {
   content: "";
-  position: absolute;
-  bottom: 0;
-  right: 0;
-  text-align: right;
   width: 100%;
-  height: 1.5em;
-  background: linear-gradient(#FFF0, #FFF);
+  height: #{$base-line-height * 4}em;
+  position: absolute;
+  left: 0px;
+  bottom: 0px;
+  display: block;
+  background: linear-gradient(rgba(255,255,255,.001),#fff);
+  transition: height .5s;
 }

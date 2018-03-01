@@ -68,6 +68,16 @@
 
 .profile-jobtitle {
     clear: left;
+    // display: flex;
+}
+
+.profile-icon {
+  display: inline-block;
+  width: 2rem;
+  height: 2.2rem;
+  margin-right: 0.5rem;
+  text-align: center;
+  vertical-align: text-bottom;
 }
 
 .usajobs-open-opps-opportunity .default-user-icon-profile {
