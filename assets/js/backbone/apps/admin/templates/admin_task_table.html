@@ -16,7 +16,7 @@
     <% _.each(tasks, function (task) { %>
       <tr>
         <td class="metrics-table__label">
-          <div class="usajobs-pill--opportunity-status status-<%= task.state.toLowerCase() %>">
+          <div class="usajobs-pill--opportunity-status status-<%= task.state.toLowerCase().replace(' ', '-') %>">
             <%=
               task.state.charAt( 0 ).toUpperCase() + task.state.slice( 1 )
             %>

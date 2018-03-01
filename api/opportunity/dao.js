@@ -37,7 +37,7 @@ const volunteerQuery = 'select volunteer.id, volunteer."userId", volunteer.assig
 const volunteerListQuery = 'select midas_user.username ' +
   'from volunteer ' +
   'join midas_user on midas_user.id = volunteer."userId" ' +
-  'where volunteer."taskId" = ?';
+  'where volunteer."taskId" = ? and volunteer.assigned = true';
 
 const commentsQuery = 'select @comment.*, @user.* ' +
   'from @comment comment ' +

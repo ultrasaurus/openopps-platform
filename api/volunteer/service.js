@@ -25,6 +25,7 @@ async function assignVolunteer (volunteerId, assign, done) {
   await dao.Volunteer.update({
     id: volunteerId,
     assigned: assign,
+    updatedAt: new Date(),
   }).then(async (volunteer) => {
     return done(null, volunteer);
   }).catch(err => {
@@ -90,6 +91,7 @@ async function sendDeletedVolunteerNotification (notificationInfo, action) {
 module.exports = {
   addVolunteer: addVolunteer,
   deleteVolunteer: deleteVolunteer,
+  assignVolunteer: assignVolunteer,
   canAddVolunteer: canAddVolunteer,
   canManageVolunteers: canManageVolunteers,
   sendAddedVolunteerNotification: sendAddedVolunteerNotification,
