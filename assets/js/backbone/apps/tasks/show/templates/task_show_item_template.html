@@ -133,53 +133,6 @@
     </main>
 
     <aside class="usajobs-rightrail" id="rightrail">
-      <div class="usajobs-open-opps-opportunity usajobs-open-opps-section usajobs-open-opps-profile">
-        <h3>Progress</h3>
-        <div class="usajobs-open-opps-opportunity-progress__container">
-          <div class="usajobs-open-opps-opportunity-progress__step">
-            <div class="usajobs-open-opps-opportunity-progress__assigned <% if (hasStep('assigning')) { %>has-step<% } %>">
-              <span class="usajobs-assistive-text">Assigning</span>
-            </div>
-            <label class="progress-label">Assigning</label>
-          </div>
-
-          <span class="progress-spacer"></span>
-
-          <div class="usajobs-open-opps-opportunity-progress__step">
-            <div class="usajobs-open-opps-opportunity-progress__in-progress <% if (hasStep('inProgress')) { %>has-step<% } %>">
-              <span class="usajobs-assistive-text">In progress</span>
-            </div>
-            <label class="progress-label">In progress</label>
-          </div>
-
-          <span class="progress-spacer"></span>
-
-          <div class="usajobs-open-opps-opportunity-progress__step">
-            <div class="usajobs-open-opps-opportunity-progress__completed <% if (hasStep('complete')) { %>has-step<% } %>">
-              <span class="usajobs-assistive-text">Complete</span>
-            </div>
-            <label class="progress-label">Complete</label>
-          </div>
-        </div>
-
-        <% if (model.canEditTask && !_.contains(['draft', 'submitted'], state.value)) { %>
-        <div class="continue-accepting-applicants">
-          <div class="continue-accepting-applicants__toggle">
-            <span class="continue-accepting-applicants__label">Continue accepting applicants</span>
-            <div id="accept-toggle" class="continue-accepting-applicants__toggle-container <% if (!model.acceptingApplicants) { %>toggle-off<% } %>">
-              <span class="continue-accepting-applicants__toggle-labeloff">Off</span>
-              <span class="continue-accepting-applicants__toggle-labelon">On</span>
-            </div>
-          </div>
-        </div>
-        <% } %>
-
-        <div id="participants"></div>
-
-        <% if (model.canEditTask) { %>
-          <a class="usajobs-open-opps-opportunity__cancel" href="javascript:void();">Cancel this opportunity</a>
-        <% } %>
-      </div>
     </aside>
 
   </div>

@@ -31,7 +31,11 @@
       "label":"Open"
     },
     {
-      "value":"assigned",
+      "value": "not open",
+      "label":"Not Open"
+    },
+    {
+      "value":"in progress",
       "label":"In Progress"
     },
     {

@@ -27,9 +27,14 @@ router.post('/api/volunteer', auth, async (ctx, next) => {
 });
 
 router.post('/api/volunteer/assign', auth, async (ctx, next) => {
-  if (await service.canManageVolunteers(ctx.query.taskId, ctx.state.user)) {
-    await service.assignVolunteer(+ctx.query.volunteerId, ctx.params.assign, function (err, volunteer) {
-      return ctx.body = err ? err : volunteer;
+  if (await service.canManageVolunteers(ctx.request.body.taskId, ctx.state.user)) {
+    await service.assignVolunteer(+ctx.request.body.volunteerId, ctx.request.body.assign, function (err, volunteer) {
+      if (err) {
+        ctx.status = 400;
+        return ctx.body = err;
+      }
+      ctx.status = 200;
+      return ctx.body = volunteer;
     });
   } else {
     ctx.status = 401;
