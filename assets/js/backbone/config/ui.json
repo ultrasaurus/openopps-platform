@@ -32,19 +32,19 @@
     },
     {
       "value": "not open",
-      "label":"Not Open",
+      "label":"Not open",
       "hide": true
     },
     {
       "value":"in progress",
-      "label":"In Progress"
+      "label":"In progress"
     },
     {
       "value": "completed",
       "label":"Completed"
     },
     {
-      "value":"archived",
+      "value":"canceled",
       "label":"Canceled"
     }
   ],
