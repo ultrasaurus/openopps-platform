@@ -36,7 +36,6 @@ var AdminTaskView = Backbone.View.extend({
         view.$el.html(template);
         view.$el.show();
         $('.tip').tooltip();
-        $('.js-tip').tooltip();
         view.renderTasks(view.tasks);
       },
     });

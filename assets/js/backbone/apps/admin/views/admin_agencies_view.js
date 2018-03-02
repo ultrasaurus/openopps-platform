@@ -17,7 +17,7 @@ var AdminAgenciesView = Backbone.View.extend({
     };
   },
 
-  render: function () {
+  render: function (replace) {
     var self = this;
 
     this.$el.show();
@@ -36,7 +36,7 @@ var AdminAgenciesView = Backbone.View.extend({
       },
     });
 
-    Backbone.history.navigate('/admin/agencies/' + this.data.agency.slug);
+    Backbone.history.navigate('/admin/agencies/' + this.data.agency.slug, { replace: replace });
     return this;
   },
 
