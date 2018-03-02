@@ -26,7 +26,7 @@ var AdminMainView = Backbone.View.extend({
     var data = {};
     var template = _.template(AdminMainTemplate)(data);
     this.$el.html(template);
-    this.routeTarget(this.options.action || '');
+    this.routeTarget(this.options.action || '', undefined, true);
     return this;
   },
 
@@ -44,7 +44,7 @@ var AdminMainView = Backbone.View.extend({
               && window.cache.currentUser.agency.slug);
   },
 
-  routeTarget: function (target, agencyId) {
+  routeTarget: function (target, agencyId, replace) {
     agencyId = agencyId || this.options.agencyId;
     if (!target) {
       target = 'dashboard';
@@ -86,7 +86,7 @@ var AdminMainView = Backbone.View.extend({
         this.initializeAdminAgenciesView();
       }
       this.hideOthers();
-      this.adminAgenciesView.render();
+      this.adminAgenciesView.render(replace);
     } else if (target == 'participants') {
       if (!this.adminParticipantsView) {
         this.initializeAdminParticipantsView();
@@ -98,7 +98,7 @@ var AdminMainView = Backbone.View.extend({
         this.initializeAdminDashboardView();
       }
       this.hideOthers();
-      this.adminDashboardView.render();
+      this.adminDashboardView.render(replace);
     }
   },
 
@@ -152,7 +152,7 @@ var AdminMainView = Backbone.View.extend({
     this.adminAgenciesView = new AdminAgenciesView({
       el: '#admin-agencies',
       agencyId: this.options.agencyId,
-      adminMainView: this,
+      adminMainView: this
     });
   },
 

@@ -28,9 +28,9 @@ var AdminDashboardView = Backbone.View.extend({
     };
   },
 
-  render: function () {
+  render: function (replace) {
     var self = this;
-    Backbone.history.navigate('/admin/dashboard');
+    Backbone.history.navigate('/admin/dashboard', { replace: replace });
     this.$el.show();
     if (this.rendered === true) {
       return this;

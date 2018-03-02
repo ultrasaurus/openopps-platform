@@ -25,10 +25,11 @@ async function getTaskStateMetrics () {
 
 async function getAgencyTaskStateMetrics (agency) {
   var states = {};
-  states.assigned = dao.clean.task(await dao.Task.query(dao.query.taskAgencyStateUserQuery, 'assigned', agency.toLowerCase(), dao.options.task));
+  states.inProgress = dao.clean.task(await dao.Task.query(dao.query.taskAgencyStateUserQuery, 'in progress', agency.toLowerCase(), dao.options.task));
   states.completed = dao.clean.task(await dao.Task.query(dao.query.taskAgencyStateUserQuery, 'completed', agency.toLowerCase(), dao.options.task));
   states.draft = dao.clean.task(await dao.Task.query(dao.query.taskAgencyStateUserQuery, 'draft', agency.toLowerCase(), dao.options.task));
   states.open = dao.clean.task(await dao.Task.query(dao.query.taskAgencyStateUserQuery, 'open', agency.toLowerCase(), dao.options.task));
+  states.notOpen = dao.clean.task(await dao.Task.query(dao.query.taskAgencyStateUserQuery, 'not open', agency.toLowerCase(), dao.options.task));
   states.submitted = dao.clean.task(await dao.Task.query(dao.query.taskAgencyStateUserQuery, 'submitted', agency.toLowerCase(), dao.options.task));
 
   return states;

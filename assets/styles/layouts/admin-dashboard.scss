@@ -115,14 +115,21 @@
   }
 
   .task-filters {
+    display: inline-block;
+    float: left;
+
     .filter {
       display: inline-block;
       margin-right: 3rem;
+
+      label {
+        margin-top: 0;
+      }
     }
 
     .export-button {
-      display: inline-block;
-      margin-left: 3rem;
+      //display: inline-block;
+      //margin-left: 3rem;
 
       a, a.visited {
         color: #0071BA;
@@ -135,6 +142,7 @@
 
     .task-open {
       color: #487E40;
+      margin-right: $size-M;
     }
 
     .delete-task {
