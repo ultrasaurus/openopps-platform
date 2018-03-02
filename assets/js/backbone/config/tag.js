@@ -38,8 +38,8 @@ module.exports = {
       'class': 'location',
       'id': 'location',
       'type': 'location',
-      'name': 'Work Location',
-      'plural': 'Work Locations'
+      'name': 'Work location',
+      'plural': 'Work locations'
     },
 
     // ---
@@ -55,12 +55,12 @@ module.exports = {
     },
 
     'task-time-required': {
-      'icon': 'fa fa-calendar',
+      'icon': 'far fa-calendar',
       'class': 'task-time-required',
       'id': 'task-time-required',
       'type': 'task-time-required',
-      'name': 'Time Commitment',
-      'plural': 'Time Commitment'
+      'name': 'Time commitment',
+      'plural': 'Time commitment'
     },
 
     'task-people': {
@@ -68,8 +68,8 @@ module.exports = {
       'class': 'task-people',
       'id': 'task-people',
       'type': 'task-people',
-      'name': 'Personnel Needed',
-      'plural': 'Personnel Needed'
+      'name': 'Personnel needed',
+      'plural': 'Personnel needed'
     },
 
     'task-length': {
@@ -82,7 +82,7 @@ module.exports = {
     },
 
     'task-time-estimate': {
-      'icon': 'fa fa-clock',
+      'icon': 'far fa-clock',
       'class': 'task-time-estimate',
       'id': 'task-time-estimate',
       'type': 'task-time-estimate',
