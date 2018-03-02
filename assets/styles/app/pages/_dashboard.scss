@@ -45,9 +45,14 @@ background-color: #ffffff;
 }
 
 .activity-feed--badges {
-  height: 6rem;
+  min-height: 6rem;
   font-size: 1.6rem;
   margin-bottom: $size-SM;
+  display: flex;
+
+  a {
+    display: inline;
+  }
 }
 
 .activity-feed--badge {
@@ -55,6 +60,7 @@ background-color: #ffffff;
   background-position: center;
   background-size: contain;
   min-height: 60px;
+  height: 60px;
   width: 60px;
   margin-top: -0.5rem;
   margin-right: $size-default;
