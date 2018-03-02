@@ -34,6 +34,19 @@ async function assignVolunteer (volunteerId, assign, done) {
   });
 }
 
+async function volunteerComplete (volunteerId, complete, done) {
+  await dao.Volunteer.update({
+    id: volunteerId,
+    taskComplete: complete,
+    updatedAt: new Date(),
+  }).then(async (volunteer) => {
+    return done(null, volunteer);
+  }).catch(err => {
+    log.info('Update: failed to set volunteer task complete ' + complete, err);
+    return done({'message':'Unable to complete request'}, null);
+  });
+}
+
 async function deleteVolunteer (vId, taskId, done) {
   var notificationInfo = (await dao.Volunteer.db.query(dao.query.volunteer, vId)).rows;
   await dao.Volunteer.delete('id = ? and "taskId" = ?', vId, taskId).catch(err => {
@@ -92,6 +105,7 @@ module.exports = {
   addVolunteer: addVolunteer,
   deleteVolunteer: deleteVolunteer,
   assignVolunteer: assignVolunteer,
+  volunteerComplete: volunteerComplete,
   canAddVolunteer: canAddVolunteer,
   canManageVolunteers: canManageVolunteers,
   sendAddedVolunteerNotification: sendAddedVolunteerNotification,

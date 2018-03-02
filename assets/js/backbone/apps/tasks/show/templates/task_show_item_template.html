@@ -54,7 +54,7 @@
             <div class="usajobs-opop-actions__col-sub-actions usajobs-opop-actions--v1-5__col-sub-actions">
               <a class="usajobs-opop-actions__duplicate" href="#duplicate" id="task-copy"><i class="fa fa-copy"></i> Duplicate</a>
               <!-- <a class="usajobs-opop-actions__save" href="#save" data-behavior="opop-actions.toggle-save" data-state="is-unsaved"><i class="fa fa-bookmark"></i> Save</a> -->
-              <% if (model.canEditTask) { %>
+              <% if (model.canEditTask && model.state != 'completed') { %>
                 <a class="usajobs-opop-actions__save" href="#edit" id="task-edit"><i class="fas fa-edit"></i> Edit</a>
               <% } %>
               <a class="usajobs-opop-actions__share usajobs-opop-actions-share" href="#" id="email"><i class="fa fa-share-alt"></i> Share</a>

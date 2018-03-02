@@ -16,6 +16,7 @@ var TaskShowTemplate = require('../templates/task_show_item_template.html');
 var ProgressTemplate = require('../templates/task_progress_template.html');
 var AlertTemplate = require('../../../../components/alert_template.html');
 var NextStepTemplate = require('../templates/next_step_template.html');
+var RemoveParticipantTemplate = require('../templates/remove_participant_template.html');
 var ParticipateCheckList = require('../templates/participate_check_list.html').toString();
 var ProfileCheckList = require('../templates/profile_check_list.html');
 var ShareTemplate = require('../templates/task_share_template.txt');
@@ -26,9 +27,11 @@ var TaskItemView = BaseView.extend({
     'click #accept-toggle'          : 'toggleAccept',
     'click #apply'                  : 'apply',
     'click #nextstep'               : 'nextstep',
+    'click #complete'               : 'complete',
     'click .project-people__assign' : 'assignParticipant',
-    'click .project-people__remove' : 'assignParticipant',
+    'click .project-people__remove' : 'removeParticipant',
     'click .usa-accordion-button'   : 'toggleAccordion',
+    'click .task-complete'          : 'taskComplete',
   },
 
   modalOptions: {
@@ -77,7 +80,7 @@ var TaskItemView = BaseView.extend({
       },
     };
 
-    if (['in progress', 'complete'].indexOf(taskState.toLowerCase()) > -1) {
+    if (['in progress', 'completed'].indexOf(taskState.toLowerCase()) > -1) {
       self.data.accordion.show = true;
     }
 
@@ -117,7 +120,6 @@ var TaskItemView = BaseView.extend({
           $('#nextstep').show();
           break;
         case 'in progress':
-        case 'completed':
           $('#complete').show();
           break;
       }
@@ -228,6 +230,57 @@ var TaskItemView = BaseView.extend({
     });
   },
 
+  taskComplete: function (e) {
+    if (e.preventDefault) e.preventDefault();
+    if (e.stopPropagation) e.stopPropagation();
+    var complete = $(e.currentTarget).data('behavior') == 'complete';
+    $.ajax({
+      url: '/api/volunteer/complete',
+      type: 'POST',
+      data: {
+        taskId: this.model.attributes.id,
+        volunteerId: $(e.currentTarget).data('volunteerid'),
+        complete: complete,
+      },
+      success: function (data) {
+        _.findWhere(this.data.model.volunteers, { id: data.id }).taskComplete = complete;
+        this.initializeProgress();
+      }.bind(this),
+      error: function (err) {
+        // display modal alert type error
+      }.bind(this),
+    });
+  },
+
+  removeParticipant: function (e) {
+    if (e.preventDefault) e.preventDefault();
+    if (e.stopPropagation) e.stopPropagation();
+    if (this.data.state.value == 'in progress') {
+      var volunteerid = $(e.currentTarget).data('volunteerid');
+      var participant = _.findWhere(this.data.model.volunteers, { id: volunteerid });
+      var options = _.extend(_.clone(this.modalOptions), {
+        modalTitle: 'Are you sure you want to remove this participant?',
+        modalBody: _.template(RemoveParticipantTemplate)(participant),
+        secondary: {
+          text: 'Cancel',
+          action: function () {
+            this.modalComponent.cleanup();
+          }.bind(this),
+        },
+        primary: {
+          text: 'Confirm',
+          action: function () {
+            this.modalComponent.cleanup();
+            this.assignParticipant(e);
+          }.bind(this),
+        },
+      });
+      this.modalComponent = new ModalComponent(options).render();
+    } else {
+      this.assignParticipant(e);
+    }
+  },
+
   assignParticipant: function (e) {
     if (e.preventDefault) e.preventDefault();
     if (e.stopPropagation) e.stopPropagation();
@@ -271,6 +324,42 @@ var TaskItemView = BaseView.extend({
           modalBody: NextStepTemplate,
           primary: {
             text: 'Okay',
+            action: function () {
+              this.modalComponent.cleanup();
+            }.bind(this),
+          },
+        });
+        this.modalComponent = new ModalComponent(options).render();
+      }.bind(this),
+      error: function (err) {
+        // display modal alert type error
+      }.bind(this),
+    });
+  },
+
+  complete: function (e) {
+    var state = 'completed';
+    $.ajax({
+      url: '/api/task/state/' +  this.model.attributes.id,
+      type: 'PUT',
+      data: {
+        id: this.model.attributes.id,
+        state: state,
+        acceptingApplicants: false,
+      },
+      success: function (data) {
+        this.updatePill(state);
+        this.model.attributes.acceptingApplicants = false;
+        this.data.model.acceptingApplicants = false;
+        this.data.accordion.show = true;
+        this.initializeProgress();
+        var options = _.extend(_.clone(this.modalOptions), {
+          modalTitle: 'Congratulations!',
+          modalBody: 'You\'ve successfully completed <strong>' + this.model.attributes.title +
+            '</strong>. We updated your profile with your achievement. Don\'t forget to thank ' +
+            'your participants for a job well done.',
+          primary: {
+            text: 'Done',
             action: function () {
               this.modalComponent.cleanup();
             }.bind(this),
