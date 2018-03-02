@@ -147,33 +147,6 @@ h3 {
   width: 1.8rem;
 }
 
-*:focus, .usa-focus {
-  outline: 0;
-  box-shadow: 0 0 3px #3e94cf, 0 0 7px #3e94cf;
-}
-
-[type=checkbox]:focus + label::before,
-[type=radio]:focus + label::before {
-  outline: 0;
-  box-shadow: 0 0 3px #3e94cf, 0 0 7px #3e94cf;
-}
-
-
-[type=checkbox]:focus + label::before {
-  outline: 0;
-  box-shadow: 0 0 3px #3e94cf, 0 0 7px #3e94cf;
-}
-
-a:focus, a.is-active:focus {
-  outline: 0;
-  box-shadow: 0 0 3px #3e94cf, 0 0 7px #3e94cf;
-}
-
-.usa-button-secondary:focus {
-  outline: 0;
-  box-shadow: inset 0 0 0 2px #aeb0b5, 0 0 3px #3e94cf, 0 0 7px #3e94cf;
-}
-
 input::-ms-clear {
   display: none;
 }
