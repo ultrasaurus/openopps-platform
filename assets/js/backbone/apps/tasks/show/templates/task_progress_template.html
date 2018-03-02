@@ -30,7 +30,7 @@
     </div>
   </div>
 
-  <% if (model.canEditTask && !_.contains(['draft', 'submitted'], state.value)) { %>
+  <% if (model.canEditTask && _.contains(['open', 'not open', 'in progress'], state.value)) { %>
   <div class="continue-accepting-applicants">
     <div class="continue-accepting-applicants__toggle">
       <span class="continue-accepting-applicants__label">Continue accepting applicants</span>
@@ -40,16 +40,25 @@
       </div>
     </div>
   </div>
+  <% } else if (state.value == 'completed') { %>
+    <div class="opportunity-completed">Completed on <%- moment(model.completedAt).format('MM/DD/YY') %></div>
   <% } %>
 
   <div id="participants">
     <% if (!user || (model.owner.id !== user.id)) { %>
       <% if (user && _.findWhere(model.volunteers, { userId: user.id })) { %>
-        <div id="apply-thanks">
-          <h3>Thanks for applying</h3>
-          <div>We’ll email you with next steps. You can also check your profile for status updates.</div>
-          <a href="javascript:void(0);" id="apply-cancel">Cancel your application</a>
-        </div>
+        <% if (_.findWhere(model.volunteers, { userId: user.id }).assigned) { %>
+          <div id="assigned">
+            <h3>Congratulations, you're assigned!</h3>
+            <div>Let the opportunity creator know when you've completed your task.</div>
+          </div>
+        <% } else { %>
+          <div id="apply-thanks">
+            <h3>Thanks for applying</h3>
+            <div>We’ll email you with next steps. You can also check your profile for status updates.</div>
+            <a href="javascript:void(0);" id="apply-cancel">Cancel your application</a>
+          </div>
+        <% } %>
       <% } else if (model.acceptingApplicants) { %>
         <a href="javascript:void(0);" id="apply" class="usa-button-big usa-button-primary"><span class="box-icon-text">Apply</span></a>
       <% } %>
@@ -67,11 +76,18 @@
                 <img src="/api/user/photo/<%- v.userId %>" alt="<%- v.name %>" class="project-people" />
                 <label class="project-people-show-label"><%- v.name %></label>
                 <% if (model.canEditTask) { %>
-                  <button class="project-people__remove" data-volunteerid="<%- v.id %>" data-behavior="remove">
-                    <span class="usajobs-assistive-text">Remove participant</span>
-                  </button>
+                  <% if (!v.taskComplete) { %>
+                    <button class="project-people__remove" data-volunteerid="<%- v.id %>" data-behavior="remove">
+                      <span class="usajobs-assistive-text">Remove participant</span>
+                    </button>
+                  <% } %>
                   <% if (state.value == 'in progress') { %>
-                    <a href="javascript:void(0);" class="task-complete">Task complete</a>
+                    <% if (v.taskComplete) { %>
+                      <span class="task-complete-check"><i class="fa fa-check"></i>Task complete</span>
+                      <a href="javascript:void(0);" class="task-complete" data-volunteerid="<%- v.id %>" data-behavior="undo">Undo</a>
+                    <% } else { %>
+                      <a href="javascript:void(0);" class="task-complete" data-volunteerid="<%- v.id %>" data-behavior="complete">Task complete</a>
+                    <% } %>
                   <% } else if (v.taskComplete) { %>
                     <span class="task-complete-check"><i class="fa fa-check"></i>Task complete</span>
                   <% } %>
@@ -100,7 +116,7 @@
 
       <% if (model.canEditTask) { %>
         <a href="javascript:void(0);" id="nextstep" class="usa-button-big usa-button-primary <% if (_.where(model.volunteers, { assigned: true }).length < 1) { %>disabled<% } %>"><span class="box-icon-text">Next step</span></a>
-        <a href="javascript:void(0);" id="complete" class="usa-button-big usa-button-primary disabled"><span class="box-icon-text">Complete opportunity</span></a>
+        <a href="javascript:void(0);" id="complete" class="usa-button-big usa-button-primary <% if (_.where(model.volunteers, { taskComplete: true }).length < 1) { %>disabled<% } %>"><span class="box-icon-text">Complete opportunity</span></a>
       <% } %>
 
       <% if (accordion.show) { %>
@@ -120,7 +136,7 @@
                 <div class="project-people-show-div" data-userid="<%- v.userId %>" data-voluserid="<%- v.userId %>">
                   <img src="/api/user/photo/<%- v.userId %>" alt="<%- v.name %>" class="project-people" />
                   <label class="project-people-show-label"><%- v.name %></label>
-                  <% if (model.canEditTask) { %>
+                  <% if (model.canEditTask && model.state != 'completed') { %>
                     <button class="project-people__assign" data-volunteerid="<%- v.id %>" data-behavior="assign">
                       <span class="usajobs-assistive-text">Assign participant</span>
                     </button>
@@ -136,7 +152,7 @@
     <% } %>
   </div>
 
-  <% if (model.canEditTask) { %>
+  <% if (model.canEditTask && model.state != 'completed') { %>
     <a class="usajobs-open-opps-opportunity__cancel" href="javascript:void();">Cancel this opportunity</a>
   <% } %>
 </div>

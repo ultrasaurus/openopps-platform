@@ -42,6 +42,22 @@ router.post('/api/volunteer/assign', auth, async (ctx, next) => {
   }
 });
 
+router.post('/api/volunteer/complete', auth, async (ctx, next) => {
+  if (await service.canManageVolunteers(ctx.request.body.taskId, ctx.state.user)) {
+    await service.volunteerComplete(+ctx.request.body.volunteerId, ctx.request.body.complete, function (err, volunteer) {
+      if (err) {
+        ctx.status = 400;
+        return ctx.body = err;
+      }
+      ctx.status = 200;
+      return ctx.body = volunteer;
+    });
+  } else {
+    ctx.status = 401;
+    return ctx.body = null;
+  }
+});
+
 router.delete('/api/volunteer/:id', auth, async (ctx, next) => {
   if (await service.canManageVolunteers(ctx.query.taskId, ctx.state.user)) {
     await service.deleteVolunteer(+ctx.params.id, +ctx.query.taskId, function (notificationInfo, err) {

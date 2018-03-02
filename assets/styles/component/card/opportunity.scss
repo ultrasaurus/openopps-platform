@@ -79,6 +79,12 @@
     margin: $size-M 0;
   }
 
+  #assigned {
+    background-color: #E1F3F8;
+    padding: $size-S;
+    margin: $size-M 0;
+  }
+
   #apply-cancel {
     color: $color-secondary-dark;
   }
@@ -512,6 +518,17 @@
     }
   }
 
+  .opportunity-completed {
+    color: #000;
+    text-decoration: none;
+    display: flex;
+    padding: $size-default;
+    background-color: $color-primary-alt-lightest;
+    margin-top: $size-default;
+    margin-bottom: $size-M;
+    font-weight: 600;
+  }
+
   .continue-accepting-applicants {
     background-color: $color-primary-alt-lightest;
     margin-top: $size-default;
@@ -824,6 +841,35 @@
 
     .usajobs-pill--opportunity-status {
       margin: 0 0 0 auto;
+    }
+  }
+}
+
+.remove-participant {
+  text-align: center;
+
+  .project-people-show-div {
+    text-align: center;
+    padding-top: 8px;
+    display: inline-block;
+    width: 85px;
+    position: relative;
+
+    .project-people {
+      width: 6.5rem;
+      height: 6.5rem;
+      border-radius: 50%;
+      display: block;
+      text-align: center;
+      margin: 0 auto 0.5rem auto;
+    }
+
+    .project-people-show-label {
+      line-height: 1;
+      margin: 0 auto;
+      max-width: 85px;
+      max-height: 35px;
+      overflow: hidden;
     }
   }
 }

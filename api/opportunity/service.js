@@ -176,7 +176,7 @@ async function publishTask (attributes, done) {
 }
 
 function volunteersCompleted (task) {
-  dao.Volunteer.find('"taskId" = ?', task.id).then(volunteers => {
+  dao.Volunteer.find('"taskId" = ? and assigned = true and "taskComplete" = true', task.id).then(volunteers => {
     var userIds = volunteers.map(v => { return v.userId; });
     dao.User.db.query(dao.query.userTasks, [userIds]).then(users => {
       users.rows.map(user => {
