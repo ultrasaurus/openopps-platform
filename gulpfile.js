@@ -108,7 +108,7 @@ gulp.task('bump:patch', function () {
 });
 
 // Build an octopus release
-gulp.task('release', ['build', 'bump:patch'], function () {
+gulp.task('release', function () {
   var octo = require('@octopusdeploy/gulp-octo');
   var pack = gulp.src(releaseFiles)
     .pipe(octo.pack('zip'));
