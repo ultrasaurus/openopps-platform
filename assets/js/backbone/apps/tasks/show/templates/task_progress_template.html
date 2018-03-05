@@ -153,6 +153,10 @@
   </div>
 
   <% if (model.canEditTask && model.state != 'completed') { %>
-    <a class="usajobs-open-opps-opportunity__cancel" href="javascript:void();">Cancel this opportunity</a>
+    <% if (model.state == 'canceled') { %>
+      <a class="usajobs-open-opps-opportunity__reopen" href="javascript:void();" id="task-reopen">Reopen this opportunity</a>
+    <% } else { %>
+      <a class="usajobs-open-opps-opportunity__cancel" href="javascript:void();" id="task-cancel">Cancel this opportunity</a>
+    <% } %>
   <% } %>
 </div>
