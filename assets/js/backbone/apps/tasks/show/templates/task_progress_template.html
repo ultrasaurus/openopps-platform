@@ -76,7 +76,7 @@
                 <img src="/api/user/photo/<%- v.userId %>" alt="<%- v.name %>" class="project-people" />
                 <label class="project-people-show-label"><%- v.name %></label>
                 <% if (model.canEditTask) { %>
-                  <% if (!v.taskComplete) { %>
+                  <% if (!v.taskComplete && model.state != 'completed') { %>
                     <button class="project-people__remove" data-volunteerid="<%- v.id %>" data-behavior="remove">
                       <span class="usajobs-assistive-text">Remove participant</span>
                     </button>

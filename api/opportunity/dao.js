@@ -34,7 +34,7 @@ const volunteerQuery = 'select volunteer.id, volunteer."userId", volunteer.assig
   'join midas_user on midas_user.id = volunteer."userId" ' +
   'where volunteer."taskId" = ?';
 
-const volunteerListQuery = 'select midas_user.username ' +
+const volunteerListQuery = 'select midas_user.username, volunteer."taskComplete" ' +
   'from volunteer ' +
   'join midas_user on midas_user.id = volunteer."userId" ' +
   'where volunteer."taskId" = ? and volunteer.assigned = true';
