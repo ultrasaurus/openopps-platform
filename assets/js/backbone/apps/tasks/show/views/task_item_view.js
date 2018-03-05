@@ -29,6 +29,8 @@ var TaskItemView = BaseView.extend({
     'click #apply'                  : 'apply',
     'click #nextstep'               : 'nextstep',
     'click #complete'               : 'complete',
+    'click #task-cancel'            : 'cancel',
+    'click #task-reopen'            : 'reopen',
     'click .project-people__assign' : 'assignParticipant',
     'click .project-people__remove' : 'removeParticipant',
     'click .usa-accordion-button'   : 'toggleAccordion',
@@ -381,6 +383,8 @@ var TaskItemView = BaseView.extend({
         this.model.attributes.state = 'completed';
         this.data.model.state = 'completed';
         this.data.accordion.show = true;
+        this.data.accordion.open = false;
+        this.data.accordion.open = false;
         $('#task-edit').remove();
         this.initializeProgress();
         var options = _.extend(_.clone(this.modalOptions), {
@@ -396,6 +400,80 @@ var TaskItemView = BaseView.extend({
           },
         });
         this.modalComponent = new ModalComponent(options).render();
+      }.bind(this),
+      error: function (err) {
+        // display modal alert type error
+      }.bind(this),
+    });
+  },
+
+  cancel: function (e) {
+    if (e.preventDefault) e.preventDefault();
+    var options = _.extend(_.clone(this.modalOptions), {
+      modalTitle: 'Are you sure you want to cancel this opportunity?',
+      modalBody: 'If you cancel this opportunity, you and your participants will not receive any credit for the work.',
+      secondary: {
+        text: 'Cancel',
+        action: function () {
+          this.modalComponent.cleanup();
+        }.bind(this),
+      },
+      primary: {
+        text: 'Confirm',
+        action: function () {
+          this.cancelOpportunity();
+          this.modalComponent.cleanup();
+        }.bind(this),
+      },
+    });
+    this.modalComponent = new ModalComponent(options).render();
+  },
+
+  cancelOpportunity: function () {
+    var state = 'canceled';
+    $.ajax({
+      url: '/api/task/state/' +  this.model.attributes.id,
+      type: 'PUT',
+      data: {
+        id: this.model.attributes.id,
+        state: state,
+        acceptingApplicants: false,
+      },
+      success: function (data) {
+        this.updatePill(state);
+        this.model.attributes.acceptingApplicants = false;
+        this.data.model.acceptingApplicants = false;
+        this.model.attributes.state = 'canceled';
+        this.data.model.state = 'canceled';
+        this.data.accordion.show = true;
+        this.data.accordion.open = false;
+        this.initializeProgress();
+      }.bind(this),
+      error: function (err) {
+        // display modal alert type error
+      }.bind(this),
+    });
+  },
+
+  reopen: function () {
+    var state = 'open';
+    $.ajax({
+      url: '/api/task/state/' +  this.model.attributes.id,
+      type: 'PUT',
+      data: {
+        id: this.model.attributes.id,
+        state: state,
+        acceptingApplicants: true,
+      },
+      success: function (data) {
+        this.updatePill(state);
+        this.model.attributes.acceptingApplicants = true;
+        this.data.model.acceptingApplicants = true;
+        this.model.attributes.state = 'open';
+        this.data.model.state = 'open';
+        this.data.accordion.show = false;
+        this.data.accordion.open = false;
+        this.initializeProgress();
       }.bind(this),
       error: function (err) {
         // display modal alert type error
