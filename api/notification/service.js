@@ -63,7 +63,7 @@ function renderTemplate (template, data, done) {
       return done(err);
     }
     data._content = _.template(template)(data);
-    data._logo = '/img/logo/png/open-opportunities-2x.png';
+    data._logo = '/img/logo/png/open-opportunities-email.png';
     fs.readFile(layout, function (err, layout) {
       if (err) {
         log.info(err);
