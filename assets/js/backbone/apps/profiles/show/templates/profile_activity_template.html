@@ -3,7 +3,7 @@
     <div>
       <% if ( count.open > 0 || count.assigned > 0 || count.draft > 0 || count.submitted > 0 || count.completed > 0) { %>
         <div class="usajobs-grid open-opps-row header">
-          <div class="usa-width-one-fourth">Your status</div>
+          <div class="usa-width-one-fourth">Opportunity status</div>
           <div class="usa-width-one-half">Opportunity</div>
           <div class="usa-width-one-fourth">Updated date</div>
         </div>
@@ -13,7 +13,7 @@
           <% if (data[i].state == 'archived') { continue; } %>
           <div data-id="<%- data[i].id %>">
             <div class="usa-width-one-fourth">
-              <span>
+              <span  class="usajobs-pill--opportunity-status status-<%= data[ i ].state.charAt( 0 ).toLowerCase() + data[ i ].state.slice( 1 ).replace(' ', '-') %>">
                 <%= data[ i ].state.charAt( 0 ).toUpperCase() + data[ i ].state.slice( 1 ) %>
               </span>
             </div>
