@@ -89,6 +89,12 @@
     border-radius: 100%;
 }
 
+ .default-user-icon-profile__small {
+  @extend .default-user-icon-profile;
+  height: 7.65rem !important;
+  width: 7.65rem !important;
+}
+
 .usajobs-opop-profile-name {
     display: block;
     float: left;

@@ -30,7 +30,7 @@
           <% } else { %>
             <div class="center">
           <% } %>
-              <img class="circle" width="50" src="/api/user/photo/<%- model.userId %>" alt="Profile pic of <%- model.owner.name %>"/>
+              <img class="default-user-icon-profile__small" src="/api/user/photo/<%- model.userId %>" alt="Profile pic of <%- model.owner.name %>"/>
               <p>Posted by</p>
               <div><%- model.owner.name %></div>
               <div><%- model.publishedAt ? moment(model.publishedAt).format('MM/DD/YY') : '-/-/-' %></div>
@@ -52,8 +52,9 @@
 
           <div class="usajobs-opop-actions usajobs-opop-actions--v1-5 usajobs-width-one-third">
             <div class="usajobs-opop-actions__col-sub-actions usajobs-opop-actions--v1-5__col-sub-actions">
-              <a class="usajobs-opop-actions__duplicate" href="#duplicate" id="task-copy"><i class="fa fa-copy"></i> Duplicate</a>
-              <!-- <a class="usajobs-opop-actions__save" href="#save" data-behavior="opop-actions.toggle-save" data-state="is-unsaved"><i class="fa fa-bookmark"></i> Save</a> -->
+              <% if (user) { %>
+                <a class="usajobs-opop-actions__duplicate" href="#duplicate" id="task-copy"><i class="fa fa-copy"></i> Duplicate</a>
+              <% } %>
               <% if (model.canEditTask && model.state != 'completed') { %>
                 <a class="usajobs-opop-actions__save" href="#edit" id="task-edit"><i class="fas fa-edit"></i> Edit</a>
               <% } %>
