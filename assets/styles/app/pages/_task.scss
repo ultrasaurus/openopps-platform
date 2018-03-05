@@ -2,7 +2,7 @@
     background-color: #e1f3f8;
     padding: 2rem;
     margin-top: 0;
-    margin-right: 1.5rem; 
+    margin-right: 1.5rem;
      a {
         text-decoration: underline;
      }
@@ -10,13 +10,31 @@
 
 .tips-left {
     @extend .tips;
+    width: 100%;
+    left: 0;
+    top: 0;
+    position: relative;
+
+    h4 {
+        margin-top: 0;
+    }
+}
+
+@media screen and (min-width: $XXXL-screen) {
+  .tips-left {
+    background-color: #e1f3f8;
+    padding: 2rem;
+    margin-top: 0;
+    margin-right: 1.5rem;
     width: 32rem;
-    left: calc(50% + 15rem);
+    left: calc(100% + 6rem);
+    top: 0;
     position: absolute;
 
     h4 {
         margin-top: 0;
     }
+  }
 }
 
 .usa-form-xl, .usa-form-xl label {
@@ -37,7 +55,7 @@
 .usa-unstyled-list__radio > li {
     margin-left: $size-XS;
 }
-  
+
 .usa-unstyled-list__radio > li, .usa-unstyled-list__radio > li > label {
     margin-top: 0;
     margin-bottom: $size-XS;
@@ -45,4 +63,8 @@
 
 .select-small {
     max-width: 14.3rem;
+}
+
+#headline, #description, #tags, #review {
+  position: relative;
 }

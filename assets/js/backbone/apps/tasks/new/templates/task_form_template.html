@@ -84,8 +84,7 @@
           </fieldset>
           <fieldset id="step-2" class="usajobs-fieldset">
             <h2>Step 2 - Create a headline</h2>
-            <div id="headline"></div>
-            <div class="required-input">
+            <div class="required-input" id="headline">
               <h3>Headline</h3>
               <span class="field-validation-error error-empty" style="display:none;">You must enter headline for this opportunity.</span>
               <span class="field-validation-error error-count99" style="display:none;">The short description of the problem must be less than 100 characters.</span>
@@ -95,17 +94,16 @@
                 on the opportunity.</p>
               <input type="text" id="task-title" class="fullwidth form-control validate" data-validate="empty,count99,html" />
               <p class="usajobs-form__help-brief">Maximum of 100 characters</p>
+              <aside class="tips-left" id="tag_headline">
+                <h4>Headline examples</h4>
+                <p>"Team up to Produce a Set of Videos About the Nat'l Networking for Manufactoring Innovation"</p>
+                <p>"Let your inner "Data Detective" Out and Get to Know Arizona"</p>
+              </aside>
             </div>
-            <aside class="tips-left" id="tag_headline">
-              <h4>Headline examples</h4>
-              <p>"Team up to Produce a Set of Videos About the Nat'l Networking for Manufactoring Innovation"</p>
-              <p>"Let your inner "Data Detective" Out and Get to Know Arizona"</p>
-            </aside>
           </fieldset>
           <fieldset id="step-3" class="usajobs-fieldset">
             <h2>Step 3 - Describe the opportunity</h2>
-            <div id="description"></div>
-            <div class="required-input">
+            <div class="required-input" id="description">
               <h3>Description</h3>
               <span class="field-validation-error error-empty" style="display:none;">You must enter a description for this opportunity.</span>
               <span class="field-validation-error error-html" style="display:none;">The special characters '
@@ -114,35 +112,42 @@
                 impact. Recommend 200 words or less.</p>
               <span class="show-markdown"></span>
               <div class="markdown-edit"></div>
+              <aside id="tag_description" class="tips-left">
+                <h4>The description should answer:</h4>
+                <ul>
+                  <li>Why is this work important?</li>
+                  <li>Who will benefit from this work?</li>
+                  <li>How does this work fit into the bigger picture?</li>
+                  <li>What does success look like?</li>
+                </ul>
+              </aside>
             </div>
-            <aside id="tag_description" class="tips-left">
-              <h4>The description should answer:</h4>
-              <ul>
-                <li>Why is this work important?</li>
-                <li>Who will benefit from this work?</li>
-                <li>How does this work fit into the bigger picture?</li>
-                <li>What does success look like?</li>
-              </ul>
-            </aside>
-            <label for="skills">
-              <div id="tags"></div>
-              <h3 class="usajobs-form__title">Tags <span class="usajobs-form__legend"><span class="usa-input-optional"></span></span></h3>
-              <span>Use keywords to describe the opportunity, such as the career or focus area, skills and mission of work.</span>
-            </label>
-            <input type="hidden" id="js-task-tag" name="skills" class="fullwidth" />
-            <p class="usajobs-form__help-brief">Put a comma between each one. Example: Cyber Security, Research, employee engagement.</p>
-            <div id="tag_tags" class="tips-left">
-              <h4>What are tags?</h4>
-              <p>Tags are keywords you can add to help describe an opportunity. Tags are also useful for searching topic and
-                interests.
-              </p>
+            <div id="tags">
+              <label for="skills">
+                <h3 class="usajobs-form__title">Tags <span class="usajobs-form__legend"><span class="usa-input-optional"></span></span></h3>
+                <span>Use keywords to describe the opportunity, such as the career or focus area, skills and mission of work.</span>
+              </label>
+              <input type="hidden" id="js-task-tag" name="skills" class="fullwidth" />
+              <p class="usajobs-form__help-brief">Put a comma between each one. Example: Cyber Security, Research, employee engagement.</p>
+              <div id="tag_tags" class="tips-left">
+                <h4>What are tags?</h4>
+                <p>Tags are keywords you can add to help describe an opportunity. Tags are also useful for searching topic and
+                  interests.
+                </p>
+              </div>
             </div>
           </fieldset>
           <fieldset id="step-4" class="usajobs-fieldset">
             <h2>Step 4 - Submit for review</h2>
-            <div id="review"></div>
-            <p>Once you submit your opportunity, we'll review it. We'll email within two business days with recommended edits
-              or approval.</p>
+            <div id="review">
+              <p>Once you submit your opportunity, we'll review it. We'll email within two business days with recommended edits
+                or approval.</p>
+              <div id="tag_review" class="tips-left">
+                <h4>What happens next?</h4>
+                <p>Please see the
+                  <a href="http://www.digitalgov.gov/resources/open-opportunities-task-creator-toolkit/" target="_blank">Task creator toolkit</a>.</p>
+              </div>
+            </div>
             <div class="usajobs-button_bar task-footer">
               <button type="button" id="js-task-draft" class="usa-button usa-button-secondary" data-state="draft">
                 Save as draft
@@ -151,21 +156,6 @@
                 Submit for review
               </button>
             </div>
-            <div id="tag_review" class="tips-left">
-              <h4>What happens next?</h4>
-              <p>Please see the
-                <a href="http://www.digitalgov.gov/resources/open-opportunities-task-creator-toolkit/" target="_blank">Task creator toolkit</a>.</p>
-            </div>
-            <!-- <div class="create__success-message js-success-message">
-              <div class="success-message__head">
-                <span class="fa fa-check-circle"></span>
-              </div>
-              <div class="success-message__body">
-                <h4>Submitted</h4>
-                <p>Your draft has been saved. You can find your draft
-                  <a class="js-profile-link" target="_blank" href="javascript:void(0);">on your profile page</a>.</p>
-              </div>
-            </div> -->
           </fieldset>
         </form>
       </div>

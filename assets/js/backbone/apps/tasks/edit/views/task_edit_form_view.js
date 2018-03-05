@@ -72,13 +72,6 @@ var TaskEditFormView = Backbone.View.extend({
         $(window).animate({ scrollTop: 0 }, 500);
       }
     });
-
-    setTimeout(function () {
-      $('#tag_headline').appendTo('#headline');
-      $('#tag_description').appendTo('#description');
-      $('#tag_tags').appendTo('#tags');
-      $('#tag_review').appendTo('#review');
-    }, 500);
   },
 
   view: function (e) {

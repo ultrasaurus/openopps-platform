@@ -240,4 +240,10 @@ $color-completed: $color-primary-alt;
     background-color: $color-completed;
     border-color: $color-completed;
   }
+
+  &.status-canceled {
+    color: $color-white;
+    background-color: $color-secondary;
+    border-color: $color-secondary;
+  }
 }

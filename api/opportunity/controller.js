@@ -108,19 +108,15 @@ router.put('/api/publishTask/:id', auth, async (ctx, next) => {
 });
 
 router.post('/api/task/copy', auth, async (ctx, next) => {
-  if (await service.canUpdateOpportunity(ctx.state.user, ctx.request.body.taskId)) {
-    await service.copyOpportunity(ctx.request.body, ctx.state.user.isAdmin ? ctx.state.user : null, function (error, task) {
-      if (error) {
-        ctx.flash('error', 'Error Copying Opportunity');
-        ctx.status = 400;
-        log.info(error);
-        return ctx.body = null;
-      }
-      ctx.body = task;
-    });
-  } else {
-    ctx.status = 403;
-  }
+  await service.copyOpportunity(ctx.request.body, ctx.state.user, function (error, task) {
+    if (error) {
+      ctx.flash('error', 'Error Copying Opportunity');
+      ctx.status = 400;
+      log.info(error);
+      return ctx.body = null;
+    }
+    ctx.body = task;
+  });
 });
 
 function awardBadge (task) {

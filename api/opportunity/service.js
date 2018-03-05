@@ -238,7 +238,7 @@ async function sendTaskCompletedNotification (user, task) {
   notification.createNotification(data);
 }
 
-async function copyOpportunity (attributes, adminAttributes, done) {
+async function copyOpportunity (attributes, user, done) {
   var results = await dao.Task.findOne('id = ?', attributes.taskId);
   var tags = await dao.TaskTags.find('task_tags = ?', attributes.taskId);
   if(results === null) {
@@ -246,8 +246,8 @@ async function copyOpportunity (attributes, adminAttributes, done) {
   }
   var task = {
     title: attributes.title,
-    userId: adminAttributes == null ? results.userId : adminAttributes.id,
-    restrict: adminAttributes == null ? results.restrict : getRestrictValues(adminAttributes),
+    userId: user.id,
+    restrict: getRestrictValues(user),
     state: 'draft',
     description: results.description,
   };
@@ -264,8 +264,8 @@ async function copyOpportunity (attributes, adminAttributes, done) {
     }).catch (err => { return done({'message':'Error copying task.'}); });
 }
 
-function getRestrictValues (adminAttributes) {
-  var record = _.find(adminAttributes.tags, { 'type': 'agency' });
+function getRestrictValues (user) {
+  var record = _.find(user.tags, { 'type': 'agency' });
   var restrict = {
     name: record.name,
     abbr: record.data.abbr,
