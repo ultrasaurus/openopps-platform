@@ -67,7 +67,6 @@
               <div id="file-upload-progress-container" style="display: none;" class="progress progress-striped active">
                 <div id="file-upload-progress" class="progress-bar" style="width: 0"></div>
               </div>
-              <!-- <div id="file-upload-alert" class="alert alert-warning" style="display:none;"></div> -->
           </div>
           <div class="usajobs-opop-profile-details usa-width-three-fourths">
             <div class="profile-name-role">
@@ -76,18 +75,21 @@
               <span class="role-label"><% if (user.isAgencyAdmin) { %> Agency <% } %> Administrator</span>
               <% } %>
             </div>
-
             <div class="profile-jobtitle"><% if (data.title) { %><span class="profile-icon"><i class="fa fa-briefcase"></i></span><span><%- data.title %></span><% } %></div>
             <div class="profile-company"><% if (data.agency) { %><span class="profile-icon"><i class="fa fa-university"></i></span><span><%- data.agency.name %></span><% } %></div>
             <div class="profile-location"><% if (data.location) { %><span class="profile-icon"><i class="fa fa-map-marker"></i></span><span><%- data.location.name %></span><% } %></div>
             <div class="profile-email"><% if (email) { %><span class="profile-icon"><i class="far fa-envelope"></i></span><a href='mailto:<%= email %>'><%= email %></a><% } %></div>
-
             <div class="profile-biography">
                 <% if (data.bioHtml) { %>
                   <h3>Biography</h3>
                   <%= data.bioHtml %>
                 <% } %>
             </div>
+
+
+
+
+
 
             <div class="profile-share <% if (data.isOwner || user.isAdmin) { %>border-bottom<% } %>">
                 <a href="#" id="email"><i class="fas fa-share-alt"></i> <span>Share Profile</span></a>
@@ -98,7 +100,7 @@
       <% if (tags.length > 0) { %>
       <div class="usajobs-open-opps-opportunity usajobs-open-opps-profile">
         <div class="usajobs-open-opps-participated__body usajobs-grid-full">
-          <h2>Skills &amp; interests</h2>
+          <h2>Skills and interests</h2>
           <div>
             <% _.each(tags, function (t) { %>
               <a class="skill-label" href="/tasks?search=<%= t.name %>"><%= t.name %></a>
