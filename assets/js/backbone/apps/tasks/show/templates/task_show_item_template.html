@@ -30,7 +30,7 @@
           <% } else { %>
             <div class="center">
           <% } %>
-              <img class="circle" width="50" src="/api/user/photo/<%- model.userId %>" alt="Profile pic of <%- model.owner.name %>"/>
+              <img class="default-user-icon-profile__small" src="/api/user/photo/<%- model.userId %>" alt="Profile pic of <%- model.owner.name %>"/>
               <p>Posted by</p>
               <div><%- model.owner.name %></div>
               <div><%- model.publishedAt ? moment(model.publishedAt).format('MM/DD/YY') : '-/-/-' %></div>
@@ -52,9 +52,10 @@
 
           <div class="usajobs-opop-actions usajobs-opop-actions--v1-5 usajobs-width-one-third">
             <div class="usajobs-opop-actions__col-sub-actions usajobs-opop-actions--v1-5__col-sub-actions">
-              <a class="usajobs-opop-actions__duplicate" href="#duplicate" id="task-copy"><i class="fa fa-copy"></i> Duplicate</a>
-              <!-- <a class="usajobs-opop-actions__save" href="#save" data-behavior="opop-actions.toggle-save" data-state="is-unsaved"><i class="fa fa-bookmark"></i> Save</a> -->
-              <% if (model.canEditTask) { %>
+              <% if (user) { %>
+                <a class="usajobs-opop-actions__duplicate" href="#duplicate" id="task-copy"><i class="fa fa-copy"></i> Duplicate</a>
+              <% } %>
+              <% if (model.canEditTask && model.state != 'completed') { %>
                 <a class="usajobs-opop-actions__save" href="#edit" id="task-edit"><i class="fas fa-edit"></i> Edit</a>
               <% } %>
               <a class="usajobs-opop-actions__share usajobs-opop-actions-share" href="#" id="email"><i class="fa fa-share-alt"></i> Share</a>
@@ -73,7 +74,7 @@
           </div>
           <div class="usa-width-one-third">
             <div class="usajobs-opop__task-intro">
-              <h4>Personnel Needed</h4>
+              <h4>Personnel needed</h4>
               <div>
                 <% if (madlibTags['task-people']) { %>
                   <%= madlibTags['task-people'][0].name %>
@@ -81,7 +82,7 @@
                   None
                 <% } %>
               </div>
-              <h4>Time Commitment</h4>
+              <h4>Time commitment</h4>
               <div>
                 <% if (madlibTags['task-time-required']) { %>
                   <%= madlibTags['task-time-required'][0].name %>
@@ -103,7 +104,7 @@
                   <%= moment(model.completedBy).format('ddd, MMM D, YYYY') %>
               </div>
               <% } %>
-              <h4>Duty Location</h4>
+              <h4>Duty location</h4>
               <div>
                 <% if (madlibTags.location) { %>
                   <% _.each(madlibTags.location, function (s, i) { %>

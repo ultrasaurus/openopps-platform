@@ -256,7 +256,8 @@ html[dir="rtl"] .select2-container .select2-choice .select2-arrow b {
 }
 
 .select2-search input:focus {
-  box-shadow: 0 0 3px #3e94cf, 0 0 7px #3e94cf;
+  outline: 2px dotted #aeb0b5;
+  outline-offset: 3px;
 }
 
 html[dir="rtl"] .select2-search input {
@@ -281,7 +282,8 @@ html[dir="rtl"] .select2-search input {
 }
 
 .select2-container-active {
-  box-shadow: 0 0 3px #3e94cf, 0 0 7px #3e94cf;
+  outline: 2px dotted #aeb0b5;
+  outline-offset: 3px;
 }
 
 .select2-container-active::after {

@@ -12,6 +12,7 @@ var TaskListView = Backbone.View.extend({
   events: {
     'keyup #search'                   : 'search',
     'change #stateFilters input'      : 'stateFilter',
+    'click #select-all-filters'       : 'selectAllStateFilter',
     'change #js-restrict-task-filter' : 'agencyFilter',
     'click a.page'                    : 'clickPage',
   },
@@ -161,6 +162,12 @@ var TaskListView = Backbone.View.extend({
     this.filter($target.val());
   },
 
+  selectAllStateFilter: function() {
+    $('#stateFilters input[type="checkbox"]').attr('checked', true);
+    var states = _($('#stateFilters input:checked')).pluck('value');
+    this.filter(undefined, { state: states }, { data: {} });
+  },
+
   stateFilter: function (event) {
     var states = _($('#stateFilters input:checked')).pluck('value');
     if ( this.isAgencyChecked() ) {
@@ -170,7 +177,7 @@ var TaskListView = Backbone.View.extend({
     }
   },
 
-  agencyFilter: function ( event ) {
+  agencyFilter: function (event) {
     var isChecked = event.target.checked;
     var states = _( $( '#stateFilters input:checked' ) ).pluck( 'value' );
     this.initAgencyFilter();

@@ -176,7 +176,7 @@ async function publishTask (attributes, done) {
 }
 
 function volunteersCompleted (task) {
-  dao.Volunteer.find('"taskId" = ?', task.id).then(volunteers => {
+  dao.Volunteer.find('"taskId" = ? and assigned = true and "taskComplete" = true', task.id).then(volunteers => {
     var userIds = volunteers.map(v => { return v.userId; });
     dao.User.db.query(dao.query.userTasks, [userIds]).then(users => {
       users.rows.map(user => {
@@ -214,6 +214,9 @@ function sendTaskStateUpdateNotification (user, task) {
 
 async function getNotificationTemplateData (user, task, action) {
   var volunteers = (await dao.Task.db.query(dao.query.volunteerListQuery, task.id)).rows;
+  if(action == 'task.update.completed') {
+    volunteers = _.filter(volunteers, { 'taskComplete': true });
+  }
   var data = {
     action: action,
     model: {
