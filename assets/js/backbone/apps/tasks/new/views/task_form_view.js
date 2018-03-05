@@ -52,13 +52,6 @@ var TaskFormView = Backbone.View.extend({
     if ( _.isUndefined( this.model ) ) {
       this.model = new TaskModel();
     }
-
-    setTimeout(function () {
-      $('#tag_headline').appendTo('#headline');
-      $('#tag_description').appendTo('#description');
-      $('#tag_tags').appendTo('#tags');
-      $('#tag_review').appendTo('#review');
-    }, 500);
   },
 
   /*
