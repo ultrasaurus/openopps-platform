@@ -17,6 +17,7 @@ var ProgressTemplate = require('../templates/task_progress_template.html');
 var AlertTemplate = require('../../../../components/alert_template.html');
 var NextStepTemplate = require('../templates/next_step_template.html');
 var RemoveParticipantTemplate = require('../templates/remove_participant_template.html');
+var NotCompleteTemplate = require('../templates/participants_not_complete_template.html');
 var ParticipateCheckList = require('../templates/participate_check_list.html').toString();
 var ProfileCheckList = require('../templates/profile_check_list.html');
 var ShareTemplate = require('../templates/task_share_template.txt');
@@ -338,6 +339,32 @@ var TaskItemView = BaseView.extend({
   },
 
   complete: function (e) {
+    var notComplete = _.where(this.data.model.volunteers, { assigned: true, taskComplete: false });
+    if(notComplete.length > 0) {
+      var options = _.extend(_.clone(this.modalOptions), {
+        modalTitle: 'Not complete',
+        modalBody: _.template(NotCompleteTemplate)({ volunteers: notComplete }),
+        secondary: {
+          text: 'Cancel',
+          action: function () {
+            this.modalComponent.cleanup();
+          }.bind(this),
+        },
+        primary: {
+          text: 'Confirm',
+          action: function () {
+            this.modalComponent.cleanup();
+            this.markComplete();
+          }.bind(this),
+        },
+      });
+      this.modalComponent = new ModalComponent(options).render();
+    } else {
+      this.markComplete();
+    }
+  },
+
+  markComplete: function () {
     var state = 'completed';
     $.ajax({
       url: '/api/task/state/' +  this.model.attributes.id,
@@ -351,7 +378,10 @@ var TaskItemView = BaseView.extend({
         this.updatePill(state);
         this.model.attributes.acceptingApplicants = false;
         this.data.model.acceptingApplicants = false;
+        this.model.attributes.state = 'completed';
+        this.data.model.state = 'completed';
         this.data.accordion.show = true;
+        $('#task-edit').remove();
         this.initializeProgress();
         var options = _.extend(_.clone(this.modalOptions), {
           modalTitle: 'Congratulations!',
