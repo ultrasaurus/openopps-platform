@@ -35,7 +35,7 @@
               </ul>
               <% if ( agency ) { %>
                 <input type="checkbox" id="task-restrict-agency" name="task-restrict-agency" value="task-restrict-agency" <% if (agency.projectNetwork ) { %> checked="checked" <% } %> >
-                <label for="task-restrict-agency"> Limit Participation to <%- agency.abbr %> Employees</label>
+                <label for="task-restrict-agency">Limit Participation to <%- agency.abbr %> Employees</label>
               <% } %>
             </div>
             <div class="form-group" id="time-options-time-required">
@@ -148,23 +148,24 @@
           </fieldset>
           <fieldset id="step-4" class="usajobs-fieldset">
             <h2>Step 4 - Submit for review</h2>
-            <div id="review"></div>
+            <div id="review">
+              <aside id="tag_review" class="tips-left">
+                <h4>What happens next?</h4>
+                <p>Please see the
+                  <a href="http://www.digitalgov.gov/resources/open-opportunities-task-creator-toolkit/" target="_blank">Task creator toolkit</a>.</p>
+              </aside>
+            </div>
             <p>Once you submit your opportunity, we'll review it. We'll email within two business days with recommended edits
                 or approval.</p>
             <div class="usajobs-button_bar task-footer">
                 <button class="usa-button usa-button-secondary" id="task-view">Discard Changes</button>
-                <% if (data.state === 'draft') { %>
+                <% if (data.state === 'draft' || data.state === 'canceled') { %>
                   <button class="usa-button usa-button-primary draft-button" data-state="save">Save as draft</button>
                   <button class="usa-button usa-button-primary draft-button" data-state="submit">Submit for review</button>
                 <% } else { %>
                   <button type="submit" class="usa-button usa-button-primary" data-state="submit">Save</button>
                 <% } %>
             </div>
-            <aside id="tag_review" class="tips-left">
-              <h4>What happens next?</h4>
-              <p>Please see the
-                <a href="http://www.digitalgov.gov/resources/open-opportunities-task-creator-toolkit/" target="_blank">Task creator toolkit</a>.</p>
-            </aside>
           </fieldset>
         </form>
       </div>
