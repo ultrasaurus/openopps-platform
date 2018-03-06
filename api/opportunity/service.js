@@ -131,6 +131,7 @@ async function updateOpportunityState (attributes, done) {
   attributes.assignedAt = attributes.state === 'assigned' && !origTask.assignedAt ? new Date : origTask.assignedAt;
   attributes.publishedAt = attributes.state === 'open' && !origTask.publishedAt ? new Date : origTask.publishedAt;
   attributes.completedAt = attributes.state === 'completed' && !origTask.completedAt ? new Date : origTask.completedAt;
+  attributes.canceledAt = attributes.state === 'canceled' && origTask.state !== 'canceled' ? new Date : origTask.canceledAt;
   await dao.Task.update(attributes).then(async (task) => {
     return done(await dao.Task.findOne('id = ?', task.id), origTask.state !== task.state);
   }).catch (err => {
@@ -149,6 +150,7 @@ async function updateOpportunity (attributes, done) {
   attributes.publishedAt = attributes.state === 'open' && origTask.state !== 'open' ? new Date : origTask.publishedAt;
   attributes.completedAt = attributes.state === 'completed' && origTask.state !== 'completed' ? new Date : origTask.completedAt;
   attributes.submittedAt = attributes.state === 'submitted' && origTask.state !== 'submitted' ? new Date : origTask.submittedAt;
+  attributes.canceledAt = attributes.state === 'canceled' && origTask.state !== 'canceled' ? new Date : origTask.canceledAt;
   attributes.updatedAt = new Date();
   await dao.Task.update(attributes).then(async (task) => {
     task.userId = task.userId || origTask.userId; // userId is null if editted by owner

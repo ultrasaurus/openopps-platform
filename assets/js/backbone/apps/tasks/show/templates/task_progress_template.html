@@ -42,6 +42,8 @@
   </div>
   <% } else if (state.value == 'completed') { %>
     <div class="opportunity-completed">Completed on <%- moment(model.completedAt).format('MM/DD/YY') %></div>
+  <% } else if (state.value == 'canceled') { %>
+    <div class="opportunity-canceled">Canceled on <%- moment(model.canceledAt).format('MM/DD/YY') %></div>
   <% } %>
 
   <div id="participants">
@@ -76,7 +78,7 @@
                 <img src="/api/user/photo/<%- v.userId %>" alt="<%- v.name %>" class="project-people" />
                 <label class="project-people-show-label"><%- v.name %></label>
                 <% if (model.canEditTask) { %>
-                  <% if (!v.taskComplete && model.state != 'completed') { %>
+                  <% if (!v.taskComplete && model.state != 'completed' && state.value != 'canceled') { %>
                     <button class="project-people__remove" data-volunteerid="<%- v.id %>" data-behavior="remove">
                       <span class="usajobs-assistive-text">Remove participant</span>
                     </button>
@@ -136,7 +138,7 @@
                 <div class="project-people-show-div" data-userid="<%- v.userId %>" data-voluserid="<%- v.userId %>">
                   <img src="/api/user/photo/<%- v.userId %>" alt="<%- v.name %>" class="project-people" />
                   <label class="project-people-show-label"><%- v.name %></label>
-                  <% if (model.canEditTask && model.state != 'completed') { %>
+                  <% if (model.canEditTask && model.state != 'completed' && state.value != 'canceled') { %>
                     <button class="project-people__assign" data-volunteerid="<%- v.id %>" data-behavior="assign">
                       <span class="usajobs-assistive-text">Assign participant</span>
                     </button>
@@ -152,11 +154,7 @@
     <% } %>
   </div>
 
-  <% if (model.canEditTask && model.state != 'completed') { %>
-    <% if (model.state == 'canceled') { %>
-      <a class="usajobs-open-opps-opportunity__reopen" href="javascript:void();" id="task-reopen">Reopen this opportunity</a>
-    <% } else { %>
-      <a class="usajobs-open-opps-opportunity__cancel" href="javascript:void();" id="task-cancel">Cancel this opportunity</a>
-    <% } %>
+  <% if (model.canEditTask && model.state != 'completed' && model.state != 'canceled') { %>
+    <a class="usajobs-open-opps-opportunity__cancel" href="javascript:void();" id="task-cancel">Cancel this opportunity</a>
   <% } %>
 </div>

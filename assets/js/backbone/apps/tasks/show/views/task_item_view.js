@@ -30,7 +30,6 @@ var TaskItemView = BaseView.extend({
     'click #nextstep'               : 'nextstep',
     'click #complete'               : 'complete',
     'click #task-cancel'            : 'cancel',
-    'click #task-reopen'            : 'reopen',
     'click .project-people__assign' : 'assignParticipant',
     'click .project-people__remove' : 'removeParticipant',
     'click .usa-accordion-button'   : 'toggleAccordion',
@@ -83,7 +82,7 @@ var TaskItemView = BaseView.extend({
       },
     };
 
-    if (['in progress', 'completed'].indexOf(taskState.toLowerCase()) > -1) {
+    if (['in progress', 'completed', 'canceled'].indexOf(taskState.toLowerCase()) > -1) {
       self.data.accordion.show = true;
     }
 
@@ -382,6 +381,8 @@ var TaskItemView = BaseView.extend({
         this.data.model.acceptingApplicants = false;
         this.model.attributes.state = 'completed';
         this.data.model.state = 'completed';
+        this.model.attributes.completedAt = new Date();
+        this.data.model.completedAt = new Date();
         this.data.accordion.show = true;
         this.data.accordion.open = false;
         this.data.accordion.open = false;
@@ -445,34 +446,11 @@ var TaskItemView = BaseView.extend({
         this.data.model.acceptingApplicants = false;
         this.model.attributes.state = 'canceled';
         this.data.model.state = 'canceled';
+        this.model.attributes.canceledAt = new Date();
+        this.data.model.canceledAt = new Date();
         this.data.accordion.show = true;
         this.data.accordion.open = false;
-        this.initializeProgress();
-      }.bind(this),
-      error: function (err) {
-        // display modal alert type error
-      }.bind(this),
-    });
-  },
-
-  reopen: function () {
-    var state = 'open';
-    $.ajax({
-      url: '/api/task/state/' +  this.model.attributes.id,
-      type: 'PUT',
-      data: {
-        id: this.model.attributes.id,
-        state: state,
-        acceptingApplicants: true,
-      },
-      success: function (data) {
-        this.updatePill(state);
-        this.model.attributes.acceptingApplicants = true;
-        this.data.model.acceptingApplicants = true;
-        this.model.attributes.state = 'open';
-        this.data.model.state = 'open';
-        this.data.accordion.show = false;
-        this.data.accordion.open = false;
+        $('#task-edit').html('<i class="fas fa-edit"></i> Reopen');
         this.initializeProgress();
       }.bind(this),
       error: function (err) {
