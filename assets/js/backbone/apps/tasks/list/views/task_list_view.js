@@ -163,7 +163,9 @@ var TaskListView = Backbone.View.extend({
   },
 
   selectAllStateFilter: function() {
-    $('#stateFilters input[type="checkbox"]').attr('checked', true);
+    var checkBoxes = $('#stateFilters input[type="checkbox"]');
+    checkBoxes.prop('checked', !checkBoxes.prop('checked'));
+
     var states = _($('#stateFilters input:checked')).pluck('value');
     this.filter(undefined, { state: states }, { data: {} });
   },
