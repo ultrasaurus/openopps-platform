@@ -140,6 +140,14 @@
   .task-table {
     width: 100%;
 
+    .metrics-table__label {
+      min-width: 15rem;
+    }
+
+    .metrics-table__button {
+      min-width: 10rem;
+    }
+
     .task-open {
       color: #487E40;
       margin-right: $size-M;
