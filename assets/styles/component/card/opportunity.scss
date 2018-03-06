@@ -529,6 +529,17 @@
     font-weight: 600;
   }
 
+  .opportunity-canceled {
+    color: #000;
+    text-decoration: none;
+    display: flex;
+    padding: $size-default;
+    background-color: $color-primary-alt-lightest;
+    margin-top: $size-default;
+    margin-bottom: $size-M;
+    font-weight: 600;
+  }
+
   .continue-accepting-applicants {
     background-color: $color-primary-alt-lightest;
     margin-top: $size-default;
@@ -788,14 +799,6 @@
     margin-top: $size-M;
     text-align: right;
     color: $color-secondary;
-  }
-
-  .usajobs-open-opps-opportunity__reopen {
-    display: block;
-    width: 100%;
-    padding: 0 0 .5rem 0;
-    margin-top: $size-M;
-    text-align: right;
   }
 }
 

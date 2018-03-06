@@ -272,8 +272,12 @@ var TaskEditFormView = Backbone.View.extend({
       // `draft` and assumes that the task is simply being updated rather than
       // there being a need to "Submit for Review".
       //
-      if ( ! event.draft && ! event.saveState ) {
+      if (event.draft) {
+        modelData.state = 'draft';
+        modelData.acceptingApplicants = true;
+      } else if (!event.saveState) {
         modelData.state = 'submitted';
+        modelData.acceptingApplicants = true;
       }
 
       if ( owner ) {
