@@ -4,6 +4,10 @@ var ProfileListTemplate = require('../templates/profile_list_template.html');
 var ProfileListTable = require('../templates/profile_list_table.html');
 
 var PeopleListView = Backbone.View.extend({
+  events: {
+    'keyup #search': 'search',
+  },
+
   initialize: function (options) {
     this.el = options.el;
     this.collection = options.collection;
@@ -29,6 +33,17 @@ var PeopleListView = Backbone.View.extend({
     });
   },
 
+  search: function (event) {
+    var target = this.$(event.currentTarget);
+    var term = target.val();
+    items = this.collection.chain()
+      .pluck('attributes')
+      .filter( _.bind( filterPeople, this, term ) )
+      .value();
+    var template = _.template(ProfileListTable)({ people: items });
+    self.$('.table-responsive').html(template);
+  },
+
   empty: function () {
     this.$el.html('');
   },
@@ -38,5 +53,10 @@ var PeopleListView = Backbone.View.extend({
   },
 
 });
+
+function filterPeople ( term, person ) {
+  var searchBody = (person.name || '').toLowerCase();
+  return searchBody.indexOf(term.toLowerCase()) > -1;
+}
 
 module.exports = PeopleListView;
