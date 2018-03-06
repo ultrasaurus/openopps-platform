@@ -1,7 +1,7 @@
 {
   "name": "openopps-platform",
   "private": true,
-  "version": "1.4.15",
+  "version": "1.4.16",
   "description": "platform that creates an empowered network through sharing skills and collaborating on projects",
   "keywords": [],
   "dependencies": {
@@ -108,7 +108,7 @@
     "migrate:up": "node ./node_modules/db-migrate/bin/db-migrate up",
     "migrate:down": "node ./node_modules/db-migrate/bin/db-migrate down",
     "migrate:check": "node ./node_modules/db-migrate/bin/db-migrate up --dry-run",
-    "release:create": "npm install && gulp release",
+    "release:create": "gulp bump:patch && npm install && npm run build && gulp release",
     "release:run": "npm run migrate:up && npm run start",
     "start": "node app.js",
     "test": "npm run test:unit",
