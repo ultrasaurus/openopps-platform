@@ -15,6 +15,10 @@ var User = function () {
     for (var i in data) {
       this[i] = data[i];
     }
+    if (this.name) {
+      var initials = this.name.match(/\b\w/g) || [];
+      this.initials = ((initials.shift() || '') + (initials.pop() || '')).toUpperCase();
+    }
   }
 
   _createClass(User, [{

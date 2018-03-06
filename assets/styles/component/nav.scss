@@ -68,7 +68,7 @@ $nav_item_height: 17px + 24px;
 
   &__brand {
     display: block;
-    padding: $size-default 0 $size-S $size-default;
+    padding: 1.6rem 0 1.2rem $size-default;
     line-height: 1;
 
     @include media($ML) {
@@ -128,11 +128,19 @@ $nav_item_height: 17px + 24px;
   &__first_name {
     display: none;
 
-    @include media($SM) {
+    @include media($ML) {
       display: inherit;
       max-width: rem(140px);
       text-overflow: ellipsis;
       // overflow: hidden;
+    }
+  }
+
+  &__initials {
+    display: inherit;
+
+    @include media($ML) {
+      display: none;
     }
   }
 
@@ -562,23 +570,25 @@ $nav_item_height: 17px + 24px;
 }
 
 .usajobs-nav--openopps {
-  &__brand {
-    padding: $size-default 0 $size-default $size-default;
+  &__brand-container {
+    // padding: $size-default 0 $size-default $size-default;
+    padding: 0;
 
     @include media($SM) {
-      padding-bottom: $size-S;
+      // padding-bottom: $size-S;
     }
 
     @include media($ML) {
-      padding-left: $size-M;
+      // padding-left: $size-M;
     }
 
     @include media($L) {
-      padding-top: 1.2rem;
+      // padding-top: 1.2rem;
     }
 
-    svg {
+    img {
       width: 17.0rem;
+      // height: 2.3rem;
 
       @include media($ML) {
         width: 22.8rem;
@@ -586,6 +596,7 @@ $nav_item_height: 17px + 24px;
 
       @include media($L) {
         width: 29.8rem;
+        // width: 34.1rem;
       }
     }
   }
@@ -605,7 +616,7 @@ $nav_item_height: 17px + 24px;
 
   &__section-link {
     font-size: $small-font-size;
-    padding: 1.3rem $size-S $size-S;
+    padding: 0.8rem $size-S $size-S;
 
     @include media($SM) {
       font-size: $base-font-size;
@@ -631,7 +642,7 @@ $nav_item_height: 17px + 24px;
       }
 
       @include media($M) {
-        padding-top: 2.7rem;
+        padding-top: 2.8rem;
       }
     }
 
