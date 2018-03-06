@@ -80,6 +80,11 @@ var LoginView = Backbone.View.extend({
         var d = JSON.parse(error.responseText);
         self.$('#login-error-text').html(d.message);
         self.$('#login-error').show();
+        self.$('#username').closest('.required-input').addClass('usa-input-error');
+        self.$('#username').closest('.required-input').find('.field-validation-error.error-email').show();
+
+        self.$('#password').closest('.required-input').addClass('usa-input-error');
+        self.$('#password').closest('.required-input').find('.field-validation-error.error-password').show();
       });
     });
   },

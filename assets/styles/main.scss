@@ -150,3 +150,11 @@ h3 {
 input::-ms-clear {
   display: none;
 }
+
+.usajobs-form--narrow,
+.usajobs-content-well .usajobs-form--narrow {
+
+  .usajobs-form__legend {
+    margin-bottom: 0;
+  }
+}

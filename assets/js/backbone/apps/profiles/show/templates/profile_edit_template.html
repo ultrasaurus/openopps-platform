@@ -82,7 +82,8 @@
     <main class="main-content usajobs-content-well" id="main-content" aria-label="Opportunity">
       <div class="usajobs-open-opps-opportunity usajobs-open-opps-section usajobs-open-opps-profile">
         <div class="usajobs-open-opps-profile__body">
-          <h1 class="usajobs-opop-intro-hiring-paths__section-title">Edit profile</h1>
+          <h1 class="usajobs-opop-intro-hiring-paths__section-title usajobs-form__title">Edit profile 
+          <span class="usajobs-form__legend">All fields are required unless otherwise noted</span></h1>
           <div class="usajobs-form--narrow center-upload">
             <img class="usajobs-opop-profile-title default-user-icon-profile" src="/api/user/photo/<%- data.id %>">
             <div class="fileinput-button" <% if (!(data.isOwner || data.canEditProfile)) { %>style="display:none;"<% } %>>
@@ -104,7 +105,7 @@
               <input type="text" class="validate" id="name" name="name" placeholder="Name" value="<%- data.name ? data.name : '' %>"  data-validate="empty,count60,html" autofocus/>
             </div>
             <div class="required-input">
-              <label for="jobtitle">Title</label>
+              <label for="jobtitle" class="usa-input-optional">Title</label>
               <span class="field-validation-error error-count150" style="display:none;">Maximum of 150 characters.</span>
               <span class="field-validation-error error-html" style="display:none;">The special characters '<' or '>' are not allowed.</span>
               <input type="text" class="validate" id="jobtitle" name="jobtitle" placeholder="Title" value="<%- data.title ? data.title : '' %>" data-validate="count150,html"/>
@@ -118,7 +119,7 @@
               <input type="hidden" id="location" name="location"/>
             </div>
             <div class="required-input">
-              <label for="bio">Biography</label>
+              <label for="bio" class="usa-input-optional">Biography</label>
               <span class="field-validation-error error-html" style="display:none;">The special characters '<' or '>' are not allowed.</span>
               <div class="markdown-edit"></div>
             </div>
