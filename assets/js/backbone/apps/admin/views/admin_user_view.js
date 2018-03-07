@@ -224,7 +224,7 @@ var AdminUserView = Backbone.View.extend({
       modalTitle: 'Reset Password',
       alert: {
         type: 'error',
-        text: 'Error sending email',
+        text: 'Error sending email.',
       },
       modalBody: 'Click <strong>Send email</strong> below to send an email to <strong>' + user.name + '</strong> to reset their password.',
       primary: {
