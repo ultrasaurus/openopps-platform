@@ -34,4 +34,28 @@
       }
     }
   }
+
+  .usa-banner {
+    font-size: 1.3rem;
+    padding-bottom: 0;
+  }
+
+  .usa-banner-header {
+    padding-top: 0;
+    padding-bottom: 0;
+
+    img {
+      margin-top: 1px;
+      margin-right: 0.7rem;
+      width: 2rem;
+    }
+
+    p {
+      margin-top: 2px;
+      margin-bottom: 2px;
+      vertical-align: middle;
+      display: inline-block;
+      line-height: 1.5;
+    }
+  }
 }
