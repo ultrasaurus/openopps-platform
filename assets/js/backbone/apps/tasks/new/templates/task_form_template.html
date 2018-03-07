@@ -28,7 +28,7 @@
               </ul>
               <% if ( agency ) { %>
                 <input type="checkbox" id="task-restrict-agency" name="task-restrict-agency" value="task-restrict-agency">
-                <label for="task-restrict-agency">Limit Participation to<%- agency.abbr %> Employees</label>
+                <label for="task-restrict-agency">Limit participation to <%- agency.abbr %> employees</label>
               <% } %>
             </div>
             <div class="form-group">
@@ -57,11 +57,11 @@
                     <% }); %>
                   </select>
               </div>
-              <div class="form-group">
-                <label for="estimated-completion-date">Estimated completion date (optional)</label>
+              <div class="form-group" id="time-options-completion-date">
+                <label for="estimated-completion-date">Estimated completion date <span class="usa-input-optional"></span></label>
                 <input id="estimated-completion-date" type="date">
               </div>
-              <div class="form-group">
+              <div class="form-group" id="time-options-time-frequency">
                 <label for="js-time-frequency-estimate">How often is this time needed?</label>
                 <select id="js-time-frequency-estimate" class="dropdown">
                     <% _.each(tags['task-length'], function (timeEstimate) { %>
@@ -69,18 +69,14 @@
                     <% }); %>
                 </select>
               </div>
-            <div class="form-group">
-              <label for="js-participant-selection">How many people are needed?</label>
-              <div class="select-small">
-                <select id="js-participant-selection">
-                  <% _.each(tags['task-people'], function (person) { %>
-                    <option value="<%- person.id %>">
-                      <%- person.name %>
-                    </option>
-                    <% }); %>
+              <div class="form-group">
+                <label for="people">How many people are needed?</label>
+                <select id="people" class="dropdown">
+                  <% _.each(tags['task-people'], function (t) { %>
+                    <option value="<%- t.id %>"><%- t.name %></option>
+                  <% }); %>
                 </select>
               </div>
-            </div>
           </fieldset>
           <fieldset id="step-2" class="usajobs-fieldset">
             <h2>Step 2 - Create a headline</h2>

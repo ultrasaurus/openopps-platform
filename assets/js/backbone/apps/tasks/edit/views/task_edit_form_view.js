@@ -193,32 +193,37 @@ var TaskEditFormView = Backbone.View.extend({
 
     $('#skills-required').select2({
       placeholder: 'required/not-required',
-      width: '200px',
+      width: '100%',
     });
 
     $('#time-required').select2({
       placeholder: 'time-required',
-      width: '130px',
+      width: '100%',
     });
 
     $('#js-time-frequency-estimate').select2({
       placeholder: 'time-frequency',
-      width: '130px',
+      width: '100%',
     });
 
     $('#length').select2({
       placeholder: 'length',
-      width: '130px',
+      width: '100%',
     });
 
     $('#time-estimate').select2({
       placeholder: 'time-estimate',
-      width: '200px',
+      width: '100%',
     });
 
     $('#task-location').select2({
       placeholder: 'location',
-      width: '130px',
+      width: '100%',
+    });
+
+    $('#people').select2({
+      placeholder: 'task-people',
+      width: '100%',
     });
 
   },
