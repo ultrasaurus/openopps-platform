@@ -147,6 +147,10 @@ h3 {
   width: 1.8rem;
 }
 
+[type=radio] + label::before {
+  border-radius: 50%;
+}
+
 input::-ms-clear {
   display: none;
 }
