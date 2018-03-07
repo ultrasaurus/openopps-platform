@@ -72,7 +72,11 @@ var Profile = BaseController.extend({
     }
     // var fetchId = null;
     // if (this.id && this.id != 'edit') { fetchId = this.id; }
-    this.model.trigger('profile:fetch', this.routeId);
+    if(!window.cache.currentUser) {
+      Backbone.history.navigate('/login?profile/' + this.routeId, { trigger: true });
+    } else {
+      this.model.trigger('profile:fetch', this.routeId);
+    }
     // process a successful model fetch, and display the model
     this.listenTo(this.model, 'profile:fetch:success', function (model) {
       // @instance
@@ -99,21 +103,22 @@ var Profile = BaseController.extend({
           message: 'You must be logged in to view profiles',
           disableClose: false,
         });
-      }
-      var data = {
-        alert: {
-          message: '<strong>Unable to load profile.  Please reload this page to try again.</strong><br/>Error: ',
-        },
-      };
-      // check if the response provided an error
-      if (response.responseText) {
-        var err = JSON.parse(response.responseText);
-        if (err.message) {
-          data.alert.message += _.escape(err.message);
+      } else {
+        var data = {
+          alert: {
+            message: '<strong>Unable to load profile.  Please reload this page to try again.</strong><br/>Error: ',
+          },
+        };
+        // check if the response provided an error
+        if (response.responseText) {
+          var err = JSON.parse(response.responseText);
+          if (err.message) {
+            data.alert.message += _.escape(err.message);
+          }
         }
+        var template = _.template(AlertTemplate)(data);
+        self.$el.html(template);
       }
-      var template = _.template(AlertTemplate)(data);
-      self.$el.html(template);
     });
   },
 
