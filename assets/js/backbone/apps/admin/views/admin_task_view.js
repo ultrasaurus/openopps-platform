@@ -104,7 +104,7 @@ var AdminTaskView = Backbone.View.extend({
       this.modal.cleanup();
     }.bind(this)).fail(function (error) {
       $('#confirm-publish').addClass('usajobs-modal--error');
-      $('.usajobs-modal__body').html('There was an error sending the Reset password email.');
+      $('.usajobs-modal__body').html('There was an error attempting to publish this opportunity.');
       $('#usajobs-modal-heading').hide();
       $('#alert-modal__heading').show();
       $('#primary-btn').hide();
