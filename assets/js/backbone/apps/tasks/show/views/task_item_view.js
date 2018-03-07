@@ -110,6 +110,7 @@ var TaskItemView = BaseView.extend({
   initializeProgress: function () {
     $('#rightrail').html(_.template(ProgressTemplate)(this.data));
     this.initializeStateButtons();
+    this.$('#task-search-spinner').hide();
   },
 
   initializeStateButtons: function () {
