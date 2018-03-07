@@ -55,8 +55,14 @@ var PeopleListView = Backbone.View.extend({
 });
 
 function filterPeople ( term, person ) {
-  var searchBody = (person.name || '').toLowerCase();
-  return searchBody.indexOf(term.toLowerCase()) > -1;
+  var name = person.name ? person.name.toLowerCase() : '';
+  var title = person.title ? person.title.toLowerCase() : '';
+  var location = person.location ? person.location.name.toLowerCase() : '';
+  var agency = person.agency ? person.agency.name.toLowerCase() : '';
+  return (name.indexOf(term.toLowerCase()) > -1) ||
+    (title.indexOf(term.toLowerCase()) > -1) ||
+    (location.indexOf(term.toLowerCase()) > -1) ||
+    (agency.indexOf(term.toLowerCase()) > -1);
 }
 
 module.exports = PeopleListView;
