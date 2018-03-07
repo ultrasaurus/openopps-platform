@@ -43,7 +43,8 @@ var LoginController = BaseController.extend({
     }
   },
 
-  renderLogin: function () {
+  renderLogin: function (e) {
+    if (e && e.preventDefault) { e.preventDefault(); }
     var self = this;
     this.cleanupViews();
     this.loginView = new LoginView({
@@ -53,7 +54,8 @@ var LoginController = BaseController.extend({
     }).render();
   },
 
-  renderRegister: function () {
+  renderRegister: function (e) {
+    if (e && e.preventDefault) { e.preventDefault(); }
     var self = this;
     this.cleanupViews();
     this.loginCreateView = new LoginCreateView({
@@ -63,7 +65,8 @@ var LoginController = BaseController.extend({
     }).render();
   },
 
-  renderForgot: function () {
+  renderForgot: function (e) {
+    if (e && e.preventDefault) { e.preventDefault(); }
     var self = this;
     this.cleanupViews();
     this.loginForgotView = new LoginForgotView({
