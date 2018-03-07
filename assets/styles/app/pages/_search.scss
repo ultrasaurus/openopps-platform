@@ -103,6 +103,10 @@
   }
 }
 
+.usajobs-open-opps-search .search-opportunities {
+  margin-bottom: 0;
+}
+
 .usajobs-grid.usajobs-open-opps-search__title {
   @include media($L) {
     padding: 0;
