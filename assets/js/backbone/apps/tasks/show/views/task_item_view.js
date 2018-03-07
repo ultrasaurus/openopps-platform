@@ -105,6 +105,15 @@ var TaskItemView = BaseView.extend({
     self.updateTaskEmail();
     self.model.trigger('task:show:render:done');
     this.initializeProgress();
+
+    if ('#apply' === window.location.hash && !self.model.attributes.volunteer) {
+      $('#apply').click();
+
+      Backbone.history.navigate(window.location.pathname, {
+        trigger: false,
+        replace: true,
+      });
+    }
   },
 
   initializeProgress: function () {
@@ -462,7 +471,8 @@ var TaskItemView = BaseView.extend({
   apply: function (e) {
     if (e.preventDefault) e.preventDefault();
     if (!window.cache.currentUser) {
-      window.cache.userEvents.trigger('user:request:login');
+      Backbone.history.navigate('/login?tasks/' + this.model.attributes.id + '#apply', { trigger: true });
+      //window.cache.userEvents.trigger('user:request:login');
     } else {
       var requiredTags = window.cache.currentUser.tags.filter(function (t) {
         return t.type === 'location' || t.type === 'agency';
