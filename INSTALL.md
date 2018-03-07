@@ -93,8 +93,8 @@ Start the postgres console acting on the `midas` database with: `psql midas`
     ALTER SCHEMA public OWNER TO midas;
     \q
 
-Install node.js. The example commands below use [nvm](https://github.com/creationix/nvm) which is not required, but we find helpful 
-to manage Node versions, when working other Node projects. 
+Install node.js. The example commands below use [nvm](https://github.com/creationix/nvm) which is not required, but we find helpful
+to manage Node versions, when working other Node projects.
 
 So back to the command line. We assume that nvm is installed and set up
 (added to `.bashrc` or equivalent).
@@ -182,13 +182,8 @@ Create database 'midas', user account 'midas' with password 'midas', and assign 
 
 #### Install Node.js via Windows MSI, select all available add-ons
 
-[Node.js](http://nodejs.org/dist/v4.2.2/)
+[Node.js](https://nodejs.org/en/download/)
 
-Use npm version 3.x
-
-```
-npm i -g npm@3
-```
 #### Set System Path Variables
 
 Go to Control Panel -> System -> Advanced System Settings -> Environment Variables
@@ -252,7 +247,7 @@ helpful:
      update midas_user set disabled='f';
      update midas_user set "isAdmin"='t' where username='alan@test.gov';
 
-Note the quotes around "isAdmin". Postgres by default lowercases all non-keywords, which includes column names. 
+Note the quotes around "isAdmin". Postgres by default lowercases all non-keywords, which includes column names.
 
 Now you are ready to rock!
 
@@ -272,7 +267,7 @@ Run the server (watch client files, compiling if needed)
     npm run watch
 
 
-Go to [http://localhost:1337](http://localhost:1337) to see the app
+Go to [http://localhost:3000](http://localhost:3000) to see the app
 
 Check out the [Contributor's Guide](CONTRIBUTING.md) for next steps
 

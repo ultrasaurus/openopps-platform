@@ -1,5 +1,5 @@
 const _ = require ('lodash');
-const log = require('blue-ox')('app:opportunity:service');
+const log = require('log')('app:opportunity:service');
 const db = require('../../db');
 const dao = require('./dao')(db);
 const notification = require('../notification/service');
@@ -125,6 +125,20 @@ async function checkAgency (user, ownerId) {
   return false;
 }
 
+async function updateOpportunityState (attributes, done) {
+  var origTask = await dao.Task.findOne('id = ?', attributes.id);
+  attributes.updatedAt = new Date();
+  attributes.assignedAt = attributes.state === 'assigned' && !origTask.assignedAt ? new Date : origTask.assignedAt;
+  attributes.publishedAt = attributes.state === 'open' && !origTask.publishedAt ? new Date : origTask.publishedAt;
+  attributes.completedAt = attributes.state === 'completed' && !origTask.completedAt ? new Date : origTask.completedAt;
+  attributes.canceledAt = attributes.state === 'canceled' && origTask.state !== 'canceled' ? new Date : origTask.canceledAt;
+  await dao.Task.update(attributes).then(async (task) => {
+    return done(await dao.Task.findOne('id = ?', task.id), origTask.state !== task.state);
+  }).catch (err => {
+    return done(null, false, {'message':'Error updating task.'});
+  });
+}
+
 async function updateOpportunity (attributes, done) {
   var errors = await Task.validateOpportunity(attributes);
   if (!_.isEmpty(errors.invalidAttributes)) {
@@ -136,6 +150,7 @@ async function updateOpportunity (attributes, done) {
   attributes.publishedAt = attributes.state === 'open' && origTask.state !== 'open' ? new Date : origTask.publishedAt;
   attributes.completedAt = attributes.state === 'completed' && origTask.state !== 'completed' ? new Date : origTask.completedAt;
   attributes.submittedAt = attributes.state === 'submitted' && origTask.state !== 'submitted' ? new Date : origTask.submittedAt;
+  attributes.canceledAt = attributes.state === 'canceled' && origTask.state !== 'canceled' ? new Date : origTask.canceledAt;
   attributes.updatedAt = new Date();
   await dao.Task.update(attributes).then(async (task) => {
     task.userId = task.userId || origTask.userId; // userId is null if editted by owner
@@ -163,7 +178,7 @@ async function publishTask (attributes, done) {
 }
 
 function volunteersCompleted (task) {
-  dao.Volunteer.find('"taskId" = ?', task.id).then(volunteers => {
+  dao.Volunteer.find('"taskId" = ? and assigned = true and "taskComplete" = true', task.id).then(volunteers => {
     var userIds = volunteers.map(v => { return v.userId; });
     dao.User.db.query(dao.query.userTasks, [userIds]).then(users => {
       users.rows.map(user => {
@@ -184,7 +199,7 @@ function volunteersCompleted (task) {
 
 function sendTaskStateUpdateNotification (user, task) {
   switch (task.state) {
-    case 'assigned':
+    case 'in progress':
       sendTaskAssignedNotification(user, task);
       break;
     case 'completed':
@@ -201,6 +216,9 @@ function sendTaskStateUpdateNotification (user, task) {
 
 async function getNotificationTemplateData (user, task, action) {
   var volunteers = (await dao.Task.db.query(dao.query.volunteerListQuery, task.id)).rows;
+  if(action == 'task.update.completed') {
+    volunteers = _.filter(volunteers, { 'taskComplete': true });
+  }
   var data = {
     action: action,
     model: {
@@ -222,7 +240,7 @@ async function sendTaskCompletedNotification (user, task) {
   notification.createNotification(data);
 }
 
-async function copyOpportunity (attributes, adminAttributes, done) {
+async function copyOpportunity (attributes, user, done) {
   var results = await dao.Task.findOne('id = ?', attributes.taskId);
   var tags = await dao.TaskTags.find('task_tags = ?', attributes.taskId);
   if(results === null) {
@@ -230,8 +248,8 @@ async function copyOpportunity (attributes, adminAttributes, done) {
   }
   var task = {
     title: attributes.title,
-    userId: adminAttributes == null ? results.userId : adminAttributes.id,
-    restrict: adminAttributes == null ? results.restrict : getRestrictValues(adminAttributes),
+    userId: user.id,
+    restrict: getRestrictValues(user),
     state: 'draft',
     description: results.description,
   };
@@ -248,8 +266,8 @@ async function copyOpportunity (attributes, adminAttributes, done) {
     }).catch (err => { return done({'message':'Error copying task.'}); });
 }
 
-function getRestrictValues (adminAttributes) {
-  var record = _.find(adminAttributes.tags, { 'type': 'agency' });
+function getRestrictValues (user) {
+  var record = _.find(user.tags, { 'type': 'agency' });
   var restrict = {
     name: record.name,
     abbr: record.data.abbr,
@@ -335,6 +353,7 @@ module.exports = {
   list: list,
   commentsByTaskId: commentsByTaskId,
   createOpportunity: createOpportunity,
+  updateOpportunityState: updateOpportunityState,
   updateOpportunity: updateOpportunity,
   publishTask: publishTask,
   copyOpportunity: copyOpportunity,

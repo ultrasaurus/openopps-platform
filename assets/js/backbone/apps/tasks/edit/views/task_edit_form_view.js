@@ -7,9 +7,8 @@ var MarkdownEditor = require('../../../../components/markdown_editor');
 var TagFactory = require('../../../../components/tag_factory');
 var ShowMarkdownMixin = require('../../../../components/show_markdown_mixin');
 var TaskFormViewHelper = require('../../task-form-view-helper');
-
 var TaskEditFormTemplate = require('../templates/task_edit_form_template.html');
-
+var ModalComponent = require('../../../../components/modal');
 
 var TaskEditFormView = Backbone.View.extend({
 
@@ -20,8 +19,8 @@ var TaskEditFormView = Backbone.View.extend({
     'click #change-owner'              : 'displayChangeOwner',
     'click #add-participant'           : 'displayAddParticipant',
     'click #task-view'                 : 'view',
-    'submit #task-edit-form'           : 'submit',
-    'click .js-task-draft'             : 'saveDraft',
+    'submit #task-edit-form'           : 'save',
+    'click .draft-button'              : 'submit',
     'click [name=task-time-required]' : 'toggleTimeOptions',
   },
 
@@ -41,10 +40,20 @@ var TaskEditFormView = Backbone.View.extend({
     this.initializeListeners();
 
     this.listenTo(this.options.model, 'task:update:success', function (data) {
-      if ('draft' === data.attributes.state) {
-        view.renderSaveSuccessModal();
-      } else {
-        Backbone.history.navigate('tasks/' + data.attributes.id, { trigger: true });
+      Backbone.history.navigate('tasks/' + data.attributes.id, { trigger: true });
+      if(data.attributes.state == 'submitted') {
+        this.modalComponent = new ModalComponent({
+          el: '#site-modal',
+          id: 'submit-opp',
+          modalTitle: 'Submitted',
+          modalBody: 'Thanks for submitting the <strong>' + data.attributes.title + '</strong>. We\'ll review it and let you know if it\'s approved or if we need more information.',
+          primary: {
+            text: 'Close',
+            action: function () {
+              this.modalComponent.cleanup();
+            }.bind(this),
+          },
+        }).render();
       }
     });
     this.listenTo(this.options.model, 'task:update:error', function (model, response, options) {
@@ -53,7 +62,8 @@ var TaskEditFormView = Backbone.View.extend({
         for (var item in error.invalidAttributes) {
           if (error.invalidAttributes[item]) {
             message = _(error.invalidAttributes[item]).pluck('message').join(',<br /> ');
-            $('#' + item + '-update-alert').html(message).show();
+            $('#' + item + '-update-alert-message').html(message);
+            $('#' + item + '-update-alert').show();
           }
         }
       } else if (error) {
@@ -177,43 +187,43 @@ var TaskEditFormView = Backbone.View.extend({
     this.tagFactory.createTagDropDown({
       type: 'location',
       selector: '#task_tag_location',
-      width: '40%',
+      width: '100%',
       data: this.data['madlibTags'].location,
     });
 
     $('#skills-required').select2({
       placeholder: 'required/not-required',
-      width: '200px',
+      width: '100%',
     });
 
     $('#time-required').select2({
       placeholder: 'time-required',
-      width: '130px',
+      width: '100%',
     });
 
     $('#js-time-frequency-estimate').select2({
       placeholder: 'time-frequency',
-      width: '130px',
-    });
-
-    $('#people').select2({
-      placeholder: 'people',
-      width: '150px',
+      width: '100%',
     });
 
     $('#length').select2({
       placeholder: 'length',
-      width: '130px',
+      width: '100%',
     });
 
     $('#time-estimate').select2({
       placeholder: 'time-estimate',
-      width: '200px',
+      width: '100%',
     });
 
     $('#task-location').select2({
       placeholder: 'location',
-      width: '130px',
+      width: '100%',
+    });
+
+    $('#people').select2({
+      placeholder: 'task-people',
+      width: '100%',
     });
 
   },
@@ -241,7 +251,7 @@ var TaskEditFormView = Backbone.View.extend({
     this.on( 'task:tags:save:done', function ( event ) {
       var owner          = this.$( '#owner' ).select2( 'data' );
       var completedBy    = this.$('[name=task-time-required]:checked').attr('data-descr') == 'One time' ? this.$( '#estimated-completion-date' ).val() : null;
-      var newParticipant = this.$( '#participant' ).select2( 'data' );
+      //var newParticipant = this.$( '#participant' ).select2( 'data' );
       var silent         = true;
 
       var modelData = {
@@ -267,8 +277,12 @@ var TaskEditFormView = Backbone.View.extend({
       // `draft` and assumes that the task is simply being updated rather than
       // there being a need to "Submit for Review".
       //
-      if ( ! event.draft && ! event.saveState ) {
+      if (event.draft) {
+        modelData.state = 'draft';
+        modelData.acceptingApplicants = true;
+      } else if (!event.saveState) {
         modelData.state = 'submitted';
+        modelData.acceptingApplicants = true;
       }
 
       if ( owner ) {
@@ -276,24 +290,6 @@ var TaskEditFormView = Backbone.View.extend({
         modelData.owner = owner;
       }
       if ( completedBy !== '' ) { modelData[ 'completedBy' ] = completedBy; }
-      if ( newParticipant ) {
-        if ( this.$( '#participant-notify:checked' ).length > 0 ) { silent = false; }
-        $.ajax( {
-          url: '/api/volunteer',
-          method: 'POST',
-          data: {
-            taskId: view.model.get( 'id' ),
-            userId: newParticipant.id,
-            silent: silent,
-          },
-          success: function ( e ) {
-            console.log( 'success adding participant', e );
-          },
-          error: function ( e ) {
-            console.log( 'error adding participant', e );
-          },
-        } );
-      }
 
       var tags = _( this.getTagsFromPage() )
         .chain()
@@ -314,20 +310,10 @@ var TaskEditFormView = Backbone.View.extend({
     } );
   },
 
-  saveDraft: function () {
-    this.trigger( 'task:tags:save:done', { draft: true } );
-  },
-
-  submit: function ( e ) {
-    if ( e.preventDefault ) { e.preventDefault(); }
+  validateFields: function () {
     var tags      = [];
     var oldTags   = [];
     var diff      = [];
-    var saveState = false;
-
-    if ( 'save' === this.$( '#js-task-create' ).data( 'state' ) ) {
-      saveState = true;
-    }
 
     // check all of the field validation before submitting
     var children = this.$el.find( '.validate' );
@@ -338,10 +324,28 @@ var TaskEditFormView = Backbone.View.extend({
       abort = abort || iAbort;
     } );
 
+    return abort;
+  },
+
+  submit: function (e) {
+    var abort = this.validateFields();
     if ( abort === true ) {
       return;
     }
-    return this.trigger( 'task:tags:save:done', { draft: false, saveState: saveState } );
+    if($(e.currentTarget).data('state') == 'save') {
+      return this.trigger( 'task:tags:save:done', { draft: true } );
+    } else {
+      return this.trigger( 'task:tags:save:done', { draft: false, saveState: false } );
+    }
+  },
+
+  save: function ( e ) {
+    if ( e.preventDefault ) { e.preventDefault(); }
+    var abort = this.validateFields();
+    if ( abort === true ) {
+      return;
+    }
+    return this.trigger( 'task:tags:save:done', { draft: false, saveState: true } );
   },
 
   /*

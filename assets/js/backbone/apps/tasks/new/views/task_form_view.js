@@ -9,6 +9,7 @@ var ShowMarkdownMixin = require('../../../../components/show_markdown_mixin');
 var TagFactory = require('../../../../components/tag_factory');
 var TaskModel = require('../../../../entities/tasks/task_model');
 var TaskFormViewHelper = require('../../task-form-view-helper');
+var Modal = require('../../../../components/modal');
 
 // templates
 var TaskFormTemplate = require('../templates/task_form_template.html');
@@ -49,11 +50,8 @@ var TaskFormView = Backbone.View.extend({
     this.model = this.collection.first();
 
     if ( _.isUndefined( this.model ) ) {
-
       this.model = new TaskModel();
-
     }
-
   },
 
   /*
@@ -104,9 +102,11 @@ var TaskFormView = Backbone.View.extend({
 
     _.extend(this, Backbone.Events);
     this.collection.on( 'task:draft:success', function (task) {
-      view.renderSaveSuccessModal(true);
+      Backbone.history.navigate('/tasks/' + task.attributes.id, { trigger: true });
+      //view.renderSaveSuccessModal(true);
     });
   },
+
 
   /*
    * Render the View
@@ -203,27 +203,27 @@ var TaskFormView = Backbone.View.extend({
 
     self.$('#time-required').select2({
       placeholder: 'Time Commitment',
-      width: 'resolve',
+      width: '100%',
     });
 
     self.$('#js-time-frequency-estimate').select2({
       placeholder: 'Frequency of work',
-      width: 'fullwidth',
+      width: '100%',
     });
 
     self.$('#js-task-time-estimate').select2({
       placeholder: 'Estimated Time Required',
-      width: 'resolve',
+      width: '100%',
     });
 
     self.$('#task-location').select2({
       placeholder: 'Work Location',
-      width: 'resolve',
+      width: '100%',
     });
 
-    self.$('#js-participant-selection').select2({
-      placeholder: 'People required',
-      width: 'resolve',
+    self.$('#people').select2({
+      placeholder: 'task-people',
+      width: '100%',
     });
 
   },
@@ -371,7 +371,7 @@ var TaskFormView = Backbone.View.extend({
     var tags        = [];
     var tagSkills   = this.$( '#js-task-tag' ).select2( 'data' );
     var tagLocation = this.$( '#js-task-location' ).select2( 'data' );
-    var peopleCount = this.$( '#js-participant-selection' ).select2( 'data' );
+    var peopleCount = this.$( '#people' ).select2( 'data' );
     var timeRequiredTagId  = this.$( '[name=task-time-required]:checked' ).val();
     var timeRequiredTag = _.findWhere(this.tagSources['task-time-required'], {id: parseInt(timeRequiredTagId)});
 

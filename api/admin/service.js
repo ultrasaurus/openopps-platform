@@ -1,5 +1,5 @@
 const _ = require ('lodash');
-const log = require('blue-ox')('app:admin:service');
+const log = require('log')('app:admin:service');
 const db = require('../../db');
 const dao = require('./dao')(db);
 const json2csv = require('json2csv');
@@ -13,10 +13,11 @@ async function getMetrics () {
 
 async function getTaskStateMetrics () {
   var states = {};
-  states.assigned = dao.clean.task(await dao.Task.query(dao.query.taskStateUserQuery, 'assigned', dao.options.task));
+  states.inProgress = dao.clean.task(await dao.Task.query(dao.query.taskStateUserQuery, 'in progress', dao.options.task));
   states.completed = dao.clean.task(await dao.Task.query(dao.query.taskStateUserQuery, 'completed', dao.options.task));
   states.draft = dao.clean.task(await dao.Task.query(dao.query.taskStateUserQuery, 'draft', dao.options.task));
   states.open = dao.clean.task(await dao.Task.query(dao.query.taskStateUserQuery, 'open', dao.options.task));
+  states.notOpen = dao.clean.task(await dao.Task.query(dao.query.taskStateUserQuery, 'not open', dao.options.task));
   states.submitted = dao.clean.task(await dao.Task.query(dao.query.taskStateUserQuery, 'submitted', dao.options.task));
 
   return states;
@@ -24,10 +25,11 @@ async function getTaskStateMetrics () {
 
 async function getAgencyTaskStateMetrics (agency) {
   var states = {};
-  states.assigned = dao.clean.task(await dao.Task.query(dao.query.taskAgencyStateUserQuery, 'assigned', agency.toLowerCase(), dao.options.task));
+  states.inProgress = dao.clean.task(await dao.Task.query(dao.query.taskAgencyStateUserQuery, 'in progress', agency.toLowerCase(), dao.options.task));
   states.completed = dao.clean.task(await dao.Task.query(dao.query.taskAgencyStateUserQuery, 'completed', agency.toLowerCase(), dao.options.task));
   states.draft = dao.clean.task(await dao.Task.query(dao.query.taskAgencyStateUserQuery, 'draft', agency.toLowerCase(), dao.options.task));
   states.open = dao.clean.task(await dao.Task.query(dao.query.taskAgencyStateUserQuery, 'open', agency.toLowerCase(), dao.options.task));
+  states.notOpen = dao.clean.task(await dao.Task.query(dao.query.taskAgencyStateUserQuery, 'not open', agency.toLowerCase(), dao.options.task));
   states.submitted = dao.clean.task(await dao.Task.query(dao.query.taskAgencyStateUserQuery, 'submitted', agency.toLowerCase(), dao.options.task));
 
   return states;
@@ -164,8 +166,8 @@ async function getUsersForAgency (page, limit, agency) {
 
 async function getUsersFiltered (q) {
   var result = {};
-  result.users = (await dao.User.db.query(await dao.query.userListFilteredQuery, 
-    '%' + q.toLowerCase() + '%' || q.toLowerCase() + '%' || '%' + q.toLowerCase(), 
+  result.users = (await dao.User.db.query(await dao.query.userListFilteredQuery,
+    '%' + q.toLowerCase() + '%' || q.toLowerCase() + '%' || '%' + q.toLowerCase(),
     '%' + q.toLowerCase() + '%' || q.toLowerCase() + '%' || '%' + q.toLowerCase())).rows;
   result = await getUserTaskMetrics (result);
   result.count = typeof result.users[0] !== 'undefined' ? +result.users[0].full_count : 0;
@@ -176,9 +178,9 @@ async function getUsersFiltered (q) {
 
 async function getUsersForAgencyFiltered (q, agency) {
   var result = {};
-  result.users = (await dao.User.db.query(await dao.query.userAgencyListFilteredQuery, 
-    '%' + q.toLowerCase() + '%' || q.toLowerCase() + '%' || '%' + q.toLowerCase(), 
-    '%' + q.toLowerCase() + '%' || q.toLowerCase() + '%' || '%' + q.toLowerCase(), 
+  result.users = (await dao.User.db.query(await dao.query.userAgencyListFilteredQuery,
+    '%' + q.toLowerCase() + '%' || q.toLowerCase() + '%' || '%' + q.toLowerCase(),
+    '%' + q.toLowerCase() + '%' || q.toLowerCase() + '%' || '%' + q.toLowerCase(),
     agency.toLowerCase())).rows;
   result = await getUserTaskMetrics (result);
   result.count = typeof result.users[0] !== 'undefined' ? +result.users[0].full_count : 0;
@@ -220,7 +222,7 @@ async function getTaskMetrics () {
 
   temp = await dao.Task.db.query(dao.query.volunteerQuery, 'withVolunteers');
   tasks.withVolunteers = +temp.rows[0].count;
-  
+
   return tasks;
 }
 

@@ -1,5 +1,5 @@
 const _ = require ('lodash');
-const log = require('blue-ox')('app:volunteer:service');
+const log = require('log')('app:volunteer:service');
 const db = require('../../db');
 const dao = require('./dao')(db);
 const notification = require('../notification/service');
@@ -21,6 +21,32 @@ async function addVolunteer (attributes, done) {
   }
 }
 
+async function assignVolunteer (volunteerId, assign, done) {
+  await dao.Volunteer.update({
+    id: volunteerId,
+    assigned: assign,
+    updatedAt: new Date(),
+  }).then(async (volunteer) => {
+    return done(null, volunteer);
+  }).catch(err => {
+    log.info('Update: failed to set volunteer assigned ' + assign, err);
+    return done({'message':'Unable to complete request'}, null);
+  });
+}
+
+async function volunteerComplete (volunteerId, complete, done) {
+  await dao.Volunteer.update({
+    id: volunteerId,
+    taskComplete: complete,
+    updatedAt: new Date(),
+  }).then(async (volunteer) => {
+    return done(null, volunteer);
+  }).catch(err => {
+    log.info('Update: failed to set volunteer task complete ' + complete, err);
+    return done({'message':'Unable to complete request'}, null);
+  });
+}
+
 async function deleteVolunteer (vId, taskId, done) {
   var notificationInfo = (await dao.Volunteer.db.query(dao.query.volunteer, vId)).rows;
   await dao.Volunteer.delete('id = ? and "taskId" = ?', vId, taskId).catch(err => {
@@ -37,7 +63,7 @@ async function canAddVolunteer (attributes, user) {
   return true;
 }
 
-async function canRemoveVolunteer (id, user) {
+async function canManageVolunteers (id, user) {
   var task = await dao.Task.findOne('id = ?', id).catch(() => { return null; });
   return task && (task.userId === user.id || user.isAdmin || (user.isAgencyAdmin && await checkAgency(user, task.userId)));
 }
@@ -78,8 +104,10 @@ async function sendDeletedVolunteerNotification (notificationInfo, action) {
 module.exports = {
   addVolunteer: addVolunteer,
   deleteVolunteer: deleteVolunteer,
+  assignVolunteer: assignVolunteer,
+  volunteerComplete: volunteerComplete,
   canAddVolunteer: canAddVolunteer,
-  canRemoveVolunteer: canRemoveVolunteer,
+  canManageVolunteers: canManageVolunteers,
   sendAddedVolunteerNotification: sendAddedVolunteerNotification,
   sendDeletedVolunteerNotification: sendDeletedVolunteerNotification,
 };

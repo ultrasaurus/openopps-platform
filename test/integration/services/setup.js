@@ -1,3 +1,4 @@
+require('app-module-path').addPath('lib/');
 const _ = require('lodash');
 const pgtools = require('pgtools');
 const pgp = require('pg-promise')();

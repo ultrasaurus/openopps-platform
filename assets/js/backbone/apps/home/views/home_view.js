@@ -2,16 +2,9 @@ var _ = require('underscore');
 var Backbone = require('backbone');
 var async = require('async');
 var UIConfig = require('../../../config/ui.json');
-/** TODO:
-var Login = require('../../../config/login.json');
-var LoginController = require('../../login/controllers/login_controller');
-var ModalPages = require('../../../components/modal_pages');
-**/
 var HomeTemplate = require('../templates/home_view_template.html');
-// TODO: var EmptyModalView = require('../views/empty_modal_view');
 
 var HomeView = Backbone.View.extend({
-
   el: '#container',
 
   events: {
@@ -23,7 +16,7 @@ var HomeView = Backbone.View.extend({
   initialize: function (options) {
     this.options = options;
     this.listenTo(window.cache.userEvents, 'user:login:success:navigate', function (user) {
-      Backbone.history.navigate(UIConfig.home.logged_in_path, { trigger: true });
+      Backbone.history.navigate(UIConfig.home.logged_in_path, { trigger: true, replaceState: true });
     });
 
     this.listenTo(window.cache.userEvents, 'user:load:usersetting:success', function (user) {
@@ -94,7 +87,8 @@ var HomeView = Backbone.View.extend({
       this.loginController.cleanup();
     }
     this.loginController = new LoginController({
-      el: '#login-wrapper',
+      // el: '#login-wrapper',
+      el: '#container',
       message: message,
     });
   },

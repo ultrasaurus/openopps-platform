@@ -1,5 +1,5 @@
 const fs = require('fs');
-const log = require('blue-ox')('app:notification:service');
+const log = require('log')('app:notification:service');
 const nodemailer = require('nodemailer');
 const db = require('../../db');
 const dao = require('./dao')(db);
@@ -55,7 +55,7 @@ function renderTemplate (template, data, done) {
     to: _.template(template.to)(data),
     cc: _.template(template.cc)(data),
     bcc: _.template(template.bcc)(data),
-    subject: _.template(template.subject)(data)
+    subject: _.template(template.subject)(data),
   };
   fs.readFile(html, function (err, template) {
     if (err) {
@@ -63,6 +63,7 @@ function renderTemplate (template, data, done) {
       return done(err);
     }
     data._content = _.template(template)(data);
+    data._logo = '/img/logo/png/open-opportunities-email.png';
     fs.readFile(layout, function (err, layout) {
       if (err) {
         log.info(err);
@@ -89,6 +90,7 @@ function sendEmail (mailOptions, done) {
   nodemailer.createTransport(transportConfig).sendMail(mailOptions, function (err, info) {
     if (err) {
       log.info('Failed to send mail. If this is unexpected, please check your email configuration in config/email.js.', err);
+      log.info('TransportConfig', transportConfig);
     }
     if (done) {
       return done(err, info);

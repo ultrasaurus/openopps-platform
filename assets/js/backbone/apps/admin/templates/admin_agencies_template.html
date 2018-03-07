@@ -1,18 +1,27 @@
-<div class="alert alert-danger" style="display:none;">
+<div class="usa-alert usajobs-alert usajobs-alert--error" role="alert" data-object="alert" style="display:none;">
+  <div class="usajobs-alert__figure">
+    <div class="usajobs-alert__icon">
+    </div>
+  </div>
+  <div class="usajobs-alert__body">
+    <p class="usa-alert-text">
+
+    </p>
+  </div>
 </div>
-<div class="row">
+
+<h2>Agency dashboard</h2>
+<div class="agency-details">
   <% if (!agency.data) { %>
   <p>Agency not set up.</p>
   <% } else { %>
-  <div class="col-md-12 box box-pad-lr">
-    <div class="row">
-      <div class="col-md-12 box-pad-b">
-        <h2><%= agency.name %></h2>
-        <p>Domain: <%= agency.data.domain %></p>
-        <h3><a class="link" data-target="users" href="/admin/users/<%=agency.slug %>"><%= agency.data.abbr %> Users</a>
-          <h3><a class="link" data-target="tasks" href="/admin/tasks/<%=agency.slug %>"><%= agency.data.abbr %> Opportunities</a>
-      </div>
-    </div>
-  </div>
+    <h3><%= agency.name %></h3>
+    <p>Domain: <%= agency.data.domain %></p>
+    <p>
+      <a class="link" data-target="users" href="/admin/users/<%=agency.slug %>"><%= agency.data.abbr %> Users</a>
+    </p>
+    <p>
+      <a class="link" data-target="tasks" href="/admin/tasks/<%=agency.slug %>"><%= agency.data.abbr %> Opportunities</a>
+    </p>
   <% } %>
 </div>

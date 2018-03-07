@@ -1,6 +1,6 @@
 const passport = require('koa-passport');
 const LocalStrategy = require('passport-local').Strategy;
-const log = require('blue-ox')('app:passport');
+const log = require('log')('app:passport');
 const db = require('../../db');
 const dao = require('./dao')(db);
 const bcrypt = require('bcryptjs');
@@ -45,7 +45,7 @@ passport.deserializeUser(async function (id, done) {
 passport.use(new LocalStrategy(localStrategyOptions, async (username, password, done) => {
   var maxAttempts = openopps.auth.local.passwordAttempts;
   log.info('local login attempt for:', username);
-  await dao.User.findOne('username = ?', username).then(async (user) => {
+  await dao.User.findOne('username = ?', username.toLowerCase().trim()).then(async (user) => {
     if (maxAttempts > 0 && user.passwordAttempts >= maxAttempts) {
       log.info('max passwordAttempts (1)', user.passwordAttempts, maxAttempts);
       done('locked', false);
@@ -65,6 +65,13 @@ passport.use(new LocalStrategy(localStrategyOptions, async (username, password, 
             done(err, false);
           });
         } else {
+          await dao.User.update({
+            id: user.id,
+            passwordAttempts: 0,
+            updatedAt: new Date(),
+          }).catch(err => {
+            log.info('Error resetting password attempts');
+          });
           done(null, user);
         }
       } else {

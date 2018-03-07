@@ -1,4 +1,4 @@
-const log = require('blue-ox')('app:location');
+const log = require('log')('app:location');
 const Router = require('koa-router');
 const request = require('request');
 const qs = require('querystring');

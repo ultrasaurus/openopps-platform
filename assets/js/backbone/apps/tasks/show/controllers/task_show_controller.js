@@ -12,7 +12,6 @@ var AttachmentView = require('../../../attachment/views/attachment_show_view');
 var TaskItemView = require('../views/task_item_view');
 var TagFactory = require('../../../../components/tag_factory');
 var ModalComponent = require('../../../../components/modal');
-var ModalAlert = require('../../../../components/modal_alert');
 var TaskEditFormView = require('../../edit/views/task_edit_form_view');
 var UIConfig = require('../../../../config/ui.json');
 var LoginConfig = require('../../../../config/login.json');
@@ -42,6 +41,7 @@ var TaskShowController = BaseView.extend({
     'click #task-copy'                    : 'copy',
     'click .link-backbone'                : linkBackbone,
     'click .volunteer-delete'             : 'removeVolunteer',
+    'click .project-people__remove'       : 'toggleAssign',
     'mouseenter .project-people-show-div' : popovers.popoverPeopleOn,
     'click .project-people-show-div'      : popovers.popoverClick,
   },
@@ -76,9 +76,10 @@ var TaskShowController = BaseView.extend({
       return;
     }
 
+    if (this.taskItemView) this.taskItemView.cleanup();
     if (this.taskEditFormView) this.taskEditFormView.cleanup();
     this.taskEditFormView = new TaskEditFormView({
-      el: '.edit-task-container',
+      el: this.el,
       elVolunteer: '#task-volunteers',
       edit: true,
       taskId: this.model.attributes.id,
@@ -87,11 +88,11 @@ var TaskShowController = BaseView.extend({
       madlibTags: this.madlibTags,
       tagTypes: this.tagTypes,
     }).render();
-    this.$('.task-show-madlib').hide();
-    this.$('.li-task-view').show();
-    this.$('.li-task-edit').hide();
+    // this.$('.task-show-madlib').hide();
+    // this.$('.li-task-view').show();
+    // this.$('.li-task-edit').hide();
     this.$('.task-container').hide();
-    this.$('.li-task-copy').hide();
+    // this.$('.li-task-copy').hide();
   },
 
   initializeChildren: function () {
@@ -175,8 +176,9 @@ var TaskShowController = BaseView.extend({
 
   edit: function (e) {
     if (e.preventDefault) e.preventDefault();
+
     this.initializeEdit();
-    popovers.popoverPeopleInit('.project-people-div');
+    // popovers.popoverPeopleInit('.project-people-div');
     Backbone.history.navigate('tasks/' + this.model.id + '/edit');
   },
 
@@ -201,7 +203,7 @@ var TaskShowController = BaseView.extend({
       var agencyRequired = (LoginConfig.agency && LoginConfig.agency.enabled);
       var locationRequired = (LoginConfig.location && LoginConfig.location.enabled);
 
-      if (this.modalAlert) { this.modalAlert.cleanup(); }
+      // if (this.modalAlert) { this.modalAlert.cleanup(); }
       if (this.modalComponent) { this.modalComponent.cleanup(); }
 
       // If user's profile has no name, ask them to enter one
@@ -212,28 +214,28 @@ var TaskShowController = BaseView.extend({
           id: 'update-name',
           modalTitle: "What's your name?",
         }).render();
-        this.modalAlert = new ModalAlert({
-          el: '#update-name .modal-template',
-          modalDiv: '#update-name',
-          content: modalNameTemplate,
-          validateBeforeSubmit: true,
-          cancel: i18n.t('volunteerModal.cancel'),
-          submit: i18n.t('volunteerModal.ok'),
-          callback: function (e) {
-            var name = $('#update-name-field').val();
-            $.ajax({
-              url: '/api/user/' + window.cache.currentUser.id,
-              method: 'POST',
-              data: {
-                username: window.cache.currentUser.username,
-                name: name,
-              },
-            }).done(function (user) {
-              window.cache.currentUser.name = user.name;
-              self.volunteer(originalEvent);
-            });
-          },
-        }).render();
+        // this.modalAlert = new ModalAlert({
+        //   el: '#update-name .modal-template',
+        //   modalDiv: '#update-name',
+        //   content: modalNameTemplate,
+        //   validateBeforeSubmit: true,
+        //   cancel: i18n.t('volunteerModal.cancel'),
+        //   submit: i18n.t('volunteerModal.ok'),
+        //   callback: function (e) {
+        //     var name = $('#update-name-field').val();
+        //     $.ajax({
+        //       url: '/api/user/' + window.cache.currentUser.id,
+        //       method: 'PUT',
+        //       data: {
+        //         username: window.cache.currentUser.username,
+        //         name: name,
+        //       },
+        //     }).done(function (user) {
+        //       window.cache.currentUser.name = user.name;
+        //       self.volunteer(originalEvent);
+        //     });
+        //   },
+        // }).render();
         return;
       }
       // If user's profile doesn't location, ask them to enter one
@@ -245,31 +247,31 @@ var TaskShowController = BaseView.extend({
           id: 'update-profile',
           modalTitle: 'Please complete your profile',
         }).render();
-        this.modalAlert = new ModalAlert({
-          el: '#update-profile .modal-template',
-          modalDiv: '#update-profile',
-          content: modalInfoTemplate,
-          validateBeforeSubmit: true,
-          cancel: i18n.t('volunteerModal.cancel'),
-          submit: i18n.t('volunteerModal.ok'),
-          callback: function (e) {
-            var agency = $('#ragency').select2('data');
-            var location = $('#rlocation').select2('data');
-            var data = {};
-            data.username = window.cache.currentUser.username;
-            data.tags = [agency, location].map(function (t) {
-              return { id: t.id };
-            });
-            $.ajax({
-              url: '/api/user/' + window.cache.currentUser.id,
-              method: 'POST',
-              data: data,
-            }).done(function (user) {
-              window.cache.currentUser.tags = user.tags;
-              self.volunteer(originalEvent);
-            });
-          },
-        }).render();
+        // this.modalAlert = new ModalAlert({
+        //   el: '#update-profile .modal-template',
+        //   modalDiv: '#update-profile',
+        //   content: modalInfoTemplate,
+        //   validateBeforeSubmit: true,
+        //   cancel: i18n.t('volunteerModal.cancel'),
+        //   submit: i18n.t('volunteerModal.ok'),
+        //   callback: function (e) {
+        //     var agency = $('#ragency').select2('data');
+        //     var location = $('#rlocation').select2('data');
+        //     var data = {};
+        //     data.username = window.cache.currentUser.username;
+        //     data.tags = [agency, location].map(function (t) {
+        //       return { id: t.id };
+        //     });
+        //     $.ajax({
+        //       url: '/api/user/' + window.cache.currentUser.id,
+        //       method: 'PUT',
+        //       data: data,
+        //     }).done(function (user) {
+        //       window.cache.currentUser.tags = user.tags;
+        //       self.volunteer(originalEvent);
+        //     });
+        //   },
+        // }).render();
         self.tagFactory.createTagDropDown({
           type:'location',
           selector:'#rlocation',
@@ -305,40 +307,47 @@ var TaskShowController = BaseView.extend({
         modalTitle: i18n.t(modalType +'.title'),
       }).render();
 
-      this.modalAlert = new ModalAlert({
-        el: '#check-volunteer .modal-template',
-        modalDiv: '#check-volunteer',
-        content: modalContent,
-        cancel: i18n.t(modalType +'.cancel'),
-        submit: i18n.t(modalType +'.ok'),
-        validateBeforeSubmit: false,
-        callback: function (e) {
-          // user clicked the submit button
-          $.ajax({
-            url: '/api/volunteer/',
-            type: 'POST',
-            data: {
-              taskId: self.model.attributes.id,
-            },
-          }).done( function (data) {
-            $('.volunteer-true').show();
-            $('.volunteer-false').hide();
-            var html = '<div class="project-people-div" data-userid="' + data.userId + '" data-voluserid="' + data.userId + '"><img src="/api/user/photo/' + data.userId + '" class="project-people"/>';
-            if (self.options.action === 'edit') {
-              html += '<a href="#" class="delete-volunteer fa fa-times"  id="delete-volunteer-' + data.id + '" data-uid="' + data.userId + '" data-vid="' +  data.id + '"></a>';
-            }
-            html += '</div>';
-            $('#task-volunteers').append(html);
-            popovers.popoverPeopleInit('.project-people-div');
-          });
-        },
-      }).render();
+      // this.modalAlert = new ModalAlert({
+      //   el: '#check-volunteer .modal-template',
+      //   modalDiv: '#check-volunteer',
+      //   content: modalContent,
+      //   cancel: i18n.t(modalType +'.cancel'),
+      //   submit: i18n.t(modalType +'.ok'),
+      //   validateBeforeSubmit: false,
+      //   callback: function (e) {
+      //     // user clicked the submit button
+      //     $.ajax({
+      //       url: '/api/volunteer/',
+      //       type: 'POST',
+      //       data: {
+      //         taskId: self.model.attributes.id,
+      //       },
+      //     }).done( function (data) {
+      //       $('.volunteer-true').show();
+      //       $('.volunteer-false').hide();
+      //       var html = '<div class="project-people-div" data-userid="' + data.userId + '" data-voluserid="' + data.userId + '"><img src="/api/user/photo/' + data.userId + '" class="project-people"/>';
+      //       if (self.options.action === 'edit') {
+      //         html += '<a href="#" class="delete-volunteer fa fa-times"  id="delete-volunteer-' + data.id + '" data-uid="' + data.userId + '" data-vid="' +  data.id + '"></a>';
+      //       }
+      //       html += '</div>';
+      //       $('#task-volunteers').append(html);
+      //       popovers.popoverPeopleInit('.project-people-div');
+      //     });
+      //   },
+      // }).render();
     }
   },
 
   volunteered: function (e) {
     if (e.preventDefault) e.preventDefault();
     // Not able to un-volunteer, so do nothing
+  },
+
+  toggleAssign: function (e) {
+    if (e.stopPropagation) e.stopPropagation();
+    if (e.preventDefault) e.preventDefault();
+    var t = $(e.currentTarget);
+    var userId = $(t.parent()).data('userid');
   },
 
   removeVolunteer: function (e) {
@@ -354,12 +363,8 @@ var TaskShowController = BaseView.extend({
     if (typeof cache !== 'undefined')
     {
       $.ajax({
-        url: '/api/volunteer/remove',
-        type: 'POST',
-        data: {
-          id: vId,
-          taskId: this.model.attributes.id,
-        },
+        url: '/api/volunteer/' + vId + '?' + $.param({ taskId: this.model.attributes.id }),
+        type: 'DELETE',
       }).done(function (data) {
         // done();
       });
@@ -381,7 +386,7 @@ var TaskShowController = BaseView.extend({
 
     var self = this;
 
-    if ( this.modalAlert ) { this.modalAlert.cleanup(); }
+    // if ( this.modalAlert ) { this.modalAlert.cleanup(); }
     if ( this.modalComponent ) { this.modalComponent.cleanup(); }
 
     var states = UIConfig.states;
@@ -417,20 +422,20 @@ var TaskShowController = BaseView.extend({
 
     } ).render();
 
-    this.modalAlert = new ModalAlert( {
+    // this.modalAlert = new ModalAlert( {
 
-      el: '#check-close .modal-template',
-      modalDiv: '#check-close',
-      content: modalContent,
-      cancel: 'Cancel',
-      submit: submitValue,
-      callback: function ( e ) {
-        // user clicked the submit button
-        self.model.trigger( 'task:update:state', $( 'input[name=opportunityState]:checked' ).val() );
-        self.taskItemView.render( self.taskItemView );
-      },
+    //   el: '#check-close .modal-template',
+    //   modalDiv: '#check-close',
+    //   content: modalContent,
+    //   cancel: 'Cancel',
+    //   submit: submitValue,
+    //   callback: function ( e ) {
+    //     // user clicked the submit button
+    //     self.model.trigger( 'task:update:state', $( 'input[name=opportunityState]:checked' ).val() );
+    //     self.taskItemView.render( self.taskItemView );
+    //   },
 
-    } ).render();
+    // } ).render();
 
   },
 
@@ -443,40 +448,41 @@ var TaskShowController = BaseView.extend({
     if (e.preventDefault) e.preventDefault();
     var self = this;
 
-    if (this.modalAlert) { this.modalAlert.cleanup(); }
+    // if (this.modalAlert) { this.modalAlert.cleanup(); }
     if (this.modalComponent) { this.modalComponent.cleanup(); }
 
-    var modalContent = _.template(CopyTaskTemplate)();
+    var modalContent = _.template(CopyTaskTemplate)({ title: 'COPY ' + self.model.attributes.title});
 
     this.modalComponent = new ModalComponent({
-      el: '#modal-copy',
+      el: '#site-modal',
       id: 'check-copy',
-      modalTitle: 'Copy This Opportunity',
-    }).render();
-
-    this.modalAlert = new ModalAlert({
-      el: '#check-copy .modal-template',
-      modalDiv: '#check-copy',
-      content: modalContent,
+      modalTitle: 'Copy this opportunity',
+      modalBody: modalContent,
       validateBeforeSubmit: true,
-      cancel: 'Cancel',
-      submit: 'Copy Opportunity',
-      callback: function (e) {
-        $.ajax({
-          url: '/api/task/copy',
-          method: 'POST',
-          data: {
-            taskId: self.model.attributes.id,
-            title: $('#task-copy-title').val(),
-          },
-        }).done(function (data) {
-          self.options.router.navigate('/tasks/' + data.taskId + '/edit',
-            { trigger: true });
-        });
+      secondary: {
+        text: 'Cancel',
+        action: function () {
+          this.modalComponent.cleanup();
+        }.bind(this),
+      },
+      primary: {
+        text: 'Copy opportunity',
+        action: function () {
+          $.ajax({
+            url: '/api/task/copy',
+            method: 'POST',
+            data: {
+              taskId: self.model.attributes.id,
+              title: $('#task-copy-title').val(),
+            },
+          }).done(function (data) {
+            self.modalComponent.cleanup();
+            self.options.router.navigate('/tasks/' + data.taskId + '/edit',
+              { trigger: true });
+          });
+        },
       },
     }).render();
-
-    $('#task-copy-title').val('COPY ' + self.model.attributes.title);
   },
 
   cleanup: function () {

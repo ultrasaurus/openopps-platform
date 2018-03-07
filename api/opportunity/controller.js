@@ -1,4 +1,4 @@
-const log = require('blue-ox')('app:opportunity');
+const log = require('log')('app:opportunity');
 const Router = require('koa-router');
 const _ = require('lodash');
 const auth = require('../auth/auth');
@@ -31,7 +31,7 @@ router.get('/api/task/:id', async (ctx, next) => {
   if (task.isOwner ||
     (_.has(ctx.state.user, 'isAdmin') && ctx.state.user.isAdmin) ||
     ((_.has(ctx.state.user, 'isAgencyAdmin') && ctx.state.user.isAgencyAdmin) &&
-      (ctx.state.user.tags && _.find(ctx.state.user.tags, { 'type': 'agency' }).name == task.owner.agency.name))) {
+      (ctx.state.user.tags && (_.find(ctx.state.user.tags, { 'type': 'agency' }) || {}).name == task.owner.agency.name))) {
     task.canEditTask = true;
   }
   ctx.body = task;
@@ -46,7 +46,8 @@ router.get('/api/comment/findAllBytaskId/:id', async (ctx, next) => {
 });
 
 router.post('/api/task', auth, async (ctx, next) => {
-  ctx.request.body.userId = ctx.session.passport.user;
+  ctx.request.body.userId = ctx.state.user.id;
+  ctx.request.body.updatedBy = ctx.state.user.id;
   var opportunity = await service.createOpportunity(ctx.request.body, function (errors, task) {
     if (errors) {
       ctx.status = 400;
@@ -57,27 +58,95 @@ router.post('/api/task', auth, async (ctx, next) => {
   });
 });
 
-router.post('/api/task/copy', auth, async (ctx, next) => {
-  if (await service.canUpdateOpportunity(ctx.state.user, ctx.request.body.taskId)) {
-    await service.copyOpportunity(ctx.request.body, ctx.state.user.isAdmin ? ctx.state.user : null, function (error, task) {
-      if (error) {
-        ctx.flash('error', 'Error Copying Opportunity');
+router.put('/api/task/state/:id', auth, async (ctx, next) => {
+  if (await service.canUpdateOpportunity(ctx.state.user, ctx.request.body.id)) {
+    ctx.request.body.updatedBy = ctx.state.user.id;
+    await service.updateOpportunityState(ctx.request.body, function (task, stateChange, errors) {
+      if (errors) {
         ctx.status = 400;
-        log.info(error);
-        return ctx.body = null;
+        return ctx.body = errors;
       }
-      ctx.body = task;
+      try {
+        checkTaskState(stateChange, ctx.state.user, task);
+      } finally {
+        ctx.body = { success: true };
+      }
     });
   } else {
     ctx.status = 403;
+    ctx.body = null;
   }
 });
 
-router.post('/api/task/remove', auth, async (ctx) => {
+router.put('/api/task/:id', auth, async (ctx, next) => {
+  if (await service.canUpdateOpportunity(ctx.state.user, ctx.request.body.id)) {
+    ctx.request.body.updatedBy = ctx.state.user.id;
+    await service.updateOpportunity(ctx.request.body, function (task, stateChange, errors) {
+      if (errors) {
+        ctx.status = 400;
+        return ctx.body = errors;
+      }
+      try {
+        awardBadge(task);
+        checkTaskState(stateChange, ctx.state.user, task);
+      } finally {
+        ctx.status = 200;
+        ctx.body = { success: true };
+      }
+    });
+  } else {
+    ctx.status = 401;
+    ctx.body = null;
+  }
+});
+
+router.put('/api/publishTask/:id', auth, async (ctx, next) => {
   if (await service.canAdministerTask(ctx.state.user, ctx.request.body.id)) {
-    await service.findOne(ctx.request.body.id).then(async task => {
+    ctx.request.body.updatedBy = ctx.state.user.id;
+    await service.publishTask(ctx.request.body, function (done) {
+      ctx.body = { success: true };
+    }).catch(err => {
+      log.info(err);
+    });
+  }
+});
+
+router.post('/api/task/copy', auth, async (ctx, next) => {
+  ctx.request.body.updatedBy = ctx.state.user.id;
+  await service.copyOpportunity(ctx.request.body, ctx.state.user, function (error, task) {
+    if (error) {
+      ctx.flash('error', 'Error Copying Opportunity');
+      ctx.status = 400;
+      log.info(error);
+      return ctx.body = null;
+    }
+    ctx.body = task;
+  });
+});
+
+function awardBadge (task) {
+  var badge = Badge.awardForTaskPublish(task, task.userId);
+  if(badge) {
+    badgeService.save(badge).catch(err => {
+      log.info('Error saving badge', badge, err);
+    });
+  }
+}
+
+function checkTaskState (stateChange, user, task) {
+  if (stateChange) {
+    service.sendTaskStateUpdateNotification(user, task);
+    if(task.state === 'completed') {
+      service.volunteersCompleted(task);
+    }
+  }
+}
+
+router.delete('/api/task/:id', auth, async (ctx) => {
+  if (await service.canAdministerTask(ctx.state.user, ctx.params.id)) {
+    await service.findOne(ctx.params.id).then(async task => {
       if (['draft', 'submitted'].indexOf(task.state) != -1) {
-        ctx.body = await service.deleteTask(ctx.request.body.id);
+        ctx.body = await service.deleteTask(ctx.params.id);
       } else {
         log.info('Wrong state');
         ctx.status = 400;
@@ -90,54 +159,5 @@ router.post('/api/task/remove', auth, async (ctx) => {
     ctx.status = 403;
   }
 });
-
-router.post('/api/task/:id', auth, async (ctx, next) => {
-  if (await service.canUpdateOpportunity(ctx.state.user, ctx.request.body.id)) {
-    ctx.status = 200;
-    await service.updateOpportunity(ctx.request.body, function (task, stateChange, errors) {
-      if (errors) {
-        ctx.status = 400;
-        return ctx.body = errors;
-      }
-      try {
-        awardBadge(task);
-        checkTaskState(stateChange, ctx.state.user, ctx.request.body, task);
-      } finally {
-        ctx.body = { success: true };
-      }
-    });
-  } else {
-    ctx.status = 401;
-    ctx.body = null;
-  }
-});
-
-router.post('/api/publishTask/:id', auth, async (ctx, next) => {
-  if (await service.canAdministerTask(ctx.state.user, ctx.request.body.id)) {
-    await service.publishTask(ctx.request.body, function (done) {
-      ctx.body = { success: true };
-    }).catch(err => {
-      log.info(err);
-    });
-  }
-});
-
-function awardBadge (task) {
-  var badge = Badge.awardForTaskPublish(task, task.userId);
-  if(badge) {
-    badgeService.save(badge).catch(err => {
-      log.info('Error saving badge', badge, err);
-    });
-  }
-}
-
-function checkTaskState (stateChange, user, body, task) {
-  if (stateChange) {
-    service.sendTaskStateUpdateNotification(user, body);
-    if(task.state === 'completed') {
-      service.volunteersCompleted(task);
-    }
-  }
-}
 
 module.exports = router.routes();

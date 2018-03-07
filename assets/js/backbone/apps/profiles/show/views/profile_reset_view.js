@@ -13,9 +13,11 @@ var ProfileResetTemplate = require('../templates/profile_reset_template.html');
 var ProfileResetView = Backbone.View.extend({
 
   events: {
-    'keyup #rpassword'               : 'checkPassword',
-    'blur #rpassword'                : 'checkPassword',
-    'submit #form-password-reset'    : 'submitReset',
+    'keyup #rpassword'            : 'checkPassword',
+    'blur #rpassword'             : 'checkPassword',
+    'keyup #rpassword-confirm'    : 'checkPasswordConfirm',
+    'blur #rpassword-confirm'     : 'checkPasswordConfirm',
+    'submit #form-password-reset' : 'submitReset',
   },
 
   initialize: function (options) {
@@ -38,7 +40,16 @@ var ProfileResetView = Backbone.View.extend({
 
   checkPassword: function (e) {
     var rules = validatePassword(this.token.email, this.$('#rpassword').val());
+    var valuesArray = _.values(rules);
+    var validRules = _.every(valuesArray);
     var success = true;
+    if (validRules === true) {
+      $('#rpassword').closest('.required-input').removeClass('usa-input-error');
+      $('#rpassword').closest('.required-input').find('.field-validation-error').hide();
+    } else {
+      $('#rpassword').closest('.required-input').addClass('usa-input-error');
+      $('#rpassword').closest('.required-input').find('.field-validation-error.error-password').show();
+    }
     _.each(rules, function (value, key) {
       if (value === true) {
         $('.password-rules .success.rule-' + key).show();
@@ -49,6 +60,21 @@ var ProfileResetView = Backbone.View.extend({
       }
       success = success && value;
     });
+    return success;
+  },
+
+  checkPasswordConfirm: function (e) {
+    var success = true;
+    var password = this.$('#rpassword').val();
+    var confirm = this.$('#rpassword-confirm').val();
+    if (password === confirm) {
+      $('#rpassword-confirm').closest('.required-input').removeClass('usa-input-error');
+      $('#rpassword-confirm').closest('.required-input').find('.field-validation-error').hide();
+    } else {
+      $('#rpassword-confirm').closest('.required-input').addClass('usa-input-error');
+      $('#rpassword-confirm').closest('.required-input').find('.field-validation-error').show();
+      success = false;
+    }
     return success;
   },
 
@@ -82,14 +108,22 @@ var ProfileResetView = Backbone.View.extend({
     var passwordSuccess = this.checkPassword();
     var parent = $(this.$('#rpassword').parents('.form-group')[0]);
     if (passwordSuccess !== true) {
-      parent.addClass('has-error');
+      parent.addClass('usa-input-error');
       $(parent.find('.error-password')[0]).show();
       return;
     } else {
       $(parent.find('.error-password')[0]).hide();
     }
+    var passwordConfirmSuccess = this.checkPasswordConfirm();
+    var passwordConfirmParent = $(this.$('#rpassword-confirm').parents('.required-input')[0]);
+    if (passwordConfirmSuccess !== true) {
+      passwordConfirmParent.addClass('usa-input-error');
+      $(passwordConfirmParent.find('.error-password')[0]).show();
+      return;
+    } else {
+      $(passwordConfirmParent.find('.error-password')[0]).hide();
+    }
 
-    // Create a data object with the required fields
     var data = {
       token: this.options.action,
       password: this.$('#rpassword').val(),
@@ -103,12 +137,10 @@ var ProfileResetView = Backbone.View.extend({
       data: data,
       success: function (data) {
         self.$('#profile-reset-submit').hide();
-        // true means the token is a valid reset token
         if (data === false) {
           self.$('#profile-reset-submit-error').show();
         }
         else {
-          // navigate to the projects main page
           Backbone.history.navigate('/', { trigger: true });
           // show log in screen with notice to log in.
           window.cache.userEvents.trigger('user:request:login', {
@@ -121,7 +153,6 @@ var ProfileResetView = Backbone.View.extend({
         self.$('#profile-reset-submit-error').show();
       },
     });
-
   },
 
   cleanup: function () {

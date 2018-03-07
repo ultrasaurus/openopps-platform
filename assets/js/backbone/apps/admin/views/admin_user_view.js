@@ -6,8 +6,7 @@ var i18n = require('i18next');
 var i18nextJquery = require('jquery-i18next');
 
 // internal dependencies
-var ModalComponent = require('../../../components/modal');
-var AdminUserPasswordView = require('./admin_user_password_view');
+var Modal = require('../../../components/modal');
 var LoginConfig = require('../../../config/login.json');
 
 // templates
@@ -17,18 +16,15 @@ var Paginate = require('../templates/admin_paginate.html');
 
 var AdminUserView = Backbone.View.extend({
 
-  events                               : {
-    'click a.page'                     : 'clickPage',
-    'click .link-backbone'             : linkBackbone,
-    'click .admin-user-mkadmin'        : 'adminCreate',
-    'click .admin-user-rmadmin'        : 'adminRemove',
-    'click .admin-user-mk-agencyadmin' : 'agencyAdminCreate',
-    'click .admin-user-rm-agencyadmin' : 'agencyAdminRemove',
-    'click .admin-user-enable'         : 'adminEnable',
-    'click .admin-user-disable'        : 'adminDisable',
-    'click .admin-user-unlock'         : 'adminUnlock',
-    'click .admin-user-resetpw'        : 'resetPassword',
-    'keyup #user-filter'               : 'filter',
+  events: {
+    'click a.page'              : 'clickPage',
+    'click .link-backbone'      : linkBackbone,
+    'click .user-admin'         : 'toggleCheckbox',
+    'click .user-agency-admin'  : 'toggleCheckbox',
+    'click .user-enable'        : 'toggleCheckbox',
+    'click .admin-user-unlock'  : 'adminUnlock',
+    'click .user-reset'         : 'resetPassword',
+    'keyup #user-filter'        : 'filter',
   },
 
   initialize: function (options) {
@@ -73,15 +69,35 @@ var AdminUserView = Backbone.View.extend({
     // render the table
     var template = _.template(AdminUserTable)(data);
     // render the pagination
-    var paginate = _.template(Paginate)(data);
-    self.$('#user-page').html(paginate);
+    self.renderPagination(data);
     self.$('#filter-count').html(data.users.length);
-    self.$('.table-responsive').html(template);
+    self.$('#user-table').html(template);
     self.$('.btn').tooltip();
     // hide spinner and show results
     self.$('.spinner').hide();
-    self.$('.table-responsive').show();
+    self.$('#user-table').show();
+    window.scrollTo(0, 0);
     self.$el.localize();
+  },
+
+  renderPagination: function (data) {
+    var self = this;
+    data.pages = [];
+    data.numberOfPages = Math.ceil(data.count/data.trueLimit);
+    if(data.numberOfPages < 8) {
+      for (var j = 1; j <= data.numberOfPages; j++)
+        data.pages.push(j);
+    } else if (data.page < 5) {
+      data.pages = [1, 2, 3, 4, 5, 0, data.numberOfPages];
+    } else if (data.page >= data.numberOfPages - 3) {
+      data.pages = [1, 0];
+      for (var i = data.numberOfPages - 4; i <= data.numberOfPages; i++)
+        data.pages.push(i);
+    } else {
+      data.pages = [1, 0, data.page - 1, data.page, data.page + 1, 0, data.numberOfPages];
+    }
+    var paginate = _.template(Paginate)(data);
+    self.$('#user-page').html(paginate);
   },
 
   clickPage: function (e) {
@@ -110,7 +126,7 @@ var AdminUserView = Backbone.View.extend({
     }
     this.q = val;
     // hide the table and show the spinner
-    this.$('.table-responsive').hide();
+    this.$('#user-table').hide();
     this.$('.spinner').show();
     // fetch this query, starting from the beginning page
     this.fetchData(this, {
@@ -135,69 +151,25 @@ var AdminUserView = Backbone.View.extend({
     });
   },
 
-  adminCreate: function (e) {
-    if (e.preventDefault) e.preventDefault();
-    var t = $(e.currentTarget);
-    var id = $(t.parents('tr')[0]).data('id');
-    this.updateUser(t, {
-      id: id,
-      isAdmin: true,
-      url: '/api/admin/admin/' + id + '?action=true',
-    });
+  getUrlFor: function (id, elem) {
+    switch (elem.data('action')) {
+      case 'user':
+        return '/api/user/' + (elem.prop('checked') ? 'enable' : 'disable') + '/' + id;
+      case 'admin':
+        return '/api/admin/admin/' + id + '?action=' + elem.prop('checked');
+      case 'agencyAdmin':
+        return '/api/admin/agencyAdmin/' + id + '?action=' + elem.prop('checked');
+    }
   },
 
-  adminRemove: function (e) {
+  toggleCheckbox: function (e) {
     if (e.preventDefault) e.preventDefault();
     var t = $(e.currentTarget);
     var id = $(t.parents('tr')[0]).data('id');
     this.updateUser(t, {
       id: id,
-      isAdmin: false,
-      url: '/api/admin/admin/' + id + '?action=false',
-    });
-  },
-
-  agencyAdminCreate: function (e) {
-    if (e.preventDefault) e.preventDefault();
-    var t = $(e.currentTarget);
-    var id = $(t.parents('tr')[0]).data('id');
-    this.updateUser(t, {
-      id: id,
-      isAgencyAdmin: true,
-      url: '/api/admin/agencyAdmin/' + id + '?action=true',
-    });
-  },
-
-  agencyAdminRemove: function (e) {
-    if (e.preventDefault) e.preventDefault();
-    var t = $(e.currentTarget);
-    var id = $(t.parents('tr')[0]).data('id');
-    this.updateUser(t, {
-      id: id,
-      isAgencyAdmin: false,
-      url: '/api/admin/agencyAdmin/' + id + '?action=false',
-    });
-  },
-
-  adminEnable: function (e) {
-    if (e.preventDefault) e.preventDefault();
-    var t = $(e.currentTarget);
-    var id = $(t.parents('tr')[0]).data('id');
-    this.updateUser(t, {
-      id: id,
-      disabled: false,
-      url: '/api/user/enable/' + id,
-    });
-  },
-
-  adminDisable: function (e) {
-    if (e.preventDefault) e.preventDefault();
-    var t = $(e.currentTarget);
-    var id = $(t.parents('tr')[0]).data('id');
-    this.updateUser(t, {
-      id: id,
-      disabled: true,
-      url: '/api/user/disable/' + id,
+      checked: t.prop('checked'),
+      url: this.getUrlFor(id, t),
     });
   },
 
@@ -210,40 +182,23 @@ var AdminUserView = Backbone.View.extend({
       passwordAttempts: 0,
       url: '/api/admin/unlock/' + id,
     });
-
   },
 
   updateUser: function (t, data) {
     var self = this;
-    var spinner = $($(t.parent()[0]).children('.btn-spin')[0]);
+    var spinner = $($(t.parent()[0]).children('.icon-spin')[0]);
+    // Show spinner and hide checkbox
     spinner.show();
-    t.hide();
+    t.siblings('label').hide();
     if (data.url) {
       $.ajax({
         url: data.url,
         dataType: 'json',
         success: function (d) {
-          // hide the spinner
+          // Hide spinner and show checkbox
           spinner.hide();
-          // show the opposite button
-          if (data.disabled === true) {
-            $(t.siblings('.admin-user-enable')[0]).show();
-          }
-          if (data.disabled === false) {
-            $(t.siblings('.admin-user-disable')[0]).show();
-          }
-          if (data.isAdmin === true) {
-            $(t.siblings('.admin-user-rmadmin')[0]).show();
-          }
-          if (data.isAdmin === false) {
-            $(t.siblings('.admin-user-mkadmin')[0]).show();
-          }
-          if (data.isAgencyAdmin === true) {
-            $(t.siblings('.admin-user-rm-agencyadmin')[0]).show();
-          }
-          if (data.isAgencyAdmin === false) {
-            $(t.siblings('.admin-user-mk-agencyadmin')[0]).show();
-          }
+          t.siblings('label').show();
+          t.prop('checked', data.checked);
         },
       });
     }
@@ -258,23 +213,55 @@ var AdminUserView = Backbone.View.extend({
     var user = {
       id: tr.data('id'),
       name: $(tr.find('td.admin-table-name')[0]).text().trim(),
+      email: $(tr.find('td.admin-table-username')[0]).text().trim(),
     };
 
-    // set up the modal
-    this.modalComponent = new ModalComponent({
-      el: '#reset-password-container',
-      id: 'reset-password-modal',
+    $('body').addClass('modal-is-open');
+
+    this.modal = new Modal({
+      el: '#site-modal',
+      id: 'reset-password',
       modalTitle: 'Reset Password',
+      alert: {
+        type: 'error',
+        text: 'Error sending email.',
+      },
+      modalBody: 'Click <strong>Send email</strong> below to send an email to <strong>' + user.name + '</strong> to reset their password.',
+      primary: {
+        text: 'Send email',
+        action: function () {
+          this.submitReset.bind(this)(user.email);
+        }.bind(this)
+      },
+      secondary: {
+        text: 'Close',
+        action: function () {
+          this.modal.cleanup();
+        }.bind(this)
+      },
     }).render();
+  },
 
-    // initialize the view inside the modal
-    this.passwordView = new AdminUserPasswordView({
-      el: '.modal-template',
-      user: user,
-    }).render();
-
-    // render the modal
-    this.$('#reset-password-modal').modal('show');
+  submitReset: function (email) {
+    var data = {
+      username: email,
+    };
+    $.ajax({
+      url: '/api/auth/forgot',
+      type: 'POST',
+      data: data,
+    }).done(function (success) {
+      $('.usajobs-modal__canvas-blackout').remove();
+      $('.modal-is-open').removeClass();
+      this.modal.cleanup();
+    }.bind(this)).fail(function (error) {
+      var d = JSON.parse(error.responseText);
+      $('#reset-password').addClass('usajobs-modal--error');
+      $('.usajobs-modal__body').html('There was an error sending the Reset password email.');
+      $('#usajobs-modal-heading').hide();
+      $('#alert-modal__heading').show();
+      $('#primary-btn').hide();
+    }.bind(this));
   },
 
   cleanup: function () {

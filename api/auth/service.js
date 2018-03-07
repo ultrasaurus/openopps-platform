@@ -3,7 +3,7 @@ const crypto = require('crypto');
 const bcrypt = require('bcryptjs');
 const validator = require('validator');
 const uuid = require('uuid');
-const log = require('blue-ox')('app:auth:service');
+const log = require('log')('app:auth:service');
 const db = require('../../db');
 const dao = require('./dao')(db);
 const notification = require('../notification/service');
@@ -29,6 +29,7 @@ async function register (attributes, done) {
   if (!attributes.password || attributes.password === '') {
     return done(new Error('password may not be blank'));
   }
+  attributes.username = attributes.username.toLowerCase().trim();
   await dao.User.insert(_.extend(_.clone(baseUser), attributes)).then(async (user) => {
     log.info('created user', _.omit(user, 'password'));
 

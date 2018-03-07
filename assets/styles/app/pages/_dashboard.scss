@@ -1,71 +1,74 @@
-.dashboard {
-  font-size: 18px;
+@import '../../base-shared';
+
+.usajobs-opop-banner {
+  background-color: #112E51;
+  color: #ffffff;
+  min-height: 157px;
+  padding-top: 3.3rem;
 }
 
-.dashboard h2 {
-  color: #297bb5;
+.usajobs-opop-banner__body {
+  text-align: center;
+  color: #FFFFFF;
+  font-family: Merriweather;
+  font-size: 2.4rem;
 }
 
-.badges-feed h2 {
-  color: #df3403;
-}
-
-.box-banner {
-  background-color: #0e5487;
-}
-
-.box-banner h1 {
-  color: #fff;
-  font-size: 24px;
-  line-height: 1.7em;
-  margin-bottom: 0;
-  text-align: right;
-}
-
-.opportunity-count--number {
-  font-size: 48px;
-}
-
-.opportunity-count--number.loaded {
-  vertical-align: middle;
-}
-
-@media (max-width: 1000px) {
-  .box-banner h1,
-  .box-banner .col-md-4 {
-    text-align: center;
+@media screen and (min-width: 48em) {
+  .usa-button.usa-button-primary-alt {
+    width: 29.1rem;
+    margin-top: $size-SM;
+    padding-top: 1.2rem;
+    padding-bottom: 1.2rem;
   }
 }
 
-.box-banner .btn {
-  padding: 1em 2em;
+.usajobs-opop-dashboard {
+background-color: #ffffff;
 }
 
-.activity-feed--item {
-  padding-bottom: .5em;
-  padding-top: .5em;
+.usajobs-opop-dashboard__body {
+  max-width: 102rem;
+  margin-left: auto;
+  margin-right: auto;
 }
 
-.activity-feed--item:after {
-  display: table;
-  content: '';
-  clear: both;
+.usajobs-opop-dashboard a {
+  color: #0071BC;
+  text-decoration: none;
 }
 
-.activity-feed--item ul {
-  margin-left: 2.2em;
+.usajobs-opop-badges__body {
+  max-width: 60rem;
+  text-align: left;
+  margin-top: $size-M;
+}
+
+.activity-feed--badges {
+  min-height: 6rem;
+  font-size: 1.6rem;
+  margin-bottom: $size-SM;
+  display: flex;
+
+  a {
+    display: inline;
+  }
 }
 
 .activity-feed--badge {
+  float: left;
   background-position: center;
   background-size: contain;
-  margin-top: -5px;
-  min-height: 50px;
-  width: 50px;
+  min-height: 60px;
+  height: 60px;
+  width: 60px;
+  margin-top: -0.5rem;
+  margin-right: $size-default;
 }
 
 .activity-feed--avatars {
-  margin-top: .3em;
+  margin-top: $size-default;
+  margin-bottom: $size-default;
 }
 
 .activity-feed--avatars::before,
@@ -78,51 +81,71 @@
   clear: both;
 }
 
+.activity-feed--avatars a {
+  background-position: center;
+  background-size: contain;
+  background-image: url(/images/default-user-icon-profile.png);
+  border-radius: 100%;
+  float: left;
+  margin-right: $size-default;
+  margin-bottom: $size-default;
+  min-height: 44px;
+  width: 44px;
+}
+
 .activity-feed--avatar {
   background-position: center;
   background-size: contain;
   border-radius: 100%;
   float: left;
-  margin-right: .3em;
-  min-height: 40px;
-  width: 40px;
+  min-height: 44px;
+  width: 44px;
 }
 
-@media (max-width: 768px) {
-  .activity-feed--text {
-    width: 80%;
+.users-feed {
+  margin-top: $size-M;
+
+  .list-unstyled {
+    list-style: none;
+    padding-left: 0;
+  }
+
+  li {
+    margin-bottom: 0.2rem;
   }
 }
 
-.network-stats--heading {
-  margin-top: 20px;
-}
-
 .tasks-completed {
-  text-align: center;
+  color: #29863D;
 }
 
-.tasks-completed input {
-  border: none;
-  color: #2e8540;
-  font-size: 40px;
-  text-align: center;
+.network-stats--heading {
+  margin-top: 3.3rem;
+  margin-bottom: 3.3rem;
+}
+
+.dashboard__task-list__item .usajobs-open-opps-opportunity{
+  box-shadow: none;
+  padding: 1.5rem;
+  border-top: 2px solid #aeb0b5;
+  border-bottom: 2px solid #aeb0b5;
+  margin: 1.5rem 0;
+}
+
+.dashboard__task-list__item .usajobs-open-opps-opportunity .usajobs-open-opps-opportunity__desc {
+  position: relative;
+  max-height: #{$base-line-height * 4}em; // use this to control the number of lines
+  overflow: hidden;
+}
+
+.dashboard__task-list__item .usajobs-open-opps-opportunity .usajobs-open-opps-opportunity__desc::before {
+  content: "";
   width: 100%;
-}
-
-.tasks-completed label {
-  font-size: 14px;
-  font-weight: 300;
-}
-
-.see-more-tasks {
-  text-align: center !important;
-  font-size: 14px !important;
-  font-weight: 300 !important;
+  height: #{$base-line-height * 4}em;
+  position: absolute;
+  left: 0px;
+  bottom: 0px;
   display: block;
-}
-
-.dashboard__task-list .col {
-  float: none;
-  width: 100% !important;
+  background: linear-gradient(rgba(255,255,255,.001),#fff);
+  transition: height .5s;
 }

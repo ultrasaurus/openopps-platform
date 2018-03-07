@@ -15,7 +15,7 @@ var AdminMainTemplate = require('../templates/admin_main_template.html');
 var AdminMainView = Backbone.View.extend({
 
   events: {
-    'click .link-admin' : 'link',
+    'click .usajobs-nav-secondary__item' : 'link',
   },
 
   initialize: function (options) {
@@ -26,7 +26,7 @@ var AdminMainView = Backbone.View.extend({
     var data = {};
     var template = _.template(AdminMainTemplate)(data);
     this.$el.html(template);
-    this.routeTarget(this.options.action || '');
+    this.routeTarget(this.options.action || '', undefined, true);
     return this;
   },
 
@@ -44,7 +44,7 @@ var AdminMainView = Backbone.View.extend({
               && window.cache.currentUser.agency.slug);
   },
 
-  routeTarget: function (target, agencyId) {
+  routeTarget: function (target, agencyId, replace) {
     agencyId = agencyId || this.options.agencyId;
     if (!target) {
       target = 'dashboard';
@@ -57,9 +57,11 @@ var AdminMainView = Backbone.View.extend({
     }
     var t = $((this.$('[data-target=' + target + ']'))[0]);
     // remove active classes
-    $($(t.parents('ul')[0]).find('li')).removeClass('active');
+    $('.usajobs-nav-secondary__item.is-active').removeClass('is-active');
+    //$($(t.parents('ul')[0]).find('li')).removeClass('active');
     // make the current link active
-    $(t.parent('li')[0]).addClass('active');
+    t.addClass('is-active');
+    //$(t.parent('li')[0]).addClass('active');
 
     if (target == 'users') {
       if (!this.adminUserView) {
@@ -84,7 +86,7 @@ var AdminMainView = Backbone.View.extend({
         this.initializeAdminAgenciesView();
       }
       this.hideOthers();
-      this.adminAgenciesView.render();
+      this.adminAgenciesView.render(replace);
     } else if (target == 'participants') {
       if (!this.adminParticipantsView) {
         this.initializeAdminParticipantsView();
@@ -96,7 +98,7 @@ var AdminMainView = Backbone.View.extend({
         this.initializeAdminDashboardView();
       }
       this.hideOthers();
-      this.adminDashboardView.render();
+      this.adminDashboardView.render(replace);
     }
   },
 
@@ -150,7 +152,7 @@ var AdminMainView = Backbone.View.extend({
     this.adminAgenciesView = new AdminAgenciesView({
       el: '#admin-agencies',
       agencyId: this.options.agencyId,
-      adminMainView: this,
+      adminMainView: this
     });
   },
 

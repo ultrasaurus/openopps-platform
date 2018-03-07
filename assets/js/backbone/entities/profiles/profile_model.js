@@ -51,8 +51,6 @@ var ProfileModel = Backbone.Model.extend({
         photoId: file.id,
       };
       _this.save(data, {
-        type: 'POST',
-      }, {
         success: function (data) {
           _this.trigger('profile:updatedPhoto', data);
         },
@@ -71,7 +69,6 @@ var ProfileModel = Backbone.Model.extend({
         tags: form.tags,
       };
       _this.save(data, {
-        type: 'POST',
         success: function (data) {
           _this.trigger('profile:save:success', data);
         },

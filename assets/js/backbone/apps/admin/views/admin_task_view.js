@@ -1,14 +1,16 @@
 var _ = require('underscore');
 var Backbone = require('backbone');
 var $ = require('jquery');
-var TaskModel = require( '../../../entities/tasks/task_model' );
+var Modal = require('../../../components/modal');
 
 // templates
 var AdminTaskTemplate = require('../templates/admin_task_template.html');
+var AdminTaskTable = require('../templates/admin_task_table.html');
 var AdminTaskView = Backbone.View.extend({
   events: {
-    'click .delete-task'  : 'deleteTask',
-    'click .js-task-open' : 'openTask',
+    'click .delete-task'            : 'deleteTask',
+    'click .task-open'              : 'openTask',
+    'click input[type="checkbox"]'  : 'filterChanged',
   },
 
   initialize: function (options) {
@@ -29,14 +31,27 @@ var AdminTaskView = Backbone.View.extend({
       data: this.data,
       dataType: 'json',
       success: function (data) {
+        view.tasks = data;
         var template = _.template(AdminTaskTemplate)(data);
         view.$el.html(template);
         view.$el.show();
-        $('.tip').tooltip();
-        $('.js-tip').tooltip();
+        view.renderTasks(view.tasks);
       },
     });
     return this;
+  },
+
+  renderTasks: function (tasks) {
+    var data = { tasks: [] };
+    $('.filter-ckbx:checked').each(function (index, item) {
+      data.tasks = data.tasks.concat(tasks[item.id]);
+    });
+    var template = _.template(AdminTaskTable)(data);
+    self.$('#task-table').html(template);
+  },
+
+  filterChanged: function () {
+    this.renderTasks(this.tasks);
   },
 
   /*
@@ -45,24 +60,55 @@ var AdminTaskView = Backbone.View.extend({
    */
   openTask: function (event) {
     event.preventDefault();
+    if (this.modalComponent) this.modalComponent.cleanup();
+
     var view = this;
     var id = $(event.currentTarget).data('task-id');
     var title = $( event.currentTarget ).data('task-title');
-    var task = new TaskModel({ id: id });
-    task.fetch( {
-      success: function ( model, response, options ) {
-        if (window.confirm('Are you sure you want to publish "' + model.attributes.title + '"?')) {
-          $.ajax({
-            url: '/api/publishTask/' + id,
-            data: {'id': id, 'state': 'open'},
-            type: 'POST',
-          }).done(function (model, response, options) {
-            view.render();
-          });
-        }
+
+    $('body').addClass('modal-is-open');
+
+    this.modal = new Modal({
+      el: '#site-modal',
+      id: 'confirm-publish',
+      modalTitle: 'Confirm publish',
+      alert: {
+        type: 'error',
+        text: 'Error publishing task.',
       },
-      error: function (model, response, options) {},
-    });
+      modalBody: 'Are you sure you want to publish <strong>' + title + '</strong>?',
+      primary: {
+        text: 'Publish',
+        action: function () {
+          this.submitPublish.bind(this)(id);
+        }.bind(this)
+      },
+      secondary: {
+        text: 'Cancel',
+        action: function () {
+          this.modal.cleanup();
+        }.bind(this)
+      },
+    }).render();
+  },
+
+  submitPublish: function (id) {
+    $.ajax({
+      url: '/api/publishTask/' + id,
+      data: {'id': id, 'state': 'open'},
+      type: 'PUT',
+    }).done(function ( model, response, options ) {
+      $('.usajobs-modal__canvas-blackout').remove();
+      $('.modal-is-open').removeClass();
+      this.render();
+      this.modal.cleanup();
+    }.bind(this)).fail(function (error) {
+      $('#confirm-publish').addClass('usajobs-modal--error');
+      $('.usajobs-modal__body').html('There was an error attempting to publish this opportunity.');
+      $('#usajobs-modal-heading').hide();
+      $('#alert-modal__heading').show();
+      $('#primary-btn').hide();
+    }.bind(this));
   },
 
   deleteTask: function (e) {
@@ -72,11 +118,8 @@ var AdminTaskView = Backbone.View.extend({
     e.preventDefault();
     if (window.confirm('Are you sure you want to delete "' + title + '"?')) {
       $.ajax({
-        url: '/api/task/remove',
-        type: 'POST',
-        data: {
-          id: id,
-        },
+        url: '/api/task/' + id,
+        type: 'DELETE',
       }).done(function () {
         view.render();
       });
