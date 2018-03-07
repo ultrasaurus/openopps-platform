@@ -37,6 +37,10 @@
 
   &-item__header {
     min-height: 17rem;
+
+    a:visited {
+      color: $color-primary;
+    }
   }
 
   &-item__title {

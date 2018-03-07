@@ -35,7 +35,7 @@
           <% } %>
               <img class="default-user-icon-profile__small" src="/api/user/photo/<%- model.userId %>" alt="Profile pic of <%- model.owner.name %>"/>
               <p>Posted by</p>
-              <div><%- model.owner.name %></div>
+              <div><a href="/profile/<%= model.userId %>"><%- model.owner.name %></a></div>
               <div><%- model.publishedAt ? moment(model.publishedAt).format('MM/DD/YY') : '-/-/-' %></div>
           <% if (user) { %>
             </div>
