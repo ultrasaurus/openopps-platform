@@ -822,16 +822,16 @@
     flex-shrink: 0;
     padding: 0 0 $size-base 0;
 
+    img {
+      width: 4.6rem;
+      height: 4.6rem;
+      background-position: center;
+      background-size: contain;
+      border-radius: 100%;
+    }
+
     @include media($L) {
       padding-bottom: 0;
-
-      img {
-        width: 4.6rem;
-        height: 4.6rem;
-        background-position: center;
-        background-size: contain;
-        border-radius: 100%;
-      }
     }
   }
 
