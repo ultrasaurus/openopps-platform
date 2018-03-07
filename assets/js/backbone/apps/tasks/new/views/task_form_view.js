@@ -203,27 +203,27 @@ var TaskFormView = Backbone.View.extend({
 
     self.$('#time-required').select2({
       placeholder: 'Time Commitment',
-      width: 'resolve',
+      width: '100%',
     });
 
     self.$('#js-time-frequency-estimate').select2({
       placeholder: 'Frequency of work',
-      width: 'fullwidth',
+      width: '100%',
     });
 
     self.$('#js-task-time-estimate').select2({
       placeholder: 'Estimated Time Required',
-      width: 'resolve',
+      width: '100%',
     });
 
     self.$('#task-location').select2({
       placeholder: 'Work Location',
-      width: 'resolve',
+      width: '100%',
     });
 
-    self.$('#js-participant-selection').select2({
-      placeholder: 'People required',
-      width: 'resolve',
+    self.$('#people').select2({
+      placeholder: 'task-people',
+      width: '100%',
     });
 
   },
@@ -371,7 +371,7 @@ var TaskFormView = Backbone.View.extend({
     var tags        = [];
     var tagSkills   = this.$( '#js-task-tag' ).select2( 'data' );
     var tagLocation = this.$( '#js-task-location' ).select2( 'data' );
-    var peopleCount = this.$( '#js-participant-selection' ).select2( 'data' );
+    var peopleCount = this.$( '#people' ).select2( 'data' );
     var timeRequiredTagId  = this.$( '[name=task-time-required]:checked' ).val();
     var timeRequiredTag = _.findWhere(this.tagSources['task-time-required'], {id: parseInt(timeRequiredTagId)});
 
