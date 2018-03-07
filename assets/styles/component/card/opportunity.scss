@@ -702,6 +702,7 @@
       background-color: $color-green-light;
       text-decoration: none;
       vertical-align: sub;
+      cursor: default;
 
       &:after {
         position: relative;
@@ -771,10 +772,10 @@
       }
 
       .project-people-show-label {
-        line-height: 1;
+        line-height: 1.2;
         margin: 0 auto;
         max-width: 85px;
-        max-height: 35px;
+        max-height: 40px;
         overflow: hidden;
       }
 

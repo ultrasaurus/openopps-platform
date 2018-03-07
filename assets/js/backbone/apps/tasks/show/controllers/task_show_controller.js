@@ -456,7 +456,7 @@ var TaskShowController = BaseView.extend({
     this.modalComponent = new ModalComponent({
       el: '#site-modal',
       id: 'check-copy',
-      modalTitle: 'Copy This Opportunity',
+      modalTitle: 'Copy this opportunity',
       modalBody: modalContent,
       validateBeforeSubmit: true,
       secondary: {
@@ -466,7 +466,7 @@ var TaskShowController = BaseView.extend({
         }.bind(this),
       },
       primary: {
-        text: 'Copy Opportunity',
+        text: 'Copy opportunity',
         action: function () {
           $.ajax({
             url: '/api/task/copy',

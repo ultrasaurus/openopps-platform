@@ -83,7 +83,7 @@ html[dir="rtl"] .select2-container .select2-choice {
   width: auto;
   background-image: url(../img/arrow-down.png);
   background-image: url(../img/arrow-down.svg);
-  background-position: right 1.3rem center;
+  background-position: right center;
   background-repeat: no-repeat;
   background-size: 1.3rem;
 }
@@ -93,8 +93,13 @@ html[dir="rtl"] .select2-container .select2-choice > .select2-chosen {
   padding-right: 0;
 }
 
+@media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
+  .select2-container .select2-choice > .select2-chosen {
+    background-image: url(../img/arrow-down.png);
+  }
+}
+
 .select2-dropdown-open .select2-choice > .select2-chosen {
-  background-image: url(../img/arrow-up.png);
   background-image: url(../img/arrow-up.svg);
 }
 

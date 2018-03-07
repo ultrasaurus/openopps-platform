@@ -67,7 +67,7 @@
     <% } %>
 
     <% if (model.volunteers) { %>
-      <h3>Assigned Participants</h3>
+      <h3>Assigned participants</h3>
       <div class="assigned-participants-wrapper project-people__wrapper">
         <% if (_.contains(['draft', 'submitted'], state.value)) { %>
           <p class="project-people__not-available">Not available</p>
@@ -104,7 +104,7 @@
                   <button class="project-people__assign-empty" data-behavior="">
                     <span class="usajobs-assistive-text">Assign participant</span>
                   </button>
-                  to assign participants
+                  from the Applicants list below to assign participants
                 <% } else { %>
                   None assigned
                 <% } %>
