@@ -12,6 +12,18 @@
   color: #FFFFFF;
   font-family: Merriweather;
   font-size: 2.4rem;
+
+  @include media($M-down) {
+    padding-left: $size-default;
+    padding-right: $size-default;
+  }
+
+  .usa-button {
+    @include media($M-down) {
+      margin-top: $size-M;
+      margin-bottom: $size-M;
+    }
+  }
 }
 
 @media screen and (min-width: 48em) {
@@ -31,6 +43,12 @@ background-color: #ffffff;
   max-width: 102rem;
   margin-left: auto;
   margin-right: auto;
+
+  &::after {
+    clear: both;
+    content: "";
+    display: table;
+  }
 }
 
 .usajobs-opop-dashboard a {
@@ -41,7 +59,13 @@ background-color: #ffffff;
 .usajobs-opop-badges__body {
   max-width: 60rem;
   text-align: left;
-  margin-top: $size-M;
+  margin-top: 0;
+  padding-top: 1.4rem;
+
+  @include media($M) {
+    margin-top: 0.1rem;
+    // padding-top: 0;
+  }
 }
 
 .activity-feed--badges {
@@ -87,8 +111,8 @@ background-color: #ffffff;
   background-image: url(/images/default-user-icon-profile.png);
   border-radius: 100%;
   float: left;
-  margin-right: $size-default;
-  margin-bottom: $size-default;
+  margin-right: 1.4rem;
+  margin-bottom: 1.4rem;
   min-height: 44px;
   width: 44px;
 }
