@@ -4,16 +4,22 @@
 
 .usajobs-open-opps-opportunity {
   position: relative;
-  box-shadow: -7px 0 3px -3px rgba(0, 0, 0, 0.12), -3px 0 2px -2px rgba(0, 0, 0, 0.24);
-
+  border-top: 1px solid $color-gray-light;
   @include card-v4();
+  margin: 0;
 
   @include media($M) {
+    border-top: 0;
+    border-bottom: 0;
     margin: 0 0 $size-default;
   }
 
   @include media($L) {
     padding: $size-default;
+  }
+
+  &:last-child {
+    border-bottom: 1px solid $color-gray-light;
   }
 
   h3 {
