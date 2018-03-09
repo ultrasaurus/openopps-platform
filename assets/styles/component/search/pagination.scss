@@ -69,15 +69,26 @@
   &__previous-page-container,
   &__next-page-container {
     display: block;
-    width: 100%;
+    // width: 100%;
 
     @include media($SM) {
       @include span-columns(1);
     }
 
+    @include media($L-down) {
+      margin-left: $size-default;
+      margin-right: $size-default;
+
+      &:last-child {
+        margin-right: $size-default;
+      }
+    }
+
     @include media($M) {
       display: inline-block;
       width: auto;
+      margin-left: auto;
+      margin-right: auto;
     }
 
     &::before {
@@ -139,6 +150,7 @@
     @include media($SM) {
       float: right;
       @include omega();
+      margin-right: $size-default;
     }
 
     @include media($M) {

@@ -103,11 +103,30 @@
   }
 }
 
-.usajobs-open-opps-search .search-opportunities {
-  margin-bottom: 0;
+.usajobs-content-gutter.usajobs-open-opps-search {
+  padding: 0;
+
+  .search-opportunities {
+    margin-top: $size-default;
+    margin-bottom: $size-M;
+
+    @include media($L) {
+      margin-top: 0;
+      margin-bottom: 0;
+    }
+  }
+
+  .add-opportunity {
+    margin-bottom: $size-M !important;
+
+    @include media($L) {
+      margin-bottom: 0 !important;
+    }
+  }
 }
 
 .usajobs-grid.usajobs-open-opps-search__title {
+
   @include media($L) {
     padding: 0;
     margin: $size-M 0;
@@ -117,8 +136,20 @@
   .search-icon {
     position: absolute;
     top: 13px;
-    right: 15px;
     fill-opacity: .5;
+    right: 30px;
+
+    @include media($M) {
+      right: 4%;
+    }
+
+    @include media($ML) {
+      right: 5%;
+    }
+
+    @include media($L) {
+      right: 15px;
+    }
   }
 }
 
@@ -195,6 +226,14 @@
       background: linear-gradient(rgba(255,255,255,.001),#fff);
       transition: height .5s;
     }
+  }
+}
+
+#rightrail {
+  margin-bottom: $size-XL;
+
+  @include media($L) {
+    margin-bottom: 0;
   }
 }
 
