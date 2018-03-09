@@ -42,9 +42,10 @@
 }
 
 .usajobs-content-well {
-  margin-bottom: $size-XL;
+  margin-bottom: 0;
 
   @include media($L) {
+    margin-bottom: $size-XL;
     @include span-columns(8);
   }
 
