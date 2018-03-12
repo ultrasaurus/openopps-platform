@@ -47,7 +47,7 @@
   <% } %>
 
   <div id="participants">
-    <% if (!user || (model.owner.id !== user.id)) { %>
+    <% if (!_.contains(['completed', 'canceled'], state.value) && (!user || (model.owner.id !== user.id))) { %>
       <% if (user && _.findWhere(model.volunteers, { userId: user.id })) { %>
         <% if (_.findWhere(model.volunteers, { userId: user.id }).assigned) { %>
           <div id="assigned">
@@ -60,7 +60,7 @@
             <div>We’ll email you with next steps. You can also check your profile for status updates.</div>
           </div>
         <% } %>
-      <% } else if (!_.contains(['draft', 'submitted', 'not open'], state.value) && model.acceptingApplicants) { %>
+      <% } else if (!_.contains(['draft', 'submitted', 'not open', 'complete'], state.value) && model.acceptingApplicants) { %>
         <a href="javascript:void(0);" id="apply" class="usa-button-big usa-button-primary"><span class="box-icon-text">Apply</span></a>
       <% } %>
     <% } %>
@@ -92,6 +92,8 @@
                   <% } else if (v.taskComplete) { %>
                     <span class="task-complete-check"><i class="fa fa-check"></i>Task complete</span>
                   <% } %>
+                <% } else if (v.taskComplete) { %>
+                  <span class="task-complete-check"><i class="fa fa-check"></i>Task complete</span>
                 <% } %>
               </div>
             <% }); %>
