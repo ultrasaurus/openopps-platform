@@ -548,3 +548,59 @@ form [type=submit], form [type=submit] {
     }
   }
 }
+
+.usajobs-content-gutter.profile-gutter {
+  @include media($M-down) {
+    padding: 0;
+  }
+
+  .usa-form-large {
+    max-width: 46rem;
+  }
+
+  .usajobs-button_bar--slim {
+    @include media($SM-down) {
+      border-top: none;
+    }
+
+    .usajobs-button_bar__body {
+      @include media($SM-down) {
+        border-bottom: 1px solid #d6d7d9;
+      }
+
+      .usa-button-secondary {
+        margin: 0 0 1.5rem 0;
+      }
+    }
+  }
+
+  .usajobs-open-opps-opportunity:last-child {
+    border-bottom: none;
+  }
+
+  .usajobs-open-opps-opportunity.usajobs-open-opps-section {
+
+    -webkit-box-shadow: inset 0 7px 5px -5px rgba(0,0,0,0.16);
+    -moz-box-shadow: inset 0 7px 5px -5px rgba(0,0,0,0.16);
+    box-shadow: inset 0 7px 5px -5px rgba(0,0,0,0.16);
+  }
+
+  .usajobs-open-opps-opportunity {
+    position: relative;
+    border-top: none;
+    position: relative;
+    background-color: #ffffff;
+    margin: 0;
+    padding: 1.5rem;
+    box-shadow: none;
+  }
+
+  #rightrail {
+    margin-bottom: 0;
+  }
+
+  #rightrail > .usajobs-open-opps-opportunity.usajobs-open-opps-section {
+    box-shadow: none;
+    border: none;
+  }
+}
