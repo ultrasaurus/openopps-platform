@@ -108,18 +108,59 @@ gulp.task('bump:patch', function () {
 });
 
 // Build an octopus release
-gulp.task('release', function () {
+gulp.task('create-release', function () {
   var octo = require('@octopusdeploy/gulp-octo');
   var pack = gulp.src(releaseFiles)
     .pipe(octo.pack('zip'));
   if(process.env.OctoHost && process.env.OctoKey) {
-    pack.pipe(octo.push({
+    return pack.pipe(octo.push({
       host: process.env.OctoHost,
       apiKey: process.env.OctoKey,
+      replace: true,
     }));
   } else {
-    pack.pipe(gulp.dest('./bin'));
+    return pack.pipe(gulp.dest('./bin'));
   }
+});
+
+gulp.task('publish', ['create-release'], function () {
+  const git = require('gulp-git');
+  const octopusApi = require('octopus-deploy');
+  const simpleCreateRelease = require('octopus-deploy/lib/commands/simple-create-release');
+  const package = require('./package.json');
+  octopusApi.init({
+    host: process.env.OctoHost,
+    apiKey: process.env.OctoKey,
+  });
+  git.exec({ args: 'describe --tags --abbrev=0', maxBuffer: Infinity }, (err, tag) => {
+    if(err) { throw(err); }
+    var logCMD = 'log ' + tag.replace(/\r?\n?/g, '') + '..@ --no-merges ' +
+      '--pretty=format:"[%h](http://github.com/openopps/openopps-platform/commit/%H): %s%n"';
+    git.exec({ args: logCMD, maxBuffer: Infinity }, (err, releaseNotes) => {
+      if(err) { throw(err); }
+      const releaseParams = {
+        projectSlugOrId: 'openopps',
+        version: package.version,
+        packageVersion: package.version,
+        releaseNotes: releaseNotes,
+      };
+      simpleCreateRelease(releaseParams).then((release) => {
+        console.log('Octopus release created:', release);
+        git.exec({ args: 'add --all', maxBuffer: Infinity }, (err) => {
+          if(err) { throw(err); }
+          var commitMsg = 'commit -m "Create release package ' + package.version + '"';
+          git.exec({ args: commitMsg, maxBuffer: Infinity }, (err) => {
+            if(err) { throw(err); }
+            git.tag('v' + package.version, '', function (err) {
+              if (err) throw err;
+            });
+          });
+        });
+      }, (error) => {
+        console.log('Octopus release creation failed!', error);
+      });
+    });
+  });
 });
 
 //Default task
