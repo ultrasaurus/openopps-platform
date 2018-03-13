@@ -1,6 +1,5 @@
 <section class="usajobs-canvas">
-    <div class="usajobs-content-gutter">
-
+    <div class="usajobs-content-gutter profile-gutter">
     <% if (user.id !== data.id) { %>
       <% if (user.isAdmin || user.isAgencyAdmin) { %>
         <div class="usa-alert usajobs-alert usajobs-alert--info" role="alert" data-object="alert">
@@ -19,7 +18,6 @@
         </div>
       <% } %>
     <% } %>
-
     <div class="usa-alert usajobs-alert usajobs-alert--warning" role="alert" data-object="alert" style="display:none;">
       <div class="usajobs-alert__figure">
         <div class="usajobs-alert__icon">
@@ -27,11 +25,9 @@
       </div>
       <div class="usajobs-alert__body">
         <p class="usa-alert-text" id="file-upload-alert">
-
         </p>
       </div>
     </div>
-
     <% if (saved) { %>
       <div class="usa-alert usajobs-alert usajobs-alert--success" role="alert" data-object="alert">
         <div class="usajobs-alert__figure">
@@ -45,7 +41,6 @@
         </div>
       </div>
       <% } %>
-
 
     <main class="main-content usajobs-content-well" id="main-content" aria-label="Opportunity">
       <div class="usajobs-open-opps-opportunity usajobs-open-opps-section usajobs-open-opps-profile">
@@ -85,12 +80,6 @@
                   <%= data.bioHtml %>
                 <% } %>
             </div>
-
-
-
-
-
-
             <div class="profile-share <% if (data.isOwner || user.isAdmin) { %>border-bottom<% } %>">
                 <a href="#" id="email"><i class="fas fa-share-alt"></i> <span>Share Profile</span></a>
             </div>
