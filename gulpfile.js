@@ -116,6 +116,7 @@ gulp.task('create-release', function () {
     return pack.pipe(octo.push({
       host: process.env.OctoHost,
       apiKey: process.env.OctoKey,
+      replace: true,
     }));
   } else {
     return pack.pipe(gulp.dest('./bin'));
@@ -131,11 +132,11 @@ gulp.task('publish', ['create-release'], function () {
     host: process.env.OctoHost,
     apiKey: process.env.OctoKey,
   });
-  git.exec({ args: 'describe --tags --abbrev=0' }, (err, tag) => {
+  git.exec({ args: 'describe --tags --abbrev=0', maxBuffer: Infinity }, (err, tag) => {
     if(err) { throw(err); }
-    var logCMD = 'log ' + tag + '..@ --no-merges --invert-grep --grep="Create release" ' +
-      '--pretty=format:"[%h](http://github.com/openopps/openopps-platform/commit/%H): %s"';
-    git.exec({ args: logCMD }, (err, releaseNotes) => {
+    var logCMD = 'log ' + tag.replace(/\r?\n?/g, '') + '..@ --no-merges ' +
+      '--pretty=format:"[%h](http://github.com/openopps/openopps-platform/commit/%H): %s%n"';
+    git.exec({ args: logCMD, maxBuffer: Infinity }, (err, releaseNotes) => {
       if(err) { throw(err); }
       const releaseParams = {
         projectSlugOrId: 'openopps',
@@ -145,10 +146,10 @@ gulp.task('publish', ['create-release'], function () {
       };
       simpleCreateRelease(releaseParams).then((release) => {
         console.log('Octopus release created:', release);
-        git.exec({ args: 'add --all'}, (err) => {
+        git.exec({ args: 'add --all', maxBuffer: Infinity }, (err) => {
           if(err) { throw(err); }
           var commitMsg = 'commit -m "Create release package ' + package.version + '"';
-          git.exec({ args: commitMsg }, (err) => {
+          git.exec({ args: commitMsg, maxBuffer: Infinity }, (err) => {
             if(err) { throw(err); }
             git.tag('v' + package.version, '', function (err) {
               if (err) throw err;
