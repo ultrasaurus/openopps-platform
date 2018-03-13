@@ -626,7 +626,7 @@ $nav_item_height: 17px + 24px;
 
   &__section-link {
     font-size: $small-font-size;
-    padding: 0.8rem $size-S $size-S;
+    padding: 0.8rem $size-base $size-S;
 
     @include media($SM) {
       font-size: $base-font-size;
