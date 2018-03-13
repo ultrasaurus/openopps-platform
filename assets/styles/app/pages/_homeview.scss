@@ -164,27 +164,55 @@
   }
 }
 
-.usajobs-grid .usa-width-one-half > .usajobs-opop-work__list {
-  margin-top: $size-M;
+.usajobs-opop-work__button {
+  margin-left: 0;
 
   @include media($M) {
-    margin-top: 0;
     margin-left: 0rem;
   }
 
   @include media($ML) {
-    margin-top: 5%;
-    margin-left: 4rem;
+    margin-left: 3rem;
   }
 
   @include media($L) {
-    margin-top: 15%;
-    margin-left: 8rem;
+    margin-left: 3rem;
   }
 
   @include media($XL) {
-    margin-top: 20%;
-    margin-left: 8rem;
+    margin-left: 3rem;
+  }
+}
+
+.usajobs-opop-work__body .center {
+  text-align: center;
+} 
+
+.usajobs-opop-work__body img {
+  max-height: 33.2rem;
+}
+
+.usajobs-grid .usa-width-one-half.usajobs-opop-work__list ul {
+  margin-top: $size-S;
+
+  @include media($M) {
+    margin-top: 0;
+    margin-left: 0;
+  }
+
+  @include media($ML) {
+    margin-top: 0;
+    margin-left: 1.5rem;
+  }
+
+  @include media($L) {
+    margin-top: 5%;
+    margin-left: 1.5rem;
+  }
+
+  @include media($XL) {
+    margin-top: 12%;
+    margin-left: 1.5rem;
   }
 }
 
