@@ -20,7 +20,8 @@ var NavView = Backbone.View.extend({
     'click .nav-link': linkBackbone,
     'click .login': 'loginClick',
     'click .logout': 'logout',
-    'click .menu-toggle': 'toggleMenu',
+    'click .toggle-one': 'toggleMenu',
+    'click .toggle-two': 'toggleMenu2',
   },
 
   initialize: function (options) {
@@ -123,8 +124,32 @@ var NavView = Backbone.View.extend({
     $('.usajobs-nav__account').attr('data-state', function (i, attr) {
       return attr == 'is-open' ? 'is-closed' : 'is-open';
     });
-    $('.usajobs-nav__secondary-menu').attr('aria-expanded', function (i, attr) {
+    $('#section-one').attr('aria-expanded', function (i, attr) {
       return attr == 'true' ? 'false' : 'true';
+    });
+    //close other menu
+    $('.usajobs-nav__menu-search.mobile').attr('data-state', function (i, attr) {
+      return attr == 'is-closed';
+    });
+    $('#section-two').attr('aria-expanded', function (i, attr) {
+      return attr == 'false';
+    });
+  },
+
+  toggleMenu2: function (e) {
+    if (e.preventDefault) e.preventDefault();
+    $('.usajobs-nav__menu-search.mobile').attr('data-state', function (i, attr) {
+      return attr == 'is-open' ? 'is-closed' : 'is-open';
+    });
+    $('#section-two').attr('aria-expanded', function (i, attr) {
+      return attr == 'true' ? 'false' : 'true';
+    });
+    //close other menu
+    $('.usajobs-nav__account').attr('data-state', function (i, attr) {
+      return attr == 'is-closed';
+    });
+    $('#section-one').attr('aria-expanded', function (i, attr) {
+      return attr == 'false';
     });
   },
 
