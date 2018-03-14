@@ -1,7 +1,7 @@
 <div class="usajobs-open-opps-participated__section">
   <div id="<%- handle %>-tab-open">
     <div>
-      <% if ( count.open > 0 || count.assigned > 0 || count.draft > 0 || count.submitted > 0 || count.completed > 0) { %>
+      <% if (_.filter(data, (item) => { return item.state != 'archived' }).length > 0) { %>
         <div class="usajobs-grid open-opps-row header">
           <div class="usa-width-one-fourth">Opportunity status</div>
           <div class="usa-width-one-half">Opportunity</div>
