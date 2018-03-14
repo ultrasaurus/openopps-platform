@@ -10,11 +10,11 @@ var LoginView = Backbone.View.extend({
   el: '#container',
 
   events: {
-    'click .oauth-link' : 'link',
-    'keyup .validate'   : 'validateField',
-    'change .validate'  : 'validateField',
-    'blur .validate'    : 'validateField',
-    'submit #login-password-form' : 'submitLogin',
+    'click .oauth-link'          : 'link',
+    'keyup .validate'            : 'validateField',
+    'change .validate'           : 'validateField',
+    'blur .validate'             : 'validateField',
+    'click #submitLogin'         : 'submitLogin',
   },
 
   initialize: function (options) {
