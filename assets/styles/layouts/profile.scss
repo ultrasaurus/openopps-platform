@@ -41,9 +41,15 @@
     margin-bottom: 6rem;
 }
 
-.usajobs-open-opps-participated__section {
-    padding-top: 1.5rem;
+.task-activity-wrapper table, .task-createdactivity-wrapper table  {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0;
 }
+
+// .usajobs-open-opps-participated__section {
+//     padding-top: 1.5rem;
+// }
 
 @media screen and (min-width: 62em) {
     .usajobs-opop-profile-title {
@@ -58,6 +64,13 @@
         margin-right: auto;
         width: 63.5231306354%;
     }
+}
+
+@include media($L-down) {
+  .profile-name-role {
+    padding-top: $size-default;
+    padding-bottom: $size-default;
+  }
 }
 
 @media screen and (min-width: 62em) {
@@ -81,12 +94,24 @@
 }
 
 .usajobs-open-opps-opportunity .default-user-icon-profile {
-    height: 15rem;
-    width: 15rem;
-    margin-top: 1rem;
+    width: 6.5rem;
+    height: 6.5rem;
+    margin-top: 0;
     background-position: center;
     background-size: contain;
     border-radius: 100%;
+
+    @include media($L) {
+      width: 12rem;
+      height: 12rem;
+      margin-top: 1rem;
+    }
+
+    @include media($XL) {
+      width: 15rem;
+      height: 15rem;
+      margin-top: 1rem;
+    }
 }
 
  .default-user-icon-profile__small {
@@ -100,6 +125,34 @@
     float: left;
     color: #212121;
     margin-top: 1.5rem;
+
+    @include media($L-down) {
+      display: none;
+    }
+}
+
+#profile {
+  display: flex;
+  align-items: center;
+  width: 100%;
+
+  @include media($L) {
+    display: block;
+    width: inherit;
+  }
+
+  .usajobs-opop-profile-name {
+      display: block;
+      float: none;
+      color: #212121;
+      margin-top: 0;
+      margin-left: $size-default;
+      line-height: 1;
+
+      @include media($L) {
+        display: none;
+      }
+  }
 }
 
 .role-label {
@@ -108,10 +161,16 @@
     padding: 0 1rem;
     font-weight: normal;
     font-size: 1.6rem;
-    display: block;
-    float: left;
-    margin-top: 1.2rem;
-    margin-left: 1rem;
+    display: inline-block;
+    float: none;
+    margin-left: 0;
+
+    @include media($L) {
+      margin-top: 1.2rem;
+      margin-left: 1rem;
+      margin-bottom: initial;
+      float: left;
+    }
 }
 
 .skill-label {
@@ -132,18 +191,31 @@
         padding: $size-default 0;
         text-align: left;
     }
+
+    th, td {
+      padding: 1.5rem 1.5rem 1.5rem 0;
+    }
 }
 
 .open-opps-row.header {
     font-weight: bold;
 }
 
-.open-opps-title, .open-opps-title a,.open-opps-title:visited {
-    width: 2.5rem;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    color: #006FBB;
+.your-status {
+  min-width: 12.5rem;
+}
+
+.open-opps-title {
+    // width: 2.5rem;
+    // white-space: nowrap;
+    // overflow: hidden;
+    // text-overflow: ellipsis;
+    width: 65%;
+    min-width: 13.5rem;
+
+    a, a:visited {
+      color: #006FBB;
+    }
 }
 
 .profile-email {
@@ -554,6 +626,12 @@ form [type=submit], form [type=submit] {
     padding: 0;
   }
 
+  @include media($M) {
+    .main-content, .usajobs-rightrail {
+      margin-top: 3rem;
+    }
+  }
+
   .usa-form-large {
     max-width: 46rem;
   }
@@ -579,10 +657,11 @@ form [type=submit], form [type=submit] {
   }
 
   .usajobs-open-opps-opportunity.usajobs-open-opps-section {
-
-    -webkit-box-shadow: inset 0 7px 5px -5px rgba(0,0,0,0.16);
-    -moz-box-shadow: inset 0 7px 5px -5px rgba(0,0,0,0.16);
-    box-shadow: inset 0 7px 5px -5px rgba(0,0,0,0.16);
+    @include media($M-down) {
+      -webkit-box-shadow: inset 0 7px 5px -5px rgba(0,0,0,0.16);
+      -moz-box-shadow: inset 0 7px 5px -5px rgba(0,0,0,0.16);
+      box-shadow: inset 0 7px 5px -5px rgba(0,0,0,0.16);
+    }
   }
 
   .usajobs-open-opps-opportunity {
