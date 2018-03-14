@@ -9,8 +9,8 @@
         </div>
 
         <% for (var i in data) { %>
-        <div class="usajobs-grid open-opps-row">
           <% if (data[i].state == 'archived') { continue; } %>
+        <div class="usajobs-grid open-opps-row">
           <div data-id="<%- data[i].id %>">
             <div class="usa-width-one-fourth">
               <span  class="usajobs-pill--opportunity-status status-<%= data[ i ].state.charAt( 0 ).toLowerCase() + data[ i ].state.slice( 1 ).replace(' ', '-') %>">
