@@ -26,6 +26,20 @@ router.post('/api/volunteer', auth, async (ctx, next) => {
   }
 });
 
+router.post('/api/volunteer/delete', auth, async (ctx, next) => {
+  var attributes = ctx.request.body;
+  attributes.userId = ctx.state.user.id;
+  await service.deleteVolunteer(attributes, function (notificationInfo, err) {
+    if (!err) {
+      service.sendDeletedVolunteerNotification(notificationInfo[0], 'volunteer.destroy.decline');
+      ctx.status = 200;
+      ctx.body = notificationInfo[0];
+    } else {
+      ctx.status = 400;
+    }
+  });
+});
+
 router.post('/api/volunteer/assign', auth, async (ctx, next) => {
   if (await service.canManageVolunteers(ctx.request.body.taskId, ctx.state.user)) {
     await service.assignVolunteer(+ctx.request.body.volunteerId, ctx.request.body.assign, function (err, volunteer) {
