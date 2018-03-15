@@ -507,7 +507,7 @@ var TaskItemView = BaseView.extend({
       this.data.model.volunteers = _.reject(this.data.model.volunteers, { userId: data.userId });
       this.initializeProgress();
       var options = _.extend(_.clone(this.modalOptions), {
-        modalTitle: 'Cancel you application',
+        modalTitle: 'Cancel your application',
         modalBody: 'Your application has been withdrawn.',
         primary: {
           text: 'Okay',

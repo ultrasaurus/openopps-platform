@@ -255,10 +255,23 @@ var ProfileShowView = Backbone.View.extend({
         target: 'task',
         handle: 'volTask',  // used in css id
         data: data.tasks.volunteered,
+        getStatus: this.getStatus,
       });
       this.volView.render();
+    }.bind(this));
+  },
 
-    });
+  getStatus: function (task) {
+    switch (task.state) {
+      case 'completed':
+        return (task.assigned ? (task.taskComplete ? 'Complete' : 'Not complete') : 'Not assigned');
+      case 'in progress':
+        return (task.assigned ? (task.taskComplete ? 'Complete' : 'Assigned') : 'Not assigned');
+      case 'canceled':
+        return 'Canceled';
+      default:
+        return (task.assigned ? 'Assigned' : 'Applied');
+    }
   },
 
   updatePhoto: function () {

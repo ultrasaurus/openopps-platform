@@ -35,6 +35,7 @@ var ProfileActivityView = Backbone.View.extend({
       targetCapitalized: this.options.target.charAt(0).toUpperCase() + this.options.target.slice(1),
       handle: this.options.handle,
       data: results,
+      getStatus: this.options.getStatus,
       count: {},
     };
 
