@@ -30,20 +30,11 @@
     }
   }
 
-  // @media screen and (min-width: 48em) {
-  //   .usajobs-landing-hero {
-  //     margin-bottom: -5.4rem;
-  //   }
-  // }
-
   .usajobs-opop-discover__body {
     max-width: 596px;
     margin-left: auto;
     margin-right: auto;
     max-width: 59.6rem;
-    // padding: 0 1.5rem;
-    // padding-top: 1.5rem;
-    // padding-bottom: 1.5rem;
     text-align: center;
     font-size: 2.0rem;
   }
@@ -153,6 +144,16 @@
 
 .usajobs-opop-work {
   background-color: #ffffff;
+}
+
+.usajobs-opop-help__link a, .usajobs-opop-help__link a:visited  {
+  font-weight: 700;
+  text-decoration: none;
+  color: #0071bc;
+}
+
+.usajobs-opop-help__link {
+  margin-bottom: $size-M;
 }
 
 .usajobs-opop-work__title {
