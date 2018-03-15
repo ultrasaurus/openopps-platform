@@ -110,14 +110,18 @@
               <span class="field-validation-error error-html" style="display:none;">The special characters '<' or '>' are not allowed.</span>
               <input type="text" class="validate" id="jobtitle" name="jobtitle" placeholder="Title" value="<%- data.title ? data.title : '' %>" data-validate="count150,html"/>
             </div>
+          </fieldset>
+          <fieldset class="usajobs-fieldset">
             <div class="required-input">
-              <label for="company" data-i18n="tag.Agency"></label>
+              <label for="company" class="s2id_company">Agency</label>
               <input type="hidden" id="company" name="company"/>
             </div>
             <div class="required-input">
-              <label for="location">Location</label>
+              <label for="location" class="s2id_location">Location</label>
               <input type="hidden" id="location" name="location"/>
             </div>
+          </fieldset>
+          <fieldset class="usajobs-fieldset">
             <div class="required-input">
               <label for="bio" class="usa-input-optional">Biography</label>
               <span class="field-validation-error error-html" style="display:none;">The special characters '<' or '>' are not allowed.</span>
@@ -152,7 +156,7 @@
         </form>
       </div>
     </main>
-    <aside class="usajobs-rightrail" id="rightrail">
+    <aside class="usajobs-rightrail profile-edit" id="rightrail">
       <div class="usajobs-open-opps-opportunity usajobs-open-opps-section usajobs-open-opps-profile">
         <h2>Badges</h2>
         <% if (data.badges.length > 0) { %>

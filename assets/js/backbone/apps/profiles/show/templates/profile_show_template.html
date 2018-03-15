@@ -59,9 +59,7 @@
           </div>
           <div id="profile" class="usajobs-opop-profile-title usa-width-one-fourth">
               <img class="default-user-icon-profile" src="/api/user/photo/<%- data.id %>">
-              <div id="file-upload-progress-container" style="display: none;" class="progress progress-striped active">
-                <div id="file-upload-progress" class="progress-bar" style="width: 0"></div>
-              </div>
+              <h2 class="usajobs-opop-profile-name"><% if (data.name) { %><%- data.name %><% } else { %><%- data.username %><% } %></h2>
           </div>
           <div class="usajobs-opop-profile-details usa-width-three-fourths">
             <div class="profile-name-role">

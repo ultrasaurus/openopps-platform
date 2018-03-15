@@ -27,6 +27,7 @@ var TaskItemView = BaseView.extend({
   events: {
     'click #accept-toggle'          : 'toggleAccept',
     'click #apply'                  : 'apply',
+    'click #apply-cancel'           : 'cancelApply',
     'click #nextstep'               : 'nextstep',
     'click #complete'               : 'complete',
     'click #task-cancel'            : 'cancel',
@@ -492,6 +493,31 @@ var TaskItemView = BaseView.extend({
         this.modalComponent = new ModalComponent(options).render();
       }
     }
+  },
+
+  cancelApply: function (e) {
+    if (e.preventDefault) e.preventDefault();
+    $.ajax({
+      url: '/api/volunteer/delete',
+      type: 'POST',
+      data: {
+        taskId: this.model.attributes.id,
+      },
+    }).done(function (data) {
+      this.data.model.volunteers = _.reject(this.data.model.volunteers, { userId: data.userId });
+      this.initializeProgress();
+      var options = _.extend(_.clone(this.modalOptions), {
+        modalTitle: 'Cancel you application',
+        modalBody: 'Your application has been withdrawn.',
+        primary: {
+          text: 'Okay',
+          action: function () {
+            this.modalComponent.cleanup();
+          }.bind(this),
+        },
+      });
+      this.modalComponent = new ModalComponent(options).render();
+    }.bind(this));
   },
 
   completeProfile: function (tags) {

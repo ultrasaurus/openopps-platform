@@ -22,6 +22,8 @@ var TagFactory = require('../../../../components/tag_factory');
 var ProfileShowTemplate = require('../templates/profile_show_template.html');
 var ProfileEditTemplate = require('../templates/profile_edit_template.html');
 var ShareTemplate = require('../templates/profile_share_template.txt');
+var ProfileCreatedTemplate = require('../templates/profile_created_template.html');
+var ProfileParticipatedTemplate = require('../templates/profile_participated_template.html');
 
 
 var ProfileShowView = Backbone.View.extend({
@@ -108,7 +110,7 @@ var ProfileShowView = Backbone.View.extend({
   validateField: function (e) {
     return validate(e);
   },
-  
+
   render: function () {
     var data = {
       login: Login,
@@ -240,6 +242,7 @@ var ProfileShowView = Backbone.View.extend({
       this.taskView = new ProfileActivityView({
         model: this.model,
         el: '.task-createdactivity-wrapper',
+        template: ProfileCreatedTemplate,
         target: 'task',
         handle: 'task',  // used in css id
         data: data.tasks.created,
@@ -248,6 +251,7 @@ var ProfileShowView = Backbone.View.extend({
       this.volView = new ProfileActivityView({
         model: this.model,
         el: '.task-activity-wrapper',
+        template: ProfileParticipatedTemplate,
         target: 'task',
         handle: 'volTask',  // used in css id
         data: data.tasks.volunteered,

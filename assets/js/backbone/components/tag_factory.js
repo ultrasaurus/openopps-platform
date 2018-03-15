@@ -89,7 +89,7 @@ var TagFactory = BaseComponent.extend({
       placeholder: options.placeholder || 'Start typing to select a ' + tagLabel,
       minimumInputLength: (isLocation ? 1 : 2),
       selectOnBlur: !isLocation,
-      width: options.width || '500px',
+      // width: options.width || '500px',
       tokenSeparators: options.tokenSeparators || [],
       multiple: options.multiple,
 
