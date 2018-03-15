@@ -114,6 +114,21 @@
     }
 }
 
+.center-upload .default-user-icon-profile {
+    width: 10rem;
+    height: 10rem;
+
+    @include media($L) {
+      width: 12rem;
+      height: 12rem;
+    }
+
+    @include media($XL) {
+      width: 15rem;
+      height: 15rem;
+    }
+}
+
  .default-user-icon-profile__small {
   @extend .default-user-icon-profile;
   height: 6.5rem !important;
@@ -676,6 +691,12 @@ form [type=submit], form [type=submit] {
 
   #rightrail {
     margin-bottom: 0;
+  }
+
+  .profile-edit#rightrail {
+    @include media($L-down) {
+      display: none;
+    }
   }
 
   #rightrail > .usajobs-open-opps-opportunity.usajobs-open-opps-section {
