@@ -349,9 +349,9 @@ var TaskFormView = Backbone.View.extend({
     this.setUpModel( 'submitted' );
 
     if ( ! _.isEmpty( completedBy ) ) {
-
-      this.model.set( 'completedBy', completedBy );
-
+      var timezoneOffset = (new Date()).getTimezoneOffset() * 60000;
+      completedBy = new Date(completedBy);
+      this.model.set( 'completedBy', new Date(completedBy.getTime() + timezoneOffset) );
     }
 
     this.collection.trigger( 'task:save', this.model );

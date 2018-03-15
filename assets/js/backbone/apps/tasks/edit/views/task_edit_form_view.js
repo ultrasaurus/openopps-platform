@@ -289,7 +289,11 @@ var TaskEditFormView = Backbone.View.extend({
         modelData[ 'userId' ] = owner.id;
         modelData.owner = owner;
       }
-      if ( completedBy !== '' ) { modelData[ 'completedBy' ] = completedBy; }
+      if ( completedBy !== '' ) {
+        var timezoneOffset = (new Date()).getTimezoneOffset() * 60000;
+        completedBy = new Date(completedBy);
+        modelData[ 'completedBy' ] = new Date(completedBy.getTime() + timezoneOffset);
+      }
 
       var tags = _( this.getTagsFromPage() )
         .chain()
