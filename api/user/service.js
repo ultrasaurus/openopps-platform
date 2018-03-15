@@ -43,7 +43,7 @@ async function getActivities (id) {
   return {
     tasks: {
       created: dao.clean.activity(await dao.Task.find('"userId" = ?', id)),
-      volunteered: (await dao.Task.db.query(dao.query.completed, id)).rows,
+      volunteered: (await dao.Task.db.query(dao.query.participated, id)).rows,
     },
   };
 }

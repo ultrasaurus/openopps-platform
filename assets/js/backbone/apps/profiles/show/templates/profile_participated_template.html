@@ -5,7 +5,7 @@
         <table class="usa-table-borderless">
         	<thead>
         	<tr class="usajobs-grid open-opps-row header">
-        		<th scope="col">Your status</th>
+        		<th scope="col">Status</th>
         		<th scope="col">Opportunity</th>
         		<th scope="col">Updated date</th>
         	</tr>
@@ -15,7 +15,7 @@
               <% if (data[i].state == 'archived') { continue; } %>
             	<tr class="usajobs-grid open-opps-row" data-id="<%- data[i].id %>">
             		<td class="your-status">
-                  <%= data[ i ].state.charAt( 0 ).toUpperCase() + data[ i ].state.slice( 1 ) %>
+                  <%= getStatus(data[i]) %>
                 </td>
             		<td class="open-opps-title">
                   <% if ( '' === data[ i ].title && 'draft' === data[ i ].state ) {
