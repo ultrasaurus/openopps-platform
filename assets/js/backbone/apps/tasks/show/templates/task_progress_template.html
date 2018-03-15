@@ -58,6 +58,7 @@
           <div id="apply-thanks">
             <h3>Thanks for applying</h3>
             <div>We’ll email you with next steps. You can also check your profile for status updates.</div>
+            <a href="javascript:void(0);" id="apply-cancel">Cancel your application</a>
           </div>
         <% } %>
       <% } else if (!_.contains(['draft', 'submitted', 'not open', 'complete'], state.value) && model.acceptingApplicants) { %>
