@@ -360,3 +360,12 @@ select[disabled] {
   font-size: 1.7rem;
   font-weight: 700;
 }
+
+.usajobs-form__title {
+
+  &::after {
+    clear: both;
+    content: "";
+    display: block;
+  }
+}
