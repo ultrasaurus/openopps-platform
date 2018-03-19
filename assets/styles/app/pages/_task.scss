@@ -1,11 +1,16 @@
 .tips {
-    background-color: #e1f3f8;
-    padding: 2rem;
-    margin-top: 0;
-    margin-right: 1.5rem;
-     a {
-        text-decoration: underline;
-     }
+  background-color: #e1f3f8;
+  padding: 2rem;
+  margin-top: 0;
+  margin-right: 1.5rem;
+
+  @include media($ML-down) {
+    margin-right: 0;
+  }
+
+  a {
+    text-decoration: underline;
+  }
 }
 
 .tips-left {

@@ -1,5 +1,5 @@
 <section class="usajobs-canvas">
-  <div class="usajobs-content-gutter">
+  <div class="usajobs-content-gutter opportunity-gutter">
     <div class="usa-alert usajobs-alert usajobs-alert--error" role="alert" data-object="alert"  id="alert-closed" style="<% if (model.state != 'closed') { %>display: none;<% } %>">
       <div class="usajobs-alert__figure">
         <div class="usajobs-alert__icon">
@@ -22,60 +22,100 @@
     <main class="main-content usajobs-content-well" id="main-content" aria-label="Opportunity">
       <div class="usajobs-open-opps-opportunity usajobs-open-opps-section usajobs-open-opps-profile">
         <div class="usajobs-grid-full usajobs-open-opps-opportunity-item__header">
-          <div class="usajobs-width-five-sixths">
+          <div class="usajobs-width-two-thirds">
             <h1 class="usajobs-open-opps-opportunity-item__title"><%- model.title %></h1>
             <span class="usajobs-pill--opportunity-status opportunity-page status-<%- state.value.replace(' ', '-') %>"><%- state.humanReadable %></span>
+            <div class="skills">
+              <% _.each(madlibTags['skill'], function (t) { %>
+                <a class="skill-label" href="/tasks?search=<%= t.name %>"><%= t.name %></a>
+              <% }) %>
+            </div>
           </div>
 
-          <div class="usajobs-width-one-sixth">
+          <div class="usajobs-width-one-third opportunity-creator">
           <% if (user) { %>
             <div class="center" data-userid="<%- model.userId %>">
           <% } else { %>
             <div class="center">
           <% } %>
               <img class="default-user-icon-profile__small" src="/api/user/photo/<%- model.userId %>" alt="Profile pic of <%- model.owner.name %>"/>
-              <p>Posted by</p>
-              <div><a href="/profile/<%= model.userId %>"><%- model.owner.name %></a></div>
-              <div><%- model.publishedAt ? moment(model.publishedAt).format('MM/DD/YY') : '-/-/-' %></div>
+              <div>
+                <p>Posted by</p>
+                <div class="profile-name"><a href="/profile/<%= model.userId %>"><%- model.owner.name %></a></div>
+                <div><%- model.publishedAt ? moment(model.publishedAt).format('MM/DD/YY') : '-/-/-' %></div>
+              </div>
           <% if (user) { %>
             </div>
           <% } else { %>
             </div>
           <% } %>
-          </div>
-        </div>
-
-        <div class="usajobs-grid-full">
-          <div class="usajobs-opop-task-tags usajobs-width-two-thirds">
-            &nbsp;
-            <% _.each(madlibTags['skill'], function (t) { %>
-              <a class="skill-label" href="/tasks?search=<%= t.name %>"><%= t.name %></a>
-            <% }) %>
-          </div>
-
-          <div class="usajobs-opop-actions usajobs-opop-actions--v1-5 usajobs-width-one-third">
             <div class="usajobs-opop-actions__col-sub-actions usajobs-opop-actions--v1-5__col-sub-actions">
               <% if (user) { %>
-                <a class="usajobs-opop-actions__duplicate" href="#duplicate" id="task-copy"><i class="fa fa-copy"></i> Duplicate</a>
+                <div><a class="usajobs-opop-actions__duplicate" href="#duplicate" id="task-copy"><i class="fa fa-copy"></i> Duplicate</a></div>
               <% } %>
               <% if (model.canEditTask && model.state != 'completed') { %>
-                <a class="usajobs-opop-actions__save" href="#edit" id="task-edit"><i class="fas fa-edit"></i> <% if (model.state != 'canceled') { %>Edit<% } else { %>Reopen<% } %></a>
+                <div><a class="usajobs-opop-actions__save" href="#edit" id="task-edit"><i class="fas fa-edit"></i> <% if (model.state != 'canceled') { %>Edit<% } else { %>Reopen<% } %></a></div>
               <% } %>
-              <a class="usajobs-opop-actions__share usajobs-opop-actions-share" href="#" id="email"><i class="fa fa-share-alt"></i> Share</a>
+              <div><a class="usajobs-opop-actions__share usajobs-opop-actions-share" href="#" id="email"><i class="fa fa-share-alt"></i> Share</a></div>
             </div>
           </div>
         </div>
       </div>
 
 
-      <div class="usajobs-open-opps-opportunity usajobs-open-opps-profile">
+      <div class="usajobs-open-opps-opportunity usajobs-open-opps-profile overview">
         <div class="usajobs-grid-full">
-          <div class="usa-width-two-thirds">
+          <div class="usa-width-one-third personnel-needed mobile">
+            <div class="usajobs-opop__task-intro">
+              <h4>Personnel needed</h4>
+              <div>
+                <% if (madlibTags['task-people']) { %>
+                  <%= madlibTags['task-people'][0].name %>
+                <% } else { %>
+                  None
+                <% } %>
+              </div>
+              <h4>Time commitment</h4>
+              <div>
+                <% if (madlibTags['task-time-required']) { %>
+                  <%= madlibTags['task-time-required'][0].name %>
+                <% } %>
+                <% if (madlibTags['task-time-estimate'] &&
+                      !(madlibTags['task-time-required'] && madlibTags['task-time-required'][0].name === 'Full Time Detail')) { %>
+                  &mdash;
+                  <%- madlibTags['task-time-estimate'][0].name %>
+                <% } %>
+                <% if (madlibTags['task-time-required'] && madlibTags['task-length']) { %>
+                  <% if (madlibTags['task-time-required'][0].name === "Ongoing") { %>
+                    <%- madlibTags['task-length'][0].name.toLowerCase() %>
+                  <% } %>
+                <% } %>
+              </div>
+              <% if (model.completedBy) { %>
+              <h4>Target Date</h4>
+              <div>
+                  <%= moment(model.completedBy).format('ddd, MMM D, YYYY') %>
+              </div>
+              <% } %>
+              <h4>Duty location</h4>
+              <div>
+                <% if (madlibTags.location) { %>
+                  <% _.each(madlibTags.location, function (s, i) { %>
+                    <% if (i > 0) { %>, <% } %><%- s.name %>
+                  <% }) %>
+                <% } else { %>
+                  Anywhere
+                <% } %>
+              </div>
+            </div>
+          </div>
+          <div class="usa-width-two-thirds opportunity-description">
             <div class="usajobs-open-opps-opportunity__desc">
+              <h3>Overview</h3>
               <%= model.descriptionHtml %>
             </div>
           </div>
-          <div class="usa-width-one-third">
+          <div class="usa-width-one-third personnel-needed desktop">
             <div class="usajobs-opop__task-intro">
               <h4>Personnel needed</h4>
               <div>
@@ -122,7 +162,7 @@
         </div>
       </div>
 
-      <div class="usajobs-open-opps-opportunity usajobs-open-opps-profile">
+      <div class="usajobs-open-opps-opportunity usajobs-open-opps-profile discussion">
         <div class="comment-list-wrapper">
           <% if (user) { %>
           <button class="file-add new-topic" id="project-topic-new">New Topic</button>
