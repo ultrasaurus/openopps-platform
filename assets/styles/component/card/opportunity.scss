@@ -703,7 +703,7 @@
     .project-people__assign {
       position: absolute;
       top: -0.4rem;
-      right: 1rem;
+      right: 0;
       margin: 0;
       vertical-align: initial;
       background-color: $color-gray-light;
@@ -792,6 +792,7 @@
       width: 85px;
       margin-bottom: $size-M;
       position: relative;
+      min-height: 11.8rem;
 
       .project-people {
         width: 6.5rem;
@@ -817,7 +818,7 @@
       .project-people__assign, .project-people__remove {
         position: absolute;
         top: -0.4rem;
-        right: 1rem;
+        right: 0;
         margin: 0;
         vertical-align: initial;
       }
@@ -897,6 +898,7 @@
     display: inline-block;
     width: 85px;
     position: relative;
+    min-height: 11.8rem;
 
     .project-people {
       width: 6.5rem;
