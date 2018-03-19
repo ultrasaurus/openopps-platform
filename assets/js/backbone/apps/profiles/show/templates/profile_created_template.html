@@ -1,7 +1,7 @@
 <div class="usajobs-open-opps-participated__section">
   <div id="<%- handle %>-tab-open">
     <div style="overflow-x:auto;">
-      <% if (_.filter(data, (item) => { return item.state != 'archived' }).length > 0) { %>
+      <% if (_.filter(data, function (item) { return item.state != 'archived' }).length > 0) { %>
         <table class="usa-table-borderless">
         	<thead>
         	<tr class="usajobs-grid open-opps-row header">
