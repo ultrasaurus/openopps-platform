@@ -794,6 +794,10 @@
       position: relative;
       min-height: 11.8rem;
 
+      @include media($SM-down) {
+        min-height: 16.2rem;
+      }
+
       .project-people {
         width: 6.5rem;
         height: 6.5rem;
