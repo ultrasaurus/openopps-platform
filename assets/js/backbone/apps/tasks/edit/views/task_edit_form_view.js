@@ -250,7 +250,7 @@ var TaskEditFormView = Backbone.View.extend({
 
     this.on( 'task:tags:save:done', function ( event ) {
       var owner          = this.$( '#owner' ).select2( 'data' );
-      var completedBy    = this.$('[name=task-time-required]:checked').attr('data-descr') == 'One time' ? this.$( '#estimated-completion-date' ).val() : null;
+      var completedBy    = this.$('[name=task-time-required]:checked').attr('data-descr') == 'One time' ?  TaskFormViewHelper.getCompletedByDate() : null;
       //var newParticipant = this.$( '#participant' ).select2( 'data' );
       var silent         = true;
 
@@ -327,6 +327,26 @@ var TaskEditFormView = Backbone.View.extend({
       var iAbort = validate( { currentTarget: child } );
       abort = abort || iAbort;
     } );
+
+    var completedBy = this.$('[name=task-time-required]:checked').attr('data-descr') == 'One time' ?  TaskFormViewHelper.getCompletedByDate() : null;
+    if(completedBy) {
+      var iAbort = false;
+      try {
+        iAbort = (new Date(completedBy).toISOString().split('T')[0]) !== completedBy;
+      } catch (err) {
+        iAbort = true;
+      }
+      if(iAbort) {
+        $('#time-options-completion-date').addClass('usa-input-error');
+        $('#time-options-completion-date input').toggleClass('usa-input-inline usa-input-inline-error');
+        $('#time-options-completion-date > .field-validation-error').show();
+      } else {
+        $('#time-options-completion-date').removeClass('usa-input-error');
+        $('#time-options-completion-date input').toggleClass('usa-input-inline-error usa-input-inline');
+        $('#time-options-completion-date > .field-validation-error').hide();
+      }
+      abort = abort || iAbort;
+    }
 
     return abort;
   },
