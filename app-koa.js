@@ -128,6 +128,7 @@ module.exports = (config) => {
         version: openopps.version,
         alert: null,
         jsHash: md5File.sync(path.join(__dirname, 'dist', 'js', 'bundle.min.js')),
+        cssHash: md5File.sync(path.join(__dirname, 'dist', 'styles', 'main.css')),
       };
       await ctx.render('main/index', data);
     }
