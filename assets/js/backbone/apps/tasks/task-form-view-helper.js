@@ -58,4 +58,15 @@ module.exports = {
       }
     }
   },
+
+  getCompletedByDate: function () {
+    var month = $('#estimated-completion-date-1').val();
+    var day = $('#estimated-completion-date-2').val();
+    var year = $('#estimated-completion-date-3').val();
+    if(!month && !day && !year) {
+      return '';
+    } else {
+      return (year + '-' + month + '-' + day);
+    }
+  },
 };

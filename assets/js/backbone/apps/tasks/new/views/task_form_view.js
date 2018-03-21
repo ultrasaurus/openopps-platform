@@ -267,31 +267,35 @@ var TaskFormView = Backbone.View.extend({
    * Validate before submitting the form and saving the task.
    */
   validateBeforeSubmit: function () {
+    // check all of the field validation before submitting
+    var children = this.$el.find( '.validate' );
+    var abort = false;
 
-    var view = this;
-    var fieldsToValidate  = [
-      '#task-title',
-      '#task-description',
-      '[name=task-time-required]:checked',
-      '[name=time-required]:checked',
-    ];
-    var field = '';
-    var valid = false;
+    _.each( children, function ( child ) {
+      var iAbort = validate( { currentTarget: child } );
+      abort = abort || iAbort;
+    } );
 
-    for ( var i = 0; i < fieldsToValidate.length; i++ ) {
-
-      // README: view.validateField() return true if there *is* a validation error
-      // it returns false if there *is not*.
-      //
-      field = fieldsToValidate[ i ];
-      valid = view.validateField( { currentTarget: field } );
-
-      if ( true === valid ) { return false; }
-
+    var completedBy = this.$('[name=task-time-required]:checked').attr('data-descr') == 'One time' ?  TaskFormViewHelper.getCompletedByDate() : null;
+    if(completedBy) {
+      var iAbort = false;
+      try {
+        iAbort = (new Date(completedBy).toISOString().split('T')[0]) !== completedBy;
+      } catch (err) {
+        iAbort = true;
+      }
+      if(iAbort) {
+        $('#time-options-completion-date').addClass('usa-input-error');
+        $('#time-options-completion-date input').toggleClass('usa-input-inline usa-input-inline-error');
+        $('#time-options-completion-date > .field-validation-error').show();
+      } else {
+        $('#time-options-completion-date').removeClass('usa-input-error');
+        $('#time-options-completion-date input').toggleClass('usa-input-inline-error usa-input-inline');
+        $('#time-options-completion-date > .field-validation-error').hide();
+      }
+      abort = abort || iAbort;
     }
-
-    return true;
-
+    return !abort;
   },
 
   /*
@@ -331,6 +335,14 @@ var TaskFormView = Backbone.View.extend({
       },
     } );
 
+
+    var completedBy = this.$('[name=task-time-required]:checked').attr('data-descr') == 'One time' ?  TaskFormViewHelper.getCompletedByDate() : null;
+    if ( ! _.isEmpty( completedBy ) ) {
+      var timezoneOffset = (new Date()).getTimezoneOffset() * 60000;
+      completedBy = new Date(completedBy);
+      this.model.set( 'completedBy', new Date(completedBy.getTime() + timezoneOffset) );
+    }
+
   },
 
   /*
@@ -342,17 +354,10 @@ var TaskFormView = Backbone.View.extend({
   submit: function ( e ) {
 
     var validForm = this.validateBeforeSubmit();
-    var completedBy = this.$( '#estimated-completion-date' ).val();
 
     if ( ! validForm ) { return this; }
 
     this.setUpModel( 'submitted' );
-
-    if ( ! _.isEmpty( completedBy ) ) {
-      var timezoneOffset = (new Date()).getTimezoneOffset() * 60000;
-      completedBy = new Date(completedBy);
-      this.model.set( 'completedBy', new Date(completedBy.getTime() + timezoneOffset) );
-    }
 
     this.collection.trigger( 'task:save', this.model );
 

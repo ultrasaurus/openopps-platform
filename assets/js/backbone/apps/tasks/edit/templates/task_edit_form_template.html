@@ -50,8 +50,23 @@
               </select>
             </div>
             <div class="form-group" id="time-options-completion-date">
-              <label for="estimated-completion-date">Estimated completion date (optional)</label>
-              <input id="estimated-completion-date" type="date" <% if (data.completedBy) { %> value="<%- moment(data.completedBy).format('YYYY-MM-DD') %>" <% } %> >
+              <label class="estimated-completion-date-label">Estimated completion date <span class="usa-input-optional"></span></label>
+              <span class="field-validation-error" style="display:none;" data-valmsg-for="estimated-completion-date" data-valmsg-replace="true">Please enter a valid completion date</span>
+              <div class="estimated-completion-date">
+                <div class="usa-form-group usa-form-group-month">
+                  <label for="estimated-completion-date-1">Month</label>
+                  <input class="usa-input-inline" aria-describedby="dateHint" id="estimated-completion-date-1" name="estimated-completion-date-1" type="number" min="1" max="12" <% if (data.completedBy) { %> value="<%- moment(data.completedBy).format('MM') %>" <% } %> >
+                </div>
+                <div class="usa-form-group usa-form-group-day">
+                  <label for="estimated-completion-date-2">Day</label>
+                  <input class="usa-input-inline" aria-describedby="dateHint" id="estimated-completion-date-2" name="estimated-completion-date-2" type="number" min="1" max="31" <% if (data.completedBy) { %> value="<%- moment(data.completedBy).format('DD') %>" <% } %> >
+                </div>
+                <div class="usa-form-group usa-form-group-year">
+                  <label for="estimated-completion-date-3">Year</label>
+                  <input class="usa-input-inline" aria-describedby="dateHint" id="estimated-completion-date-3" name="estimated-completion-date-3" type="number" min="2008" max="2043" <% if (data.completedBy) { %> value="<%- moment(data.completedBy).format('YYYY') %>" <% } %> >
+                </div>
+              </div>
+              <span class="usajobs-form__help-brief" id="dateHint">For example: 03 09 2018</span>
             </div>
             <div class="form-group" id="time-options-time-frequency">
               <label for="js-time-frequency-estimate">How often is this time needed?</label>
