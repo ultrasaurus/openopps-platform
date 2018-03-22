@@ -101,8 +101,7 @@
   },
   "scripts": {
     "preinstall": "",
-    "import": "node import-theme $npm_package_config_dir",
-    "postinstall": "node install-theme && npm run import --openopps-platform:dir=_theme && npm run uswds",
+    "postinstall": "npm run uswds",
     "init": "node ./tools/init.js",
     "demo": "node ./tools/demo.js",
     "build": "gulp build",
