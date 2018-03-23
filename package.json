@@ -1,7 +1,7 @@
 {
   "name": "openopps-platform",
   "private": true,
-  "version": "2.1.8",
+  "version": "2.1.12",
   "description": "platform that creates an empowered network through sharing skills and collaborating on projects",
   "keywords": [],
   "dependencies": {
@@ -101,8 +101,7 @@
   },
   "scripts": {
     "preinstall": "",
-    "import": "node import-theme $npm_package_config_dir",
-    "postinstall": "node install-theme && npm run import --openopps-platform:dir=_theme && npm run uswds",
+    "postinstall": "npm run uswds",
     "init": "node ./tools/init.js",
     "demo": "node ./tools/demo.js",
     "build": "gulp build",
@@ -130,13 +129,13 @@
     "watch:server": "node ./node_modules/nodemon/bin/nodemon --ignore .git/ --ignore assets/ --ignore dist/ --ignore node_modules/ app.js",
     "watch:client": "gulp",
     "uswds": "npm run uswds:css && npm run uswds:images && npm run uswds:fonts",
-    "uswds:css": "node fs-copy node_modules/uswds/dist/css/uswds.css assets/styles/uswds.css",
-    "uswds:images": "node fs-copy node_modules/uswds/dist/img assets/images/uswds",
-    "uswds:fonts": "node fs-copy node_modules/uswds/dist/fonts assets/fonts",
+    "uswds:css": "node ./fs-copy node_modules/uswds/dist/css/uswds.css assets/styles/uswds.css",
+    "uswds:images": "node ./fs-copy node_modules/uswds/dist/img assets/images/uswds",
+    "uswds:fonts": "node ./fs-copy node_modules/uswds/dist/fonts assets/fonts",
     "design-system": "npm run design-system:css && npm run design-system:images && npm run design-system:fonts",
-    "design-system:css": "node fs-copy node_modules/usajobs-design-system/css/usajobs-design-system.min.css assets/styles/usajobs-design-system.min.css",
-    "design-system:images": "node fs-copy node_modules/usajobs-design-system/img assets/img",
-    "design-system:fonts": "node fs-copy node_modules/usajobs-design-system/fonts assets/fonts"
+    "design-system:css": "node ./fs-copy node_modules/usajobs-design-system/css/usajobs-design-system.min.css assets/styles/usajobs-design-system.min.css",
+    "design-system:images": "node ./fs-copy node_modules/usajobs-design-system/img assets/img",
+    "design-system:fonts": "node ./fs-copy node_modules/usajobs-design-system/fonts assets/fonts"
   },
   "main": "app.js",
   "repository": {
