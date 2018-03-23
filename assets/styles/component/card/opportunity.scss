@@ -112,20 +112,56 @@
     box-shadow: 7px 0 3px -3px rgba(0, 0, 0, 0.12), 3px 0 2px -2px rgba(0, 0, 0, 0.24);
   }
 
-  .center {
-    text-align: center;
-    padding-top: 8px;
+  .opportunity-creator {
+    display: flex;
+    flex-direction: column;
+  }
 
-    .circle {
-      width: 6.5rem;
-      height: 6.5rem;
-      border-radius: 50%;
+  .center {
+    text-align: left;
+    padding-top: 0;
+    display: flex;
+    align-items: center;
+    margin-bottom: $size-M;
+
+    @include media($M) {
+      display: block;
+      text-align: center;
+    }
+
+    @include media($ML) {
+      width: 75%;
+      margin-left: 25%;
+      padding-top: 8px;
+    }
+
+    .default-user-icon-profile__small {
+      @include media($M-down) {
+        width: 4.5rem !important;
+        height: 4.5rem !important;
+        margin-right: $size-default;
+      }
     }
 
     p {
       font-size: 1.4rem;
       line-height: 1;
       margin: 0.5rem 0;
+
+      @include media($M-down) {
+        font-style: italic;
+        display: inline;
+      }
+    }
+
+    .profile-name {
+      display: inline;
+    }
+
+    &::after {
+      clear: both;
+      content: "";
+      display: block;
     }
   }
 
@@ -135,23 +171,41 @@
   }
 
   .usajobs-opop-actions__col-sub-actions {
-    text-align: right;
+    text-align: center;
+    display: flex;
+    justify-content: space-between;
 
-    a {
-      margin-right: $size-default;
+    @include media($SM){
+      justify-content: space-around;
     }
 
-    :last-child {
-      margin-right: 0;
+    @include media($ML){
+
+      div {
+        margin-right: $size-S;
+
+        &:last-child {
+          margin-right: inherit;
+        }
+      }
     }
   }
 
   .usajobs-opop__task-intro {
-    display: inline-block;
-    float: right;
+    display: block;
     padding: 1.5rem;
-    padding-top: 0;
     background-color: $color-cool-blue-lightest;
+    margin-left: -$size-default;
+    margin-right: -$size-default;
+
+    @include media($ML) {
+      margin-left: inherit;
+      margin-right: inherit;
+    }
+
+    h4:first-child {
+      margin-top: 0;
+    }
   }
 
   .comment-list-wrapper {
@@ -196,6 +250,11 @@
         float: left;
         width: calc(100% - 15rem);
         max-width: calc(100% - 15rem);
+
+        @include media($M-down) {
+          width: 100%;
+          max-width: 100%;
+        }
       }
 
       .comment-submit {
@@ -205,6 +264,13 @@
         padding: 1.3rem 2rem 1.4rem 2rem;
         float: left;
         width: 15rem;
+
+        @include media($M-down) {
+          border-bottom-left-radius: $size-base;
+          border-top-left-radius: $size-base;
+          width: inherit;
+          float: none;
+        }
       }
 
       &::after {
@@ -271,18 +337,20 @@
       .comment-item {
         width: 100%;
         overflow: hidden;
-        // display: inline-table;
         padding-top: 5px;
       }
 
       .comment-image {
         float: left;
-        // display: table-cell;
         vertical-align: top;
         max-height: 40px;
         max-width: 40px;
         height: 40px;
         width: 40px;
+
+        @include media($M-down) {
+          margin-right: $size-S;
+        }
       }
 
       .comment-inner {
@@ -291,6 +359,10 @@
         width: 100%;
         vertical-align: top;
         margin-left: 45px;
+
+        @include media($M-down) {
+          margin-left: 0;
+        }
       }
 
       .comment-alert-empty {
@@ -326,14 +398,6 @@
         display: none;
       }
 
-      // .comment-input {
-      //   padding-top: 5px;
-      //   padding-bottom: 5px;
-      //   position: relative;
-      //   height: auto;
-      //   min-height: 30px;
-      // }
-
       form.comment-submit .input-group-btn {
         vertical-align: bottom;
       }
@@ -350,9 +414,7 @@
         margin-top: 5px;
         background-color: $color-gray-light;
         border-radius: 50%;
-        // border: 1px solid $color-gray;
         color: #fff;
-        // font-size: 7px;
         width: 3rem;
         height: 3rem;
         line-height: 3rem;
@@ -372,7 +434,6 @@
     display: flex;
 
     .usajobs-open-opps-opportunity-progress__step {
-      //display: inline-block;
       text-align: center;
       width: 9rem;
       margin-bottom: $size-default;
@@ -397,7 +458,6 @@
       line-height: 65px;
       border-radius: 50%;
       color: #fff;
-      //box-shadow: 0 0 0 2px none inset;
       text-decoration: none;
       text-align: center;
 
@@ -416,17 +476,6 @@
           height: 4.5rem;
         }
       }
-
-      // &::after {
-      //   position: relative;
-      //   display: inline-block;
-      //   width: 4.1rem;
-      //   height: 4.1rem;
-      //   padding-top: 0.9rem;
-      //   margin-left: 0;
-      //   content: url(../img/icons/white/svg/user-plus.svg);
-      //   color: #fff;
-      // }
     }
 
     .usajobs-open-opps-opportunity-progress__in-progress {
@@ -440,7 +489,6 @@
       line-height: 65px;
       border-radius: 50%;
       color: #fff;
-      //box-shadow: 0 0 0 2px none inset;
       text-decoration: none;
       text-align: center;
 
@@ -459,17 +507,6 @@
           height: 3.5rem;
         }
       }
-
-      // &::after {
-      //   position: relative;
-      //   display: inline-block;
-      //   width: 3.6rem;
-      //   height: 3.6rem;
-      //   padding-top: 1.3rem;
-      //   margin-left: 0;
-      //   content: url(../img/icons/white/svg/sync.svg);
-      //   color: #fff;
-      // }
     }
 
     .usajobs-open-opps-opportunity-progress__completed {
@@ -483,7 +520,6 @@
       line-height: 65px;
       border-radius: 50%;
       color: #fff;
-      //box-shadow: 0 0 0 2px none inset;
       text-decoration: none;
       text-align: center;
 
@@ -502,17 +538,6 @@
           height: 3.5rem;
         }
       }
-
-      // &::after {
-      //   position: relative;
-      //   display: inline-block;
-      //   width: 3.6rem;
-      //   height: 3.6rem;
-      //   padding-top: 1.2rem;
-      //   margin-left: 0;
-      //   content: url(../img/icons/white/svg/check.svg);
-      //   color: #fff;
-      // }
     }
 
     .progress-spacer {
@@ -520,7 +545,6 @@
       width: 7.2rem;
       background-color: $color-gray-lighter;
       content: ' ';
-      //display: inline-block;
       margin-bottom: 3rem;
       flex-grow: 8;
       flex-shrink: 8;
@@ -622,7 +646,6 @@
       display: inline-block;
       width: 1.6rem;
       height: 1.6rem;
-      //background-size: 12px 12px;
       margin-top: 0.3rem;
       margin-left: 0;
       color: #fff;
@@ -680,7 +703,7 @@
     .project-people__assign {
       position: absolute;
       top: -0.4rem;
-      right: 1rem;
+      right: 0;
       margin: 0;
       vertical-align: initial;
       background-color: $color-gray-light;
@@ -690,7 +713,6 @@
         display: inline-block;
         width: 1.6rem;
         height: 1.6rem;
-        //background-size: 12px 12px;
         margin-top: 0.3rem;
         margin-left: 0;
         content: url(../img/icons/white/svg/times.svg);
@@ -719,7 +741,6 @@
         display: inline-block;
         width: 1.6rem;
         height: 1.6rem;
-        //background-size: 12px 12px;
         margin-top: 0.3rem;
         margin-left: 0;
         content: url(../img/icons/white/svg/plus.svg);
@@ -771,6 +792,11 @@
       width: 85px;
       margin-bottom: $size-M;
       position: relative;
+      min-height: 11.8rem;
+
+      @include media($SM-down) {
+        min-height: 16.2rem;
+      }
 
       .project-people {
         width: 6.5rem;
@@ -796,7 +822,7 @@
       .project-people__assign, .project-people__remove {
         position: absolute;
         top: -0.4rem;
-        right: 1rem;
+        right: 0;
         margin: 0;
         vertical-align: initial;
       }
@@ -876,6 +902,7 @@
     display: inline-block;
     width: 85px;
     position: relative;
+    min-height: 11.8rem;
 
     .project-people {
       width: 6.5rem;
@@ -892,6 +919,140 @@
       max-width: 85px;
       max-height: 35px;
       overflow: hidden;
+    }
+  }
+}
+
+.estimated-completion-date {
+  &::after {
+    clear: both;
+    content: "";
+    display: table;
+  }
+
+  label {
+    margin-top: 0;
+  }
+
+  input::-webkit-outer-spin-button,
+  input::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
+  }
+}
+
+.usajobs-form__help-brief {
+    margin-top: .5rem;
+    font-size: 1.4rem;
+    max-width: 46rem;
+}
+
+.usa-input-error .usa-input-inline-error {
+  width: 100%;
+}
+
+.usajobs-content-gutter.opportunity-gutter {
+  @include media($ML-down) {
+    padding: 0;
+  }
+
+  @include media($M) {
+    .overview, .discussion {
+      margin-top: 3rem;
+    }
+  }
+
+  .usa-form-large {
+    max-width: 46rem;
+  }
+
+  .usajobs-button_bar--slim {
+    @include media($SM-down) {
+      border-top: none;
+    }
+
+    .usajobs-button_bar__body {
+      @include media($SM-down) {
+        border-bottom: 1px solid #d6d7d9;
+      }
+
+      .usa-button-secondary {
+        margin: 0 0 1.5rem 0;
+      }
+    }
+  }
+
+  .usajobs-open-opps-opportunity:last-child {
+    border-bottom: none;
+  }
+
+  .usajobs-open-opps-opportunity.usajobs-open-opps-section {
+    @include media($ML-down) {
+      -webkit-box-shadow: inset 0 7px 5px -5px rgba(0,0,0,0.16);
+      -moz-box-shadow: inset 0 7px 5px -5px rgba(0,0,0,0.16);
+      box-shadow: inset 0 7px 5px -5px rgba(0,0,0,0.16);
+    }
+  }
+
+  .usajobs-open-opps-opportunity {
+    @include media($ML-down) {
+      position: relative;
+      border-top: none;
+      position: relative;
+      background-color: #ffffff;
+      margin: 0;
+      padding: 1.5rem;
+      box-shadow: none;
+    }
+  }
+
+  #rightrail {
+    margin-bottom: 0;
+
+    @include media($ML-down) {
+      border-top: 1px solid $color-gray-light;
+    }
+  }
+
+  #rightrail > .usajobs-open-opps-opportunity.usajobs-open-opps-section {
+    box-shadow: none;
+    border: none;
+  }
+
+  .overview .opportunity-description {
+
+    @include media($ML-down) {
+      width: 100%;
+    }
+  }
+
+  .overview .personnel-needed.mobile {
+    width: 100%;
+    margin-bottom: $size-M;
+    float: none;
+
+    @include media($ML) {
+      display: none;
+    }
+  }
+
+  .overview .personnel-needed.desktop {
+    @include media($ML-down) {
+      display: none;
+    }
+  }
+
+  .skills {
+    margin-bottom: $size-M;
+
+    @include media($L) {
+      margin-bottom: inherit;
+    }
+  }
+
+  .discussion {
+    @include media($ML-down) {
+      border-top: 1px solid $color-gray-light;
     }
   }
 }

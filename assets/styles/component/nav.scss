@@ -702,6 +702,10 @@ $nav_item_height: 17px + 24px;
     background-color: $color-primary-darkest;
     box-shadow: none;
 
+    @include media($SM) {
+      padding-top: 1.7rem;
+    }
+
     @include media($M) {
       padding-top: 2.7rem;
       padding-bottom: 2.6rem;
@@ -711,7 +715,7 @@ $nav_item_height: 17px + 24px;
   &__people {
     display: none;
 
-    @include media($SM) {
+    @include media($M) {
       display: inline-block;
     }
 
@@ -732,10 +736,9 @@ $nav_item_height: 17px + 24px;
   }
 
   .desktop {
-    display: none;
 
-    @include media($M) {
-      display: initial;
+    @include media($M-down) {
+      display: none;
     }
   }
 
@@ -1005,5 +1008,12 @@ ul.ui-autocomplete {
     @include media($L) {
       display: inherit;
     }
+  }
+}
+
+.svg-inline--fa.fa-fw {
+  @include media($M-down) {
+    width: auto;
+    margin: 0 auto;
   }
 }
