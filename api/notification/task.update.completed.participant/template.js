@@ -1,6 +1,6 @@
 module.exports = {
-  subject: '<%- task.title %> is complete — thank you!',
-  to: '<%- owner.username %>',
+  subject: 'Your opportunity is complete — thank you!',
+  to: '<%- volunteers %>',
   data: function (model, done) {
     var data = {
       task: model.task,
@@ -10,7 +10,4 @@ module.exports = {
     };
     done(null, data);
   },
-  includes: [
-    'task.update.completed.participant',
-  ],
 };

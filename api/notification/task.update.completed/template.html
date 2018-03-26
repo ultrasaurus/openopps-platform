@@ -1,1 +1,10 @@
-<p>Congrats! You’ve successfully completed “<a href="<%- globals.urlPrefix %>/tasks/<%- task.id %>"><%- task.title %></a>.” Your profile has been updated to reflect your achievement.</p>
+<p>Dear <% if (user.name) { %><%- user.name %><% } %>:</p>
+
+<p>This email was sent to your Open Opportunities participant today to let them know that your Open Opportunity was marked as completed and to ask them to complete a survey about their experience.</p>
+
+<p>Thanks for leveraging Open Opportunities to help achieve your mission while developing the federal workforce!</p>
+
+<p class="no-margin">Thanks,</p>
+<p>The <%- globals.systemName %> Team</p>
+
+<p><hr class="hr" style="border: 0; background: #5b616b; height: 2px;"></p>

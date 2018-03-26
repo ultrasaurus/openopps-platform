@@ -204,6 +204,7 @@ function sendTaskStateUpdateNotification (user, task) {
       break;
     case 'completed':
       sendTaskCompletedNotification(user, task);
+      sendTaskCompletedNotificationParticipant(user, task);
       break;
     case 'open':
       sendTaskNotification(user, task, 'task.update.opened');
@@ -237,6 +238,11 @@ async function sendTaskAssignedNotification (user, task) {
 
 async function sendTaskCompletedNotification (user, task) {
   var data = await getNotificationTemplateData(user, task, 'task.update.completed');
+  notification.createNotification(data);
+}
+
+async function sendTaskCompletedNotificationParticipant (user, task) {
+  var data = await getNotificationTemplateData(user, task, 'task.update.completed.participant');
   notification.createNotification(data);
 }
 
