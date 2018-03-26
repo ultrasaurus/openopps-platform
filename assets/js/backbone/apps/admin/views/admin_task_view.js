@@ -81,13 +81,13 @@ var AdminTaskView = Backbone.View.extend({
         text: 'Publish',
         action: function () {
           this.submitPublish.bind(this)(id);
-        }.bind(this)
+        }.bind(this),
       },
       secondary: {
         text: 'Cancel',
         action: function () {
           this.modal.cleanup();
-        }.bind(this)
+        }.bind(this),
       },
     }).render();
   },
