@@ -1,11 +1,10 @@
-module.exports = { 
-  subject: 'Welcome to <%= globals.systemName %>',
+module.exports = {
+  subject: 'Welcome to <%= globals.systemName %>!',
   to: '<%= user.username %>',
   data: function (model, done) {
-    var data = { 
+    var data = {
       user: model,
     };
     done(null, data);
   },
 };
-  

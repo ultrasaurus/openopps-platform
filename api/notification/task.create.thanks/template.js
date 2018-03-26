@@ -1,5 +1,5 @@
 module.exports = {
-  subject: 'New Opportunity Submission',
+  subject: 'New opportunity submitted',
   to: '<%= user.username %>',
   data: function (model, done) {
     var data = {
@@ -9,4 +9,3 @@ module.exports = {
     done(null, data);
   },
 };
-  
