@@ -6,7 +6,6 @@ var Backbone = require('backbone');
 var BaseController = require('../../../base/base_controller');
 var AdminMainView = require('../views/admin_main_view');
 
-
 var Admin = {};
 
 Admin.ShowController = BaseController.extend({
@@ -20,12 +19,12 @@ Admin.ShowController = BaseController.extend({
     this.adminMainView = new AdminMainView({
       action: options.action,
       agencyId: options.agencyId,
-      el: this.el
+      el: this.el,
     }).render();
   },
 
   // Cleanup controller and views
-  cleanup: function() {
+  cleanup: function () {
     this.adminMainView.cleanup();
     removeView(this);
   }

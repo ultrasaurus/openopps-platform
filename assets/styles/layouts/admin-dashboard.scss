@@ -10,6 +10,11 @@
   background: #ffffff;
   padding: 1rem 3rem 3rem 3rem;
 
+  @include media($M-down) {
+    padding: 1.5rem;
+    margin-top: 0;
+  }
+
   hr {
     border-top: 1px solid #212121;
   }
@@ -40,6 +45,7 @@
 
   .task-metrics-table {
     width: 100%;
+    margin: 0;
 
     :first-child {
       margin-top: 0;
@@ -114,30 +120,34 @@
     }
   }
 
-  .task-filters {
-    display: inline-block;
-    float: left;
+  .filter.usa-width-one-sixth {
+    white-space: nowrap; 
+    width: auto;
+    margin-right: 3rem;
+    
 
-    .filter {
-      display: inline-block;
-      margin-right: 3rem;
-
-      label {
-        margin-top: 0;
-      }
+    > label {
+      margin-top: 0;
     }
 
-    .export-button {
-      //display: inline-block;
-      //margin-left: 3rem;
-
-      a, a.visited {
-        color: #0071BA;
-      }
+    > a {
+      white-space: nowrap; 
     }
   }
 
+  .export-button {
+
+    a, a.visited {
+      color: #0071BA;
+    }
+  }
+
+  .table-responsive {
+    overflow-x: auto;
+  }
+
   .task-table {
+
     width: 100%;
 
     .metrics-table__label {
@@ -156,5 +166,25 @@
     .delete-task {
       color: #CD2026;
     }
+  }
+
+  @media screen and (min-width: 600px) {
+    .usa-width-one-fourth.period {
+      float: right;
+    }
+  }
+
+  @media screen and (min-width: 1201px) {
+    .usa-width-three-fourths.type {
+      width: 80.41059%
+    }
+
+    .usa-width-one-fourth.period {
+      width: 16.23176%
+    }
+  }
+
+  .usa-width-three-fourths.type, .usa-width-one-fourth.period {
+    white-space: nowrap;
   }
 }
