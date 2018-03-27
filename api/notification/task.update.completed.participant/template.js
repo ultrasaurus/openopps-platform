@@ -1,5 +1,5 @@
 module.exports = {
-  subject: '<%- task.title %> is complete — thank you!',
+  subject: 'Your opportunity is complete — thank you!',
   to: '<%- user.username %>',
   data: function (model, done) {
     var data = {

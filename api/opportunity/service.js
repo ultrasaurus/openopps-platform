@@ -83,7 +83,7 @@ async function createOpportunity (attributes, done) {
     await processTaskTags(task, tags).then(tags => {
       task.tags = tags;
     });
-    task.owner = attributes.userId;
+    task.owner = dao.clean.user((await dao.User.query(dao.query.user, task.userId, dao.options.user))[0]);
     return done(null, task);
   }).catch(err => {
     return done(true);
@@ -133,7 +133,7 @@ async function updateOpportunityState (attributes, done) {
   attributes.completedAt = attributes.state === 'completed' && !origTask.completedAt ? new Date : origTask.completedAt;
   attributes.canceledAt = attributes.state === 'canceled' && origTask.state !== 'canceled' ? new Date : origTask.canceledAt;
   await dao.Task.update(attributes).then(async (task) => {
-    return done(await dao.Task.findOne('id = ?', task.id), origTask.state !== task.state);
+    return done(await findById(task.id, true), origTask.state !== task.state);
   }).catch (err => {
     return done(null, false, {'message':'Error updating task.'});
   });
@@ -154,6 +154,8 @@ async function updateOpportunity (attributes, done) {
   attributes.updatedAt = new Date();
   await dao.Task.update(attributes).then(async (task) => {
     task.userId = task.userId || origTask.userId; // userId is null if editted by owner
+    task.owner = dao.clean.user((await dao.User.query(dao.query.user, task.userId, dao.options.user))[0]);
+    task.volunteers = (await dao.Task.db.query(dao.query.volunteer, task.id)).rows;
     task.tags = [];
     await dao.TaskTags.db.query(dao.query.deleteTaskTags, task.id)
       .then(async () => {
@@ -200,10 +202,15 @@ function volunteersCompleted (task) {
 function sendTaskStateUpdateNotification (user, task) {
   switch (task.state) {
     case 'in progress':
-      sendTaskAssignedNotification(user, task);
+      _.forEach(_.filter(task.volunteers, { assigned: true }), (volunteer) => {
+        sendTaskAssignedNotification(volunteer, task);
+      });
       break;
     case 'completed':
       sendTaskCompletedNotification(user, task);
+      _.forEach(_.filter(task.volunteers, { assigned: true, taskComplete: true }), (volunteer) => {
+        sendTaskCompletedNotificationParticipant(volunteer, task);
+      });
       break;
     case 'open':
       sendTaskNotification(user, task, 'task.update.opened');
@@ -215,16 +222,11 @@ function sendTaskStateUpdateNotification (user, task) {
 }
 
 async function getNotificationTemplateData (user, task, action) {
-  var volunteers = (await dao.Task.db.query(dao.query.volunteerListQuery, task.id)).rows;
-  if(action == 'task.update.completed') {
-    volunteers = _.filter(volunteers, { 'taskComplete': true });
-  }
   var data = {
     action: action,
     model: {
       task: task,
-      owner: user,
-      volunteers: _.map(volunteers, 'username').join(', '),
+      user: user,
     },
   };
   return data;
@@ -237,6 +239,11 @@ async function sendTaskAssignedNotification (user, task) {
 
 async function sendTaskCompletedNotification (user, task) {
   var data = await getNotificationTemplateData(user, task, 'task.update.completed');
+  notification.createNotification(data);
+}
+
+async function sendTaskCompletedNotificationParticipant (user, task) {
+  var data = await getNotificationTemplateData(user, task, 'task.update.completed.participant');
   notification.createNotification(data);
 }
 

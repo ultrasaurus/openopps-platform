@@ -1,32 +1,38 @@
 <div id="profile-list">
-  <div class="open-opps-people-row header">
-    <div class="col-name">Name</div>
-    <div class="col-title">Title</div>
-    <div class="col-agency" data-i18n="tag.Agency">Agency</div>
-    <div class="col-location">Location</div>
-  </div>
-  <% _.each(people, function(person) { %>
-  <% if (!_.isUndefined(person.name)) { %>
-  <div class="open-opps-people-row">
-    <div class="col-name">
-      <a href="/profile/<%= person.id %>">
-        <%= person.name %>
-      </a>
-    </div>
-    <div class="col-title">
-      <%= person.title %>
-    </div>
-    <div class="col-agency">
-      <% if (!_.isUndefined(person.agency)) { %>
-      <%= person.agency.name %>
+  <table class="usa-table-borderless">
+    <thead>
+    <tr class="usajobs-grid open-opps-row header">
+      <th scope="col" class="col-name">Name</th>
+      <th scope="col" class="col-title">Title</th>
+      <th scope="col" class="col-agency">Agency</th>
+      <th scope="col" class="col-location">Location</th>
+    </tr>
+    </thead>
+    <tbody>
+      <% _.each(people, function(person) { %>
+      <% if (!_.isUndefined(person.name)) { %>
+      <tr>
+        <td class="col-name">
+          <a href="/profile/<%= person.id %>">
+            <%= person.name %>
+          </a>
+        </td>
+        <td class="col-title">
+          <%= person.title %>
+        </td>
+        <td class="col-agency">
+          <% if (!_.isUndefined(person.agency)) { %>
+          <%= person.agency.name %>
+          <% } %>
+        </td>
+        <td class="col-location">
+          <% if (!_.isUndefined(person.location)) { %>
+          <%= person.location.name %>
+          <% } %>
+        </td>
+      </tr>
       <% } %>
-    </div>
-    <div class="col-location">
-      <% if (!_.isUndefined(person.location)) { %>
-      <%= person.location.name %>
-      <% } %>
-    </div>
-  </div>
-  <% } %>
-  <% }); %>
+      <% }); %>
+    </tbody>
+  </table>
 </div>
