@@ -29,8 +29,9 @@
 }
 
 .usajobs-grid.usajobs-open-opps-people-search__title {
+  padding: 0;
+
   @include media($L) {
-    padding: 0;
     margin: $size-M 0;
   }
 
@@ -56,51 +57,43 @@
 }
 
 #profile-list {
-  display: table;
   overflow-x: auto;
   padding-bottom: $size-M;
   width: 100%;
 }
 
-.open-opps-people-row {
-  display: table-row;
+.col-name, .col-title, .col-agency, .col-location {
+  padding: $size-default $size-default $size-default 0;
 
-  @include media($M) {
-    padding: $size-default 0;
-    text-align: left;
+  @include media($ML-down) {
+    max-width: 12rem;
   }
+}
 
-  &.header {
-    font-weight: bold;
+.col-title {
+  @include media($ML-down) {
+    max-width: 15rem;
   }
+}
 
-  .col-name {
-    display: table-cell;
-    width: 15%;
-    padding: $size-default 0 $size-default $size-default;
-    border-bottom: 1.5px solid #c8c8c8;
-  }
+.col-name {
+  width: 15%;
+  padding: $size-default $size-default $size-default 0;
+}
 
-  .col-title {
-    display: table-cell;
-    width: 35%;
-    padding: $size-default 0;
-    border-bottom: 1.5px solid #c8c8c8;
-  }
+.col-title {
+  width: 35%;
+  padding: $size-default $size-default $size-default 0;
+}
 
-  .col-agency {
-    display: table-cell;
-    width: 35%;
-    padding: $size-default 0;
-    border-bottom: 1.5px solid #c8c8c8;
-  }
+.col-agency {
+  width: 35%;
+  padding: $size-default $size-default $size-default 0;
+}
 
-  .col-location {
-    display: table-cell;
-    width: 15%;
-    padding: $size-default $size-default $size-default 0;
-    border-bottom: 1.5px solid #c8c8c8;
-  }
+.col-location {
+  width: 15%;
+  padding: $size-default $size-default $size-default 0;
 }
 
 .usajobs-content-gutter.usajobs-open-opps-search {
