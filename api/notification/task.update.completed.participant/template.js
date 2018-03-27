@@ -1,11 +1,10 @@
 module.exports = {
   subject: 'Your opportunity is complete — thank you!',
-  to: '<%- volunteers %>',
+  to: '<%- user.username %>',
   data: function (model, done) {
     var data = {
       task: model.task,
-      owner: model.owner,
-      volunteers: model.volunteers,
+      user: model.user,
       survey: openopps.survey,
     };
     done(null, data);
