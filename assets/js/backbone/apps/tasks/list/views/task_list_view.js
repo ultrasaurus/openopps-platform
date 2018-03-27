@@ -61,7 +61,7 @@ var TaskListView = Backbone.View.extend({
   },
 
   renderList: function (page) {
-    $('#task-search-spinner').hide();
+    $('#search-results-loading').hide();
     $('#task-list').html('');
     if (this.tasks.length === 0) {
       var settings = {
@@ -162,7 +162,7 @@ var TaskListView = Backbone.View.extend({
     this.filter($target.val());
   },
 
-  selectAllStateFilter: function() {
+  selectAllStateFilter: function () {
     var checkBoxes = $('#stateFilters input[type="checkbox"]');
     checkBoxes.prop('checked', !checkBoxes.prop('checked'));
 
