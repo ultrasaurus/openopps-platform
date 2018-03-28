@@ -38,7 +38,7 @@
 
       select {
         display: inline-block;
-        width: 15rem;
+        width: 21rem;
       }
     }
   }
@@ -168,23 +168,41 @@
     }
   }
 
-  @media screen and (min-width: 600px) {
+  @media screen and (min-width: 62rem) {
+    .usa-width-three-fourths.type {
+      text-align: right;
+    }
     .usa-width-one-fourth.period {
       float: right;
+      text-align: right;
+    }
+    .task-metrics .usajobs-form .filter, .task-metrics .usajobs-form .group {
+      width: 15rem;
     }
   }
 
   @media screen and (min-width: 1201px) {
     .usa-width-three-fourths.type {
-      width: 80.41059%
+      width: 80.41059%;
+      text-align: right;
     }
 
     .usa-width-one-fourth.period {
-      width: 16.23176%
+      width: 16.23176%;
+      text-align: right;
     }
   }
+}
 
-  .usa-width-three-fourths.type, .usa-width-one-fourth.period {
-    white-space: nowrap;
+.usa-width-three-fourths.type, .usa-width-one-fourth.period {
+  white-space: nowrap;
+  text-align: left;
+
+  .filter {
+    width: 100%;
+  }
+  
+  label {
+    width: 5rem;
   }
 }
