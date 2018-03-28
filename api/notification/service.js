@@ -57,12 +57,17 @@ function renderTemplate (template, data, done) {
     bcc: _.template(template.bcc)(data),
     subject: _.template(template.subject)(data),
   };
-  fs.readFile(html, function (err, template) {
+  fs.readFile(html, function (err, htmlTemplate) {
     if (err) {
       log.info(err);
       return done(err);
     }
-    data._content = _.template(template)(data);
+    data._content = _.template(htmlTemplate)(data);
+    if (!_.isEmpty(template.includes)) {
+      data._content += _.map(template.includes, (include) => {
+        return renderIncludes(include, data);
+      });
+    }
     data._logo = '/img/logo/png/open-opportunities-email.png';
     fs.readFile(layout, function (err, layout) {
       if (err) {
@@ -73,6 +78,17 @@ function renderTemplate (template, data, done) {
       return done(err, mailOptions);
     });
   });
+}
+
+function renderIncludes (template, data) {
+  try {
+    var html = __dirname + '/../notification/' + template + '/template.html';
+    var htmlTemplate = fs.readFileSync(html);
+    return _.template(htmlTemplate)(data);
+  } catch (err) {
+    return '';
+  }
+
 }
 
 function sendEmail (mailOptions, done) {

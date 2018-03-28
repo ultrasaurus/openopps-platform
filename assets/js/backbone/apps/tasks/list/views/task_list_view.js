@@ -29,7 +29,6 @@ var TaskListView = Backbone.View.extend({
   },
 
   render: function () {
-    //var peopleToRender = this.collection.chain().pluck('attributes').value();
     var template = _.template(TaskListTemplate)({
       placeholder: 'I\'m looking for opportunities by name, agency, skill, topic, description...',
       user: window.cache.currentUser,
@@ -51,6 +50,7 @@ var TaskListView = Backbone.View.extend({
         self.collection = collection;
         self.tasks = collection.chain()
           .pluck('attributes')
+          .map( _.bind( parseTaskStatus, this ) )
           .filter( _.bind( filterTaskByAgency, self, self.agency ) )
           .filter( _.bind( filterTaskByTerm, self, self.term ) )
           .filter( _.bind( filterTaskByFilter, self, self.filters ) )
@@ -61,7 +61,7 @@ var TaskListView = Backbone.View.extend({
   },
 
   renderList: function (page) {
-    $('#task-search-spinner').hide();
+    $('#search-results-loading').hide();
     $('#task-list').html('');
     if (this.tasks.length === 0) {
       var settings = {
@@ -162,7 +162,7 @@ var TaskListView = Backbone.View.extend({
     this.filter($target.val());
   },
 
-  selectAllStateFilter: function() {
+  selectAllStateFilter: function () {
     var checkBoxes = $('#stateFilters input[type="checkbox"]');
     checkBoxes.prop('checked', !checkBoxes.prop('checked'));
 
@@ -196,6 +196,7 @@ var TaskListView = Backbone.View.extend({
     if (typeof agency !== 'undefined') this.agency = agency;
     this.tasks = this.collection.chain()
       .pluck('attributes')
+      .map( _.bind( parseTaskStatus, this ) )
       .filter( _.bind( filterTaskByAgency, this, this.agency ) )
       .filter( _.bind( filterTaskByTerm, this, this.term ) )
       .filter( _.bind( filterTaskByFilter, this, this.filters ) )
@@ -212,6 +213,11 @@ var TaskListView = Backbone.View.extend({
   },
 
 });
+
+function parseTaskStatus (task) {
+  task.state = (task.state == 'in progress' && task.acceptingApplicants) ? 'open' : task.state;
+  return task;
+}
 
 function filterTaskByAgency ( agency, task ) {
   var getAbbr = _.property( 'abbr' );

@@ -29,8 +29,9 @@
 }
 
 .usajobs-grid.usajobs-open-opps-people-search__title {
+  padding: 0;
+
   @include media($L) {
-    padding: 0;
     margin: $size-M 0;
   }
 
@@ -55,52 +56,52 @@
   }
 }
 
+.table-responsive {
+  position: relative;
+}
+
+.loading-container {
+  height: 22.5em;
+}
+
 #profile-list {
-  display: table;
   overflow-x: auto;
   padding-bottom: $size-M;
   width: 100%;
 }
 
-.open-opps-people-row {
-  display: table-row;
+.col-name, .col-title, .col-agency, .col-location {
+  padding: $size-default $size-default $size-default 0;
 
-  @include media($M) {
-    padding: $size-default 0;
-    text-align: left;
+  @include media($ML-down) {
+    max-width: 12rem;
   }
+}
 
-  &.header {
-    font-weight: bold;
+.col-title {
+  @include media($ML-down) {
+    max-width: 15rem;
   }
+}
 
-  .col-name {
-    display: table-cell;
-    width: 15%;
-    padding: $size-default 0 $size-default $size-default;
-    border-bottom: 1.5px solid #c8c8c8;
-  }
+.col-name {
+  width: 15%;
+  padding: $size-default $size-default $size-default 0;
+}
 
-  .col-title {
-    display: table-cell;
-    width: 35%;
-    padding: $size-default 0;
-    border-bottom: 1.5px solid #c8c8c8;
-  }
+.col-title {
+  width: 35%;
+  padding: $size-default $size-default $size-default 0;
+}
 
-  .col-agency {
-    display: table-cell;
-    width: 35%;
-    padding: $size-default 0;
-    border-bottom: 1.5px solid #c8c8c8;
-  }
+.col-agency {
+  width: 35%;
+  padding: $size-default $size-default $size-default 0;
+}
 
-  .col-location {
-    display: table-cell;
-    width: 15%;
-    padding: $size-default $size-default $size-default 0;
-    border-bottom: 1.5px solid #c8c8c8;
-  }
+.col-location {
+  width: 15%;
+  padding: $size-default $size-default $size-default 0;
 }
 
 .usajobs-content-gutter.usajobs-open-opps-search {
@@ -172,6 +173,10 @@
   height: 4.3rem;
 }
 
+.main-content {
+  position: relative;
+}
+
 .usajobs-open-opps-search-results {
   // margin-top: $size-default;
 
@@ -179,6 +184,42 @@
     // margin-top: $size-M;
     display: flex;
     flex-wrap: wrap;
+  }
+
+  &__loading {
+    -webkit-box-align: start;
+    -moz-box-align: start;
+    box-align: start;
+    -webkit-align-items: flex-start;
+    -moz-align-items: flex-start;
+    -ms-align-items: flex-start;
+    -o-align-items: flex-start;
+    align-items: flex-start;
+    -ms-flex-align: start;
+    -webkit-box-pack: center;
+    -moz-box-pack: center;
+    box-pack: center;
+    -webkit-justify-content: center;
+    -moz-justify-content: center;
+    -ms-justify-content: center;
+    -o-justify-content: center;
+    justify-content: center;
+    -ms-flex-pack: center;
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background-color: #fffc;
+    text-align: center;
+    vertical-align: middle;
+    z-index: 800;
+
+    .svg-inline--fa {
+      margin-top: 12.5rem;
+      margin-bottom: 12.5rem;
+      color: #02bfe7;
+    }
   }
 
   .usajobs-open-opps-opportunity {
