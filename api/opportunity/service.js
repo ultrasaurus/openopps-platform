@@ -210,6 +210,10 @@ function sendTaskStateUpdateNotification (user, task) {
       break;
     case 'submitted':
       sendTaskNotification(user, task, 'task.update.submitted');
+      sendTaskNotification(user, task, 'task.update.submitted.admin');
+      break;
+    case 'canceled':
+      sendTaskNotification(user, task, 'task.update.canceled');
       break;
   }
 }
