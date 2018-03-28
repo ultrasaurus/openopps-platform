@@ -102,6 +102,9 @@ var TaskItemView = BaseView.extend({
 
     self.$el.html(compiledTemplate);
     self.$el.localize();
+    if(taskState.toLowerCase() == 'in progress' && self.data.model.acceptingApplicants) {
+      this.updatePill('in progress', true);
+    }
     $('time.timeago').timeago();
     self.updateTaskEmail();
     self.model.trigger('task:show:render:done');
@@ -200,17 +203,18 @@ var TaskItemView = BaseView.extend({
     element.siblings('.usa-accordion-content').attr('aria-hidden', !this.data.accordion.open);
   },
 
-  updatePill: function (state) {
-    var pillElem = $('.status-' + this.data.state.value.replace(' ', '-'));
-    pillElem.removeClass('status-' + this.data.state.value.replace(' ', '-'));
+  updatePill: function (state, toggleOn) {
+    var status = (state == 'in progress' && !toggleOn) ? 'status-open' : 'status-' + this.data.state.value.replace(' ', '-');
+    var pillElem = $('.' + status);
+    pillElem.removeClass(status);
     this.data.state = {
       humanReadable: state.charAt(0).toUpperCase() + state.slice(1),
       value: state,
     };
     this.data.model.state = state;
     this.model.attributes.state = state;
-    pillElem.addClass('status-' + this.data.state.value.replace(' ', '-'));
-    pillElem.html(this.data.state.humanReadable);
+    pillElem.addClass((state == 'in progress' && toggleOn) ? 'status-open' : 'status-' + this.data.state.value.replace(' ', '-'));
+    pillElem.html((state == 'in progress' && toggleOn) ? 'Open' : this.data.state.humanReadable);
   },
 
   toggleAccept: function (e) {
@@ -235,7 +239,7 @@ var TaskItemView = BaseView.extend({
         } else {
           $(e.currentTarget).addClass('toggle-off');
         }
-        this.updatePill(state);
+        this.updatePill(state, toggleOn);
       }.bind(this),
       error: function (err) {
         // display modal alert type error
