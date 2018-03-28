@@ -3,6 +3,11 @@ var $ = require('jquery');
 var _ = require('underscore');
 var Backbone = require('backbone');
 
+Backbone.history.on('all', function (route, router) {
+  window.scrollTo(0, 0);
+});
+
+
 /**
  * Helper function to navigate links within backbone
  * instead of reloading the whole page through a hard link.
