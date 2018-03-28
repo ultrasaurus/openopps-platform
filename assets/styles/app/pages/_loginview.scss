@@ -39,6 +39,12 @@
 
 .usajobs-button_bar--slim .usajobs-button_bar__body {
   text-align: right;
+
+  #register-cancel {
+    @include media($M-down) {
+      margin-bottom: 1em;
+    }
+  }
 }
 
 .password-rules {
