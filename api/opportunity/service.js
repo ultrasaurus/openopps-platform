@@ -132,8 +132,10 @@ async function updateOpportunityState (attributes, done) {
   attributes.publishedAt = attributes.state === 'open' && !origTask.publishedAt ? new Date : origTask.publishedAt;
   attributes.completedAt = attributes.state === 'completed' && !origTask.completedAt ? new Date : origTask.completedAt;
   attributes.canceledAt = attributes.state === 'canceled' && origTask.state !== 'canceled' ? new Date : origTask.canceledAt;
-  await dao.Task.update(attributes).then(async (task) => {
-    return done(await findById(task.id, true), origTask.state !== task.state);
+  await dao.Task.update(attributes).then(async (t) => {
+    var task = await findById(t.id, true);
+    task.previousState = origTask.state;
+    return done(task, origTask.state !== task.state); 
   }).catch (err => {
     return done(null, false, {'message':'Error updating task.'});
   });
@@ -217,10 +219,18 @@ function sendTaskStateUpdateNotification (user, task) {
       break;
     case 'submitted':
       sendTaskNotification(user, task, 'task.update.submitted');
-      sendTaskNotification(user, task, 'task.update.submitted.admin');
+      sendTaskSubmittedNotification(user, task, 'task.update.submitted.admin');
       break;
     case 'canceled':
-      sendTaskNotification(user, task, 'task.update.canceled');
+      if (task.previousState == 'open') {
+        _.forEach(task.volunteers, (volunteer) => {
+          sendTaskNotification(volunteer, task, 'task.update.canceled');
+        });
+      } else if (task.previousState == 'in progress') {
+        _.forEach(_.filter(task.volunteers, { assigned: true }), (volunteer) => {
+          sendTaskNotification(volunteer, task, 'task.update.canceled');
+        });
+      }
       break;
   }
 }
@@ -239,6 +249,15 @@ async function getNotificationTemplateData (user, task, action) {
 async function sendTaskAssignedNotification (user, task) {
   var data = await getNotificationTemplateData(user, task, 'task.update.assigned');
   notification.createNotification(data);
+}
+
+async function sendTaskSubmittedNotification (user, task) {
+  var baseData = await getNotificationTemplateData(user, task, 'task.update.submitted.admin');
+  _.forEach(await dao.User.find('"isAdmin" = true and disabled = false'), (admin) => {
+    var data = _.cloneDeep(baseData);
+    data.model.admin = admin;
+    notification.createNotification(data);
+  });
 }
 
 async function sendTaskCompletedNotification (user, task) {

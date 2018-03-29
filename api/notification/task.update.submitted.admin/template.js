@@ -1,11 +1,11 @@
 module.exports = {
   subject: 'New opportunity submitted by a task creator',
-  to: '<%- admins %>',
+  to: '<%- admin.username %>',
   data: function (model, done) {
     var data = {
       task: model.task,
-      owner: model.owner,
-      volunteers: model.volunteers,
+      user: model.user,
+      admin: model.admin,
     };
     done(null, data);
   },

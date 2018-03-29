@@ -1,15 +1,11 @@
 module.exports = {
   subject: 'Opportunity has been canceled',
-  to: '<%- users %>',
+  to: '<%- user.username %>',
   data: function (model, done) {
     var data = {
       task: model.task,
-      owner: model.owner,
-      volunteers: model.volunteers,
+      user: model.user,
     };
     done(null, data);
   },
-  includes:[
-    'task.update.canceled',
-  ],
 };
