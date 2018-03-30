@@ -27,6 +27,7 @@ var TaskFormView = Backbone.View.extend({
     'keyup .validate'                 : 'validateField',
     'click [name=task-time-required]' : 'toggleTimeOptions',
     'change #task-location'           : 'locationChange',
+    'click #js-task-cancel'           : 'cancel',
     'click #js-task-draft'            : 'saveDraft',
     'click #js-task-create'           : 'submit',
   },
@@ -296,6 +297,11 @@ var TaskFormView = Backbone.View.extend({
       abort = abort || iAbort;
     }
     return !abort;
+  },
+
+  cancel: function (e) {
+    if (e.preventDefault) e.preventDefault();
+    Backbone.history.navigate('tasks', { trigger: true });
   },
 
   /*
