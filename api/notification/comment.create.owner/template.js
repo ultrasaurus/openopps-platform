@@ -1,5 +1,5 @@
 module.exports = {
-  subject: '"<%- task.title %>" has a new comment on <%= globals.systemName %>',
+  subject: 'There&rsquo;s a new comment on "<%- task.title %>"',
   to: '<%- owner.username %>',
   data: function (model, done) {
     var data = {
@@ -11,4 +11,3 @@ module.exports = {
     done( null, data );
   },
 };
-  
