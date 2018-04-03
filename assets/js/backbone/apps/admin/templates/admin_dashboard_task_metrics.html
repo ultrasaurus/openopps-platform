@@ -53,6 +53,18 @@
         <% }); %>
       </tr>
       <tr>
+        <th scope="row">Completed by Admin</th>
+        <% _.each(range, function(key) { %>
+          <td><%- tasks.completedByAdmin[key] || 0 %></td>
+        <% }); %>
+      </tr>
+      <tr>
+        <th scope="row">Completed by Opportunity Creator</th>
+        <% _.each(range, function(key) { %>
+          <td><%- tasks.completedByCreator[key] || 0 %></td>
+        <% }); %>
+      </tr>
+      <tr>
         <th scope="row">Percentage Completed</th>
         <% _.each(range, function(key) { %>
         <td><%- Math.round(tasks.completed[key] / tasks.published[key] * 100, 4) || 0 %>%</td>
