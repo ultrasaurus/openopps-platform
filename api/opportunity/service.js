@@ -221,6 +221,9 @@ function sendTaskStateUpdateNotification (user, task) {
       sendTaskNotification(user, task, 'task.update.submitted');
       sendTaskSubmittedNotification(user, task, 'task.update.submitted.admin');
       break;
+    case 'draft':
+      sendTaskNotification(user, task, 'task.create.draft');
+      break;
     case 'canceled':
       if (task.previousState == 'open') {
         _.forEach(task.volunteers, (volunteer) => {

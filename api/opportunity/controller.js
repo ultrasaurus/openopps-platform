@@ -53,7 +53,7 @@ router.post('/api/task', auth, async (ctx, next) => {
       ctx.status = 400;
       return ctx.body = errors;
     }
-    service.sendTaskNotification(task.owner, task, task.state === 'draft' ? 'task.create.draft' : 'task.create.thanks');
+    service.sendTaskStateUpdateNotification(task.owner, task);
     ctx.body = task;
   });
 });
