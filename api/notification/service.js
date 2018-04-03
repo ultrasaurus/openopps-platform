@@ -125,6 +125,52 @@ function insertNotification (action, data) {
   dao.Notification.insert(newNotification);
 }
 
+function processNotification (notification) {
+  switch (notification.notificationType) {
+    case 'Bounce':
+      if(notification.bounce.bounceType == 'Permanent') {
+        _.forEach(notification.bounce.bouncedRecipients, (recipient) => {
+          dao.User.findOne('username = ?', recipient.emailAddress.toLowerCase()).then((user) => {
+            user.bounced = true;
+            user.updatedAt = new Date();
+            dao.User.update(user);
+            dao.NotificationMonitor.insert({
+              type: notification.notificationType,
+              subType: notification.bounce.bounceType,
+              data: notification,
+              userId: user.id,
+              createdAt: new Date(),
+            });
+          }).catch((err) => {
+            log.info('Error processing bounce notification for email ' + recipient.emailAddress);
+          });
+        });
+      }
+      break;
+    case 'Complaint':
+      _.forEach(notification.complaint.complainedRecipients, (recipient) => {
+        dao.User.findOne('username = ?', recipient.emailAddress.toLowerCase()).then((user) => {
+          user.complained = _.indexOf(['abuse', 'fraud'], notification.complaint.complaintFeedbackType);
+          user.updatedAt = new Date();
+          dao.User.update(user);
+          dao.NotificationMonitor.insert({
+            type: notification.notificationType,
+            subType: notification.complaint.complaintFeedbackType,
+            data: notification,
+            userId: user.id,
+            createdAt: new Date(),
+          });
+        }).catch((err) => {
+          log.info('Error processing complaint notification for email ' + recipient.emailAddress);
+        });
+      });
+      break;
+    default:
+      break;
+  }
+}
+
 module.exports = {
   createNotification: createNotification,
+  processNotification: processNotification,
 };
