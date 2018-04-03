@@ -10,6 +10,6 @@ module.exports = {
     done(null, data);
   },
   includes:[
-    'task.create.thanks',
+    'task.update.submitted',
   ],
 };
