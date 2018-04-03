@@ -134,7 +134,7 @@ function processNotification (notification) {
             user.bounced = true;
             user.updatedAt = new Date();
             dao.User.update(user);
-            dao.NotificationMonitor.insert({
+            insertAWSNotification({
               type: notification.notificationType,
               subType: notification.bounce.bounceType,
               data: notification,
@@ -153,7 +153,7 @@ function processNotification (notification) {
           user.complained = _.indexOf(['abuse', 'fraud'], notification.complaint.complaintFeedbackType);
           user.updatedAt = new Date();
           dao.User.update(user);
-          dao.NotificationMonitor.insert({
+          insertAWSNotification({
             type: notification.notificationType,
             subType: notification.complaint.complaintFeedbackType,
             data: notification,
@@ -170,7 +170,14 @@ function processNotification (notification) {
   }
 }
 
+function insertAWSNotification (notification) {
+  dao.NotificationMonitor.insert(notification).catch(err => {
+    log.info('Error inserting AWS notification ' + notification.type, err);
+  });
+}
+
 module.exports = {
   createNotification: createNotification,
   processNotification: processNotification,
+  insertAWSNotification: insertAWSNotification,
 };
