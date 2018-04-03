@@ -98,7 +98,9 @@ async function sendTaskNotification (user, task, action) {
       user: user,
     },
   };
-  notification.createNotification(data);
+  if(!data.model.user.bounced) {
+    notification.createNotification(data);
+  }
 }
 
 async function canUpdateOpportunity (user, id) {
@@ -135,7 +137,7 @@ async function updateOpportunityState (attributes, done) {
   await dao.Task.update(attributes).then(async (t) => {
     var task = await findById(t.id, true);
     task.previousState = origTask.state;
-    return done(task, origTask.state !== task.state); 
+    return done(task, origTask.state !== task.state);
   }).catch (err => {
     return done(null, false, {'message':'Error updating task.'});
   });
@@ -251,7 +253,9 @@ async function getNotificationTemplateData (user, task, action) {
 
 async function sendTaskAssignedNotification (user, task) {
   var data = await getNotificationTemplateData(user, task, 'task.update.assigned');
-  notification.createNotification(data);
+  if(!data.model.user.bounced) {
+    notification.createNotification(data);
+  }
 }
 
 async function sendTaskSubmittedNotification (user, task) {
@@ -259,18 +263,24 @@ async function sendTaskSubmittedNotification (user, task) {
   _.forEach(await dao.User.find('"isAdmin" = true and disabled = false'), (admin) => {
     var data = _.cloneDeep(baseData);
     data.model.admin = admin;
-    notification.createNotification(data);
+    if(!data.model.admin.bounced) {
+      notification.createNotification(data);
+    }
   });
 }
 
 async function sendTaskCompletedNotification (user, task) {
   var data = await getNotificationTemplateData(user, task, 'task.update.completed');
-  notification.createNotification(data);
+  if(!data.model.user.bounced) {
+    notification.createNotification(data);
+  }
 }
 
 async function sendTaskCompletedNotificationParticipant (user, task) {
   var data = await getNotificationTemplateData(user, task, 'task.update.completed.participant');
-  notification.createNotification(data);
+  if(!data.model.user.bounced) {
+    notification.createNotification(data);
+  }
 }
 
 async function copyOpportunity (attributes, user, done) {

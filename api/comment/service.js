@@ -37,11 +37,13 @@ async function sendCommentNotification (user, comment, action) {
       owner: { name: notificationData[0].ownername, username: notificationData[0].ownerusername },
     },
   };
-  notification.createNotification(data);
+  if(!notificationData[0].ownerbounced) {
+    notification.createNotification(data);
+  }
 }
 
 module.exports = {
   addComment: addComment,
   deleteComment: deleteComment,
-  sendCommentNotification: sendCommentNotification, 
+  sendCommentNotification: sendCommentNotification,
 };

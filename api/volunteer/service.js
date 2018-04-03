@@ -91,7 +91,9 @@ async function sendAddedVolunteerNotification (user, volunteer, action) {
       user: user,
     },
   };
-  notification.createNotification(data);
+  if(!data.model.user.bounced) {
+    notification.createNotification(data);
+  }
 }
 
 async function sendDeletedVolunteerNotification (notificationInfo, action) {
@@ -103,7 +105,9 @@ async function sendDeletedVolunteerNotification (notificationInfo, action) {
       user: { name: notificationInfo.name, username: notificationInfo.username},
     },
   };
-  notification.createNotification(data);
+  if(!notificationInfo.bounced) {
+    notification.createNotification(data);
+  }
 }
 
 module.exports = {
