@@ -34,6 +34,11 @@ module.exports = (config) => {
     _.extend(openopps, config);
   }
 
+  // easy loading of a feature
+  feature = function (name) {
+    return require(path.join(__dirname, 'api', name, 'controller'));
+  };
+
   const app = new koa();
   require('./lib/log/middleware')(app);
 
@@ -51,6 +56,14 @@ module.exports = (config) => {
   app.keys = [openopps.session.secret || 'your-secret-key'];
   app.use(session(openopps.session, app));
 
+  // initialize authentication
+  require(path.join(__dirname, 'api/auth/passport'));
+  app.use(passport.initialize());
+  app.use(passport.session());
+
+  // configure receiving AWS SNS messages
+  app.use(feature('notification'));
+
   // configure CSRF
   app.use(new CSRF({
     invalidSessionSecretMessage: { message: 'Invalid session' },
@@ -61,11 +74,6 @@ module.exports = (config) => {
     disableQuery: true,
   }));
 
-  // initialize authentication
-  require(path.join(__dirname, 'api/auth/passport'));
-  app.use(passport.initialize());
-  app.use(passport.session());
-
   // for rendering .ejs views
   render(app, {
     root: path.join(__dirname, 'views'),
@@ -74,11 +82,6 @@ module.exports = (config) => {
     cache: false,
     debug: false,
   });
-
-  // easy loading of a feature
-  feature = function (name) {
-    return require(path.join(__dirname, 'api', name, 'controller'));
-  };
 
   // redirect any request coming other than openopps.hostName
   app.use(async (ctx, next) => {
