@@ -1,6 +1,5 @@
 const log = require('log')('app:document');
 const Router = require('koa-router');
-const request = require('request');
 const _ = require('lodash');
 const service = require('./service');
 
@@ -18,7 +17,6 @@ router.post('/api/notifications', async (ctx, next) => {
           userId: 0,
           createdAt: new Date(),
         });
-        request(ctx.request.body.SubscribeURL);
         ctx.status = 200;
         break;
       case 'notification':
