@@ -1,6 +1,5 @@
 const log = require('log')('app:document');
 const Router = require('koa-router');
-const request = require('request');
 const _ = require('lodash');
 const service = require('./service');
 
@@ -11,7 +10,13 @@ router.post('/api/notifications', async (ctx, next) => {
   if(ctx.request.header['x-amz-sns-message-type'] && _.includes(ctx.request.header['x-amz-sns-topic-arn'], openopps.AWS_ACCOUNT)) {
     switch (ctx.request.header['x-amz-sns-message-type'].toLowerCase()) {
       case 'subscriptionconfirmation':
-        request(ctx.request.body.SubscribeURL);
+        service.insertAWSNotification({
+          type: ctx.request.header['x-amz-sns-message-type'],
+          subType: '',
+          data: ctx.request.body,
+          userId: 0,
+          createdAt: new Date(),
+        });
         ctx.status = 200;
         break;
       case 'notification':
@@ -19,6 +24,13 @@ router.post('/api/notifications', async (ctx, next) => {
         ctx.status = 200;
         break;
       default:
+        service.insertAWSNotification({
+          type: ctx.request.header['x-amz-sns-message-type'],
+          subType: '',
+          data: ctx.request.body,
+          userId: 0,
+          createdAt: new Date(),
+        });
         ctx.status = 400;
     }
   } else {
