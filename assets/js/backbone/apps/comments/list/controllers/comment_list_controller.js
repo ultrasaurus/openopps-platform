@@ -228,7 +228,7 @@ var Comment = Backbone.View.extend({
     if (e.preventDefault) e.preventDefault();
     var id = $(e.currentTarget).data('commentid') || null;
 
-    if ( window.cache.currentUser && window.cache.currentUser.isAdmin ) {
+    if ( window.cache.currentUser ) {
       $.ajax({
         url: '/api/comment/' + id,
         type: 'DELETE',
