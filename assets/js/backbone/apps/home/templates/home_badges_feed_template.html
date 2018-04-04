@@ -16,7 +16,7 @@
         <div class="activity-feed--avatars">
           <% b.participants.map(function(p, i) { %>
             <a href="/profile/<%- p.id %>">
-              <div class="activity-feed--avatar" style="background-image: url(/api/user/photo/<%- p.id %>);left: <%- i * 10 %>px">&nbsp;</div>
+              <div class="activity-feed--avatar" style="background-image: url(/api/user/photo/<%- p.id %>);left: <%- i * 10 %>px"><span class="sr-only">Profile picture of <%- p.name %></span></div>
             </a>
           <% }); %>
         </div>

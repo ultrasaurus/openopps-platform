@@ -95,14 +95,10 @@ background-color: #ffffff;
   margin-bottom: $size-default;
 }
 
-.activity-feed--avatars::before,
 .activity-feed--avatars::after {
-  content: " ";
-  display: table;
-}
-
-.activity-feed--avatars::after {
+  content: "";
   clear: both;
+  display: table;
 }
 
 .activity-feed--avatars a {

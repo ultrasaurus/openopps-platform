@@ -24,12 +24,12 @@
                   </span>
                 </a>
                 <ul id="section-one" class="usajobs-nav__secondary-menu" aria-expanded="false" aria-label="submenu" role="menu">
-                  <li><a href="/profile/<%- user.id %>" id="profileLink" role="menuitem">Profile</a></li>
+                  <li role="menuitem"><a href="/profile/<%- user.id %>" id="profileLink">Profile</a></li>
                   <% if (user.isAdmin === true || user.isAgencyAdmin === true) { %>
-                  <li><a href="/admin">Administration</a></li>
+                  <li role="menuitem"><a href="/admin">Administration</a></li>
                   <% } %>
                   <% if (login.local.logout) { %>
-                  <li><a href="/auth/logout" class="logout">Sign Out</a></li>
+                  <li role="menuitem"><a href="/auth/logout" class="logout">Sign Out</a></li>
                   <% } %>
                 </ul>
               </li>
@@ -47,8 +47,8 @@
                   </span>
                 </a>
                 <ul id="section-two" class="usajobs-nav__secondary-menu" aria-expanded="false" aria-label="submenu" role="menu">
-                  <li><a href="/profiles" role="menuitem">People</a></li>
-                  <li><a href="/tasks" role="menuitem">Opportunities</a></li>
+                  <li role="menuitem"><a href="/profiles">People</a></li>
+                  <li role="menuitem"><a href="/tasks">Opportunities</a></li>
                 </ul>
               </li>
               <li class="usajobs-nav__menu-container usajobs-nav__menu-search desktop">
