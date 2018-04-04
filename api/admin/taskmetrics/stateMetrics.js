@@ -19,6 +19,20 @@ _.extend(StateMetrics.prototype, {
       .value();
   },
 
+  completedByCreatorCount: function () {
+    return _.chain(this.tasks)
+      .filter(function (task) { return task.isCompleted && (task.updatedBy === task.userId); })
+      .countBy(function (task) { return task.completedAtCode; }.bind(this))
+      .value();
+  },
+
+  completedByAdminCount: function () {
+    return _.chain(this.tasks)
+      .filter(function (task) { return task.isCompleted && (task.updatedBy !== task.userId); })
+      .countBy(function (task) { return task.completedAtCode; }.bind(this))
+      .value();
+  },
+
   range: function () {
     return _.keys(this.publishedCount() || {});
   },
@@ -50,6 +64,8 @@ _.extend(StateMetrics.prototype, {
     var metrics = this.metrics = {tasks: {}};
     metrics.tasks.published = this.publishedCount();
     metrics.tasks.completed = this.completedCount();
+    metrics.tasks.completedByCreator = this.completedByCreatorCount();
+    metrics.tasks.completedByAdmin = this.completedByAdminCount();
     metrics.range = this.range();
     metrics.tasks.carryOver = this.calculateCarryover();
     return metrics;
