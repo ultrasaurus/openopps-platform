@@ -176,7 +176,9 @@ async function updateOpportunity (attributes, done) {
 async function publishTask (attributes, done) {
   attributes.publishedAt = new Date();
   attributes.updatedAt = new Date();
-  await dao.Task.update(attributes).then(async (task) => {
+  await dao.Task.update(attributes).then(async (t) => {
+    var task = await findById(t.id, true);
+    sendTaskNotification(task.owner, task, 'task.update.opened');
     return done(true);
   }).catch (err => {
     return done(false);
