@@ -3,6 +3,7 @@ const Router = require('koa-router');
 const _ = require('lodash');
 const auth = require('../auth/auth');
 const service = require('./service');
+const opportunityService = require('../opportunity/service');
 
 var router = new Router();
 
@@ -19,8 +20,22 @@ router.post('/api/comment', auth, async (ctx, next) => {
   });
 });
 
-router.delete('/api/comment/:id', auth.isAdmin, async (ctx) => {
-  ctx.body = await service.deleteComment(ctx.params.id);
+router.delete('/api/comment/:id', auth, async (ctx) => {
+  var comment = await service.findById(ctx.params.id);
+  var task = (comment ? await opportunityService.findById(comment.taskId) : null);
+  if (!comment || !task) {
+    ctx.status = 400;
+  } else {
+    if (comment.userId === ctx.state.user.id || task.isOwner ||
+      (_.has(ctx.state.user, 'isAdmin') && ctx.state.user.isAdmin) ||
+      ((_.has(ctx.state.user, 'isAgencyAdmin') && ctx.state.user.isAgencyAdmin) &&
+        (ctx.state.user.tags && (_.find(ctx.state.user.tags, { 'type': 'agency' }) || {}).name == task.owner.agency.name))) {
+      ctx.body = await service.deleteComment(ctx.params.id);
+    } else {
+      ctx.status = 403;
+    }
+  }
+  
 });
 
 module.exports = router.routes();
