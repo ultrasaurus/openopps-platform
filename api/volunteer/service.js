@@ -48,16 +48,21 @@ async function volunteerComplete (volunteerId, complete, done) {
 }
 
 async function deleteVolunteer (attributes, done) {
-  var volunteer = (await dao.Volunteer.db.query(dao.query.lookupVolunteer, attributes.userId, attributes.taskId)).rows[0];
-  if(!volunteer) {
-    return done(null, {'message':'error deleting volunteer'});
-  } else {
-    var notificationInfo = (await dao.Volunteer.db.query(dao.query.volunteer, volunteer.id)).rows;
-    await dao.Volunteer.delete('id = ? and "taskId" = ?', volunteer.id, attributes.taskId).catch(err => {
-      log.info('delete: failed to delete volunteeer ', err);
+  try {
+    var volunteer = (await dao.Volunteer.db.query(dao.query.lookupVolunteer, attributes.userId, attributes.taskId)).rows[0];
+    if(!volunteer) {
       return done(null, {'message':'error deleting volunteer'});
-    });
-    return done(notificationInfo, null);
+    } else {
+      var notificationInfo = (await dao.Volunteer.db.query(dao.query.volunteer, volunteer.id)).rows;
+      await dao.Volunteer.delete('id = ? and "taskId" = ?', volunteer.id, attributes.taskId).catch(err => {
+        log.info('delete: failed to delete volunteeer ', err);
+        return done(null, {'message':'error deleting volunteer'});
+      });
+      return done(notificationInfo, null);
+    }
+  } catch (err) {
+    log.info('Error deleting volunteer', err);
+    return done(null, {'message':'error deleting volunteer'});
   }
 }
 
