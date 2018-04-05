@@ -34,8 +34,8 @@
     </ul>
     <div class="usajobs-open-opps-opportunity-requestor__wrapper">
       <div class="usajobs-open-opps-opportunity-requestor">
-        <div class="usajobs-open-opps-opportunity-requestor__figure" <% if (user) { %> data-userid="<%- item.owner.id %>" <% } %>>
-          <img src="/api/user/photo/<%- item.owner.id %>" alt="<%- user.name %>">
+        <div class="usajobs-open-opps-opportunity-requestor__figure" <% if (item.owner) { %> data-userid="<%- item.owner.id %>" <% } %>>
+          <img src="/api/user/photo/<%- item.owner.id %>" alt="<%- item.owner.name %>">
         </div>
         <div class="usajobs-open-opps-opportunity-requestor__body">
           <span class="usajobs-open-opps-opportunity-requestor__by">
