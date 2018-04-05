@@ -2,7 +2,7 @@
   <div class="usajobs-grid-full">
     <div class="usa-width-three-fourths type">
       <label for="filter">Type:</label>
-      <select name="filter" class="filter">
+      <select id="filter" name="filter" class="filter">
         <option value="">All</option>
         <option value="One time">One time</option>
         <option value="Ongoing">Ongoing</option>
@@ -10,7 +10,7 @@
     </div>
     <div class="usa-width-one-fourth period">
       <label for="group">Period:</label>
-      <select name="group" class="group">
+      <select id="group" name="group" class="group">
         <option value="week">Week</option>
         <option value="month">Month</option>
         <option value="quarter">Quarter</option>
@@ -27,7 +27,7 @@
   <table class="usa-table-borderless task-metrics-table">
     <thead>
       <tr>
-        <th scope="col"></th>
+        <th scope="col"><span class="sr-only">Type</span></th>
         <% _.each(range, function(key) { %>
         <th scope="col"><%- label(key) %></th>
         <% }); %>

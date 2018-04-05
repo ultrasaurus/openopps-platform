@@ -58,7 +58,7 @@
             <h1 class="usajobs-opop-intro-hiring-paths__section-title">Profile</h1>
           </div>
           <div id="profile" class="usajobs-opop-profile-title usa-width-one-fourth">
-              <img class="default-user-icon-profile" src="/api/user/photo/<%- data.id %>">
+              <img class="default-user-icon-profile" src="/api/user/photo/<%- data.id %>" alt="<%- user.name %>">
               <h2 class="usajobs-opop-profile-name"><% if (data.name) { %><%- data.name %><% } else { %><%- data.username %><% } %></h2>
           </div>
           <div class="usajobs-opop-profile-details usa-width-three-fourths">
