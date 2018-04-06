@@ -1,10 +1,23 @@
 <section class="usajobs-canvas">
   <div class="usajobs-content-gutter usajobs-open-opps-search">
     <main class="main-content usajobs-content-well" id="main-content" aria-label="Search results">
-      <div class="usajobs-grid usajobs-open-opps-search__title">
+      <div class="usajobs-grid usajobs-open-opps-search__box">
         <div class="usa-width-one-whole">
-          <input type="text" id="search" title="Search" class="usajobs-open-opps-search__input" placeholder="<%- placeholder %>" value="<%- term %>">
-          <span class="fa fa-search search-icon"></span>
+          <h1>Search for opportunities</h1>
+          <p class="search__box-content">Gain experience with hands-on training, share your expertise and work with others across the government.</p>
+          <p class="search__box-content">Learn more about <a href="https://usajobs.github.io/openopps-help/" target="_blank"><span class="underline">Open Opportunities</span> <span class="sr-only">Opens in a new window</span><i class="fas fa-external-link-alt"></i></a></p>
+          <label for="search" class="search__box-label">
+            <span class="fas fa-search search-icon"></span>
+            Keywords
+          </label>
+          <div class="usajobs-grid-full">
+            <div class="usa-width-two-thirds">
+              <input type="text" id="search" title="Search" class="usajobs-open-opps-search__input" placeholder="<%- placeholder %>" value="<%- term %>">
+            </div>
+            <div class="usa-width-one-third">
+              <button class="usa-button usa-button-primary-alt usajobs-nav__search-button">Search</button>
+            </div>
+          </div>
         </div>
       </div>
       <div class="usajobs-open-opps-search-results" id="task-list">
@@ -19,9 +32,9 @@
     <aside class="usajobs-rightrail" id="rightrail">
       <div class="find-people">
         <h4>Find people to help you complete your next project.</h4>
-        <p class="no-margin-bottom">Anyone can create an opportunity. <a href="" target="_blank">Learn how <span class="sr-only">Opens in a new window</span><i class="fas fa-external-link-alt"></i></a></p>
+        <p class="no-margin-bottom">Anyone can create an opportunity. <a href="https://usajobs.github.io/openopps-help/opportunity/" target="_blank">Learn how <span class="sr-only">Opens in a new window</span><i class="fas fa-external-link-alt"></i></a></p>
         <a href="#createOpportunity" id="create-opportunity" class="usa-button usa-button-secondary add-opportunity" data-toggle="modal" data-backdrop="static" style="<% if (!user) { %>display: none;<% } %>"><i class="fa fa-plus"></i> <span>Create opportunity</span></a>
-        <p>Connect with people who share similar skills or invite someone to apply to your opportunity. <a href="" target="_blank" class="external-link-alt"><span class="fas fa-users" focusable="false"></span> Search people</a></p>
+        <p>Connect with people who share similar skills or invite someone to apply to your opportunity. <a href="/profiles"><span class="fas fa-users"></span> Search people</a></p>
       </div>
 
       <div class="usajobs-open-opps-opportunity">

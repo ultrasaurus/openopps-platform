@@ -30,7 +30,7 @@ var TaskListView = Backbone.View.extend({
 
   render: function () {
     var template = _.template(TaskListTemplate)({
-      placeholder: 'I\'m looking for opportunities by name, agency, skill, topic, description...',
+      placeholder: '',
       user: window.cache.currentUser,
       ui: UIConfig,
       agencyName: this.userAgency.name,

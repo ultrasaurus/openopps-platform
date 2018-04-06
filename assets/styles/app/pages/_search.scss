@@ -118,42 +118,70 @@
   }
 }
 
-.usajobs-grid.usajobs-open-opps-search__title {
-  margin: $size-M 0;
+.usajobs-grid.usajobs-open-opps-search__box {
+  background: $color-primary-darker;
+  margin: 0 0 $size-M 0;
+  padding: $size-default $size-default $size-M $size-default;
+  color: $color-white;
+
+  @include media($ML) {
+    background: $color-primary-darker url(/img/graphic_search.svg) no-repeat 106% -4%;
+  }
 
   @include media($L) {
-    padding: 0;
-    // margin: $size-M 0;
-    position: relative;
+    margin: $size-M 0;
+    padding: $size-default $size-M $size-M $size-M;
+  }
+
+  h1 {
+    color: $color-white;
+  }
+
+  .search__box-content {
+    font-size: 1.9rem;
+  }
+
+  a {
+    color: $color-white;
+
+    &:visited {
+      color: $color-white;
+    }
+
+    .underline {
+      text-decoration: underline;
+    }
   }
 
   .search-icon {
-    position: absolute;
-    top: 13px;
-    fill-opacity: .5;
-    right: 30px;
+    color: $color-primary-alt;
+  }
 
-    @include media($M) {
-      right: 4%;
-    }
+  .search__box-label {
+    margin-bottom: $size-default;
+  }
+
+  .usa-button-primary-alt {
+    width: 100%;
 
     @include media($ML) {
-      right: 5%;
+      width: auto;
     }
+  }
 
-    @include media($L) {
-      right: 15px;
+  .usajobs-nav__search-button {
+    @include media($M-down) {
+      margin-top: $size-S;
+      margin-bottom: $size-M;
     }
   }
 }
 
 .usajobs-open-opps-search__input {
-  border: none;
   max-width: 100%;
   float: left;
   height: 4.3rem;
   margin-bottom: 0;
-  padding-right: 4rem;
 }
 
 .usa-button.usajobs-open-opps-search-button {
