@@ -116,21 +116,14 @@
       margin-bottom: 0;
     }
   }
-
-  .add-opportunity {
-    margin-bottom: $size-M !important;
-
-    @include media($L) {
-      margin-bottom: 0 !important;
-    }
-  }
 }
 
 .usajobs-grid.usajobs-open-opps-search__title {
+  margin: $size-M 0;
 
   @include media($L) {
     padding: 0;
-    margin: $size-M 0;
+    // margin: $size-M 0;
     position: relative;
   }
 
@@ -169,19 +162,14 @@
   width: 7.2rem;
 }
 
-.usajobs-grid.usajobs-open-opps-search__title .usa-button-gray {
-  height: 4.3rem;
-}
-
 .main-content {
   position: relative;
 }
 
 .usajobs-open-opps-search-results {
-  // margin-top: $size-default;
+  position: relative;
 
   @include media($L) {
-    // margin-top: $size-M;
     display: flex;
     flex-wrap: wrap;
   }
@@ -275,6 +263,47 @@
 
   @include media($L) {
     margin-bottom: 0;
+  }
+}
+
+.find-people {
+  background-color: $color-cool-blue-lightest;
+  margin: $size-M 0;
+  padding: $size-S $size-default $size-default $size-default;
+
+  @include media($L) {
+    padding: $size-S $size-M $size-default $size-M;
+  }
+
+  .no-margin-bottom {
+    @include media($L) {
+      margin-bottom: 0;
+    }
+  }
+
+  a {
+    text-decoration: none;
+    color: $color-primary;
+
+    &:visited {
+      color: $color-primary;
+    }
+  }
+
+  #create-opportunity.usa-button.usa-button-secondary {
+    background: $color-cool-blue-lightest;
+
+    &:hover {
+      background-color: $color-cool-blue-lightest;
+    }
+
+    @include media($L) {
+      margin-bottom: $size-default;
+    }
+  }
+
+  .add-opportunity {
+
   }
 }
 
