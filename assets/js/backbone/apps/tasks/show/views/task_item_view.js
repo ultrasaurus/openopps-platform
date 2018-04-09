@@ -17,6 +17,7 @@ var ProgressTemplate = require('../templates/task_progress_template.html');
 var AlertTemplate = require('../../../../components/alert_template.html');
 var NextStepTemplate = require('../templates/next_step_template.html');
 var RemoveParticipantTemplate = require('../templates/remove_participant_template.html');
+var ConfirmParticipantTemplate = require('../templates/confirm_participant_template.html');
 var NotCompleteTemplate = require('../templates/participants_not_complete_template.html');
 var ParticipateCheckList = require('../templates/participate_check_list.html').toString();
 var ProfileCheckList = require('../templates/profile_check_list.html');
@@ -25,16 +26,17 @@ var ShareTemplate = require('../templates/task_share_template.txt');
 
 var TaskItemView = BaseView.extend({
   events: {
-    'click #accept-toggle'          : 'toggleAccept',
-    'click #apply'                  : 'apply',
-    'click #apply-cancel'           : 'cancelApply',
-    'click #nextstep'               : 'nextstep',
-    'click #complete'               : 'complete',
-    'click #task-cancel'            : 'cancel',
-    'click .project-people__assign' : 'assignParticipant',
-    'click .project-people__remove' : 'removeParticipant',
-    'click .usa-accordion-button'   : 'toggleAccordion',
-    'click .task-complete'          : 'taskComplete',
+    'click #accept-toggle'            : 'toggleAccept',
+    'click #apply'                    : 'apply',
+    'click #apply-cancel'             : 'cancelApply',
+    'click #nextstep'                 : 'nextstep',
+    'click #complete'                 : 'complete',
+    'click #task-cancel'              : 'cancel',
+    'click .project-people__assign'   : 'assignParticipant',
+    'click .project-people__confirm'  : 'confirmParticipant',
+    'click .project-people__remove'   : 'removeParticipant',
+    'click .usa-accordion-button'     : 'toggleAccordion',
+    'click .task-complete'            : 'taskComplete',
   },
 
   modalOptions: {
@@ -318,6 +320,31 @@ var TaskItemView = BaseView.extend({
         // display modal alert type error
       }.bind(this),
     });
+  },
+
+  confirmParticipant: function (e) {
+    if (e.preventDefault) e.preventDefault();
+    if (e.stopPropagation) e.stopPropagation();
+    var volunteerid = $(e.currentTarget).data('volunteerid');
+    var participant = _.findWhere(this.data.model.volunteers, { id: volunteerid });
+    var options = _.extend(_.clone(this.modalOptions), {
+      modalTitle: 'Are you sure you want to assign this participant?',
+      modalBody: _.template(ConfirmParticipantTemplate)(participant),
+      secondary: {
+        text: 'Cancel',
+        action: function () {
+          this.modalComponent.cleanup();
+        }.bind(this),
+      },
+      primary: {
+        text: 'Confirm',
+        action: function () {
+          this.modalComponent.cleanup();
+          this.assignParticipant(e);
+        }.bind(this),
+      },
+    });
+    this.modalComponent = new ModalComponent(options).render();
   },
 
   nextstep: function (e) {

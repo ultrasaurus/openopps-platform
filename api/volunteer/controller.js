@@ -3,6 +3,7 @@ const Router = require('koa-router');
 const _ = require('lodash');
 const auth = require('../auth/auth');
 const service = require('./service');
+const opportunityService = require('../opportunity/service');
 
 var router = new Router();
 
@@ -41,11 +42,16 @@ router.post('/api/volunteer/delete', auth, async (ctx, next) => {
 });
 
 router.post('/api/volunteer/assign', auth, async (ctx, next) => {
+  var task = await opportunityService.findById(ctx.request.body.taskId);
+
   if (await service.canManageVolunteers(ctx.request.body.taskId, ctx.state.user)) {
     await service.assignVolunteer(+ctx.request.body.volunteerId, ctx.request.body.assign, function (err, volunteer) {
       if (err) {
         ctx.status = 400;
         return ctx.body = err;
+      }
+      if (ctx.request.body.assign == 'true') {
+        opportunityService.sendTaskAssignedNotification(ctx.state.user, task);
       }
       ctx.status = 200;
       return ctx.body = volunteer;

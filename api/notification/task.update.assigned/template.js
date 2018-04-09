@@ -1,5 +1,5 @@
 module.exports = {
-  subject: 'You’ve been selected for <%- task.title %>!',
+  subject: 'You’ve been selected for an opportunity!',
   to: '<%- user.username %>',
   data: function (model, done) {
     var data = {

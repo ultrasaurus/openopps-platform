@@ -3,7 +3,7 @@ console.log('Loading... ', __filename);
 module.exports = {
 
   // The name of the system, as should appear in emails and the <html> <title> tag
-  systemName: process.env.SYSTEM_NAME || 'midas',
+  systemName: process.env.SYSTEM_NAME || 'Open Opportunities',
 
   // 'http' or 'https'
   httpProtocol: process.env.PROTOCOL || 'http',
