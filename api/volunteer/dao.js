@@ -9,6 +9,12 @@ const volunteerQuery = 'select ' +
 'inner join midas_user m2 on m2.id = volunteer."userId" ' +
 'where volunteer.id = ? ';
 
+const assignedVolunteerQuery = 'select ' +
+'volunteer."userId", midas_user.name, midas_user.bounced, midas_user.username ' +
+'from volunteer ' +
+'inner join midas_user on midas_user.id = volunteer."userId" ' +
+'where volunteer.id = ? ';
+
 const lookupVolunteerQuery = 'select volunteer.id ' +
 'from volunteer ' +
 'join midas_user on midas_user.id = volunteer."userId" ' +
@@ -29,6 +35,7 @@ module.exports = function (db) {
       volunteer: volunteerQuery,
       lookupVolunteer: lookupVolunteerQuery,
       user: userAgencyQuery,
+      assignedVolunteer: assignedVolunteerQuery,
     },
   };
 };

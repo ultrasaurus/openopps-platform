@@ -22,9 +22,11 @@ async function addVolunteer (attributes, done) {
 }
 
 async function assignVolunteer (volunteerId, assign, done) {
+  var volunteer = (await dao.Volunteer.db.query(dao.query.assignedVolunteer, volunteerId)).rows[0];
   await dao.Volunteer.update({
     id: volunteerId,
     assigned: assign,
+    assignedVolunteer: volunteer,
     updatedAt: new Date(),
   }).then(async (volunteer) => {
     return done(null, volunteer);

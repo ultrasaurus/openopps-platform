@@ -51,7 +51,7 @@ router.post('/api/volunteer/assign', auth, async (ctx, next) => {
         return ctx.body = err;
       }
       if (ctx.request.body.assign == 'true' && task.state == 'in progress') {
-        opportunityService.sendTaskAssignedNotification(ctx.state.user, task);
+        opportunityService.sendTaskAssignedNotification(volunteer.assignedVolunteer, task);
       }
       ctx.status = 200;
       return ctx.body = volunteer;
