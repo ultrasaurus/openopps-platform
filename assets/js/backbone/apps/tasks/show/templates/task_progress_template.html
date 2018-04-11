@@ -141,7 +141,7 @@
                   <img src="/api/user/photo/<%- v.userId %>" alt="<%- v.name %>" class="project-people" />
                   <label class="project-people-show-label"><%- v.name %></label>
                   <% if (model.canEditTask && model.state != 'completed' && state.value != 'canceled') { %>
-                    <button class="project-people__assign" data-volunteerid="<%- v.id %>" data-behavior="assign">
+                    <button class="project-people__<% if (state.value == 'in progress'){ %>confirm<%} else {%>assign<%}%>" data-volunteerid="<%- v.id %>" data-behavior="assign">
                       <span class="usajobs-assistive-text">Assign participant</span>
                     </button>
                   <% } %>

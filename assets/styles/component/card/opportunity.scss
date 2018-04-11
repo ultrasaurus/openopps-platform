@@ -626,7 +626,7 @@
     }
   }
 
-  .project-people__assign, .project-people__remove {
+  .project-people__assign, .project-people__confirm, .project-people__remove {
     margin: 0.5rem 0 0 0;
     padding: 0;
     display: inline-block;
@@ -652,7 +652,7 @@
     }
   }
 
-  .project-people__assign {
+  .project-people__assign, .project-people__confirm {
     &:after {
       content: url(../img/icons/white/svg/plus.svg);
     }
@@ -700,7 +700,7 @@
       text-align: center;
     }
 
-    .project-people__assign {
+    .project-people__assign, .project-people__confirm {
       position: absolute;
       top: -0.4rem;
       right: 0;
@@ -819,7 +819,7 @@
         color: $color-green;
       }
 
-      .project-people__assign, .project-people__remove {
+      .project-people__assign, .project-people__confirm, .project-people__remove {
         position: absolute;
         top: -0.4rem;
         right: 0;
@@ -893,7 +893,7 @@
   }
 }
 
-.remove-participant, .not-complete-participants {
+.remove-participant, .confirm-participant, .not-complete-participants {
   text-align: center;
 
   .project-people-show-div {
