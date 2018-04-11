@@ -407,6 +407,7 @@ module.exports = {
   volunteersCompleted: volunteersCompleted,
   sendTaskNotification: sendTaskNotification,
   sendTaskStateUpdateNotification: sendTaskStateUpdateNotification,
+  sendTaskAssignedNotification: sendTaskAssignedNotification,
   sendTasksDueNotifications: sendTasksDueNotifications,
   canUpdateOpportunity: canUpdateOpportunity,
   canAdministerTask: canAdministerTask,
