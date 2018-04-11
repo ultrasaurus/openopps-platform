@@ -95,11 +95,15 @@ module.exports = {
         return line !== '';
       });
       tags = _.map(lines, function (line) {
+        var match = line.match(/\((.+)\)/);
         if (tagType == 'agency') {
-          var match = line.match(/\((.+)\)/);
           if (match && match.length > 1) {
             var abbr = match[1];
             return { name: line, abbr: abbr, slug: abbr.toLowerCase(), domain: [abbr.toLowerCase() + '.gov'], allowRestrictAgency: true};
+          }
+        } else if (tagType == 'series') {
+          if (match && match.length > 1) {
+            return { name: line.replace(match[0], '').trim(), title: match[1] };
           }
         }
         return { name: line };
