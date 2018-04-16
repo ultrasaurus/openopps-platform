@@ -27,9 +27,49 @@
         </div>
       </div>
       <div class="" id="task-page"></div>
-    </main>
 
+      <div id="usajobs-search-tab-bar">
+        <nav class="usajobs-search-tab-bar" data-object="search-tab-bar">
+            <div class="usajobs-search-tab-bar__body" id="search-tab-bar-controls">
+                <a href="javascript:void(0);" id="search-tab-bar-filter" class="usajobs-search-tab-bar__link usajobs-search-tab-bar__filters" data-behavior="search-tab-bar.toggle-filters" aria-controls="usajobs-search-filters" aria-expanded="false" title="Filter">
+                    <div class="usajobs-search-tab-bar__filters-default usa-button usa-button-secondary-inverse">
+                        <span class="usajobs-icon--center">
+                            <svg class="fa fa-sliders-h fa-w-18" title="Filter" aria-labelledby="fa-title-16" data-fa-processed="" data-prefix="fas" data-icon="sliders-h" 
+                            role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><title id="fa-title-16">Filter</title>
+                              <span class="fas fa-sliders-h" title="Filter"></span>
+                        </span>
+                        <span class="usajobs-filter">Filter</span>
+                        <span class="usajobs-search-tab-bar__filter-count-container" aria-hidden="false">
+                            <span id="search-tab-bar-filter-count" class="usajobs-search-tab-bar__filter-count">1</span>
+                        </span>
+                    </div>
+                    <button class="usa-button-primary usajobs-search-tab-bar__filters-expanded" data-behavior="search-tab-bar.show-results" aria-expanded="false">
+                        View results
+                    </button>
+                </a>
+            </div>
+        </nav>
+    </div>
+
+    </main>
     <aside class="usajobs-rightrail" id="rightrail">
+      
+    <div class="usajobs-search-filters" id="usajobs-search-filters" aria-hidden="true">
+        <div id="usajobs-search-filter-nav" data-object="search-filter-nav">
+            <div class="usajobs-search-filter-nav usajobs-search-filter-nav--filters">
+                <div class="usajobs-search-filter-nav__body">
+                    <span class="fas fa-sliders-h" title="Filters"></span> Filters
+                    <span class="usajobs-search-filter-nav__results">5 opportunities found</span>
+                    <a href="javascript:void(0);" class="usajobs-search-filter-nav__back" data-behavior="search-filter-nav.close" aria-controls="usajobs-search-filters" title="Filters">
+                        <span class="sr-only">Close</span> <svg class="fa fa-times fa-w-12" title="Close" aria-labelledby="fa-title-20" data-fa-processed="" 
+                        data-prefix="fas" data-icon="times" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><title id="fa-title-20">Close</title>
+                        </svg><span class="fas fa-times" title="Close"></span>
+                    </a>
+                </div>
+            </div>
+      </div>
+
+
       <div class="find-people">
         <h4>Find people to help you complete your next project.</h4>
         <p class="no-margin-bottom">Anyone can create an opportunity. <a href="https://usajobs.github.io/openopps-help/opportunity/" target="_blank">Learn how <span class="sr-only">Opens in a new window</span><i class="fas fa-external-link-alt"></i></a></p>
@@ -37,7 +77,10 @@
         <p>Connect with people who share similar skills or invite someone to apply to your opportunity. <a href="/profiles"><span class="fas fa-users"></span> Search people</a></p>
       </div>
 
-      <div class="usajobs-open-opps-opportunity">
+      <div class="usajobs-open-opps-opportunity usajobs-search-filters__scroll-container">
+          <a href="https://usajobs.github.io/openopps-help/" class="usajobs-opop-section__help" target="_blank">
+            <span class="fas fa-question-circle" title="Help"></span> Help
+        </a>
         <h3>Filters</h3>
         <h4 class="usajobs-search-filters__title">Status</h4>
         <a class="usajobs-search-filters__select-toggle" href="javascript:void(0);" id="select-all-filters">Select all</a>
@@ -66,10 +109,49 @@
           </div>
         </div>
 
+        <h4 class="usajobs-search-filters__title skill">Skill</h4>
+        <input type="text" id="skill" title="Skill" />
+
+        <h4 class="usajobs-search-filters__title career">Career field</h4>
+        <input type="text" id="career" title="Career field" />
+
+        <h4 class="usajobs-search-filters__title">Series</h4>
+        <input type="text" id="series" title="Series" />
+
+        <h4 class="usajobs-search-filters__title time">Time commitment</h4>
+        <a class="usajobs-search-filters__select-toggle" href="javascript:void(0);" id="select-all-time-filters">Select all</a>
+        <ul id="stateFilters" class="usa-unstyled-list">
+          <li>
+              <input id="one-time" type="checkbox" name="time">
+              <label for="one-time">One time</label>
+          </li>
+          <li>
+              <input id="ongoing" class="restrict-participation" type="checkbox" name="time" />
+              <label for="ongoing">Ongoing</label>
+          </li>
+          <li>
+              <input id="full-time" class="restrict-participation" type="checkbox" name="time" />
+              <label for="full-time">Full time detail</label>
+          </li>
+        </ul>
+
+        <h4 class="usajobs-search-filters__title location">Location</h4>
+        <a class="usajobs-search-filters__select-toggle" href="javascript:void(0);" id="select-all-locations-filters">Select all</a>
+        <ul id="stateFilters" class="usa-unstyled-list">
+            <li>
+              <input id="virtual" type="checkbox" name="location">
+              <label for="virtual">Virtual</label>
+            </li>
+            <li>
+              <input id="in-person" class="restrict-participation" type="checkbox" name="location" />
+              <label for="in-person">In person</label>
+            </li>
+          </ul>
+
         <% if (agencyName) { %>
-        <h4 class="usajobs-search-filters__title agency">Agency</h4>
-          <input id="js-restrict-task-filter" class="restrict-participation" type="checkbox" name="restrict">
-          <label for="js-restrict-task-filter">Restrict to <%- agencyName %></label>
+          <h4 class="usajobs-search-filters__title agency">Agency</h4>
+            <input id="js-restrict-task-filter" class="restrict-participation" type="checkbox" name="restrict" />
+            <label for="js-restrict-task-filter">Restrict to <%- agencyName %></label>
         <% } %>
       </div>
     </aside>
