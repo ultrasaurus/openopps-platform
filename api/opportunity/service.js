@@ -208,7 +208,7 @@ function volunteersCompleted (task) {
 function sendTaskStateUpdateNotification (user, task) {
   switch (task.state) {
     case 'in progress':
-      _.forEach(_.filter(task.volunteers, { assigned: true }), (volunteer) => {
+      _.forEach(task.volunteers, (volunteer) => {
         sendTaskAssignedNotification(volunteer, task);
       });
       break;
@@ -254,7 +254,8 @@ async function getNotificationTemplateData (user, task, action) {
 }
 
 async function sendTaskAssignedNotification (user, task) {
-  var data = await getNotificationTemplateData(user, task, 'task.update.assigned');
+  var template = (user.assigned ? 'task.update.assigned' : 'task.update.not.assigned');
+  var data = await getNotificationTemplateData(user, task, template);
   if(!data.model.user.bounced) {
     notification.createNotification(data);
   }
