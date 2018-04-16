@@ -103,7 +103,7 @@ module.exports = {
           }
         } else if (tagType == 'series') {
           if (match && match.length > 1) {
-            return { name: line.replace(match[0], '').trim(), title: match[1] };
+            return { name: line, series: line.replace(match[0], '').trim(), title: match[1] };
           }
         }
         return { name: line };

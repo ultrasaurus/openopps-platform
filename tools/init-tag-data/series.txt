@@ -1,5 +1,5 @@
 0000 (Safety, Health, And Physical)
-0100 ((Social Science, Psychologist))
+0100 (Social Science, Psychologist)
 0200 (Human Resources)
 0300 (Management, Administrative And Clerical Services)
 0400 (Biological Sciences)
