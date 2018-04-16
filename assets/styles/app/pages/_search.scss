@@ -329,23 +329,20 @@
       margin-bottom: $size-default;
     }
   }
-
-  .add-opportunity {
-
-  }
 }
 
 .usajobs-search-filters__title {
   font-weight: 700;
   line-height: 1.3;
   font-size: 1.9rem;
-  margin: 0 0 1.5rem 0;
+  margin: 0 0 .5rem 0;
   padding: 1rem 0 0 0;
   color: $color-primary-darkest;
 
-  &.agency {
+  &.agency, &.skill, &.career, &.time, &.location {
     border-top: 0.5px solid #c8c8c8;
-    padding-top: 2rem;
+    padding-top: 1.5rem;
+    margin-top: 3rem;
   }
 }
 
