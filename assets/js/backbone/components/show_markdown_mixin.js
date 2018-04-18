@@ -14,6 +14,50 @@ module.exports = {
     }
   },
 
+  initializeShowMarkdownIntroduction: function (options) {
+    if (this.defaultDescription) { this.defaultDescription.cleanup(); }
+    var data = (UIConfig.fullTimeDetail && UIConfig.fullTimeDetail.description) ? UIConfig.fullTimeDetail.description : undefined;
+    if (data) {
+      options = _.extend(options, { data: data });
+      this.defaultDescription = new ShowMarkdown(options).render();
+      var descr = this.$('input[name="task-time-required"]:checked').attr('data-descr');
+      this.defaultDescription.showHide(descr);
+    }
+  },
+
+  initializeShowMarkdownDetails: function (options) {
+    if (this.defaultDescription) { this.defaultDescription.cleanup(); }
+    var data = (UIConfig.fullTimeDetail && UIConfig.fullTimeDetail.description) ? UIConfig.fullTimeDetail.description : undefined;
+    if (data) {
+      options = _.extend(options, { data: data });
+      this.defaultDescription = new ShowMarkdown(options).render();
+      var descr = this.$('input[name="task-time-required"]:checked').attr('data-descr');
+      this.defaultDescription.showHide(descr);
+    }
+  },
+
+  initializeShowMarkdownSkills: function (options) {
+    if (this.defaultDescription) { this.defaultDescription.cleanup(); }
+    var data = (UIConfig.fullTimeDetail && UIConfig.fullTimeDetail.description) ? UIConfig.fullTimeDetail.description : undefined;
+    if (data) {
+      options = _.extend(options, { data: data });
+      this.defaultDescription = new ShowMarkdown(options).render();
+      var descr = this.$('input[name="task-time-required"]:checked').attr('data-descr');
+      this.defaultDescription.showHide(descr);
+    }
+  },
+
+  initializeShowMarkdownTeam: function (options) {
+    if (this.defaultDescription) { this.defaultDescription.cleanup(); }
+    var data = (UIConfig.fullTimeDetail && UIConfig.fullTimeDetail.description) ? UIConfig.fullTimeDetail.description : undefined;
+    if (data) {
+      options = _.extend(options, { data: data });
+      this.defaultDescription = new ShowMarkdown(options).render();
+      var descr = this.$('input[name="task-time-required"]:checked').attr('data-descr');
+      this.defaultDescription.showHide(descr);
+    }
+  },
+
   timeRequiredChanged: function (e) {
     e.preventDefault();
     if (this.defaultDescription) {
