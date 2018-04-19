@@ -1,0 +1,89 @@
+<div class="usajobs-open-opps-opportunity usajobs-search-filters__scroll-container">
+
+    <div class="usajobs-search-filters__container" id="filters-container">
+        <div class="usajobs-search-filter-nav" aria-hidden="true">
+            <div class="usajobs-search-filter-nav__body">
+                <span class="fas fa-sliders-h" title="Filters"></span> Filters
+                <span class="usajobs-search-filter-nav__results">5 opportunities found</span>
+                <a href="javascript:void(0);" class="usajobs-search-filter-nav__back" data-behavior="search-filter-nav.close" aria-controls="usajobs-search-filters" title="Filters">
+                    <span class="sr-only">Close</span> <svg class="fa fa-times fa-w-12" title="Close" aria-labelledby="fa-title-20" data-fa-processed="" 
+                    data-prefix="fas" data-icon="times" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><title id="fa-title-20">Close</title>
+                    </svg><span class="fas fa-times" title="Close"></span>
+                </a>
+            </div>
+        </div>
+
+        <a href="https://usajobs.github.io/openopps-help/" class="usajobs-opop-section__help" target="_blank">
+        <span class="fas fa-question-circle" title="Help"></span> Help
+        </a>
+        <h3>Filters</h3>
+        <h4 class="usajobs-search-filters__title">Status</h4>
+        <a class="usajobs-search-filters__select-toggle" href="javascript:void(0);" id="select-all-filters">Select all</a>
+
+        <ul id="stateFilters" class="usa-unstyled-list">
+            <% _.each(ui.states, function (t) { %>
+            <% if (!t.hide || (user && user.isAdmin)) { %>
+                <li>
+                <input type='checkbox' id='state<%- t.label %>' value='<%- t.value %>' <% if(filters.indexOf(t.value) > -1) { %>checked<% } %>>
+                <label for='state<%- t.label %>' class="<%- t.value %>-filter">
+                    <%- t.label %>
+                </label>
+                </li>
+            <% } %>
+            <% }); %>
+        </ul>
+
+        <ul id="search-projs" class="nav nav-pills nav-stacked nav-search">
+        </ul>
+        <ul id="search-tags" class="nav nav-pills nav-stacked nav-search">
+        </ul>
+
+        <div class="search-clear" style="display: none;">
+            <div class="align-right">
+            <a href="#" id="search-clear" class="btn btn-sm btn-c0"><i class="fa fa-remove"></i> Clear Search Criteria</a>
+            </div>
+        </div>
+
+        <h4 class="usajobs-search-filters__title skill">Skill</h4>
+        <input type="text" id="skill" title="Skill" />
+
+        <h4 class="usajobs-search-filters__title">Series</h4>
+        <input type="text" id="series" title="Series" />
+
+        <h4 class="usajobs-search-filters__title time">Time commitment</h4>
+        <a class="usajobs-search-filters__select-toggle" href="javascript:void(0);" id="select-all-time-filters">Select all</a>
+        <ul id="stateFilters" class="usa-unstyled-list">
+            <li>
+                <input id="one-time" type="checkbox" name="time">
+                <label for="one-time">One time</label>
+            </li>
+            <li>
+                <input id="ongoing" class="restrict-participation" type="checkbox" name="time" />
+                <label for="ongoing">Ongoing</label>
+            </li>
+            <li>
+                <input id="full-time" class="restrict-participation" type="checkbox" name="time" />
+                <label for="full-time">Full time detail</label>
+            </li>
+        </ul>
+
+        <h4 class="usajobs-search-filters__title location">Location</h4>
+        <a class="usajobs-search-filters__select-toggle" href="javascript:void(0);" id="select-all-locations-filters">Select all</a>
+        <ul id="stateFilters" class="usa-unstyled-list">
+            <li>
+                <input id="virtual" type="checkbox" name="location">
+                <label for="virtual">Virtual</label>
+            </li>
+            <li>
+                <input id="in-person" class="restrict-participation" type="checkbox" name="location" />
+                <label for="in-person">In person</label>
+            </li>
+            </ul>
+
+        <% if (agencyName) { %>
+            <h4 class="usajobs-search-filters__title agency">Agency</h4>
+            <input id="js-restrict-task-filter" class="restrict-participation" type="checkbox" name="restrict" />
+            <label for="js-restrict-task-filter">Restrict to <%- agencyName %></label>
+        <% } %>
+    </div>
+</div>
