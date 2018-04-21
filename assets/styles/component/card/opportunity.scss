@@ -27,7 +27,15 @@
   }
 
   &__body {
-    padding-bottom: 8.1rem;
+    padding-bottom: 4.5rem;
+
+    @include media($XL-down) {
+      padding-bottom: 8.5rem;
+    }
+
+    .skills {
+      margin-bottom: 0.7rem;
+    }
   }
 
   & &__title {
@@ -54,10 +62,10 @@
   }
 
   & &__desc {
-    margin: $size-base 0;
+    margin: $size-base 0 $size-M 0;
 
     @include media($ML) {
-      margin: $size-S 0;
+      margin: $size-S 0 $size-default 0;
     }
   }
 
@@ -73,10 +81,28 @@
 
   &__details {
     @include unstyledList();
+    margin-bottom: $size-M;
+
+    &::after {
+      content: '';
+      display: table;
+      clear: both;
+    }
   }
 
-  &__detail-item {
+  & &__detail-item {
     color: $color-gray;
+    float: left;
+    margin-right: $size-M;
+
+    @include media($L-down) {
+      font-size: $small-font-size;
+    }
+  }
+
+  .related-keywords {
+    font-size: $small-font-size;
+    margin-bottom: $size-L;
   }
 
   #apply {
@@ -144,7 +170,7 @@
     }
 
     p {
-      font-size: 1.4rem;
+      font-size: $small-font-size;
       line-height: 1;
       margin: 0.5rem 0;
 
@@ -218,7 +244,7 @@
     blockquote {
       padding: 10px 20px;
       margin: 0 0 20px;
-      font-size: 1.7rem;
+      font-size: $base-font-size;
       border-left: 5px solid $color-gray-lighter;
       background-color: $color-gray-lightest;
 
@@ -240,7 +266,7 @@
         box-sizing: border-box;
         color: #212121;
         display: block;
-        font-size: 1.7rem;
+        font-size: $base-font-size;
         min-height: 4.4rem;
         height: auto;
         line-height: 1.3;
@@ -329,7 +355,7 @@
       }
 
       .comment-metadata {
-        font-size: 1.4rem;
+        font-size: $small-font-size;
         padding-top: 3px;
         color: $color-gray;
       }
@@ -391,7 +417,7 @@
 
       .comment-expand > .content,
       .comment-contract > .content {
-        font-size: 10px;
+        font-size: $em-base;
       }
 
       .comment-expand {
@@ -680,7 +706,7 @@
 
   .project-people__not-available {
     color: $color-gray-light;
-    font-size: 1.9rem;
+    font-size: $lead-font-size;
     font-style: italic;
     font-weight: 600;
     margin-top: $size-XXL;
@@ -692,7 +718,7 @@
 
     .project-people__assign-instruction {
       color: $color-gray-light;
-      font-size: 1.9rem;
+      font-size: $lead-font-size;
       font-style: italic;
       font-weight: 600;
       margin-top: $size-XXL;
@@ -841,8 +867,15 @@
 
 .usajobs-open-opps-opportunity-requestor {
   display: flex;
-  margin-top: $size-M;
-  align-items: center;
+  margin-top: $size-L;
+  // align-items: center;
+  flex-wrap: wrap;
+  flex-direction: column;
+
+  @include media($XL) {
+    align-items: center;
+    flex-direction: row;
+  }
 
   &__wrapper {
     position: absolute;
@@ -850,21 +883,38 @@
     width: calc(100% - 3rem);
   }
 
+  &__figure-body {
+    display: flex;
+    flex-wrap: nowrap;
+    flex-direction: row;
+    justify-content: flex-start;
+
+    @include media($XL-down) {
+      margin-bottom: $size-default;
+    }
+  }
+
   &__figure {
     flex-shrink: 0;
-    padding: 0 0 $size-base 0;
-
-    img {
-      width: 4.6rem;
-      height: 4.6rem;
-      background-position: center;
-      background-size: contain;
-      border-radius: 100%;
-    }
+    // padding: $size-base;
+    width: 4.6rem;
+    height: 4.6rem;
+    border-radius: 50%;
+    // position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 
     @include media($L) {
       padding-bottom: 0;
     }
+  }
+
+  &__initials {
+    font-weight: bold;
+    // position: absolute;
+    // top: 24%;
+    // left: 25%;
   }
 
   &__body {
@@ -873,7 +923,7 @@
     padding: 0 $size-S;
   }
 
-  &__by {
+  &__on {
     margin: 0;
     font-size: $small-font-size;
     color: $color-base;
@@ -943,7 +993,7 @@
 
 .usajobs-form__help-brief {
     margin-top: .5rem;
-    font-size: 1.4rem;
+    font-size: $small-font-size;
     max-width: 46rem;
 }
 
@@ -1061,6 +1111,22 @@
     position: absolute;
     top: 1.5rem;
     right: 1.5rem;
-    font-size: 1.4rem;
+    font-size: $small-font-size;
     text-decoration: none;
+}
+
+$requestor-background-colors: $color-cool-blue-lightest, $color-gold-lightest, $color-secondary-lightest, $color-primary-alt-lightest, $color-green-lightest;
+
+@for $i from 1 through length($requestor-background-colors) {
+  .usajobs-open-opps-opportunity:nth-child(#{length($requestor-background-colors)}n+#{$i}) .usajobs-open-opps-opportunity-requestor__figure {
+    background: lighten(nth($requestor-background-colors, $i), 0%);
+  }
+}
+
+$requestor-initial-colors: $color-cool-blue, $color-gray-dark, $color-secondary-darkest, $color-primary, $color-green;
+
+@for $i from 1 through length($requestor-initial-colors) {
+  .usajobs-open-opps-opportunity:nth-child(#{length($requestor-initial-colors)}n+#{$i}) .usajobs-open-opps-opportunity-requestor__initials {
+    color: lighten(nth($requestor-initial-colors, $i), 0%);
+  }
 }
