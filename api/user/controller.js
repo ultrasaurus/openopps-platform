@@ -4,6 +4,7 @@ const Router = require('koa-router');
 const _ = require('lodash');
 const auth = require('../auth/auth');
 const service = require('./service');
+const validGovtEmail = require('../model').ValidGovtEmail;
 
 var router = new Router();
 
@@ -26,13 +27,10 @@ router.get('/api/user/:id', auth, async (ctx, next) => {
 });
 
 router.get('/api/user/username/:username', async (ctx, next) => {
-  if (!ctx.params.username) {
-    return ctx.send(true);
-  }
-  log.info('looking up username', ctx.params.username);
-  if (validator.isEmail(ctx.params.username) !== true) {
+  if (!ctx.params.username || !validator.isEmail(ctx.params.username)) {
     return ctx.body = true;
   }
+  log.info('looking up username', ctx.params.username);
   await service.findOneByUsername(ctx.params.username.toLowerCase().trim(), function (err, user) {
     if (err) {
       ctx.status = 400;
