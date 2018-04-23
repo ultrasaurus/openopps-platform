@@ -13,7 +13,11 @@ var TaskListView = Backbone.View.extend({
   events: {
     'keyup #search'                           : 'search',
     'change #stateFilters input'              : 'stateFilter',
-    'click #select-all-filters'               : 'selectAllStateFilter',
+    'change #timeFilters input'               : 'timeFilter',
+    'change #locationFilters input'           : 'locationFilter',
+    'click #select-all-statefilters'          : 'selectAllStateFilter',
+    'click #select-all-timefilters'           : 'selectAllTimeFilter',
+    'click #select-all-locationfilters'       : 'selectAllLocationFilter',
     'change #js-restrict-task-filter'         : 'agencyFilter',
     'click a.page'                            : 'clickPage',
     'click #search-tab-bar-filter'            : 'toggleFilter',
@@ -29,6 +33,29 @@ var TaskListView = Backbone.View.extend({
       JSON.parse(this.queryParams.filters) : { state: 'open' };
     this.userAgency = window.cache.currentUser ? window.cache.currentUser.agency : {};
     this.initAgencyFilter();
+    this.taskFilteredCount = 0;
+    this.appliedFilterCount = getAppliedFiltersCount(this.filters);
+    $(window).resize(function () {
+      if ($(window).width() < 991) {
+        $('#task-filters').addClass('hide');
+        $('#footer').addClass('hide');
+        $('.usajobs-search-tab-bar__filters-default').attr('aria-hidden', 'false');
+        $('.usajobs-search-tab-bar__filter-count-container').attr('aria-hidden', 'false');
+        $('.usajobs-search-tab-bar__filters-expanded').attr('aria-expanded', true);
+      } else {
+        $('#task-filters').removeClass('hide');
+        $('#title').toggleClass('hide', false);
+        $('.navigation').toggleClass('hide', false);
+        $('#main-content').toggleClass('hide', false);
+        $('.find-people').toggleClass('hide', false);
+        $('#footer').removeClass('hide');
+        $('.usajobs-search-filter-nav').attr('aria-hidden', 'true');
+        $('#search-tab-bar-filter').attr('aria-expanded', false);
+        $('.usajobs-search-tab-bar__filters-default').attr('aria-hidden', 'true');
+        $('.usajobs-search-tab-bar__filter-count-container').attr('aria-hidden', 'true');
+        $('.usajobs-search-tab-bar__filters-expanded').attr('aria-expanded', false);
+      }
+    });
   },
 
   render: function () {
@@ -38,7 +65,9 @@ var TaskListView = Backbone.View.extend({
       ui: UIConfig,
       agencyName: this.userAgency.name,
       term: this.term,
-      filters: this.filters.state,
+      filters: this.filters,
+      taskFilteredCount: this.taskFilteredCount,
+      appliedFilterCount: this.appliedFilterCount,
     });
     this.$el.html(template);
     this.$el.localize();
@@ -70,16 +99,21 @@ var TaskListView = Backbone.View.extend({
       ui: UIConfig,
       agencyName: this.userAgency.name,
       term: this.term,
-      filters: this.filters.state,
+      filters: this.filters,
+      taskFilteredCount: this.taskFilteredCount,
+      appliedFilterCount: this.appliedFilterCount,
     });
     $('#task-filters').html(compiledTemplate);
+     
   },
 
   renderList: function (page) {
     $('#search-results-loading').hide();
     $('#task-list').html('');
+    this.taskFilteredCount = this.tasks.length;
+    this.appliedFilterCount = getAppliedFiltersCount(this.filters);
     this.renderFilters();
-    
+        
     if (this.tasks.length === 0) {
       var settings = {
         ui: UIConfig,
@@ -88,6 +122,7 @@ var TaskListView = Backbone.View.extend({
       $('#task-list').append(compiledTemplate);
       $('#task-page').hide();
     } else {
+      $('#search-tab-bar-filter-count').text(this.appliedFilterCount);
       var pageSize = 20;
       var start = (page - 1) * pageSize;
       var stop = page * pageSize;
@@ -175,8 +210,10 @@ var TaskListView = Backbone.View.extend({
   },
 
   toggleFilter: function (e) {
-    var filterTab = this.$(e.currentTarget);
+    var filterTab = this.$('#search-tab-bar-filter');
     if (filterTab.attr('aria-expanded') === 'true') {
+      $('#task-filters').toggleClass('hide', true);
+
       $(filterTab).attr('aria-expanded', false);
       $('.usajobs-search-tab-bar__filters-default').attr('aria-hidden', 'false');
       $('.usajobs-search-tab-bar__filter-count-container').attr('aria-hidden', 'false');
@@ -187,7 +224,7 @@ var TaskListView = Backbone.View.extend({
       $('.navigation').toggleClass('hide', false);
       $('#main-content').toggleClass('hide', false);
       $('.find-people').toggleClass('hide', false);
-      $('#footer').toggleClass('hide', false);
+
     } else {
       $(filterTab).attr('aria-expanded', true);
       $('.usajobs-search-tab-bar__filters-default').attr('aria-hidden', 'true');
@@ -199,9 +236,11 @@ var TaskListView = Backbone.View.extend({
       $('.navigation').toggleClass('hide', true);
       $('#main-content').toggleClass('hide', true);
       $('.find-people').toggleClass('hide', true);
-      $('#footer').toggleClass('hide', true);
+      $('#task-filters').toggleClass('hide', false);
+
     }
   },
+
 
   search: function (event) {
     var $target = this.$(event.currentTarget);
@@ -216,6 +255,24 @@ var TaskListView = Backbone.View.extend({
     this.filter(undefined, { state: states }, { data: {} });
   },
 
+  selectAllTimeFilter: function () {
+    var checkBoxes = $('#timeFilters input[type="checkbox"]');
+    checkBoxes.prop('checked', !checkBoxes.prop('checked'));
+
+    var times = _($('#timeFilters input:checked')).pluck('value').map(function (value) {
+      return { type: 'task-time-required', name: value };
+    });
+    this.filter(undefined, { tags: times }, { data: {} });
+  },
+
+  selectAllLocationFilter: function () {
+    var checkBoxes = $('#locationFilters input[type="checkbox"]');
+    checkBoxes.prop('checked', !checkBoxes.prop('checked'));
+
+    var locations = _($('#locationFilters input:checked')).pluck('value');
+    this.filter(undefined, { location: locations }, { data: {} });
+  },
+
   stateFilter: function (event) {
     var states = _($('#stateFilters input:checked')).pluck('value');
     if ( this.isAgencyChecked() ) {
@@ -223,6 +280,18 @@ var TaskListView = Backbone.View.extend({
     } else {
       this.filter(undefined, { state: states }, { data: {} });
     }
+  },
+
+  timeFilter: function (event) {
+    var times = _($('#timeFilters input:checked')).pluck('value').map(function (value) {
+      return { type: 'task-time-required', name: value };
+    });
+    this.filter(undefined, { tags: times }, { data: {} });
+  },
+
+  locationFilter: function (event) {
+    var times = _($('#locationFilters input:checked')).pluck('value');
+    this.filter(undefined, { location: locations }, { data: {} });
   },
 
   agencyFilter: function (event) {
@@ -247,7 +316,13 @@ var TaskListView = Backbone.View.extend({
       .filter( _.bind( filterTaskByTerm, this, this.term ) )
       .filter( _.bind( filterTaskByFilter, this, this.filters ) )
       .value();
+    
+    //this.appliedFilterCount = filters.length;
     this.renderList(1);
+
+    if ($('#search-tab-bar-filter').attr('aria-expanded') === 'true') {
+      $('.usajobs-search-filter-nav').attr('aria-hidden', 'false');
+    }
   },
 
   empty: function () {
@@ -259,6 +334,14 @@ var TaskListView = Backbone.View.extend({
   },
 
 });
+
+function getAppliedFiltersCount (filters) {
+  var count = 0;
+  _.each(filters, function ( value, key ) {
+    count += (_.isArray(value) ? value.length : 1);
+  });
+  return count;
+}
 
 function parseTaskStatus (task) {
   task.state = (task.state == 'in progress' && task.acceptingApplicants) ? 'open' : task.state;

@@ -26,13 +26,14 @@
           <span class="sr-only">Loading</span>
         </div>
       </div>
-      <div class="" id="task-page"></div>
+      <div id="task-page"></div>
     </main>
 
     <div id="usajobs-search-tab-bar">
       <nav class="usajobs-search-tab-bar" data-object="search-tab-bar">
           <div class="usajobs-search-tab-bar__body" id="search-tab-bar-controls">
-              <a href="javascript:void(0);" id="search-tab-bar-filter" class="usajobs-search-tab-bar__link usajobs-search-tab-bar__filters" data-behavior="search-tab-bar.toggle-filters" aria-controls="usajobs-search-filters" aria-expanded="false" title="Filter">
+              <a href="javascript:void(0);" id="search-tab-bar-filter" class="usajobs-search-tab-bar__link usajobs-search-tab-bar__filters" data-behavior="search-tab-bar.toggle-filters" 
+              aria-controls="usajobs-search-filters" aria-expanded="false" title="Filter">
                   <button class="usa-button-secondary-inverse usajobs-search-tab-bar__filters-default" aria-hidden="false">
                     <span class="usajobs-icon--center">
                       <svg class="fa fa-sliders-h fa-w-18" title="Filter" aria-labelledby="fa-title-16" data-prefix="fas" data-icon="sliders-h" 
@@ -41,7 +42,7 @@
                   </span>
                   <span class="usajobs-filter">Filter</span>
                   <span class="usajobs-search-tab-bar__filter-count-container" aria-hidden="false">
-                      <span id="search-tab-bar-filter-count" class="usajobs-search-tab-bar__filter-count">1</span>
+                      <span id="search-tab-bar-filter-count" class="usajobs-search-tab-bar__filter-count"><%= appliedFilterCount %></span>
                   </span>
                   </button>
                   <button class="usa-button-primary usajobs-search-tab-bar__filters-expanded" data-behavior="search-tab-bar.show-results" aria-expanded="false">
@@ -58,7 +59,7 @@
         <a href="#createOpportunity" id="create-opportunity" class="usa-button usa-button-secondary add-opportunity" data-toggle="modal" data-backdrop="static" style="<% if (!user) { %>display: none;<% } %>"><i class="fa fa-plus"></i> <span>Create opportunity</span></a>
         <p>Connect with people who share similar skills or invite someone to apply to your opportunity. <a href="/profiles"><span class="fas fa-users"></span> Search people</a></p>
       </div>
-      <div id="task-filters"></div>
+      <div id="task-filters" aria-hidden="false"></div>
     </aside>
   </div>
 </section>
