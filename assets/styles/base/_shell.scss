@@ -7,7 +7,6 @@
   position: relative;
   @include outer-container();
   max-width: $site-max-width;
-  background: $color-gray-lightest;
 }
 
 // Update all usa-grid styles to use our site max width
