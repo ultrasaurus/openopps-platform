@@ -51,7 +51,12 @@
   text-rendering: optimizeSpeed;
 }
 
-.usajobs-search-tab-bar__body[aria-hidden=true], .usajobs-search-tab-bar__filter-controls[aria-hidden=true], .usajobs-search-tab-bar__filters-default[aria-hidden=true] {
+.usajobs-search-tab-bar__filters-default {
+  width: 100%;
+}
+
+.usajobs-search-tab-bar__body[aria-hidden=true], .usajobs-search-tab-bar__filter-controls[aria-hidden=true], 
+.usajobs-search-tab-bar__filters-default[aria-hidden=true] {
   display: none;
 }
 
@@ -247,6 +252,7 @@
 
 .usajobs-search-filter-nav {
   background-color: #112e51;
+  
 }
 
 .usajobs-search-filter-nav::after {
