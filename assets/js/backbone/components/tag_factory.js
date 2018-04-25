@@ -81,7 +81,7 @@ var TagFactory = BaseComponent.extend({
     options.multiple = (options.multiple !== undefined ? options.multiple : true);
     options.allowCreate = (options.allowCreate !== undefined ? options.allowCreate : true);
 
-    var tagLabel = i18n.t('tag.' + options.type);
+    var tagLabel = options.type;
 
     //construct the settings for this tag type
     var settings = {

@@ -45,7 +45,8 @@
     },
     {
       "value":"canceled",
-      "label":"Canceled"
+      "label":"Canceled",
+      "hide": true
     }
   ],
   "modalHome" : {
