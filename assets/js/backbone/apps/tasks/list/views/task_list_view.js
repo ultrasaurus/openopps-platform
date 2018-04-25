@@ -13,7 +13,7 @@ var SearchPills = require('../templates/search_pills.html');
 
 var TaskListView = Backbone.View.extend({
   events: {
-    'keyup #search'                           : 'search',
+    'click #search-button'                    : 'search',
     'change #stateFilters input'              : 'stateFilter',
     'change #timeFilters input'               : 'timeFilter',
     'change input[name=location]'             : 'locationFilter',
@@ -65,7 +65,7 @@ var TaskListView = Backbone.View.extend({
 
   render: function () {
     var template = _.template(TaskListTemplate)({
-      placeholder: '',
+      placeholder: 'Find opportunities by ',
       user: window.cache.currentUser,
       ui: UIConfig,
       agencyName: this.userAgency.name,
@@ -307,9 +307,8 @@ var TaskListView = Backbone.View.extend({
   },
 
 
-  search: function (event) {
-    var $target = this.$(event.currentTarget);
-    this.filter($target.val());
+  search: function () {
+    this.filter(this.$('#search').val());
   },
 
   toggleStateFilters: function (event) {
