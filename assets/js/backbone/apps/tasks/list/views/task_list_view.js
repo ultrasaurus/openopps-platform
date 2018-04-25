@@ -3,29 +3,34 @@ var Backbone = require('backbone');
 var marked = require('marked');
 var UIConfig = require('../../../../config/ui.json');
 var TagConfig = require('../../../../config/tag');
+var TagFactory = require('../../../../components/tag_factory');
 var TaskListTemplate = require('../templates/task_list_template.html');
 var TaskListItem = require('../templates/task_list_item.html');
 var NoListItem = require('../templates/no_search_results.html');
 var Pagination = require('../../../../components/pagination.html');
 var TaskFilters = require('../templates/task_filters.html');
+var SearchPills = require('../templates/search_pills.html');
 
 var TaskListView = Backbone.View.extend({
   events: {
     'keyup #search'                           : 'search',
     'change #stateFilters input'              : 'stateFilter',
     'change #timeFilters input'               : 'timeFilter',
-    'change #locationFilters input'           : 'locationFilter',
-    'click #select-all-statefilters'          : 'selectAllStateFilter',
-    'click #select-all-timefilters'           : 'selectAllTimeFilter',
-    'click #select-all-locationfilters'       : 'selectAllLocationFilter',
+    'change input[name=location]'             : 'locationFilter',
+    'click .stateFilters-toggle'              : 'toggleStateFilters',
+    'click .timefilters-toggle'               : 'toggleTimeFilters',
+    'click .locationfilters-toggle'           : 'toggleLocationFilters',
     'change #js-restrict-task-filter'         : 'agencyFilter',
     'click a.page'                            : 'clickPage',
     'click #search-tab-bar-filter'            : 'toggleFilter',
     'click .usajobs-search-filter-nav__back'  : 'toggleFilter',
+    'click .usajobs-search-pills__item'       : 'removeFilter',
+    'click #search-pills-remove-all'          : 'removeAllFilters',
   },
 
   initialize: function (options) {
     this.el = options.el;
+    this.tagFactory = new TagFactory();
     this.collection = options.collection;
     this.queryParams = options.queryParams;
     this.term = this.queryParams.search;
@@ -80,16 +85,71 @@ var TaskListView = Backbone.View.extend({
     self.collection.fetch({
       success: function (collection) {
         self.collection = collection;
-        self.tasks = collection.chain()
-          .pluck('attributes')
-          .map( _.bind( parseTaskStatus, this ) )
-          .filter( _.bind( filterTaskByAgency, self, self.agency ) )
-          .filter( _.bind( filterTaskByTerm, self, self.term ) )
-          .filter( _.bind( filterTaskByFilter, self, self.filters ) )
-          .value();
-        self.renderList(1);
+        self.filter(self.term, self.filters, self.agency);
       },
     });
+  },
+
+  initializeSelect2: function () {
+    ['series', 'skill', 'location'].forEach(function (tag) {
+      var data = this.filters[tag];
+      if(tag == 'location') {
+        data = _.filter(data, _.isObject);
+      }
+      this.tagFactory.createTagDropDown({
+        type: tag,
+        selector: '#' + tag,
+        width: '100%',
+        tokenSeparators: [','],
+        allowCreate: false,
+        maximumSelectionSize: 5,
+        data: data,
+      });
+      $('#' + tag).on('change', function (e) {
+        this.filters[tag] = _.map($(e.target).select2('data'), function (item) {
+          return _.pick(item, 'type', 'name', 'id');
+        });
+        if(tag == 'location') {
+          if($('#virtual').is(':checked')) {
+            this.filters.location.push('virtual');
+          }
+          if($('#in-person').is(':checked')) {
+            this.filters.location.push('in-person');
+          }
+        }
+        this.filter(this.term, this.filters, { data: {} });
+      }.bind(this));
+    }.bind(this));
+    if(!_.contains(this.filters.location, 'in-person')) {
+      $('#location').siblings('.select2-container').hide();
+    }
+  },
+
+  removeFilter: function (event) {
+    event.preventDefault();
+    var element = $(event.target).closest('.usajobs-search-pills__item');
+    var type = element.data('type');
+    var value = element.data('value');
+    if(_.isArray(this.filters[type])) {
+      if(type == 'location' && value == 'in-person') {
+        this.filters[type] = _.filter(this.filters[type], function (filter) {
+          return _.isEqual(filter, 'virtual'); // only return virtual if it exist
+        });
+      } else {
+        this.filters[type] = _.filter(this.filters[type], function (filter) {
+          return !_.isEqual(filter, value);
+        });
+      }
+    } else if (_.isEqual(this.filters[type], value)) {
+      this.filters[type] = [];
+    }
+    this.filter(this.term, this.filters, { data: {} });
+  },
+
+  removeAllFilters: function (event) {
+    event.preventDefault();
+    this.filters = { state: [] };
+    this.filter(this.term, this.filters, { data: {} });
   },
 
   renderFilters: function () {
@@ -104,7 +164,12 @@ var TaskListView = Backbone.View.extend({
       appliedFilterCount: this.appliedFilterCount,
     });
     $('#task-filters').html(compiledTemplate);
-     
+    compiledTemplate = _.template(SearchPills)({
+      filters: this.filters,
+      appliedFilterCount: this.appliedFilterCount,
+    });
+    $('#usajobs-search-pills').html(compiledTemplate);
+    this.initializeSelect2();
   },
 
   renderList: function (page) {
@@ -113,12 +178,12 @@ var TaskListView = Backbone.View.extend({
     this.taskFilteredCount = this.tasks.length;
     this.appliedFilterCount = getAppliedFiltersCount(this.filters);
     this.renderFilters();
-        
+
     if (this.tasks.length === 0) {
       var settings = {
         ui: UIConfig,
       };
-      compiledTemplate = _.template(NoListItem)(settings); 
+      compiledTemplate = _.template(NoListItem)(settings);
       $('#task-list').append(compiledTemplate);
       $('#task-page').hide();
     } else {
@@ -247,61 +312,70 @@ var TaskListView = Backbone.View.extend({
     this.filter($target.val());
   },
 
-  selectAllStateFilter: function () {
+  toggleStateFilters: function (event) {
+    var behavior = $(event.currentTarget).data('behavior');
     var checkBoxes = $('#stateFilters input[type="checkbox"]');
-    checkBoxes.prop('checked', !checkBoxes.prop('checked'));
-
-    var states = _($('#stateFilters input:checked')).pluck('value');
-    this.filter(undefined, { state: states }, { data: {} });
+    checkBoxes.prop('checked', behavior == 'select');
+    this.stateFilter();
   },
 
-  selectAllTimeFilter: function () {
+  toggleTimeFilters: function (event) {
+    var behavior = $(event.currentTarget).data('behavior');
     var checkBoxes = $('#timeFilters input[type="checkbox"]');
-    checkBoxes.prop('checked', !checkBoxes.prop('checked'));
-
-    var times = _($('#timeFilters input:checked')).pluck('value').map(function (value) {
-      return { type: 'task-time-required', name: value };
-    });
-    this.filter(undefined, { tags: times }, { data: {} });
+    checkBoxes.prop('checked', behavior == 'select');
+    this.timeFilter();
   },
 
-  selectAllLocationFilter: function () {
+  toggleLocationFilters: function (event) {
+    var behavior = $(event.currentTarget).data('behavior');
     var checkBoxes = $('#locationFilters input[type="checkbox"]');
-    checkBoxes.prop('checked', !checkBoxes.prop('checked'));
-
-    var locations = _($('#locationFilters input:checked')).pluck('value');
-    this.filter(undefined, { location: locations }, { data: {} });
+    checkBoxes.prop('checked', behavior == 'select');
+    this.locationFilter();
   },
 
   stateFilter: function (event) {
-    var states = _($('#stateFilters input:checked')).pluck('value');
+    this.filters.state = _($('#stateFilters input:checked')).pluck('value');
     if ( this.isAgencyChecked() ) {
-      this.filter( undefined, { state: states }, this.agency );
+      this.filter( this.term, this.filters, this.agency );
     } else {
-      this.filter(undefined, { state: states }, { data: {} });
+      this.filter(this.term, this.filters, { data: {} });
     }
   },
 
   timeFilter: function (event) {
-    var times = _($('#timeFilters input:checked')).pluck('value').map(function (value) {
+    this.filters.time = _($('#timeFilters input:checked')).pluck('value').map(function (value) {
       return { type: 'task-time-required', name: value };
     });
-    this.filter(undefined, { tags: times }, { data: {} });
+    this.filter(this.term, this.filters, { data: {} });
   },
 
   locationFilter: function (event) {
-    var times = _($('#locationFilters input:checked')).pluck('value');
-    this.filter(undefined, { location: locations }, { data: {} });
+    if(!$('#in-person').is(':checked')) {
+      $('#location').siblings('.select2-container').hide();
+      $('#location').select2('data', null);
+    } else {
+      $('#location').siblings('.select2-container').show();
+    }
+    this.filters.location = _.map($('#location').select2('data'), function (item) {
+      return _.pick(item, 'type', 'name', 'id');
+    });
+    if($('#virtual').is(':checked')) {
+      this.filters.location.push('virtual');
+    }
+    if($('#in-person').is(':checked')) {
+      this.filters.location.push('in-person');
+    }
+    this.filter(this.term, this.filters, { data: {} });
   },
 
   agencyFilter: function (event) {
     var isChecked = event.target.checked;
-    var states = _( $( '#stateFilters input:checked' ) ).pluck( 'value' );
+    this.filters.state = _( $( '#stateFilters input:checked' ) ).pluck( 'value' );
     this.initAgencyFilter();
     if ( isChecked ) {
-      this.filter( undefined, { state: states }, this.agency );
+      this.filter( this.term, this.filters, this.agency );
     } else {
-      this.filter(undefined, { state: states }, { data: {} });
+      this.filter(this.term, this.filters, { data: {} });
     }
   },
 
@@ -314,10 +388,20 @@ var TaskListView = Backbone.View.extend({
       .map( _.bind( parseTaskStatus, this ) )
       .filter( _.bind( filterTaskByAgency, this, this.agency ) )
       .filter( _.bind( filterTaskByTerm, this, this.term ) )
-      .filter( _.bind( filterTaskByFilter, this, this.filters ) )
       .value();
-    
-    //this.appliedFilterCount = filters.length;
+
+    _.each(filters, function ( value, key ) {
+      if(key == 'state') {
+        this.tasks = this.tasks.filter(_.bind(filterTaskByState, this, value));
+      } else if (key == 'location') {
+        filter = _.filter(value, function (v) { return v != 'in-person'; });
+        if(!_.isEmpty(filter)) {
+          this.tasks = this.tasks.filter(_.bind(filterTaskByLocation, this, filter));
+        }
+      } else if (!_.isEmpty(value)) {
+        this.tasks = this.tasks.filter(_.bind(filterTaskByTag, this, value));
+      }
+    }.bind(this));
     this.renderList(1);
 
     if ($('#search-tab-bar-filter').attr('aria-expanded') === 'true') {
@@ -366,17 +450,40 @@ function filterTaskByTerm ( term, task ) {
   return ( ! term ) || ( searchBody.indexOf( term.toLowerCase() ) >= 0 );
 }
 
-function filterTaskByFilter ( filters, task ) {
+function filterTaskByState ( filters, task ) {
   var test = [];
-  _.each( filters, function ( value, key ) {
-    if ( _.isArray( value ) ) {
-      test.push( _.some( value, function ( val ) {
-        return task[ key ] === val || _.contains( task[ key ], value );
-      } ) );
-    } else {
-      test.push( task[ key ] === value || _.contains( task[ key ], value ) );
-    }
-  } );
+  if (_.isArray(filters)) {
+    test.push(_.some(filters, function (val) {
+      return task.state === val || _.contains(task.state, val);
+    }));
+  } else {
+    test.push(task.state === filters || _.contains(task.state, filters));
+  }
+  return test.length === _.compact(test).length;
+}
+
+function filterTaskByTag (filters, task) {
+  var test = [];
+  if (_.isArray(filters)) {
+    test.push(_.some(filters,function (val) {
+      return _.find(task.tags, val);
+    }));
+  } else {
+    test.push(_.find(task.tags, filters));
+  }
+  return test.length === _.compact(test).length;
+}
+
+function filterTaskByLocation (filters, task) {
+  var test = [];
+  taskHasLocation = _.find(task.tags, { type: 'location'});
+  if (_.isArray(filters)) {
+    test.push(_.some(filters, function (val) {
+      return ((val == 'virtual' && !taskHasLocation) || _.find(task.tags, val));
+    }));
+  } else {
+    test.push((filters == 'virtual' && !taskHasLocation) || _.find(task.tags, filters));
+  }
   return test.length === _.compact(test).length;
 }
 
