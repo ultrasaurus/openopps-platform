@@ -11,7 +11,6 @@ var TaskCollection = require('./entities/tasks/tasks_collection');
 var TaskListController = require('./apps/tasks/list/controllers/task_list_controller');
 var TaskShowController = require('./apps/tasks/show/controllers/task_show_controller');
 var TaskEditFormView = require('./apps/tasks/edit/views/task_edit_form_view');
-var TaskCreateFormView = require('./apps/tasks/new/views/task_form_view');
 var AdminMainController = require('./apps/admin/controllers/admin_main_controller');
 var HomeController = require('./apps/home/controllers/home_controller');
 var LoginController = require('./apps/login/controllers/login_controller');
