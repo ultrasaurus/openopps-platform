@@ -1,6 +1,7 @@
 'use strict';
 var _ = require('underscore');
 var Backbone = require('backbone');
+var async = require('async');
 
 var TaskModel = Backbone.Model.extend({
 
@@ -23,7 +24,14 @@ var TaskModel = Backbone.Model.extend({
   initialize: function () {
 
     this.listenTo(this, 'task:save', function (data) {
-      this.save(data);
+      this.save(data, {
+        success: function (data) {
+          this.trigger('task:save:success', data);
+        }.bind(this),
+        error: function ( model, response, options ) {
+          this.trigger( 'task:save:error', model, response, options );
+        }.bind(this),
+      });
     });
 
     this.listenTo(this, 'task:model:fetch', function (data) {
@@ -122,6 +130,26 @@ var TaskModel = Backbone.Model.extend({
       this.attributes.submittedAt ||
       ( ! this.isDraft() && ! this.isSubmission() )
     );
+  },
+
+  tagTypes: function (callback) {
+    var types = ['task-skills-required', 'task-time-required', 'task-people', 'task-length', 'task-time-estimate', 'career'];
+    var tagSources = {};
+    var requestAllTagsByType = function (type, cb) {
+      $.ajax({
+        url: '/api/ac/tag?type=' + type + '&list',
+        type: 'GET',
+        async: false,
+        success: function (data) {
+          tagSources[type] = data;
+          return cb();
+        },
+      });
+    };
+
+    async.each(types, requestAllTagsByType, function (err) {
+      callback(tagSources);
+    });
   },
 
 });

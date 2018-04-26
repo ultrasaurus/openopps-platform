@@ -40,7 +40,7 @@
           <% } %>
         </td>
         <td class="metrics-table__button">
-          <% if (task.state.toLowerCase() == 'submitted') { %>
+          <% if (_.contains(['draft', 'submitted'], task.state.toLowerCase())) { %>
             <a href="#open/<%- task.id %>"
                data-task-id="<%- task.id %>"
                data-task-title="<%- task.title %>"

@@ -2,7 +2,7 @@
   <div class="usajobs-content-gutter opportunity-gutter">
     <main class="main-content usajobs-content-well" id="main-content" aria-label="Opportunity">
       <div class="usajobs-open-opps-opportunity usajobs-open-opps-section usajobs-open-opps-profile">
-        <h1 class="usajobs-form__title">Edit opportunity <span class="usajobs-form__legend">All fields are required unless otherwise noted</span></h1>
+        <h1 class="usajobs-form__title"><% if(data.id) { %>Edit<% } else {%>Create an<% } %> opportunity <span class="usajobs-form__legend">All fields are required unless otherwise noted</span></h1>
         <form id="task-edit-form" class="usa-form-xl" action="">
           <fieldset class="usajobs-fieldset">
             <div class="tips">
@@ -29,40 +29,21 @@
                     <% }); %>
               </select>
             </div>
-            <!--<div class="form-group checkboxes-horizontal">
-              <label for="AcquisitionOpportunity" class="usajobs-profile-question__title">
-                Is this an Acquisition opportunity?
-              </label>
-              <ul class="usa-unstyled-list" id="acquisition-opportunity">
-                <li>
-                  <input <% if (data.isAquisition) { %>checked<% } %> id="acquisition-opportunity-yes" name="AcquisitionOpportunity" type="radio" value="True">
-                  <label for="acquisition-opportunity-yes">Yes</label>
-                </li>
-                <li>
-                  <input <% if (!data.isAquisition) { %>checked<% } %> id="acquisition-opportunity-no" name="AcquisitionOpportunity" type="radio" value="False">
-                  <label for="acquisition-opportunity-no">No</label>
-                </li>
-              </ul>
-            </div>-->
             <div class="form-group">
               <label for="opportunity-series">Series <span class="usa-input-optional"></span></label>
               <input type="text" class="fullwidth form-control" id="opportunity-series" name="opportunity-series">
             </div>
-            <!--<div class="form-group">
-              <label for="opportunity-occupation">Occupation <span class="usa-input-optional"></span></label>
-              <input type="text" class="fullwidth form-control" id="opportunity-occupation" name="opportunity-occupation">
-            </div>-->
             <div class="form-group checkboxes-horizontal-longtitle">
               <label for="CareerField" class="usajobs-profile-question__title">
                 Are you looking for someone in a specific career field? <span class="usa-input-optional"></span>
               </label>
               <ul class="usa-unstyled-list" id="career-field">
                 <li>
-                  <input id="career-field-yes" name="CareerField" type="radio" value="True">
+                  <input id="career-field-yes" name="CareerField" type="radio" value="true">
                   <label for="career-field-yes">Yes</label>
                 </li>
                 <li>
-                  <input id="career-field-no" name="CareerField" type="radio" value="False">
+                  <input id="career-field-no" name="CareerField" type="radio" value="false">
                   <label for="career-field-no">No</label>
                 </li>
               </ul>
@@ -84,19 +65,6 @@
             <div class="form-group">
               <label for="time-required" class="no-margin-top">What is the time commitment?</label>
               <ul class="usa-unstyled-list opportunity-options__list">
-                <!-- <% _.each(tagTypes['task-time-required'], function (t) { %>
-                  <li>
-                    <% var selected = madlibTags['task-time-required'] && (madlibTags['task-time-required'][0].id == t.id); %>
-                      <input id="<%- t.id %>" type="radio" name="task-time-required" value="<%- t.id %>" data-descr="<%- t.name %>"
-                      <% if (selected) { %>checked<% } %> />
-                        <label for="<%- t.id %>">
-                          <%- t.name %>
-                            <% if (t.description) { %> &mdash;
-                              <%= t.description %>
-                                <% } %>
-                        </label>
-                  </li>
-                  <% }); %> -->
                   <li>
                     <button type="button" class="opportunity-options__button time-options-time-required" id="one-time" value="One time">
                       <span class="opportunity-options__icon">
@@ -190,30 +158,9 @@
                     <span class="opportunity-options__text">In person</span>
                   </button>
                 </li>
-                <!-- <li>
-                    <% var somewhere = madlibTags['location']; %>
-                    <input type="radio" name="participant-location" id="anywhere" value="anywhere" <% if (_.isUndefined(somewhere)) { %> checked <% } %> />
-                    <label for="anywhere">Anywhere</label>
-                </li>
-                <li>
-                  <input type="radio" name="participant-location" id="specific-location" value="specific-location" <% if (somewhere) { %> checked <% } %> />
-                  <label for="specific-location">At specific locations</label>
-                </li> -->
               </ul>
               <input type="hidden" id="task_tag_location" name="location" />
             </div>
-            <!-- <div class="form-group">
-              <label for="people">How many people are needed?</label>
-              <select id="people" class="dropdown">
-                <% _.each(tagTypes['task-people'], function (t) { %>
-                  <% var selected = madlibTags['task-people'] && (madlibTags['task-people'][0].id == t.id); %>
-                    <option value=<%- t.id %>
-                      <% if (selected) { %>selected<% } %>>
-                          <%- t.name %>
-                    </option>
-                    <% }); %>
-              </select>
-            </div> -->
           </fieldset>
           <fieldset id="step-2" class="usajobs-fieldset">
             <h2>Step 2 - Describe the opportunity</h2>
@@ -257,7 +204,7 @@
               <li>
                 <label for="opportunity-skills" class="expandorama-button expandorama-button-skills" aria-expanded="false" aria-controls="skills">
                   <!-- <i class="fas fa-minus-circle"></i> -->
-                  <h3>What you'll learn</h3>
+                  <h3>What you'll learn <span class="usa-input-optional"></span></h3>
                 </label>
                 <div class="required-input expandorama-content" id="skills">
                   <span class="field-validation-error error-html" style="display:none;">The special characters '
@@ -269,7 +216,7 @@
               </li>
               <li>
                 <label for="opportunity-team" class="expandorama-button expandorama-button-team" aria-expanded="false" aria-controls="team">
-                  <h3>Who we are</h3>
+                  <h3>Who we are <span class="usa-input-optional"></span></h3>
                 </label>
                 <div class="required-input expandorama-content" id="team">
                   <span class="field-validation-error error-html" style="display:none;">The special characters '
@@ -281,7 +228,7 @@
               </li>
               <li>
                 <label for="task_tag_keywords" class="expandorama-button expandorama-button-keywords" aria-expanded="false" aria-controls="keywords">
-                  <h3>Related keyword</h3>
+                  <h3>Related keyword <span class="usa-input-optional"></span></h3>
                 </label>
                 <div class="required-input expandorama-content" id="keywords">
                   <span class="field-validation-error error-html" style="display:none;">The special characters '
@@ -292,6 +239,7 @@
               </li>
             </ul>
           </fieldset>
+          <fieldset id="step-3" class="usajobs-fieldset"></fieldset>
           <fieldset class="usajobs-fieldset">
             <div class="usajobs-button_bar--slim task-footer">
               <div class="usajobs-button_bar__body">
@@ -302,70 +250,6 @@
                 <% } else { %>
                   <button type="submit" class="usa-button usa-button-primary" data-state="submit">Save &amp; preview</button>
                 <% } %>
-              </div>
-            </div>
-          </fieldset>
-
-          <fieldset id="step-3" class="usajobs-fieldset">
-            <h2>Step 3 - Review draft and submit</h2>
-            <hr>
-            <h1 class="usajobs-open-opps-opportunity-item__title">
-              Process Improvement Event Facilitator</h1>
-            <p><em>Desired skills:</em></p>
-            <!-- <div class="skills">
-              <% _.each(madlibTags['skill'], function (t) { %>
-                <a class="skill-label" href="/tasks?search=<%= t.name %>"><%= t.name %></a>
-              <% }) %>
-            </div> -->
-            <div class="skills">
-            	<a class="skill-label" href="">Shining</a>
-            </div>
-            <div class="step-3-flex__wrapper">
-              <div class="step-3-flex__item paragraphs">
-                <h3>Introduction</h3>
-                <p>Are you looking for an opportunity to strengthen your skills in a highly sought-after area? Do you have a passion for helping people? Do you have training in process improvement methodologies (e.g. Lean Six Sigma) and would like more hands on experience?</p>
-                <h3>What you'll do</h3>
-                <p>Are you looking for an opportunity to strengthen your skills in a highly sought-after area? Do you have a passion for helping people? Do you have training in process improvement methodologies (e.g. Lean Six Sigma) and would like more hands on experience?</p>
-                <h3>What you'll learn</h3>
-                <p>Are you looking for an opportunity to strengthen your skills in a highly sought-after area? Do you have a passion for helping people? Do you have training in process improvement methodologies (e.g. Lean Six Sigma) and would like more hands on experience?</p>
-                <h3>Who we are</h3>
-                <p>Are you looking for an opportunity to strengthen your skills in a highly sought-after area? Do you have a passion for helping people? Do you have training in process improvement methodologies (e.g. Lean Six Sigma) and would like more hands on experience?</p>
-                <div class="related-keywords">
-                  <h3>Related keywords</h3>
-                  <!-- <div class="keywords">
-                    <% _.each(madlibTags['keywords'], function (t) { %>
-                      <a class="keyword-label" href="/tasks?search=<%= t.name %>"><%= t.name %></a>
-                    <% }) %>
-                  </div> -->
-                  <div class="keywords">
-                  	<a class="keyword-label" href="">Acquisition</a>
-                  	<a class="keyword-label" href="">1102 - Contracting</a>
-                  	<a class="keyword-label" href="">Industry day</a>
-                  </div>
-                  <aside class="step-3-flex__item happens-next tips-left">
-                    <h4>What happens next?</h4>
-                    <p>Once you submit your opportunity, we'll review it. We'll email you within <strong>two business days</strong> with recommended edits or approval.</p>
-                    <p>Read our <a href="https://usajobs.github.io/openopps-help/opportunity/">step-by-step process</a> to learn more about creating an opportunity.</p>
-                  </aside>
-                </div>
-              </div>
-              <div class="step-3-flex__item personnel">
-                <div class="usajobs-opop__task-intro">
-                  <div class="usajobs-grid-full">
-                    <div class="usa-width-one-half">
-                      <h4><i class="far fa-user"></i>Personnel needed</h4>
-                      <p>2-5 people</p>
-                      <h4><i class="far fa-calendar"></i>Time commitment</h4>
-                      <p>Ongoing/4-8 hours weekly</p>
-                    </div>
-                    <div class="usa-width-one-half">
-                      <h4><i class="far fa-clock"></i>Due date</h4>
-                      <p>00/00/00</p>
-                      <h4><i class="fas fa-map-marker-alt"></i>Location</h4>
-                      <p>Virtual</p>
-                    </div>
-                  </div>
-                </div>
               </div>
             </div>
           </fieldset>

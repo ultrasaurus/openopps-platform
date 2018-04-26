@@ -157,37 +157,42 @@ var BrowseRouter = Backbone.Router.extend({
    * on the collection.
    */
   newTask: function ( /*params*/ ) {
-
     var self = this;
-    var tasks = new TaskCollection([{}]);
-
     this.cleanupChildren();
-
-    this.taskCreateController = new TaskCreateFormView({ collection: tasks });
-    this.taskCreateController.render();
-
-    this.listenTo(tasks, 'task:save:success', function (data) {
-
-      Backbone.history.navigate('/tasks/' + data.attributes.id, { trigger: true });
-      setTimeout(function () {
-        $('body').addClass('modal-is-open');
-        
-        this.modal = new Modal({
-          el: '#site-modal',
-          id: 'submit-opp',
-          modalTitle: 'Submitted',
-          modalBody: 'Thanks for submitting the <strong>' + data.attributes.title + '</strong>. We\'ll review it and let you know if it\'s approved or if we need more information.',
-          primary: {
-            text: 'Close',
-            action: function () {
-              this.modal.cleanup();
-            }.bind(this),
-          }
-        }).render();
-      }, 500);
+    var model = new TaskModel();
+    model.tagTypes(function (tagTypes) {
+      this.taskEditFormView = new TaskEditFormView({
+        el: '#container',
+        edit: false,
+        model: model,
+        tags: [],
+        madlibTags: {},
+        tagTypes: tagTypes,
+      }).render();
     });
 
-    this.listenTo(tasks, 'task:save:error', function (model, response, options) {
+    this.listenTo(model, 'task:save:success', function (data) {
+      Backbone.history.navigate('/tasks/' + data.attributes.id, { trigger: true });
+      if(data.attributes.state != 'draft') {
+        setTimeout(function () {
+          $('body').addClass('modal-is-open');
+          this.modal = new Modal({
+            el: '#site-modal',
+            id: 'submit-opp',
+            modalTitle: 'Submitted',
+            modalBody: 'Thanks for submitting the <strong>' + data.attributes.title + '</strong>. We\'ll review it and let you know if it\'s approved or if we need more information.',
+            primary: {
+              text: 'Close',
+              action: function () {
+                this.modal.cleanup();
+              }.bind(this),
+            },
+          }).render();
+        }, 500);
+      }
+    });
+
+    this.listenTo(model, 'task:save:error', function (model, response, options) {
       var error = options.xhr.responseJSON;
       if (error && error.invalidAttributes) {
         for (var item in error.invalidAttributes) {
