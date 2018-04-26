@@ -51,7 +51,12 @@
   text-rendering: optimizeSpeed;
 }
 
-.usajobs-search-tab-bar__body[aria-hidden=true], .usajobs-search-tab-bar__filter-controls[aria-hidden=true], .usajobs-search-tab-bar__filters-default[aria-hidden=true] {
+.usajobs-search-tab-bar__filters-default {
+  width: 100%;
+}
+
+.usajobs-search-tab-bar__body[aria-hidden=true], .usajobs-search-tab-bar__filter-controls[aria-hidden=true],
+.usajobs-search-tab-bar__filters-default[aria-hidden=true] {
   display: none;
 }
 
@@ -107,7 +112,7 @@
   color: #212121;
 }
 
-.usajobs-search-tab-bar__filter-count-container[aria-hidden=true], 
+.usajobs-search-tab-bar__filter-count-container[aria-hidden=true],
 .usajobs-search-filter-nav[aria-hidden=true] {
   display: none;
 }
@@ -216,7 +221,7 @@
 @media screen and (min-width: 62em) {
   .usajobs-search-filters__container {
     height: 100%;
-    z-index: 99;
+    z-index: 5;
     -webkit-transition: all 0.3s;
     -moz-transition: all 0.3s;
     transition: all 0.3s;
@@ -247,6 +252,7 @@
 
 .usajobs-search-filter-nav {
   background-color: #112e51;
+
 }
 
 .usajobs-search-filter-nav::after {
@@ -272,11 +278,11 @@
   text-decoration: none;
 }
 
-.usajobs-search-filter-nav__back:visited, .usajobs-search-filter-nav__back:active, 
-.usajobs-search-filter-nav__back:hover, .usajobs-search-filter-nav__header-back:visited, 
-.usajobs-search-filter-nav__header-back:active, .usajobs-search-filter-nav__header-back:hover, 
-.usajobs-search-save-nav__back:visited, .usajobs-search-save-nav__back:active, 
-.usajobs-search-save-nav__back:hover, .usajobs-search-save-nav__header-back:visited, 
+.usajobs-search-filter-nav__back:visited, .usajobs-search-filter-nav__back:active,
+.usajobs-search-filter-nav__back:hover, .usajobs-search-filter-nav__header-back:visited,
+.usajobs-search-filter-nav__header-back:active, .usajobs-search-filter-nav__header-back:hover,
+.usajobs-search-save-nav__back:visited, .usajobs-search-save-nav__back:active,
+.usajobs-search-save-nav__back:hover, .usajobs-search-save-nav__header-back:visited,
 .usajobs-search-save-nav__header-back:active, .usajobs-search-save-nav__header-back:hover {
     color: #ffffff;
     text-decoration: none;
@@ -284,7 +290,7 @@
 .usajobs-search-filter-nav__back, .usajobs-search-save-nav__back {
     float: right;
 }
-.usajobs-search-filter-nav__back, .usajobs-search-filter-nav__header-back, 
+.usajobs-search-filter-nav__back, .usajobs-search-filter-nav__header-back,
 .usajobs-search-save-nav__back, .usajobs-search-save-nav__header-back {
     color: #ffffff;
     font-weight: bold;
