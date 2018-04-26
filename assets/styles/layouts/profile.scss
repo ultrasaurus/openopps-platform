@@ -637,6 +637,10 @@ form [type=submit], form [type=submit] {
 }
 
 .usajobs-content-gutter.profile-gutter {
+  max-width: 160rem;
+  margin-right: auto;
+  margin-left: auto;
+
   @include media($M-down) {
     padding: 0;
   }

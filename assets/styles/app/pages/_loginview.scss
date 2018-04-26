@@ -26,6 +26,9 @@
 
 .usajobs-open-opps-opportunity.usajobs-open-opps-login {
   margin-top: 0;
+  max-width: 160rem;
+  margin-right: auto;
+  margin-left: auto;
 
   @include media($M) {
     margin-top: $size-M;
