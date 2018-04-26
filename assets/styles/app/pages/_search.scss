@@ -2,14 +2,19 @@
 
 @import '../../base-shared';
 
-.usajobs-content-gutter.usajobs-open-opps-people {
+.usajobs-content-gutter.usajobs-open-opps-search, .usajobs-content-gutter.usajobs-open-opps-people {
   max-width: 160rem;
   margin-right: auto;
   margin-left: auto;
 }
 
-.usajobs-open-opps-people {
+@media screen and (max-width: 61.9999em) {
+  .usajobs-content-gutter.usajobs-open-opps-search {
+    padding: 0px;
+  }
+}
 
+.usajobs-open-opps-people {
   position: relative;
   background-color: #fff;
   margin: $size-default 0;
@@ -112,7 +117,6 @@
 }
 
 .usajobs-content-gutter.usajobs-open-opps-search {
-  padding: 0;
   max-width: 160rem;
   margin-right: auto;
   margin-left: auto;

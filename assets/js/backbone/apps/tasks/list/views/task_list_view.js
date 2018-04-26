@@ -40,27 +40,6 @@ var TaskListView = Backbone.View.extend({
     this.initAgencyFilter();
     this.taskFilteredCount = 0;
     this.appliedFilterCount = getAppliedFiltersCount(this.filters);
-    $(window).resize(function () {
-      if ($(window).width() < 991) {
-        $('#task-filters').addClass('hide');
-        $('#footer').addClass('hide');
-        $('.usajobs-search-tab-bar__filters-default').attr('aria-hidden', 'false');
-        $('.usajobs-search-tab-bar__filter-count-container').attr('aria-hidden', 'false');
-        $('.usajobs-search-tab-bar__filters-expanded').attr('aria-expanded', true);
-      } else {
-        $('#task-filters').removeClass('hide');
-        $('#title').toggleClass('hide', false);
-        $('.navigation').toggleClass('hide', false);
-        $('#main-content').toggleClass('hide', false);
-        $('.find-people').toggleClass('hide', false);
-        $('#footer').removeClass('hide');
-        $('.usajobs-search-filter-nav').attr('aria-hidden', 'true');
-        $('#search-tab-bar-filter').attr('aria-expanded', false);
-        $('.usajobs-search-tab-bar__filters-default').attr('aria-hidden', 'true');
-        $('.usajobs-search-tab-bar__filter-count-container').attr('aria-hidden', 'true');
-        $('.usajobs-search-tab-bar__filters-expanded').attr('aria-expanded', false);
-      }
-    });
   },
 
   render: function () {
@@ -277,32 +256,34 @@ var TaskListView = Backbone.View.extend({
   toggleFilter: function (e) {
     var filterTab = this.$('#search-tab-bar-filter');
     if (filterTab.attr('aria-expanded') === 'true') {
-      $('#task-filters').toggleClass('hide', true);
+      setTimeout(function () {
+        $('#task-filters').toggleClass('hide', true);
 
-      $(filterTab).attr('aria-expanded', false);
-      $('.usajobs-search-tab-bar__filters-default').attr('aria-hidden', 'false');
-      $('.usajobs-search-tab-bar__filter-count-container').attr('aria-hidden', 'false');
-      $('.usajobs-search-tab-bar__filters-expanded').attr('aria-expanded', false);
-      $('.usajobs-search-filter-nav').attr('aria-hidden', 'true');
+        $(filterTab).attr('aria-expanded', false);
+        $('.usajobs-search-tab-bar__filters-default').attr('aria-hidden', 'false');
+        $('.usajobs-search-tab-bar__filter-count-container').attr('aria-hidden', 'false');
+        $('.usajobs-search-tab-bar__filters-expanded').attr('aria-expanded', false);
+        $('.usajobs-search-filter-nav').attr('aria-hidden', 'true');
 
-      $('#title').toggleClass('hide', false);
-      $('.navigation').toggleClass('hide', false);
-      $('#main-content').toggleClass('hide', false);
-      $('.find-people').toggleClass('hide', false);
-
+        $('#title').toggleClass('hide', false);
+        $('.navigation').toggleClass('hide', false);
+        $('#main-content').toggleClass('hide', false);
+        $('.find-people').toggleClass('hide', false);
+      }, 250);
     } else {
-      $(filterTab).attr('aria-expanded', true);
-      $('.usajobs-search-tab-bar__filters-default').attr('aria-hidden', 'true');
-      $('.usajobs-search-tab-bar__filter-count-container').attr('aria-hidden', 'true');
-      $('.usajobs-search-tab-bar__filters-expanded').attr('aria-expanded', true);
-      $('.usajobs-search-filter-nav').attr('aria-hidden', 'false');
+      setTimeout(function () {
+        $(filterTab).attr('aria-expanded', true);
+        $('.usajobs-search-tab-bar__filters-default').attr('aria-hidden', 'true');
+        $('.usajobs-search-tab-bar__filter-count-container').attr('aria-hidden', 'true');
+        $('.usajobs-search-tab-bar__filters-expanded').attr('aria-expanded', true);
+        $('.usajobs-search-filter-nav').attr('aria-hidden', 'false');
 
-      $('#title').toggleClass('hide', true);
-      $('.navigation').toggleClass('hide', true);
-      $('#main-content').toggleClass('hide', true);
-      $('.find-people').toggleClass('hide', true);
-      $('#task-filters').toggleClass('hide', false);
-
+        $('#title').toggleClass('hide', true);
+        $('.navigation').toggleClass('hide', true);
+        $('#main-content').toggleClass('hide', true);
+        $('.find-people').toggleClass('hide', true);
+        $('#task-filters').toggleClass('hide', false);
+      }, 250);
     }
   },
 
