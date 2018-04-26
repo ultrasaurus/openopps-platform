@@ -952,6 +952,10 @@
 }
 
 .usajobs-content-gutter.opportunity-gutter {
+  max-width: 160rem;
+  margin-right: auto;
+  margin-left: auto;
+  
   @include media($ML-down) {
     padding: 0;
   }
