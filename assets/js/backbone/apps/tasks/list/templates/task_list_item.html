@@ -6,11 +6,11 @@
     <div class="usajobs-open-opps-opportunity__desc">
       <%= item.descriptionHtml %>
     </div>
-    <% if (item.restrict) { %>
+    <!-- <% if (item.restrict) { %>
     <p class="usajobs-open-opps-opportunity__agency-only">
       <%- item.restrict.name %>
     </p>
-    <% } %>
+    <% } %> -->
     <ul class="usajobs-open-opps-opportunity__details">
       <% if (!tags["location"]) { %>
       <li class="usajobs-open-opps-opportunity__detail-item">
@@ -19,12 +19,10 @@
       <% } %>
       <% _.each(tagShow, function (tagType) { %>
       <% if (tags[tagType]) { %>
+        <% _.each(tags[tagType], function (t, i) { %>
+          <% if (t.type !== 'skill') { %>
       <li class="usajobs-open-opps-opportunity__detail-item">
         <span class="fas <%- tagConfig.tags[tagType].icon %> fa-w-16"></span>
-        <% _.each(tags[tagType], function (t, i) { %>
-          <% if (t.type == 'skill') { %>
-          <a href="/tasks?search=<%- t.name %>"><%- t.name %></a><% if (i + 1 < tags[tagType].length) { %>,<% } %>
-          <% } else { %>
             <%- t.name %><% if (i + 1 < tags[tagType].length) { %>,<% } %>
           <% } %>
         <% }); %>
@@ -32,18 +30,32 @@
       <% } %>
       <% }); %>
     </ul>
+    <div class="skills">
+      <% _.each(tags['skill'], function (t) { %>
+        <a class="skill-label" href="/tasks?search=<%- t.name %>"><%- t.name %></a>
+      <% }); %>
+    </div>
+    <div class="related-keywords">
+      Related keyword:
+      <a href="" class="related-keyword">Acquisition</a>,
+      <a href="" class="related-keyword">1102</a>,
+      <a href="" class="related-keyword">Contract Specialist</a>
+    </div>
     <div class="usajobs-open-opps-opportunity-requestor__wrapper">
       <div class="usajobs-open-opps-opportunity-requestor">
-        <div class="usajobs-open-opps-opportunity-requestor__figure" <% if (item.owner) { %> data-userid="<%- item.owner.id %>" <% } %>>
-          <img src="/api/user/photo/<%- item.owner.id %>" alt="<%- item.owner.name %>">
-        </div>
-        <div class="usajobs-open-opps-opportunity-requestor__body">
-          <span class="usajobs-open-opps-opportunity-requestor__by">
-            Requested by
-          </span>
-          <p class="usajobs-open-opps-opportunity-requestor__name">
-            <%- item.owner.name %>
-          </p>
+        <div class="usajobs-open-opps-opportunity-requestor__figure-body">
+          <div class="usajobs-open-opps-opportunity-requestor__figure" <% if (item.owner) { %> data-userid="<%- item.owner.id %>" <% } %>>
+            <!-- <img src="/api/user/photo/<%- item.owner.id %>" alt="<%- item.owner.name %>"> -->
+            <div class="usajobs-open-opps-opportunity-requestor__initials"><%- user.initials %></div>
+          </div>
+          <div class="usajobs-open-opps-opportunity-requestor__body">
+            <p class="usajobs-open-opps-opportunity-requestor__name">
+              <%- item.owner.name %> (OPM)
+            </p>
+            <span class="usajobs-open-opps-opportunity-requestor__on">
+               Posted on 04/20/2018
+            </span>
+          </div>
         </div>
         <div class="usajobs-open-opps-opportunity-requestor__status">
           <div class="usajobs-pill--opportunity-status status-<%= item.state.toLowerCase().replace(' ', '-') %>">

@@ -176,7 +176,7 @@ var TaskItemView = BaseView.extend({
   },
 
   initializeTags: function (self) {
-    var types = ['task-skills-required', 'task-time-required', 'task-people', 'task-length', 'task-time-estimate'];
+    var types = ['task-skills-required', 'task-time-required', 'task-people', 'task-length', 'task-time-estimate', 'career'];
 
     self.tagSources = {};
 

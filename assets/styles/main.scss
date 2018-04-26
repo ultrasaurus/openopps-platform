@@ -67,6 +67,11 @@ h3 {
   color: $color-base;
 }
 
+.usa-input-optional:after {
+  font-size: $base-font-size;
+  font-weight: normal;
+}
+
 @media screen and (min-width: 62em) {
   .usajobs-content-well {
     float: left;

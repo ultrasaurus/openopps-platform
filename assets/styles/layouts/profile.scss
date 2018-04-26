@@ -194,6 +194,10 @@
     padding: 0.8rem 1rem;
     font-size: 1.4rem;
     font-weight: 600;
+
+    &:visited {
+      color: $color-base;
+    }
 }
 
 .main-content a {
