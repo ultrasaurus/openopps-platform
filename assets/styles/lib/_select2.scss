@@ -84,7 +84,7 @@ html[dir="rtl"] .select2-container .select2-choice {
 }
 
 .select2-container.select2-allowclear .select2-choice .select2-chosen {
-  margin-right: 42px;
+  //margin-right: 42px;
 }
 
 .select2-container .select2-choice > .select2-chosen {
@@ -672,19 +672,37 @@ html[dir="rtl"] .select2-container-multi .select2-choices .select2-search-choice
   background: #d4d4d4;
 }
 
-.select2-search-choice-close {
+// .select2-search-choice-close {
+//   display: block;
+//   width: 12px;
+//   height: 13px;
+//   position: absolute;
+//   right: 10px;
+//   top: 10px;
+//   font-size: 1px;
+//   outline: none;
+//   background: url('../../img/close.png') right top no-repeat;
+//   background-repeat: no-repeat;
+//   background-size: 1.1rem;
+
+// }
+
+.select2-container .select2-choice.select2-default abbr.select2-search-choice-close {
+  display: none;
+}
+
+.select2-container .select2-choice abbr.select2-search-choice-close {
   display: block;
   width: 12px;
   height: 13px;
   position: absolute;
-  right: 10px;
-  top: 10px;
+  right: 35px;
+  top: 17px;
   font-size: 1px;
   outline: none;
-  background: url('../../img/close.png') right top no-repeat;
+  background: url(../../img/close.png) right top no-repeat;
   background-repeat: no-repeat;
   background-size: 1.1rem;
-
 }
 
 html[dir="rtl"] .select2-search-choice-close {
