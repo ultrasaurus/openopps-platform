@@ -714,7 +714,7 @@ $nav_item_height: 17px + 24px;
     }
   }
 
-  &__people {
+  &__help {
     display: none;
 
     @include media($M) {
@@ -1015,7 +1015,6 @@ ul.ui-autocomplete {
 
 .svg-inline--fa.fa-fw {
   @include media($M-down) {
-    width: auto;
     margin: 0 auto;
   }
 }

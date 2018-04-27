@@ -102,6 +102,19 @@ var TaskListView = Backbone.View.extend({
     if(!_.contains(this.filters.location, 'in-person')) {
       $('#location').siblings('.select2-container').hide();
     }
+    $('#career').select2({
+      placeholder: 'Select a career field',
+      width: '100%',
+      allowClear: true,
+    });
+    $('#career').on('change', function (e) {
+      if($('#career').select2('data').id) {
+        this.filters.career = _.pick(JSON.parse($('#career').select2('data').id), 'type', 'name', 'id');
+      } else {
+        this.filters.career = {};
+      }
+      this.filter(this.term, this.filters, { data: {} });
+    }.bind(this));
   },
 
   removeFilter: function (event) {
@@ -137,6 +150,7 @@ var TaskListView = Backbone.View.extend({
       user: window.cache.currentUser,
       ui: UIConfig,
       agencyName: this.userAgency.name,
+      tagTypes: this.tagTypes,
       term: this.term,
       filters: this.filters,
       taskFilteredCount: this.taskFilteredCount,
@@ -149,6 +163,11 @@ var TaskListView = Backbone.View.extend({
     });
     $('#usajobs-search-pills').html(compiledTemplate);
     this.initializeSelect2();
+    if(this.filters.career && this.filters.career.name.toLowerCase() == 'acquisition') {
+      $('.usajobs-open-opps-search__box').addClass('display-acquisition');
+    } else {
+      $('.usajobs-open-opps-search__box').removeClass('display-acquisition');
+    }
   },
 
   renderList: function (page) {
@@ -156,7 +175,15 @@ var TaskListView = Backbone.View.extend({
     $('#task-list').html('');
     this.taskFilteredCount = this.tasks.length;
     this.appliedFilterCount = getAppliedFiltersCount(this.filters);
-    this.renderFilters();
+    $.ajax({
+      url: '/api/ac/tag?type=career&list',
+      type: 'GET',
+      async: false,
+      success: function (data) {
+        this.tagTypes = { career: data };
+        this.renderFilters();
+      }.bind(this),
+    });
 
     if (this.tasks.length === 0) {
       var settings = {
@@ -289,7 +316,13 @@ var TaskListView = Backbone.View.extend({
 
 
   search: function () {
-    this.filter(this.$('#search').val());
+    this.term = this.$('#search').val().trim();
+    if (this.term.toLowerCase() == 'acquisition') {
+      this.filters.career = _.find(this.tagTypes.career, function (t) { return t.name.toLowerCase() == 'acquisition'; });
+      this.term = '';
+      $('#search').val('');
+    }
+    this.filter(this.term, this.filters, { data: {} });
   },
 
   toggleStateFilters: function (event) {
