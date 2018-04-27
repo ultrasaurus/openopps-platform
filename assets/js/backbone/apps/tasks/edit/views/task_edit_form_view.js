@@ -81,7 +81,11 @@ var TaskEditFormView = Backbone.View.extend({
 
   view: function (e) {
     if (e.preventDefault) e.preventDefault();
-    Backbone.history.navigate('tasks/' + this.model.attributes.id, { trigger: true });
+    if(this.model.attributes.id) {
+      Backbone.history.navigate('tasks/' + this.model.attributes.id, { trigger: true });
+    } else {
+      window.history.back();
+    }
   },
 
   /*
@@ -202,16 +206,6 @@ var TaskEditFormView = Backbone.View.extend({
       tokenSeparators: [','],
       data: this.data['madlibTags'].series,
     });
-
-    // this.tagFactory.createTagDropDown({
-    //   type: 'career',
-    //   placeholder: 'Start typing to select a career',
-    //   selector: '#opportunity-career-field',
-    //   allowCreate: false,
-    //   width: '100%',
-    //   tokenSeparators: [','],
-    //   data: this.data['madlibTags'].career,
-    // });
 
     this.tagFactory.createTagDropDown({
       type: 'skill',
@@ -343,34 +337,8 @@ var TaskEditFormView = Backbone.View.extend({
    * The event is triggered from the `submit` & `saveDraft` methods.
    */
   initializeListeners: function () {
-    var view = this;
-
-    this.on( 'task:tags:save:done', function ( event ) {
-      var owner          = this.$( '#owner' ).select2( 'data' );
-      var completedBy    = this.$('.time-options-time-required.selected').val() == 'One time' ?  TaskFormViewHelper.getCompletedByDate() : null;
-      //var newParticipant = this.$( '#participant' ).select2( 'data' );
-      var silent         = true;
-
-      var modelData = {
-        id          : this.model.get( 'id' ),
-        title       : this.$( '#task-title' ).val(),
-        description : this.$( '#opportunity-introduction' ).val(),
-        details     : this.$( '#opportunity-details' ).val(),
-        outcome     : this.$( '#opportunity-skills' ).val(),
-        about       : this.$( '#opportunity-team' ).val(),
-        submittedAt : this.$( '#js-edit-date-submitted' ).val() || null,
-        publishedAt : this.$( '#publishedAt' ).val() || null,
-        assignedAt  : this.$( '#assignedAt' ).val() || null,
-        completedAt : this.$( '#completedAt' ).val() || null,
-        projectId   : null,
-        state       : this.model.get( 'state' ),
-        restrict    : this.model.get( 'restrict' ),
-      };
-
-      if (this.agency) {
-        modelData.restrict.projectNetwork = view.$(  '#task-restrict-agency'  ).prop( 'checked' );
-      }
-
+    this.on( 'task:tags:save:done', function (event) {
+      var modelData = this.getDataFromPage();
       // README: Check if draft is being saved or if this is a submission.
       // If the state isn't a draft and it isn't simply being saved, then it will
       // be submitted for review. `event.saveState` is true if the task is not a
@@ -385,35 +353,8 @@ var TaskEditFormView = Backbone.View.extend({
         modelData.acceptingApplicants = true;
       }
 
-      if ( owner ) {
-        modelData[ 'userId' ] = owner.id;
-        modelData.owner = owner;
-      }
-      if (completedBy) {
-        var timezoneOffset = (new Date()).getTimezoneOffset() * 60000;
-        completedBy = new Date(completedBy);
-        modelData[ 'completedBy' ] = new Date(completedBy.getTime() + timezoneOffset);
-      } else {
-        modelData[ 'completedBy' ] = null;
-      }
-
-      var tags = _( this.getTagsFromPage() )
-        .chain()
-        .map( function ( tag ) {
-          if ( ! tag || ! tag.id ) { return; }
-          return ( tag.id && tag.id !== tag.name ) ? parseInt( tag.id, 10 ) : {
-            name: tag.name,
-            type: tag.tagType,
-            data: tag.data,
-          };
-        } )
-        .compact()
-        .value();
-
-      modelData.tags = tags;
-
       this.options.model.trigger( modelData.id ? 'task:update' : 'task:save', modelData );
-    } );
+    });
   },
 
   toggleAccordion1: function (e) {
@@ -589,6 +530,47 @@ var TaskEditFormView = Backbone.View.extend({
     this.$('.add-participant').show();
 
     return this;
+  },
+
+  getDataFromPage: function () {
+    var modelData = {
+      id          : this.model.get('id'),
+      title       : this.$('#task-title').val(),
+      description : this.$('#opportunity-introduction').val(),
+      details     : this.$('#opportunity-details').val(),
+      outcome     : this.$('#opportunity-skills').val(),
+      about       : this.$('#opportunity-team').val(),
+      submittedAt : this.$('#js-edit-date-submitted').val() || null,
+      publishedAt : this.$('#publishedAt').val() || null,
+      assignedAt  : this.$('#assignedAt').val() || null,
+      completedAt : this.$('#completedAt').val() || null,
+      state       : this.model.get('state'),
+      restrict    : this.model.get('restrict'),
+    };
+
+    if (this.agency) {
+      modelData.restrict.projectNetwork = this.$('#task-restrict-agency').prop('checked');
+    }
+
+    var completedBy    = this.$('.time-options-time-required.selected').val() == 'One time' ?  TaskFormViewHelper.getCompletedByDate() : null;
+    if (completedBy) {
+      var timezoneOffset = (new Date()).getTimezoneOffset() * 60000;
+      completedBy = new Date(completedBy);
+      modelData[ 'completedBy' ] = new Date(completedBy.getTime() + timezoneOffset);
+    } else {
+      modelData[ 'completedBy' ] = null;
+    }
+
+    modelData.tags = _(this.getTagsFromPage()).chain().map(function (tag) {
+      if (!tag || !tag.id) { return; }
+      return (tag.id && tag.id !== tag.name) ? parseInt(tag.id, 10) : {
+        name: tag.name,
+        type: tag.tagType,
+        data: tag.data,
+      };
+    }).compact().value();
+
+    return modelData;
   },
 
   getTagsFromPage: function () {
