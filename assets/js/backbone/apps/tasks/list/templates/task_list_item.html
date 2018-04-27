@@ -32,14 +32,14 @@
     </ul>
     <div class="skills">
       <% _.each(tags['skill'], function (t) { %>
-        <a class="skill-label" href="/tasks?search=<%- t.name %>"><%- t.name %></a>
+        <span class="skill-label clickable-filter"><%- t.name %></span>
       <% }); %>
     </div>
     <% if (!_.isEmpty(tags['keywords'])) { %>
       <div class="related-keywords">
         <span>Related keyword:</span>
         <% _.each(tags['keywords'], function (t, index, list) { %>
-          <a class="related-keyword" href="/tasks?search=<%- t.name %>"><%- t.name %></a><% if ((index + 1) < list.length) { %>,<% } %>
+          <a class="related-keyword" href="/tasks?keywords=<%- t.name %>"><%- t.name %></a><% if ((index + 1) < list.length) { %>,<% } %>
         <% }); %>
       </div>
     <% } %>

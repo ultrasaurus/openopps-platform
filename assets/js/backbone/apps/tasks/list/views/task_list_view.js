@@ -34,8 +34,13 @@ var TaskListView = Backbone.View.extend({
     this.collection = options.collection;
     this.queryParams = options.queryParams;
     this.term = this.queryParams.search;
-    this.filters = this.queryParams.filters ?
-      JSON.parse(this.queryParams.filters) : { state: 'open' };
+    this.filters = { state: 'open' };
+    _.each(_.omit(this.queryParams, 'search'), function (value, key) {
+      var parts = value.split(',');
+      this.filters[key] = _.map(parts, function (part) {
+        return { type: key, name: part};
+      });
+    }.bind(this));
     this.userAgency = window.cache.currentUser ? window.cache.currentUser.agency : {};
     this.initAgencyFilter();
     this.taskFilteredCount = 0;
@@ -71,7 +76,7 @@ var TaskListView = Backbone.View.extend({
 
   initializeSelect2: function () {
     ['series', 'skill', 'location'].forEach(function (tag) {
-      var data = this.filters[tag];
+      var data = this.filters[tag] ? [].concat(this.filters[tag]) : [];
       if(tag == 'location') {
         data = _.filter(data, _.isObject);
       }
@@ -448,10 +453,10 @@ function filterTaskByTag (filters, task) {
   var test = [];
   if (_.isArray(filters)) {
     test.push(_.some(filters,function (val) {
-      return _.find(task.tags, val);
+      return _.find(task.tags, val.id ? val : _.omit(val, 'id'));
     }));
   } else {
-    test.push(_.find(task.tags, filters));
+    test.push(_.find(task.tags, filters.id ? filters : _.omit(filters, 'id')));
   }
   return test.length === _.compact(test).length;
 }
