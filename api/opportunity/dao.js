@@ -10,7 +10,7 @@ const tasksDueDetailQuery = 'select owner.name, owner.username, owner.bounced ' 
   'from task join midas_user owner on task."userId" = owner.id ' +
   'where task.id = ? ';
 
-const taskQuery = 'select @task.*, @tags.*, @owner.id, @owner.name ' +
+const taskQuery = 'select @task.*, @tags.*, @owner.id, @owner.name, @owner.photoId ' +
   'from @task task ' +
   'join @midas_user owner on owner.id = task."userId"' +
   'left join tagentity_tasks__task_tags task_tags on task_tags.task_tags = task.id ' +
