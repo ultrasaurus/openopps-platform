@@ -171,6 +171,8 @@ var TaskListView = Backbone.View.extend({
       var start = (page - 1) * pageSize;
       var stop = page * pageSize;
       $('#task-list').append(this.tasks.slice(start, stop).map(function (task) {
+        var nameSplit = task.owner.name.split(' ');
+        task.owner.initials = nameSplit[0].charAt(0).toUpperCase() + nameSplit[1].charAt(0).toUpperCase();
         return this.renderItem(task);
       }.bind(this)));
       this.renderPagination({
