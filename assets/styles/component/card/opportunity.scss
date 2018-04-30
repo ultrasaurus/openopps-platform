@@ -52,6 +52,14 @@
   &-item__header {
     min-height: 17rem;
 
+    h1 {
+      font-size: $h3-font-size;
+
+      @include media($ML) {
+        font-size: $h1-font-size;
+      }
+    }
+
     a:visited {
       color: $color-primary;
     }
@@ -865,6 +873,7 @@
   }
 }
 
+//Search Page Card Avatar/Initials
 .usajobs-open-opps-opportunity-requestor {
   display: flex;
   margin-top: $size-L;
@@ -908,6 +917,10 @@
     @include media($L) {
       padding-bottom: 0;
     }
+
+    img {
+      border-radius: 50%;
+    }
   }
 
   &__initials {
@@ -928,6 +941,107 @@
     font-size: $small-font-size;
     color: $color-base;
     display: block;
+  }
+
+  & &__name {
+    margin: 0;
+  }
+
+  &__status {
+    flex: 1;
+
+    .usajobs-pill--opportunity-status {
+      margin: 0 0 0 auto;
+    }
+  }
+}
+
+//Opportunity Page Avatar/Initials
+.usajobs-open-opps-profile .usajobs-open-opps-opportunity-requestor {
+  display: flex;
+  margin-top: 0;
+  // align-items: center;
+  flex-wrap: wrap;
+  flex-direction: column;
+
+  @include media($XL) {
+    align-items: flex-end;
+    // flex-direction: row;
+  }
+
+  &__wrapper {
+    position: relative;
+    bottom: $size-default;
+    width: auto;
+    margin-top: 0;
+  }
+
+  &__figure-body {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+
+    @include media($XL-down) {
+      margin-bottom: $size-default;
+      flex-wrap: nowrap;
+      flex-direction: row;
+    }
+
+    @include media($L) {
+      justify-content: center;
+      align-items: center;
+      margin-top: 3rem;
+    }
+  }
+
+  &__figure {
+    flex-shrink: 0;
+    // padding: $size-base;
+    width: 4.6rem;
+    height: 4.6rem;
+    border-radius: 50%;
+    // position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    @include media($L) {
+      padding-bottom: 0;
+    }
+
+    img {
+      border-radius: 50%;
+    }
+  }
+
+  &__initials {
+    font-weight: bold;
+    // position: absolute;
+    // top: 24%;
+    // left: 25%;
+  }
+
+  &__body {
+    flex: 1;
+    min-width: 0;
+    padding: 0 $size-S;
+
+    @include media($L) {
+      padding: 0;
+    }
+  }
+
+  &__on {
+    margin: 0;
+    font-size: $small-font-size;
+    color: $color-base;
+    display: block;
+
+    @include media($L) {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
   }
 
   & &__name {
@@ -1098,6 +1212,13 @@
     @include media($L) {
       margin-bottom: inherit;
     }
+
+    span {
+      font-size: $small-font-size;
+      font-style: italic;
+      display: block;
+      margin-bottom: $size-S;
+    }
   }
 
   .discussion {
@@ -1115,7 +1236,8 @@
     text-decoration: none;
 }
 
-$requestor-background-colors: $color-cool-blue-lightest, $color-gold-lightest, $color-secondary-lightest, $color-primary-alt-lightest, $color-green-lightest;
+// Initials start
+$requestor-background-colors: $color-secondary-lightest, $color-cool-blue-lightest, $color-green-lightest, $color-primary-alt-lightest, $color-gold-lightest;
 
 @for $i from 1 through length($requestor-background-colors) {
   .usajobs-open-opps-opportunity:nth-child(#{length($requestor-background-colors)}n+#{$i}) .usajobs-open-opps-opportunity-requestor__figure {
@@ -1123,10 +1245,11 @@ $requestor-background-colors: $color-cool-blue-lightest, $color-gold-lightest, $
   }
 }
 
-$requestor-initial-colors: $color-cool-blue, $color-gray-dark, $color-secondary-darkest, $color-primary, $color-green;
+$requestor-initial-colors: $color-secondary-darkest, $color-cool-blue, $color-gray, $color-primary-alt-darkest, $color-gray;
 
 @for $i from 1 through length($requestor-initial-colors) {
   .usajobs-open-opps-opportunity:nth-child(#{length($requestor-initial-colors)}n+#{$i}) .usajobs-open-opps-opportunity-requestor__initials {
     color: lighten(nth($requestor-initial-colors, $i), 0%);
   }
 }
+// Initials end

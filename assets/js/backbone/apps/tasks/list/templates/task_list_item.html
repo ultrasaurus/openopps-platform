@@ -45,8 +45,11 @@
       <div class="usajobs-open-opps-opportunity-requestor">
         <div class="usajobs-open-opps-opportunity-requestor__figure-body">
           <div class="usajobs-open-opps-opportunity-requestor__figure" <% if (item.owner) { %> data-userid="<%- item.owner.id %>" <% } %>>
-            <!-- <img src="/api/user/photo/<%- item.owner.id %>" alt="<%- item.owner.name %>"> -->
-            <div class="usajobs-open-opps-opportunity-requestor__initials"><%- user.initials %></div>
+            <% if (!item.owner.id) { %>
+            <img src="/api/user/photo/<%- item.owner.id %>" alt="<%- item.owner.name %>">
+            <% } else { %>
+            <div class="usajobs-open-opps-opportunity-requestor__initials" title="<%- item.owner.name %>"><%- user.initials %></div>
+            <% } %>
           </div>
           <div class="usajobs-open-opps-opportunity-requestor__body">
             <p class="usajobs-open-opps-opportunity-requestor__name">
