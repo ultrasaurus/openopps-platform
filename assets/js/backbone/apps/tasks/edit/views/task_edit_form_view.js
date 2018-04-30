@@ -35,7 +35,7 @@ var TaskEditFormView = Backbone.View.extend({
     var view                    = this;
     this.options                = options;
     this.tagFactory             = new TagFactory();
-    this.agency                 = this.model.get( 'restrict' );
+    this.agency                 = this.model.get( 'owner' ).agency;
     this.data                   = {};
     this.data.newTag            = {};
 
@@ -230,44 +230,28 @@ var TaskEditFormView = Backbone.View.extend({
       data: this.data['madlibTags'].keywords,
     });
 
-    $('#skills-required').select2({
-      placeholder: 'required/not-required',
-      width: '100%',
-    });
-
     $('#opportunity-career-field').select2({
-      placeholder: 'Select a career field',
+      placeholder: '- Select -',
       width: '100%',
-    });
-
-    $('#time-required').select2({
-      placeholder: 'time-required',
-      width: '100%',
+      allowClear: true,
     });
 
     $('#js-time-frequency-estimate').select2({
-      placeholder: 'time-frequency',
+      placeholder: '- Select -',
       width: '100%',
-    });
-
-    $('#length').select2({
-      placeholder: 'length',
-      width: '100%',
+      allowClear: true,
     });
 
     $('#time-estimate').select2({
-      placeholder: 'time-estimate',
+      placeholder: '- Select -',
       width: '100%',
-    });
-
-    $('#task-location').select2({
-      placeholder: 'location',
-      width: '100%',
+      allowClear: true,
     });
 
     $('#people').select2({
-      placeholder: 'task-people',
+      placeholder: '- Select -',
       width: '100%',
+      allowClear: true,
     });
 
   },

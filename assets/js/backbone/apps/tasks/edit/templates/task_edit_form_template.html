@@ -20,6 +20,7 @@
             <div class="form-group">
               <label for="people" class="no-margin-top">How many people do you need?</label>
               <select id="people" class="dropdown">
+                <option></option>
                 <% _.each(tagTypes['task-people'], function (t) { %>
                   <% var selected = madlibTags['task-people'] && (madlibTags['task-people'][0].id == t.id); %>
                     <option value=<%- t.id %>
@@ -49,6 +50,7 @@
               </ul>
               <label for="opportunity-career-field" class="sr-only">Career field</label>
               <select id="opportunity-career-field" class="dropdown">
+                <option></option>
                 <% _.each(tagTypes['career'], function (t) { %>
                   <% var selected = madlibTags['career'] && (madlibTags['career'][0].id == t.id); %>
                   <option value=<%- t.id %> <% if (selected) { %>selected<% } %>><%- t.name %></option>
@@ -95,13 +97,14 @@
               <p class="time-required-description" id="full-time-description"><em>Restricted to opportunity creator's agency</em></p>
               <!-- <% if ( agency ) { %> -->
                 <input type="checkbox" id="task-restrict-agency" name="task-restrict-agency" value="task-restrict-agency" <% if (agency.projectNetwork ) { %> checked="checked" <% } %> >
-                <label for="task-restrict-agency">Limit participation to <%- agency.abbr %> employees</label>
+                <label for="task-restrict-agency">Limit participation to <%- agency.data.abbr %> employees</label>
               <!-- <% } %> -->
             </div>
 
             <div class="form-group" id="time-options-time-required">
               <label for="time-estimate">How many hours do you need?</label>
               <select id="time-estimate" class="dropdown">
+                <option></option>
                 <% _.each(tagTypes['task-time-estimate'], function (t) { %>
                   <% var selected = madlibTags['task-time-estimate'] && (madlibTags['task-time-estimate'][0].id == t.id); %>
                   <option value=<%- t.id %> <% if (selected) { %>selected<% } %>><%- t.name %></option>
@@ -130,6 +133,7 @@
             <div class="form-group" id="time-options-time-frequency">
               <label for="js-time-frequency-estimate">How often do you need this time?</label>
               <select id="js-time-frequency-estimate" class="dropdown">
+                <option></option>
                 <% _.each(tagTypes['task-length'], function (t) { %>
                   <% var selected = madlibTags['task-length'] && (madlibTags['task-length'][0].id == t.id); %>
                   <option value=<%- t.id %> <% if (selected) { %>selected<% } %>><%- t.name %></option>
