@@ -132,30 +132,10 @@ var TaskEditFormView = Backbone.View.extend({
     this.initializeTextAreaDetails();
     this.initializeTextAreaSkills();
     this.initializeTextAreaTeam();
-    this.initializeShowMarkdownIntroduction({
-      el               : '.show-markdown-introduction',
-      id               : 'show-default-introduction',
-      displayCondition : 'Full Time Detail',
-      textAreaId       : 'opportunity-introduction',
-    });
-    this.initializeShowMarkdownDetails({
-      el               : '.show-markdown-details',
-      id               : 'show-default-details',
-      displayCondition : 'Full Time Detail',
-      textAreaId       : 'opportunity-details',
-    });
-    this.initializeShowMarkdownSkills({
-      el               : '.show-markdown-skills',
-      id               : 'show-default-skills',
-      displayCondition : 'Full Time Detail',
-      textAreaId       : 'opportunity-skills',
-    });
-    this.initializeShowMarkdownTeam({
-      el               : '.show-markdown-team',
-      id               : 'show-default-team',
-      displayCondition : 'Full Time Detail',
-      textAreaId       : 'opportunity-team',
-    });
+    if(!_.isEmpty(this.data['madlibTags'].keywords)) {
+      $('#keywords').siblings('.expandorama-button').attr('aria-expanded', true);
+      $('#keywords').attr('aria-hidden', false);
+    }
 
     this.$( '.js-success-message' ).hide();
     this.toggleTimeOptions();
@@ -253,7 +233,7 @@ var TaskEditFormView = Backbone.View.extend({
       type: 'keywords',
       selector: '#task_tag_keywords',
       width: '100%',
-      data: this.data['madlibTags'].location,
+      data: this.data['madlibTags'].keywords,
     });
 
     $('#skills-required').select2({
@@ -327,7 +307,7 @@ var TaskEditFormView = Backbone.View.extend({
   initializeTextAreaSkills: function () {
     if (this.md3) { this.md3.cleanup(); }
     this.md3 = new MarkdownEditor({
-      data: this.model.toJSON().skills,
+      data: this.model.toJSON().outcome,
       el: '.markdown-edit-skills',
       id: 'opportunity-skills',
       placeholder: '',
@@ -335,12 +315,16 @@ var TaskEditFormView = Backbone.View.extend({
       rows: 6,
       validate: ['html'],
     }).render();
+    if(this.model.toJSON().outcome) {
+      $('#skills').siblings('.expandorama-button').attr('aria-expanded', true);
+      $('#skills').attr('aria-hidden', false);
+    }
   },
 
   initializeTextAreaTeam: function () {
     if (this.md4) { this.md4.cleanup(); }
     this.md4 = new MarkdownEditor({
-      data: this.model.toJSON().team,
+      data: this.model.toJSON().about,
       el: '.markdown-edit-team',
       id: 'opportunity-team',
       placeholder: '',
@@ -348,6 +332,10 @@ var TaskEditFormView = Backbone.View.extend({
       rows: 6,
       validate: ['html'],
     }).render();
+    if(this.model.toJSON().about) {
+      $('#team').siblings('.expandorama-button').attr('aria-expanded', true);
+      $('#team').attr('aria-hidden', false);
+    }
   },
 
   /*
@@ -359,7 +347,7 @@ var TaskEditFormView = Backbone.View.extend({
 
     this.on( 'task:tags:save:done', function ( event ) {
       var owner          = this.$( '#owner' ).select2( 'data' );
-      var completedBy    = this.$('[name=task-time-required]:checked').attr('data-descr') == 'One time' ?  TaskFormViewHelper.getCompletedByDate() : null;
+      var completedBy    = this.$('.time-options-time-required.selected').val() == 'One time' ?  TaskFormViewHelper.getCompletedByDate() : null;
       //var newParticipant = this.$( '#participant' ).select2( 'data' );
       var silent         = true;
 
@@ -367,10 +355,13 @@ var TaskEditFormView = Backbone.View.extend({
         id          : this.model.get( 'id' ),
         title       : this.$( '#task-title' ).val(),
         description : this.$( '#opportunity-introduction' ).val(),
-        submittedAt : this.$( '#js-edit-date-submitted' ).val() || undefined,
-        publishedAt : this.$( '#publishedAt' ).val() || undefined,
-        assignedAt  : this.$( '#assignedAt' ).val() || undefined,
-        completedAt : this.$( '#completedAt' ).val() || undefined,
+        details     : this.$( '#opportunity-details' ).val(),
+        outcome     : this.$( '#opportunity-skills' ).val(),
+        about       : this.$( '#opportunity-team' ).val(),
+        submittedAt : this.$( '#js-edit-date-submitted' ).val() || null,
+        publishedAt : this.$( '#publishedAt' ).val() || null,
+        assignedAt  : this.$( '#assignedAt' ).val() || null,
+        completedAt : this.$( '#completedAt' ).val() || null,
         projectId   : null,
         state       : this.model.get( 'state' ),
         restrict    : this.model.get( 'restrict' ),
@@ -402,6 +393,8 @@ var TaskEditFormView = Backbone.View.extend({
         var timezoneOffset = (new Date()).getTimezoneOffset() * 60000;
         completedBy = new Date(completedBy);
         modelData[ 'completedBy' ] = new Date(completedBy.getTime() + timezoneOffset);
+      } else {
+        modelData[ 'completedBy' ] = null;
       }
 
       var tags = _( this.getTagsFromPage() )
@@ -419,7 +412,7 @@ var TaskEditFormView = Backbone.View.extend({
 
       modelData.tags = tags;
 
-      this.options.model.trigger( 'task:update', modelData );
+      this.options.model.trigger( modelData.id ? 'task:update' : 'task:save', modelData );
     } );
   },
 
@@ -458,7 +451,7 @@ var TaskEditFormView = Backbone.View.extend({
       abort = abort || iAbort;
     } );
 
-    var completedBy = this.$('[name=task-time-required]:checked').attr('data-descr') == 'One time' ?  TaskFormViewHelper.getCompletedByDate() : null;
+    var completedBy = this.$('.time-options-time-required.selected').val() == 'One time' ?  TaskFormViewHelper.getCompletedByDate() : null;
     if(completedBy) {
       var iAbort = false;
       try {
@@ -482,6 +475,8 @@ var TaskEditFormView = Backbone.View.extend({
   },
 
   submit: function (e) {
+    if ( e.preventDefault ) { e.preventDefault(); }
+    if ( e.stopPropagation ) { e.stopPropagation(); }
     var abort = this.validateFields();
     if ( abort === true ) {
       return;
@@ -565,7 +560,7 @@ var TaskEditFormView = Backbone.View.extend({
 
   toggleCareerField: function (e) {
     if(e) {
-      if(e.currentTarget.value == 'True') {
+      if(e.currentTarget.value.toLowerCase() == 'true') {
         $('#s2id_opportunity-career-field').show();
       } else {
         $('#s2id_opportunity-career-field').hide();
@@ -599,21 +594,21 @@ var TaskEditFormView = Backbone.View.extend({
   getTagsFromPage: function () {
     // Gather tags for submission after the task is created
     var tags = [];
-    var taskTimeDescription = this.$('[name=task-time-required]:checked').attr('data-descr');
-    var taskTimeTag = this.$('[name=task-time-required]:checked').val();
+    var taskTimeDescription = $('.time-options-time-required.selected').val();
+    var taskTimeTag = _.find(this.tagSources['task-time-required'], { name: taskTimeDescription });
 
     if (taskTimeTag) {
-      tags.push.apply(tags,[{
-        id: parseInt(taskTimeTag),
-        type: 'task-time-required',
-      }]);
+      tags.push.apply(tags,[taskTimeTag]);
     }
     tags.push.apply(tags,this.$('#task_tag_skills').select2('data'));
-    tags.push.apply(tags,this.$('#task_tag_location').select2('data'));
+    if($('.opportunity-location.selected').val() !== 'anywhere') {
+      tags.push.apply(tags,this.$('#task_tag_location').select2('data'));
+    }
+    tags.push.apply(tags,this.$('#opportunity-series').select2('data'));
     tags.push.apply(tags,this.$('#task_tag_keywords').select2('data'));
     tags.push.apply(tags,[this.$('#people').select2('data')]);
-    if (taskTimeDescription === 'One time') {
-      tags.push.apply(tags,[this.$('#time-required').select2('data')]);
+    if($('[name=CareerField]:checked').val().toLowerCase() == 'true') {
+      tags.push.apply(tags,[this.$('#opportunity-career-field').select2('data')]);
     }
     if (taskTimeDescription === 'One time' || taskTimeDescription === 'Ongoing') {
       tags.push.apply(tags,[this.$('#time-estimate').select2('data')]);

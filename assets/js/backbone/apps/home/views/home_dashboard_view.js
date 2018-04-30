@@ -8,20 +8,20 @@ var TaskCollection = require('../../../entities/tasks/tasks_collection');
 var UIConfig = require('../../../config/ui.json');
 
 // templates
-//var BrowseMainView = require('../../browse/views/browse_main_view');
-//var BrowseListView = require('../../browse/views/browse_list_view');
 var TaskListView = require('../../tasks/list/views/task_list_view');
 var TasksCollection = require('../../../entities/tasks/tasks_collection');
 var DashboardTemplate = require('../templates/home_dashboard_template.html');
-var BadgesTemplate = require('../templates/home_badges_feed_template.html');
+var AnnoucementTemplate = require('../templates/home_annoucement_template.html');
+var SearchTemplate = require('../templates/home_search_template.html');
 var UsersTemplate = require('../templates/home_users_feed_template.html');
-var NetworkTemplate = require('../templates/home_network_stats_template.html');
+var AchievementsTemplate = require('../templates/home_achievements_template.html');
 
 var templates = {
   main: _.template(DashboardTemplate),
-  badges: _.template(BadgesTemplate),
+  annoucement: _.template(AnnoucementTemplate),
   users: _.template(UsersTemplate),
-  network: _.template(NetworkTemplate),
+  search: _.template(SearchTemplate),
+  achievements: _.template(AchievementsTemplate),
 };
 
 var DashboardView = Backbone.View.extend({
@@ -66,32 +66,28 @@ var DashboardView = Backbone.View.extend({
 
   render: function () {
     var self            = this,
-        badges          = new ActivityCollection({ type: 'badges' }),
+        achievements    = new ActivityCollection({ type: 'badges' }),
         users           = new ActivityCollection({ type: 'users' }),
         tasks           = new TaskCollection();
 
     this.$el.html(templates.main());
 
     /*
-     * Listen for badges. This callback function uses Backbone's trigger method
-     * to retrieve the badges information whenever the ActivityCollection is
+     * Listen for achievements. This callback function uses Backbone's trigger method
+     * to retrieve the achievements information whenever the ActivityCollection is
      * fetched successfully.
      * @param ActivityCollection | An activity collection.
      * @param String             | A Backbone event string to bind to..
      * @param Function           | A callback function containing the event data.
      * @see   /assets/js/backbone/entities/activities/activities_collection.js
      */
-    this.listenTo( badges, 'activity:collection:fetch:success', function ( e ) {
-
-      var bs = e.toJSON().filter( function ( b ) {
+    this.listenTo(achievements, 'activity:collection:fetch:success', function  (e) {
+      var bs = e.toJSON().filter(function (b) {
         return b.participants.length > 0;
-      } );
-
-      var badgesHtml = templates.badges( { badges: bs } );
-
-      self.setTarget( 'badges-feed', badgesHtml );
-
-    } );
+      });
+      var achievementsHtml = templates.achievements({ achievements: bs });
+      self.setTarget('achievements-feed', achievementsHtml);
+    });
 
     this.listenTo(users, 'activity:collection:fetch:success', function (e) {
       var data = { users: e.toJSON() },
@@ -99,17 +95,11 @@ var DashboardView = Backbone.View.extend({
       self.setTarget('users-feed', usersHtml);
     });
 
-    $.ajax({
-      url: '/api/activity/count',
-      data: { where: { state: 'completed' }},
-      success: function (d) {
-        var html = templates.network({ count: d });
-        self.setTarget('network-stats', html);
-      },
-      error: function (err) {
-        console.log('err with /api/activity/count\n', err);
-      },
-    });
+    searchHtml = templates.search();
+    self.setTarget('search-feed', searchHtml);
+    
+    annoucementHtml = templates.annoucement();
+    self.setTarget('annoucement-feed', annoucementHtml);
 
     $.ajax({
       url: '/api/activity/count',

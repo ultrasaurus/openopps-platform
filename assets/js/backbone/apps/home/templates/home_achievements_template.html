@@ -1,6 +1,6 @@
 <h2>Latest achievements</h2>
 <ul class="usa-unstyled-list">
-  <% _.forEach(badges, function(b) { %>
+  <% _.forEach(achievements, function(b) { %>
     <li>
         <% var ps = b.participants.map(function(p) { %>
           <% return '<a href="/profile/' + _.escape(p.id) + '">' + _.escape(p.name) + '</a>' %>
@@ -20,19 +20,6 @@
             </a>
           <% }); %>
         </div>
-        <% if ( b.badges.length > 0 ) { %>
-        <ul class="usa-unstyled-list">
-          <% b.badges.forEach( function( badge ) { %>
-            <li>
-              <div class="activity-feed--badges">
-                <% badge.type = badge.type.replace( ' ', '-' ); %>
-                <img class="activity-feed--badge" src="/images/badges/<%- badge.type %>.png" alt="The <%- badge.type %> badge is awarded when you <%- badge.description %>" title="The <%- badge.type %> badge is awarded when you <%- badge.description %>">
-                <span><a href="/profile/<%- badge.user.id %>"><%- badge.user.name %></a> earned the <%- badge.type %> badge. The <%- badge.type %> badge is awarded when you <%- badge.description %></span>
-              </div>
-            </li>
-          <% } ); %>
-        </ul>
-        <% } %>
     </li>
   <% }); %>
 </ul>

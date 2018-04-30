@@ -6,8 +6,7 @@
 .usajobs-shell {
   position: relative;
   @include outer-container();
-  max-width: $site-max-width;
-  background: $color-gray-lightest;
+  max-width: 100%;
 }
 
 // Update all usa-grid styles to use our site max width

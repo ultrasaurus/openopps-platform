@@ -10,7 +10,8 @@ $color-completed: $color-primary-alt;
 .usajobs-search-pills {
   position: relative;
   overflow: hidden;
-  margin-bottom: $size-base;
+  margin-top: $size-M * -1;
+  margin-bottom: $size-M;
 
   @include media($M) {
     overflow: inherit;
