@@ -1,18 +1,14 @@
 <div class="usajobs-open-opps-opportunity usajobs-search-filters__scroll-container">
-
     <div class="usajobs-search-filters__container" id="filters-container">
         <div class="usajobs-search-filter-nav" aria-hidden="true">
             <div class="usajobs-search-filter-nav__body">
                 <span class="fas fa-sliders-h"></span> Filters
                 <span class="usajobs-search-filter-nav__results"><%= taskFilteredCount %> opportunities found</span>
                 <a href="javascript:void(0);" class="usajobs-search-filter-nav__back" title="Filters">
-                    <span class="sr-only">Close</span> <svg class="fa fa-times fa-w-12" title="Close" aria-labelledby="fa-title-20" data-fa-processed=""
-                    data-prefix="fas" data-icon="times" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><title id="fa-title-20">Close</title>
-                    </svg><span class="fas fa-times" title="Close"></span>
+                    <span class="sr-only">Close</span><span class="fas fa-times" title="Close"></span>
                 </a>
             </div>
         </div>
-
         <a href="https://usajobs.github.io/openopps-help/" class="usajobs-opop-section__help" target="_blank">
         <span class="fas fa-question-circle" title="Help"></span> Help
         </a>
@@ -50,6 +46,14 @@
 
         <h4 class="usajobs-search-filters__title skill">Skill</h4>
         <input type="text" id="skill" title="Skill" />
+
+        <h4 class="usajobs-search-filters__title career">Career field</h4>
+        <select id="career" class="dropdown">
+            <option></option>
+        <% _.each(tagTypes['career'], function (t) { %>
+            <option value=<%- JSON.stringify(t) %> <% if (filters.career && t.id == filters.career.id) { %>selected<% } %>><%- t.name %></option>
+        <% }); %>
+        </select>
 
         <h4 class="usajobs-search-filters__title">Series</h4>
         <input type="text" id="series" title="Series" />

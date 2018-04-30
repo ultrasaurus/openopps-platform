@@ -32,23 +32,25 @@
     </ul>
     <div class="skills">
       <% _.each(tags['skill'], function (t) { %>
-        <a class="skill-label" href="/tasks?search=<%- t.name %>"><%- t.name %></a>
+        <span class="skill-label clickable-filter"><%- t.name %></span>
       <% }); %>
     </div>
-    <div class="related-keywords">
-      Related keyword:
-      <a href="" class="related-keyword">Acquisition</a>,
-      <a href="" class="related-keyword">1102</a>,
-      <a href="" class="related-keyword">Contract Specialist</a>
-    </div>
+    <% if (!_.isEmpty(tags['keywords'])) { %>
+      <div class="related-keywords">
+        <span>Related keyword:</span>
+        <% _.each(tags['keywords'], function (t, index, list) { %>
+          <a class="related-keyword" href="/tasks?keywords=<%- t.name %>"><%- t.name %></a><% if ((index + 1) < list.length) { %>,<% } %>
+        <% }); %>
+      </div>
+    <% } %>
     <div class="usajobs-open-opps-opportunity-requestor__wrapper">
       <div class="usajobs-open-opps-opportunity-requestor">
         <div class="usajobs-open-opps-opportunity-requestor__figure-body">
           <div class="usajobs-open-opps-opportunity-requestor__figure" <% if (item.owner) { %> data-userid="<%- item.owner.id %>" <% } %>>
-            <% if (!item.owner.id) { %>
-            <img src="/api/user/photo/<%- item.owner.id %>" alt="<%- item.owner.name %>">
+            <% if (item.owner.photoId) { %>
+              <img src="/api/user/photo/<%- item.owner.id %>" alt="<%- item.owner.name %>">
             <% } else { %>
-            <div class="usajobs-open-opps-opportunity-requestor__initials" title="<%- item.owner.name %>"><%- user.initials %></div>
+              <div class="usajobs-open-opps-opportunity-requestor__initials"><%- item.owner.initials %></div>
             <% } %>
           </div>
           <div class="usajobs-open-opps-opportunity-requestor__body">
@@ -56,7 +58,7 @@
               <%- item.owner.name %> (OPM)
             </p>
             <span class="usajobs-open-opps-opportunity-requestor__on">
-               Posted on 04/20/2018
+               Posted on <%- moment(item.publishedAt).format('MM/DD/YY') %>
             </span>
           </div>
         </div>

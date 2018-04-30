@@ -35,6 +35,8 @@
 
     .skills {
       margin-bottom: 0.7rem;
+      position: relative;
+      z-index: 2;
     }
   }
 
@@ -1119,7 +1121,7 @@
   max-width: 160rem;
   margin-right: auto;
   margin-left: auto;
-  
+
   @include media($ML-down) {
     padding: 0;
   }
@@ -1240,7 +1242,10 @@
     text-decoration: none;
 }
 
-// Initials start
+.usajobs-open-opps-opportunity-requestor__figure img {
+  border-radius: 50%;
+}
+
 $requestor-background-colors: $color-secondary-lightest, $color-cool-blue-lightest, $color-green-lightest, $color-primary-alt-lightest, $color-gold-lightest;
 
 @for $i from 1 through length($requestor-background-colors) {
