@@ -48,13 +48,15 @@ router.get('/api/comment/findAllBytaskId/:id', async (ctx, next) => {
 router.post('/api/task', auth, async (ctx, next) => {
   ctx.request.body.userId = ctx.state.user.id;
   ctx.request.body.updatedBy = ctx.state.user.id;
-  var opportunity = await service.createOpportunity(ctx.request.body, function (errors, task) {
+  await service.createOpportunity(ctx.request.body, function (errors, task) {
     if (errors) {
       ctx.status = 400;
-      return ctx.body = errors;
+      ctx.body = errors;
+    } else {
+      service.sendTaskStateUpdateNotification(task.owner, task);
+      ctx.status = 200;
+      ctx.body = task;
     }
-    service.sendTaskStateUpdateNotification(task.owner, task);
-    ctx.body = task;
   });
 });
 

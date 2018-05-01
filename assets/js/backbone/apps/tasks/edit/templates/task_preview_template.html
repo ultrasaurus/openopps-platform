@@ -1,7 +1,7 @@
 <h2>Step 3 - Review draft and submit</h2>
 <hr>
 <h1 class="usajobs-open-opps-opportunity-item__title">
-  <%- title %>
+  <%- data.title %>
 </h1>
 <p><em>Desired skills:</em></p>
 <div class="skills">
@@ -12,24 +12,23 @@
 <div class="step-3-flex__wrapper">
   <div class="step-3-flex__item paragraphs">
     <h3>Introduction</h3>
-    <p>Are you looking for an opportunity to strengthen your skills in a highly sought-after area? Do you have a passion for helping people? Do you have training in process improvement methodologies (e.g. Lean Six Sigma) and would like more hands on experience?</p>
+    <%= data.descriptionHtml %>
     <h3>What you'll do</h3>
-    <p>Are you looking for an opportunity to strengthen your skills in a highly sought-after area? Do you have a passion for helping people? Do you have training in process improvement methodologies (e.g. Lean Six Sigma) and would like more hands on experience?</p>
-    <h3>What you'll learn</h3>
-    <p>Are you looking for an opportunity to strengthen your skills in a highly sought-after area? Do you have a passion for helping people? Do you have training in process improvement methodologies (e.g. Lean Six Sigma) and would like more hands on experience?</p>
-    <h3>Who we are</h3>
-    <p>Are you looking for an opportunity to strengthen your skills in a highly sought-after area? Do you have a passion for helping people? Do you have training in process improvement methodologies (e.g. Lean Six Sigma) and would like more hands on experience?</p>
+    <%= data.detailsHtml %>
+    <% if (data.outcome) { %>
+      <h3>What you'll learn</h3>
+      <%= data.outcomeHtml %>
+    <% } %>
+    <% if (data.about) { %>
+      <h3>Who we are</h3>
+      <%= data.aboutHtml %>
+    <% } %>
     <div class="related-keywords">
       <h3>Related keywords</h3>
-      <!-- <div class="keywords">
-        <% _.each(madlibTags['keywords'], function (t) { %>
-          <a class="keyword-label" href="/tasks?search=<%= t.name %>"><%= t.name %></a>
-        <% }) %>
-      </div> -->
       <div class="keywords">
-        <a class="keyword-label" href="">Acquisition</a>
-        <a class="keyword-label" href="">1102 - Contracting</a>
-        <a class="keyword-label" href="">Industry day</a>
+        <% _.each(madlibTags['keywords'], function (t) { %>
+          <a class="keyword-label" href="javascript:void(0)"><%= t.name %></a>
+        <% }) %>
       </div>
       <aside class="step-3-flex__item happens-next tips-left">
         <h4>What happens next?</h4>
@@ -43,15 +42,24 @@
       <div class="usajobs-grid-full">
         <div class="usa-width-one-half">
           <h4><i class="far fa-user"></i>Personnel needed</h4>
-          <p>2-5 people</p>
+          <p><%- madlibTags['task-people'][0].name.replace(' - ', '-') %></p>
           <h4><i class="far fa-calendar"></i>Time commitment</h4>
-          <p>Ongoing/4-8 hours weekly</p>
+          <p><%- madlibTags['task-time-required'][0].name %>/<%- madlibTags['task-time-estimate'][0].name.replace(' - ', '-') %> 
+            <% if (madlibTags['task-length']) { %><%- madlibTags['task-length'][0].name.toLowerCase() %><% } %></p>
         </div>
         <div class="usa-width-one-half">
           <h4><i class="far fa-clock"></i>Due date</h4>
-          <p>00/00/00</p>
+          <p><%- data.completedBy ? moment(data.completedBy).format('MM/DD/YY') : '-/-/-' %></p>
           <h4><i class="fas fa-map-marker-alt"></i>Location</h4>
-          <p>Virtual</p>
+          <p>
+            <% if (madlibTags['location']) { %>
+              <% _.each(madlibTags['location'], function (location) { %>
+                <%= location.name %>
+              <% }); %>
+            <% } else { %>
+              Virtual
+            <% } %>
+          </p>
         </div>
       </div>
     </div>

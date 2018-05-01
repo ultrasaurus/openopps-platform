@@ -8,6 +8,7 @@ var TagFactory = require('../../../../components/tag_factory');
 var ShowMarkdownMixin = require('../../../../components/show_markdown_mixin');
 var TaskFormViewHelper = require('../../task-form-view-helper');
 var TaskEditFormTemplate = require('../templates/task_edit_form_template.html');
+var TaskPreviewTemplate = require('../templates/task_preview_template.html');
 var ModalComponent = require('../../../../components/modal');
 
 var TaskEditFormView = Backbone.View.extend({
@@ -18,9 +19,7 @@ var TaskEditFormView = Backbone.View.extend({
     'change .validate'                 : 'validateField',
     'click #change-owner'              : 'displayChangeOwner',
     'click #add-participant'           : 'displayAddParticipant',
-    'click #task-view'                 : 'view',
-    'submit #task-edit-form'           : 'save',
-    'click .draft-button'              : 'submit',
+    'click .usa-button'                   : 'submit',
     'click .time-options-time-required'   : 'toggleTimeOptions',
     'click .opportunity-location'         : 'toggleLocationOptions',
     'click .expandorama-button-skills'    : 'toggleAccordion1',
@@ -35,7 +34,8 @@ var TaskEditFormView = Backbone.View.extend({
     var view                    = this;
     this.options                = options;
     this.tagFactory             = new TagFactory();
-    this.agency                 = this.model.get( 'owner' ).agency;
+    this.owner                  = this.model.get( 'owner' );
+    this.agency                 = this.owner ? this.owner.agency.data : window.cache.currentUser.agency;
     this.data                   = {};
     this.data.newTag            = {};
 
@@ -77,15 +77,6 @@ var TaskEditFormView = Backbone.View.extend({
         $(window).animate({ scrollTop: 0 }, 500);
       }
     });
-  },
-
-  view: function (e) {
-    if (e.preventDefault) e.preventDefault();
-    if(this.model.attributes.id) {
-      Backbone.history.navigate('tasks/' + this.model.attributes.id, { trigger: true });
-    } else {
-      window.history.back();
-    }
   },
 
   /*
@@ -396,21 +387,59 @@ var TaskEditFormView = Backbone.View.extend({
       abort = abort || iAbort;
     }
 
+    if(abort) {
+      $('.usa-input-error').get(0).scrollIntoView();
+    }
     return abort;
   },
 
   submit: function (e) {
     if ( e.preventDefault ) { e.preventDefault(); }
     if ( e.stopPropagation ) { e.stopPropagation(); }
-    var abort = this.validateFields();
-    if ( abort === true ) {
-      return;
+    switch ($(e.currentTarget).data('state')) {
+      case 'cancel':
+        if(this.model.attributes.id) {
+          Backbone.history.navigate('tasks/' + this.model.attributes.id, { trigger: true });
+        } else {
+          window.history.back();
+        }
+        break;
+      case 'preview':
+        if (!this.validateFields()) {
+          this.preview(true);
+        }
+        break;
+      case 'edit':
+        this.preview(false);
+        break;
+      default:
+        this.save(e);
+        break;
     }
-    if($(e.currentTarget).data('state') == 'save') {
-      return this.trigger( 'task:tags:save:done', { draft: true } );
-    } else {
-      return this.trigger( 'task:tags:save:done', { draft: false, saveState: false } );
+  },
+
+  preview: function (showPreview) {
+    if(showPreview) {
+      var data = this.getDataFromPage();
+      _.each(['description', 'details', 'outcome', 'about'], function (part) {
+        if(data[part]) {
+          data[part + 'Html'] = marked(data[part]);
+        }
+      });
+      var tags = _(this.getTagsFromPage()).chain().map(function (tag) {
+        if (!tag || !tag.id) { return; }
+        return { name: tag.name, type: tag.type || tag.tagType };
+      }).compact().value();
+      var compiledTemplate = _.template(TaskPreviewTemplate)({
+        data: data,
+        madlibTags: organizeTags(tags),
+      });
+      $('#step-3').html(compiledTemplate);
     }
+    _.each(['#cancel', '#edit', '#preview', '#save', '#step-1', '#step-2', '#step-3'], function (id) {
+      $(id).toggle();
+    });
+    window.scrollTo(0, 0);
   },
 
   save: function ( e ) {
@@ -419,7 +448,17 @@ var TaskEditFormView = Backbone.View.extend({
     if ( abort === true ) {
       return;
     }
-    return this.trigger( 'task:tags:save:done', { draft: false, saveState: true } );
+    switch ($(e.currentTarget).data('state')) {
+      case 'draft':
+        this.trigger( 'task:tags:save:done', { draft: true } );
+        break;
+      case 'submit':
+        this.trigger( 'task:tags:save:done', { draft: false, saveState: false } );
+        break;
+      default:
+        this.trigger( 'task:tags:save:done', { draft: false, saveState: true } );
+        break;
+    }
   },
 
   /*
@@ -434,6 +473,8 @@ var TaskEditFormView = Backbone.View.extend({
       var timeRequired = _.find(this.data.data.tags, { type: 'task-time-required'});
       if(timeRequired) {
         $('[value="' + timeRequired.name + '"]').addClass('selected');
+      } else {
+        $('[value="One time"]').addClass('selected');
       }
     }
     var target = $('.time-options-time-required.selected')[0] || {};
@@ -562,9 +603,13 @@ var TaskEditFormView = Backbone.View.extend({
     var tags = [];
     var taskTimeDescription = $('.time-options-time-required.selected').val();
     var taskTimeTag = _.find(this.tagSources['task-time-required'], { name: taskTimeDescription });
+    var taskPeopleTag = _.find(this.tagSources['task-people'], { id: parseInt($('#people').select2('data').id || '0') });
 
     if (taskTimeTag) {
-      tags.push.apply(tags,[taskTimeTag]);
+      tags.push.apply(tags, [taskTimeTag]);
+    }
+    if (taskPeopleTag) {
+      tags.push.apply(tags, [taskPeopleTag]);
     }
     tags.push.apply(tags,this.$('#task_tag_skills').select2('data'));
     if($('.opportunity-location.selected').val() !== 'anywhere') {
@@ -572,15 +617,17 @@ var TaskEditFormView = Backbone.View.extend({
     }
     tags.push.apply(tags,this.$('#opportunity-series').select2('data'));
     tags.push.apply(tags,this.$('#task_tag_keywords').select2('data'));
-    tags.push.apply(tags,[this.$('#people').select2('data')]);
     if($('[name=CareerField]:checked').val().toLowerCase() == 'true') {
-      tags.push.apply(tags,[this.$('#opportunity-career-field').select2('data')]);
+      var taskCareerTag = _.find(this.tagSources['career'], { id: parseInt($('#opportunity-career-field').select2('data').id || '0') });
+      tags.push.apply(tags, [taskCareerTag]);
     }
     if (taskTimeDescription === 'One time' || taskTimeDescription === 'Ongoing') {
-      tags.push.apply(tags,[this.$('#time-estimate').select2('data')]);
+      var taskEstimateTag = _.find(this.tagSources['task-time-estimate'], { id: parseInt($('#time-estimate').select2('data').id || '0') });
+      tags.push.apply(tags, [taskEstimateTag]);
     }
     if (taskTimeDescription === 'Ongoing') {
-      tags.push.apply(tags,[this.$('#js-time-frequency-estimate').select2('data')]);
+      var taskLengthTag = _.find(this.tagSources['task-length'], { id: parseInt($('#js-time-frequency-estimate').select2('data').id || '0') });
+      tags.push.apply(tags,[taskLengthTag]);
     }
     return tags;
   },

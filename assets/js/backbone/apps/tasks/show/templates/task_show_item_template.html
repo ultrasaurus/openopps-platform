@@ -1,13 +1,13 @@
 <section class="usajobs-canvas">
   <div class="usajobs-content-gutter opportunity-gutter">
-    <div class="usa-alert usajobs-alert usajobs-alert--error" role="alert" data-object="alert"  id="alert-closed" style="<% if (model.state != 'closed') { %>display: none;<% } %>">
+    <div class="usa-alert usajobs-alert usajobs-alert--error" role="alert" data-object="alert"  id="alert-closed" <% if (model.state != 'closed') { %>style="display: none;"<% } %>>
       <div class="usajobs-alert__figure">
         <div class="usajobs-alert__icon">
         </div>
       </div>
       <div class="usajobs-alert__body">
         <p class="usa-alert-text">
-          This <span data-i18n="task">opportunity</span> is <strong>closed</strong>.  It is no longer active, and no more modifications may be made.
+          This opportunity is <strong>closed</strong>.  It is no longer active, and no more modifications may be made.
         </p>
       </div>
       <% if (alert.dismiss) { %>
