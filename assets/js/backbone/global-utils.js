@@ -119,9 +119,10 @@ global.validatePassword = function (username, password) {
  * Expects an object with currentTarget, eg { currentTarget: '#foo' }
  */
 global.validate = function (e) {
-  var opts = String($(e.currentTarget).data('validate')).split(',');
-  var val = ($(e.currentTarget).prop('tagName') == 'DIV' ? $(e.currentTarget).text() : $(e.currentTarget).val());
-  var parent = $(e.currentTarget).parents('.required-input, .checkbox')[0];
+  var target = e.currentTarget.classList.contains('select2-container') ? e.currentTarget.nextSibling : e.currentTarget;
+  var opts = String($(target).data('validate')).split(',');
+  var val = ($(target).prop('tagName') == 'DIV' ? $(target).text() : $(target).val());
+  var parent = $(target).parents('.required-input, .checkbox')[0];
   var result = false;
   _.each(opts, function (o) {
     if (o == 'empty') {
@@ -134,7 +135,7 @@ global.validate = function (e) {
       return;
     }
     if (o == 'radio') {
-      if ($(e.currentTarget).prop('checked').length <= 0) {
+      if ($(target).prop('checked').length <= 0) {
         $(parent).find('.error-radio').show();
         result = true;
       } else {
@@ -143,7 +144,7 @@ global.validate = function (e) {
       return;
     }
     if (o == 'checked') {
-      if ($(e.currentTarget).prop('checked') !== true) {
+      if ($(target).prop('checked') !== true) {
         $(parent).find('.error-checked').show();
         result = true;
       } else {
@@ -171,7 +172,7 @@ global.validate = function (e) {
       return;
     }
     if (o == 'confirm') {
-      var id = $(e.currentTarget).attr('id');
+      var id = $(target).attr('id');
       var newVal = $('#' + id + '-confirm').val();
       if (val != newVal) {
         $(parent).find('.error-' + o).show();
@@ -182,7 +183,7 @@ global.validate = function (e) {
       return;
     }
     if (o == 'button') {
-      if (!($($(parent).find('#' + $(e.currentTarget).attr('id') + '-button')[0]).hasClass('btn-success'))) {
+      if (!($($(parent).find('#' + $(target).attr('id') + '-button')[0]).hasClass('btn-success'))) {
         $(parent).find('.error-' + o).show();
         result = true;
       } else {
@@ -215,7 +216,7 @@ global.validate = function (e) {
       return;
     }
     if ( o== 'emaildomain'){
-      var domain = $(e.currentTarget).data('emaildomain');
+      var domain = $(target).data('emaildomain');
       if ( val !== '' && val.indexOf('@') >= 2 ){
         bits = val.split('@');
         if ( bits[1] != domain ){

@@ -211,8 +211,7 @@ var TaskListView = Backbone.View.extend({
       var start = (page - 1) * pageSize;
       var stop = page * pageSize;
       $('#task-list').append(this.tasks.slice(start, stop).map(function (task) {
-        var nameSplit = task.owner.name.split(' ');
-        task.owner.initials = nameSplit[0].charAt(0).toUpperCase() + nameSplit[1].charAt(0).toUpperCase();
+        task.owner.initials = getInitials(task.owner.name);
         return this.renderItem(task);
       }.bind(this)));
       this.renderPagination({
@@ -512,6 +511,13 @@ function filterTaskByLocation (filters, task) {
     test.push((filters == 'virtual' && !taskHasLocation) || _.find(task.tags, filters));
   }
   return test.length === _.compact(test).length;
+}
+
+function getInitials (name) {
+  var initials = name.split(' ').map((part) => { 
+    return part.charAt(0).toUpperCase();
+  });
+  return initials.length > 2 ? _.first(initials) + _.last(initials) : initials.join('');
 }
 
 module.exports = TaskListView;
