@@ -126,20 +126,17 @@ var BrowseRouter = Backbone.Router.extend({
   },
 
   listProfiles: function (queryStr) {
-    this.cleanupChildren();
-    this.profileListController = new ProfileListController({
-      el: '#container',
-      router: this,
-      queryParams: this.parseQueryParams(queryStr),
-      data: this.data,
-    });
-    // this.browseListController = new BrowseListController({
-    //   target: 'profiles',
-    //   el: '#container',
-    //   router: this,
-    //   queryParams: this.parseQueryParams(queryStr),
-    //   data: this.data,
-    // });
+    if (!window.cache.currentUser) {
+      Backbone.history.navigate('/login?profiles', { trigger: true });
+    } else {
+      this.cleanupChildren();
+      this.profileListController = new ProfileListController({
+        el: '#container',
+        router: this,
+        queryParams: this.parseQueryParams(queryStr),
+        data: this.data,
+      });
+    }
   },
 
   showTask: function (id, action) {
@@ -156,6 +153,10 @@ var BrowseRouter = Backbone.Router.extend({
    * on the collection.
    */
   newTask: function ( /*params*/ ) {
+    if (!window.cache.currentUser) {
+      Backbone.history.navigate('/login?tasks/new', { trigger: true });
+      return;
+    }
     var self = this;
     this.cleanupChildren();
     var model = new TaskModel();
@@ -231,13 +232,16 @@ var BrowseRouter = Backbone.Router.extend({
   },
 
   showAdmin: function (action, agencyId) {
-    this.cleanupChildren();
-    this.adminMainController = new AdminMainController({
-      el: '#container',
-      action: action,
-      agencyId: agencyId,
-    });
-
+    if (!window.cache.currentUser) {
+      Backbone.history.navigate('/login?admin', { trigger: true });
+    } else {
+      this.cleanupChildren();
+      this.adminMainController = new AdminMainController({
+        el: '#container',
+        action: action,
+        agencyId: agencyId,
+      });
+    }
   },
 
 });

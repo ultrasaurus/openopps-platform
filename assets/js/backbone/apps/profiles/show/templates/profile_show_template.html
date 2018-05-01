@@ -68,7 +68,8 @@
               <span class="role-label"><% if (user.isAgencyAdmin) { %> Agency <% } %> Administrator</span>
               <% } %>
             </div>
-            <div class="profile-jobtitle"><% if (data.title) { %><span class="profile-icon"><i class="fa fa-briefcase"></i></span><span><%- data.title %></span><% } %></div>
+            <div class="profile-jobtitle"><% if (data.title) { %><span><%- data.title %></span><% } %></div>
+            <div class="profile-careerfield"><% if (career) { %><span><%- career.name %></span><% } else { %><span>-Career field-</span><% } %></div>
             <div class="profile-company"><% if (data.agency) { %><span class="profile-icon"><i class="fa fa-university"></i></span><span><%- data.agency.name %></span><% } %></div>
             <div class="profile-location"><% if (data.location) { %><span class="profile-icon"><i class="fa fa-map-marker"></i></span><span><%- data.location.name %></span><% } %></div>
             <div class="profile-email"><% if (email) { %><span class="profile-icon"><i class="far fa-envelope"></i></span><a href='mailto:<%= email %>'><%= email %></a><% } %></div>
