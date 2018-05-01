@@ -49,7 +49,7 @@ var TaskListView = Backbone.View.extend({
 
   render: function () {
     var template = _.template(TaskListTemplate)({
-      placeholder: 'Find opportunities by ',
+      placeholder: '',
       user: window.cache.currentUser,
       ui: UIConfig,
       agencyName: this.userAgency.name,
@@ -145,7 +145,11 @@ var TaskListView = Backbone.View.extend({
 
   removeAllFilters: function (event) {
     event.preventDefault();
-    this.filters = { state: [] };
+    if(this.filters.career.name == 'Acquisition' ||_.findWhere(this.filters.career, { name: 'Acquisition' })) {
+      this.filters = { state: [ 'open' ] };
+    } else {
+      this.filters = { state: [] };
+    }
     this.filter(this.term, this.filters, { data: {} });
   },
 
@@ -170,8 +174,12 @@ var TaskListView = Backbone.View.extend({
     this.initializeSelect2();
     if(this.filters.career && this.filters.career.name.toLowerCase() == 'acquisition') {
       $('.usajobs-open-opps-search__box').addClass('display-acquisition');
+      $('#search-pills-remove-all').attr('title', 'Remove all filters to see all opportunities');
+      $('#search-pills-remove-all').children('.text').text('Remove all filters to see all opportunities');
     } else {
       $('.usajobs-open-opps-search__box').removeClass('display-acquisition');
+      $('#search-pills-remove-all').attr('title', 'Remove all filters');
+      $('#search-pills-remove-all').children('.text').text('Remove all filters');
     }
   },
 
@@ -320,7 +328,6 @@ var TaskListView = Backbone.View.extend({
       }, 250);
     }
   },
-
 
   search: function () {
     this.term = this.$('#search').val().trim();
