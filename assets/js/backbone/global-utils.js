@@ -29,6 +29,21 @@ global.linkBackbone = function (e) {
 };
 
 /**
+ * Takes a name and pulls the first letter of first name
+ * and first letter of last name if it exist. If name is 
+ * an empty string it will return an empty string.
+ * 
+ * @param {string} name name to convert to initials [John J Smith]
+ * @returns {string} first and last initial [JS]
+ */
+global.getInitials = function (name) {
+  var initials = name.split(' ').map(function (part) { 
+    return part.charAt(0).toUpperCase();
+  });
+  return initials.length > 2 ? _.first(initials) + _.last(initials) : initials.join('');
+};
+
+/**
  * Organize the tags output into an associative array key'd by their type.
  * If the tag has more than one value for said key, make it an array otherwise
  * keep it as a top level object.
@@ -119,9 +134,10 @@ global.validatePassword = function (username, password) {
  * Expects an object with currentTarget, eg { currentTarget: '#foo' }
  */
 global.validate = function (e) {
-  var opts = String($(e.currentTarget).data('validate')).split(',');
-  var val = ($(e.currentTarget).prop('tagName') == 'DIV' ? $(e.currentTarget).text() : $(e.currentTarget).val());
-  var parent = $(e.currentTarget).parents('.required-input, .checkbox')[0];
+  var target = e.currentTarget.classList.contains('select2-container') ? e.currentTarget.nextSibling : e.currentTarget;
+  var opts = String($(target).data('validate')).split(',');
+  var val = ($(target).prop('tagName') == 'DIV' ? $(target).text() : $(target).val());
+  var parent = $(target).parents('.required-input, .checkbox')[0];
   var result = false;
   _.each(opts, function (o) {
     if (o == 'empty') {
@@ -134,7 +150,7 @@ global.validate = function (e) {
       return;
     }
     if (o == 'radio') {
-      if ($(e.currentTarget).prop('checked').length <= 0) {
+      if ($(target).prop('checked').length <= 0) {
         $(parent).find('.error-radio').show();
         result = true;
       } else {
@@ -143,7 +159,7 @@ global.validate = function (e) {
       return;
     }
     if (o == 'checked') {
-      if ($(e.currentTarget).prop('checked') !== true) {
+      if ($(target).prop('checked') !== true) {
         $(parent).find('.error-checked').show();
         result = true;
       } else {
@@ -171,7 +187,7 @@ global.validate = function (e) {
       return;
     }
     if (o == 'confirm') {
-      var id = $(e.currentTarget).attr('id');
+      var id = $(target).attr('id');
       var newVal = $('#' + id + '-confirm').val();
       if (val != newVal) {
         $(parent).find('.error-' + o).show();
@@ -182,7 +198,7 @@ global.validate = function (e) {
       return;
     }
     if (o == 'button') {
-      if (!($($(parent).find('#' + $(e.currentTarget).attr('id') + '-button')[0]).hasClass('btn-success'))) {
+      if (!($($(parent).find('#' + $(target).attr('id') + '-button')[0]).hasClass('btn-success'))) {
         $(parent).find('.error-' + o).show();
         result = true;
       } else {
@@ -215,7 +231,7 @@ global.validate = function (e) {
       return;
     }
     if ( o== 'emaildomain'){
-      var domain = $(e.currentTarget).data('emaildomain');
+      var domain = $(target).data('emaildomain');
       if ( val !== '' && val.indexOf('@') >= 2 ){
         bits = val.split('@');
         if ( bits[1] != domain ){

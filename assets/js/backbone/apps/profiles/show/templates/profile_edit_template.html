@@ -105,10 +105,20 @@
               <input type="text" class="validate" id="name" name="name" placeholder="Name" value="<%- data.name ? data.name : '' %>"  data-validate="empty,count60,html" autofocus/>
             </div>
             <div class="required-input">
-              <label for="jobtitle" class="usa-input-optional">Title</label>
+              <label for="jobtitle" class="usa-input-optional">Job title</label>
               <span class="field-validation-error error-count150" style="display:none;">Maximum of 150 characters.</span>
               <span class="field-validation-error error-html" style="display:none;">The special characters '<' or '>' are not allowed.</span>
               <input type="text" class="validate" id="jobtitle" name="jobtitle" placeholder="Title" value="<%- data.title ? data.title : '' %>" data-validate="count150,html"/>
+            </div>
+            <div class="required-input">
+              <label for="career-field" class="usa-input-optional">Career field</label>
+              <select id="career-field" class="dropdown">
+                <option></option>
+                <% _.each(tagTypes['career'], function (t) { %>
+                  <% var selected = !_.isEmpty(career); %>
+                  <option value=<%- t.id %> <% if (selected) { %>selected<% } %>><%- t.name %></option>
+                <% }); %>
+              </select>
             </div>
           </fieldset>
           <fieldset class="usajobs-fieldset">

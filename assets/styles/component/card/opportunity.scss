@@ -1057,7 +1057,7 @@
   }
 
   &__body {
-    flex: 1;
+    //flex: 1;
     min-width: 0;
     padding: 0 $size-S;
 
@@ -1277,6 +1277,7 @@
 
 .usajobs-open-opps-opportunity-requestor__figure img {
   border-radius: 50%;
+  width: 100%;
 }
 
 $requestor-background-colors: $color-secondary-lightest, $color-cool-blue-lightest, $color-green-lightest, $color-primary-alt-lightest, $color-gold-lightest;
