@@ -145,7 +145,7 @@ var TaskListView = Backbone.View.extend({
 
   removeAllFilters: function (event) {
     event.preventDefault();
-    if(this.filters.career.name == 'Acquisition' ||_.findWhere(this.filters.career, { name: 'Acquisition' })) {
+    if(this.filters.career && this.filters.career.name == 'Acquisition') {
       this.filters = { state: [ 'open' ] };
     } else {
       this.filters = { state: [] };
@@ -511,13 +511,6 @@ function filterTaskByLocation (filters, task) {
     test.push((filters == 'virtual' && !taskHasLocation) || _.find(task.tags, filters));
   }
   return test.length === _.compact(test).length;
-}
-
-function getInitials (name) {
-  var initials = name.split(' ').map((part) => { 
-    return part.charAt(0).toUpperCase();
-  });
-  return initials.length > 2 ? _.first(initials) + _.last(initials) : initials.join('');
 }
 
 module.exports = TaskListView;
