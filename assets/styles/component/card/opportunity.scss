@@ -884,7 +884,6 @@ ul.achievements {
 .usajobs-open-opps-opportunity-requestor {
   display: flex;
   margin-top: $size-L;
-  // align-items: center;
   flex-wrap: wrap;
   flex-direction: column;
 
@@ -932,6 +931,78 @@ ul.achievements {
 
     @include media($L) {
       padding-bottom: 0;
+    }
+
+    img {
+      border-radius: 50%;
+    }
+  }
+
+  &__initials {
+    font-weight: bold;
+  }
+
+  &__body {
+    min-width: 0;
+    padding: 0 $size-S;
+  }
+
+  &__on {
+    margin: 0;
+    font-size: $small-font-size;
+    color: $color-base;
+    display: block;
+  }
+
+  & &__name {
+    margin: 0;
+  }
+
+  &__status {
+    flex: 1;
+
+    .usajobs-pill--opportunity-status {
+      margin: 0 0 0 auto;
+    }
+  }
+}
+
+//Opportunity Page Avatar/Initials
+.usajobs-open-opps-profile .usajobs-open-opps-opportunity-requestor {
+  display: flex;
+  margin-top: 0;
+  // align-items: center;
+  flex-wrap: wrap;
+  flex-direction: column;
+
+  @include media($XL) {
+    align-items: flex-end;
+    // flex-direction: row;
+  }
+
+  &__wrapper {
+    position: relative;
+    bottom: $size-default;
+    width: auto;
+    margin-top: 0;
+  }
+
+  &__figure-body {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+
+    @include media($M-down) {
+      margin-bottom: $size-default;
+      flex-wrap: nowrap;
+      flex-direction: row;
+    }
+
+    @include media($M) {
+      justify-content: center;
+      align-items: center;
+      margin-top: $size-M;
+      margin-bottom: $size-L;
     }
   }
 
