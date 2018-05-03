@@ -38,11 +38,11 @@
               <div class="usajobs-open-opps-opportunity-requestor">
                 <div class="usajobs-open-opps-opportunity-requestor__figure-body">
                   <div class="usajobs-open-opps-opportunity-requestor__figure" <% if (user) { %> data-userid="<%- model.userId %>" <% } %>>
-                    <div class="usajobs-open-opps-opportunity-requestor__initials" title="<%- model.owner.name %>"><%- user.initials %></div>
+                    <div class="usajobs-open-opps-opportunity-requestor__initials" title="<%- model.owner.name %>"><%- model.owner.initials %></div>
                   </div>
                   <div class="usajobs-open-opps-opportunity-requestor__body">
                     <p class="usajobs-open-opps-opportunity-requestor__name">
-                      <%- model.owner.name %> (OPM)
+                      <%- model.owner.name %> (<%- model.owner.agency.data.abbr %>)
                     </p>
                     <span class="usajobs-open-opps-opportunity-requestor__on">
                        Posted on
@@ -117,13 +117,24 @@
             <div class="usajobs-open-opps-opportunity__desc">
               <h3>Introduction</h3>
               <%= model.descriptionHtml %>
-              <h3>What you'll do</h3>
-              <%= model.details %>
-              <h3>What you'll learn</h3>
-              <%= model.outcome %>
-              <h3>Who we are</h3>
-              <%= model.about %>
-              <h3>Related keywords</h3>
+              <% if (model.details) { %>
+                <h3>What you'll do</h3>
+                <%= model.detailsHtml %>
+              <% } %>
+              <% if (model.outcome) { %>
+                <h3>What you'll learn</h3>
+                <%= model.outcomeHtml %>
+              <% } %>
+              <% if (model.about) { %>
+                <h3>Who we are</h3>
+                <%= model.aboutHtml %>
+              <% } %>
+              <% if (madlibTags['keywords']) { %>
+                <h3>Related keywords</h3>
+                <% _.each(madlibTags['keywords'], function (t) { %>
+                  <a class="keyword-label" href="/tasks?search=<%= t.name %>"><%= t.name %></a>
+                <% }) %>
+              <% } %>
             </div>
           </div>
           <div class="usa-width-one-third personnel-needed desktop">

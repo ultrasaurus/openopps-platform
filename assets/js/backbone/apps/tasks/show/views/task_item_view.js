@@ -90,7 +90,11 @@ var TaskItemView = BaseView.extend({
     }
 
     self.data['madlibTags'] = organizeTags(self.data.tags);
-    self.data.model.descriptionHtml = marked(self.data.model.description || '');
+    _.each(['description', 'details', 'outcome', 'about'], function (part) {
+      if(self.data.model[part]) {
+        self.data.model[part + 'Html'] = marked(self.data.model[part]);
+      }
+    });
     self.model.trigger('task:tag:data', self.tags, self.data['madlibTags']);
 
     var d = self.data,
@@ -100,6 +104,7 @@ var TaskItemView = BaseView.extend({
     self.data.ui = UIConfig;
     self.data.vol = vol;
     self.data.model.userId = self.data.model.owner.id;
+    self.data.model.owner.initials = getInitials(self.data.model.owner.name);
     var compiledTemplate = _.template(TaskShowTemplate)(self.data);
 
     self.$el.html(compiledTemplate);
