@@ -15,7 +15,7 @@ const taskHistoryQuery = 'select @task.* ' +
 'from @task task ' +
 'where state = ? ' +
 'order by task."createdAt" desc ' +
-'limit 30 ';
+'limit 6 ';
 
 const participantsQuery = 'select @m_user.* ' +
 'from @midas_user m_user left join volunteer on m_user.id = volunteer."userId" ' +

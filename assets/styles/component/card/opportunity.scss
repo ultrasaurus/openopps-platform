@@ -867,6 +867,20 @@
   }
 }
 
+ul.achievements {
+  border-top: 1px solid #979797;
+  margin-bottom: $size-L;
+}
+
+.usajobs-open-opps-opportunity-achievements  {
+  border-bottom: 1px solid #979797;
+  padding: 1rem .5rem;
+}
+
+.usajobs-open-opps-opportunity-requestor.achievements {
+  margin-top: 0;
+}
+
 .usajobs-open-opps-opportunity-requestor {
   display: flex;
   margin-top: $size-L;
@@ -896,13 +910,22 @@
     }
   }
 
+  &__figure-body-wrap {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    justify-content: flex-start;
+
+    @include media($XL-down) {
+      margin-bottom: $size-default;
+    }
+  }
+
   &__figure {
     flex-shrink: 0;
-    // padding: $size-base;
     width: 4.6rem;
     height: 4.6rem;
     border-radius: 50%;
-    // position: relative;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -912,11 +935,27 @@
     }
   }
 
+  &__figure {
+    flex-shrink: 0;
+    width: 4.6rem;
+    height: 4.6rem;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    @include media($L) {
+      padding-bottom: 0;
+    }
+  }
+
+  &__figure.space {
+    margin: .5rem;
+  }
+
+
   &__initials {
     font-weight: bold;
-    // position: absolute;
-    // top: 24%;
-    // left: 25%;
   }
 
   &__body {
@@ -1126,17 +1165,29 @@
 }
 
 $requestor-background-colors: $color-cool-blue-lightest, $color-gold-lightest, $color-secondary-lightest, $color-primary-alt-lightest, $color-green-lightest;
-
-@for $i from 1 through length($requestor-background-colors) {
-  .usajobs-open-opps-opportunity:nth-child(#{length($requestor-background-colors)}n+#{$i}) .usajobs-open-opps-opportunity-requestor__figure {
-    background: lighten(nth($requestor-background-colors, $i), 0%);
-  }
-}
-
-$requestor-initial-colors: $color-cool-blue, $color-gray-dark, $color-secondary-darkest, $color-primary, $color-green;
+$requestor-initial-colors: $color-cool-blue, $color-gray, $color-secondary-darkest, $color-primary-alt-darkest,  $color-gray;
+$repeat: 20;
 
 @for $i from 1 through length($requestor-initial-colors) {
-  .usajobs-open-opps-opportunity:nth-child(#{length($requestor-initial-colors)}n+#{$i}) .usajobs-open-opps-opportunity-requestor__initials {
-    color: lighten(nth($requestor-initial-colors, $i), 0%);
+  .usajobs-open-opps-opportunity:nth-child(#{length($requestor-initial-colors)}n+#{$i}) {
+    .usajobs-open-opps-opportunity-requestor__initials {
+      color: lighten(nth($requestor-initial-colors, $i), 0%);
+    }
+   .usajobs-open-opps-opportunity-requestor__figure {
+      background: lighten(nth($requestor-background-colors, $i), 0%);
+    }
+  }
+
+  .usajobs-open-opps-opportunity-requestor__figure-body-wrap a:nth-child(#{length($requestor-initial-colors)}n+#{$i}) {
+    .usajobs-open-opps-opportunity-requestor__initials {
+      color: lighten(nth($requestor-initial-colors, $i), 0%);
+    }
+    .usajobs-open-opps-opportunity-requestor__figure {
+      background: lighten(nth($requestor-background-colors, $i), 0%);
+    }
   }
 }
+
+
+
+
