@@ -874,7 +874,7 @@ ul.achievements {
 
 .usajobs-open-opps-opportunity-achievements  {
   border-bottom: 1px solid #979797;
-  padding: 1rem .5rem;
+  padding: 1.5rem 1rem;
 }
 
 .usajobs-open-opps-opportunity-requestor.achievements {
@@ -936,6 +936,10 @@ ul.achievements {
     img {
       border-radius: 50%;
     }
+  }
+
+  &__figure.space {
+    margin: .5rem;
   }
 
   &__initials {
@@ -1019,11 +1023,6 @@ ul.achievements {
       padding-bottom: 0;
     }
   }
-
-  &__figure.space {
-    margin: .5rem;
-  }
-
 
   &__initials {
     font-weight: bold;
@@ -1237,24 +1236,26 @@ ul.achievements {
 
 $requestor-background-colors: $color-cool-blue-lightest, $color-gold-lightest, $color-secondary-lightest, $color-primary-alt-lightest, $color-green-lightest;
 $requestor-initial-colors: $color-cool-blue, $color-gray, $color-secondary-darkest, $color-primary-alt-darkest,  $color-gray;
-$repeat: 20;
+$repeat: 50;
+$r: 6; //needed to initialize the variable
 
-@for $i from 1 through length($requestor-initial-colors) {
+@for $i from 1 through $repeat {
   .usajobs-open-opps-opportunity:nth-child(#{length($requestor-initial-colors)}n+#{$i}) {
+    $r: random(length($requestor-initial-colors));
     .usajobs-open-opps-opportunity-requestor__initials {
-      color: lighten(nth($requestor-initial-colors, $i), 0%);
+      color: lighten(nth($requestor-initial-colors, $r), 0%);
     }
    .usajobs-open-opps-opportunity-requestor__figure {
-      background: lighten(nth($requestor-background-colors, $i), 0%);
+      background: lighten(nth($requestor-background-colors, $r), 0%);
     }
   }
 
   .usajobs-open-opps-opportunity-requestor__figure-body-wrap a:nth-child(#{length($requestor-initial-colors)}n+#{$i}) {
     .usajobs-open-opps-opportunity-requestor__initials {
-      color: lighten(nth($requestor-initial-colors, $i), 0%);
+      color: lighten(nth($requestor-initial-colors, $r), 0%);
     }
     .usajobs-open-opps-opportunity-requestor__figure {
-      background: lighten(nth($requestor-background-colors, $i), 0%);
+      background: lighten(nth($requestor-background-colors, $r), 0%);
     }
   }
 }

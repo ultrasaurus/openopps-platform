@@ -173,11 +173,4 @@ var DashboardView = Backbone.View.extend({
   },
 });
 
-function getInitials (name) {
-  var initials = name.split(' ').map((part) => { 
-    return part.charAt(0).toUpperCase();
-  });
-  return initials.length > 2 ? _.first(initials) + _.last(initials) : initials.join('');
-}
-
 module.exports = DashboardView;
