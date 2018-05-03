@@ -12,14 +12,14 @@ const tasksDueDetailQuery = 'select owner.name, owner.username, owner.bounced ' 
 
 const taskQuery = 'select @task.*, @tags.*, @owner.id, @owner.name, @owner.photoId ' +
   'from @task task ' +
-  'join @midas_user owner on owner.id = task."userId"' +
+  'join @midas_user owner on owner.id = task."userId" ' +
   'left join tagentity_tasks__task_tags task_tags on task_tags.task_tags = task.id ' +
   'left join @tagentity tags on tags.id = task_tags.tagentity_tasks ';
 
 const userQuery = 'select @midas_user.*, @agency.* ' +
   'from @midas_user midas_user ' +
   'left join tagentity_users__user_tags user_tags on user_tags.user_tags = midas_user.id ' +
-  'left join @tagentity agency on agency.id = user_tags.tagentity_users ' +
+  'left join @tagentity agency on agency.id = user_tags.tagentity_users and agency.type = \'agency\' ' +
   'where midas_user.id = ? ';
 
 const userTasksQuery = 'select count(*) as "completedTasks", midas_user.id, ' +
@@ -90,6 +90,7 @@ const options = {
   task: {
     fetch: {
       owner: '',
+      agency: '',
       tags: [],
     },
     exclude: {

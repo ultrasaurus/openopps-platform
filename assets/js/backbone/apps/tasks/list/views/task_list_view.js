@@ -86,7 +86,7 @@ var TaskListView = Backbone.View.extend({
         width: '100%',
         tokenSeparators: [','],
         allowCreate: false,
-        maximumSelectionSize: 5,
+        maximumSelectionSize: (tag == 'skill' ? 5 : undefined),
         data: data,
       });
       $('#' + tag).on('change', function (e) {
@@ -113,10 +113,10 @@ var TaskListView = Backbone.View.extend({
       allowClear: true,
     });
     $('#career').on('change', function (e) {
-      if($('#career').select2('data').id) {
+      if($('#career').select2('data')) {
         this.filters.career = _.pick(JSON.parse($('#career').select2('data').id), 'type', 'name', 'id');
       } else {
-        this.filters.career = {};
+        this.filters.career = [];
       }
       this.filter(this.term, this.filters, { data: {} });
     }.bind(this));
@@ -145,7 +145,7 @@ var TaskListView = Backbone.View.extend({
 
   removeAllFilters: function (event) {
     event.preventDefault();
-    if(this.filters.career.name == 'Acquisition' ||_.findWhere(this.filters.career, { name: 'Acquisition' })) {
+    if(this.filters.career && this.filters.career.name == 'Acquisition') {
       this.filters = { state: [ 'open' ] };
     } else {
       this.filters = { state: [] };
@@ -172,7 +172,7 @@ var TaskListView = Backbone.View.extend({
     });
     $('#usajobs-search-pills').html(compiledTemplate);
     this.initializeSelect2();
-    if(this.filters.career && this.filters.career.name.toLowerCase() == 'acquisition') {
+    if(!_.isEmpty(this.filters.career) && this.filters.career.name.toLowerCase() == 'acquisition') {
       $('.usajobs-open-opps-search__box').addClass('display-acquisition');
       $('#search-pills-remove-all').attr('title', 'Remove all filters to see all opportunities');
       $('#search-pills-remove-all').children('.text').text('Remove all filters to see all opportunities');
@@ -331,7 +331,10 @@ var TaskListView = Backbone.View.extend({
   search: function () {
     this.term = this.$('#search').val().trim();
     if (this.term.toLowerCase() == 'acquisition') {
-      this.filters.career = _.find(this.tagTypes.career, function (t) { return t.name.toLowerCase() == 'acquisition'; });
+      var item = _.find(this.tagTypes.career, function (t) { 
+        return t.name.toLowerCase() == 'acquisition';
+      });
+      this.filters.career = _.pick(item, 'type', 'name', 'id');
       this.term = '';
       $('#search').val('');
     }
@@ -511,13 +514,6 @@ function filterTaskByLocation (filters, task) {
     test.push((filters == 'virtual' && !taskHasLocation) || _.find(task.tags, filters));
   }
   return test.length === _.compact(test).length;
-}
-
-function getInitials (name) {
-  var initials = name.split(' ').map((part) => { 
-    return part.charAt(0).toUpperCase();
-  });
-  return initials.length > 2 ? _.first(initials) + _.last(initials) : initials.join('');
 }
 
 module.exports = TaskListView;
