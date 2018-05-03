@@ -385,7 +385,7 @@
 }
 
 #stateFilters label, #timeFilters label, #locationFilters label {
-  margin-top: 0;
+  margin: 0px 2px 6px; // because IE
 }
 
 #js-restrict-task-filter {
