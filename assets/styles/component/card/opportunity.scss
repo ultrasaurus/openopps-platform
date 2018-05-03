@@ -906,7 +906,6 @@
 .usajobs-open-opps-opportunity-requestor {
   display: flex;
   margin-top: $size-L;
-  // align-items: center;
   flex-wrap: wrap;
   flex-direction: column;
 
@@ -934,11 +933,9 @@
 
   &__figure {
     flex-shrink: 0;
-    // padding: $size-base;
     width: 4.6rem;
     height: 4.6rem;
     border-radius: 50%;
-    // position: relative;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -954,13 +951,9 @@
 
   &__initials {
     font-weight: bold;
-    // position: absolute;
-    // top: 24%;
-    // left: 25%;
   }
 
   &__body {
-    flex: 1;
     min-width: 0;
     padding: 0 $size-S;
   }
