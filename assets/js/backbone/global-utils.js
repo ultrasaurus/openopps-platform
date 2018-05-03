@@ -29,21 +29,6 @@ global.linkBackbone = function (e) {
 };
 
 /**
- * Takes a name and pulls the first letter of first name
- * and first letter of last name if it exist. If name is 
- * an empty string it will return an empty string.
- * 
- * @param {string} name name to convert to initials [John J Smith]
- * @returns {string} first and last initial [JS]
- */
-global.getInitials = function (name) {
-  var initials = name.split(' ').map(function (part) { 
-    return part.charAt(0).toUpperCase();
-  });
-  return initials.length > 2 ? _.first(initials) + _.last(initials) : initials.join('');
-};
-
-/**
  * Organize the tags output into an associative array key'd by their type.
  * If the tag has more than one value for said key, make it an array otherwise
  * keep it as a top level object.

@@ -6,6 +6,7 @@ var $ = require('jquery');
 var ActivityCollection = window.c = require('../../../entities/activities/activities_collection');
 var TaskCollection = require('../../../entities/tasks/tasks_collection');
 var UIConfig = require('../../../config/ui.json');
+var User = require('../../../../utils/user');
 
 // templates
 var TaskListView = require('../../tasks/list/views/task_list_view');
@@ -82,9 +83,16 @@ var DashboardView = Backbone.View.extend({
      * @see   /assets/js/backbone/entities/activities/activities_collection.js
      */
     this.listenTo(achievements, 'activity:collection:fetch:success', function  (e) {
-      var bs = e.toJSON().filter(function (b) {
+      var bs = e.toJSON().filter(function (b) {     
         return b.participants.length > 0;
       });
+
+      // _(bs).forEach(function (element) {
+      //   // initials = 'JH';
+      //   // element.participants.push(initials);
+      //   element.participants = new User(element.participants);
+      // });
+      
       var achievementsHtml = templates.achievements({ achievements: bs });
       self.setTarget('achievements-feed', achievementsHtml);
     });
