@@ -298,20 +298,8 @@
     // ask the user to enter a brief description that would not be truncated.
     &__desc {
       position: relative;
-      max-height: #{$base-line-height * 5}em; // use this to control the number of lines
+      max-height: #{$base-line-height * 4.5}em; // use this to control the number of lines
       overflow: hidden;
-    }
-
-    &__desc:before {
-      content: "";
-      width: 100%;
-      height: #{$base-line-height * 2}em;
-      position: absolute;
-      left: 0px;
-      bottom: 0px;
-      display: block;
-      background: linear-gradient(rgba(255,255,255,.001),#fff);
-      transition: height .5s;
     }
   }
 }
