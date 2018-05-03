@@ -26,29 +26,32 @@
             <h1 class="usajobs-open-opps-opportunity-item__title"><%- model.title %></h1>
             <span class="usajobs-pill--opportunity-status opportunity-page status-<%- state.value.replace(' ', '-') %>"><%- state.humanReadable %></span>
             <div class="skills">
+              <span>Desired skills:</span>
               <% _.each(madlibTags['skill'], function (t) { %>
                 <a class="skill-label" href="/tasks?search=<%= t.name %>"><%= t.name %></a>
               <% }) %>
             </div>
           </div>
 
-          <div class="usajobs-width-one-third opportunity-creator">
-          <% if (user) { %>
-            <div class="center" data-userid="<%- model.userId %>">
-          <% } else { %>
-            <div class="center">
-          <% } %>
-              <img class="default-user-icon-profile__small" src="/api/user/photo/<%- model.userId %>" alt="Profile pic of <%- model.owner.name %>"/>
-              <div>
-                <p>Posted by</p>
-                <div class="profile-name"><a href="/profile/<%= model.userId %>"><%- model.owner.name %></a></div>
-                <div><%- model.publishedAt ? moment(model.publishedAt).format('MM/DD/YY') : '-/-/-' %></div>
+          <div class="usajobs-width-one-third">
+            <div class="usajobs-open-opps-opportunity-requestor__wrapper">
+              <div class="usajobs-open-opps-opportunity-requestor">
+                <div class="usajobs-open-opps-opportunity-requestor__figure-body">
+                  <div class="usajobs-open-opps-opportunity-requestor__figure" <% if (user) { %> data-userid="<%- model.userId %>" <% } %>>
+                    <div class="usajobs-open-opps-opportunity-requestor__initials" title="<%- model.owner.name %>"><%- model.owner.initials %></div>
+                  </div>
+                  <div class="usajobs-open-opps-opportunity-requestor__body">
+                    <p class="usajobs-open-opps-opportunity-requestor__name">
+                      <%- model.owner.name %> (<%- model.owner.agency.data.abbr %>)
+                    </p>
+                    <span class="usajobs-open-opps-opportunity-requestor__on">
+                       Posted on
+                       <span><%- model.publishedAt ? moment(model.publishedAt).format('MM/DD/YY') : '-/-/-' %></span>
+                    </span class="usajobs-open-opps-opportunity-requestor__date">
+                  </div>
+                </div>
               </div>
-          <% if (user) { %>
             </div>
-          <% } else { %>
-            </div>
-          <% } %>
             <div class="usajobs-opop-actions__col-sub-actions usajobs-opop-actions--v1-5__col-sub-actions">
               <% if (user) { %>
                 <div><a class="usajobs-opop-actions__duplicate" href="#duplicate" id="task-copy"><i class="fa fa-copy"></i> Duplicate</a></div>
@@ -59,6 +62,7 @@
               <div><a class="usajobs-opop-actions__share usajobs-opop-actions-share" href="#" id="email"><i class="fa fa-share-alt"></i> Share</a></div>
             </div>
           </div>
+
         </div>
       </div>
 
@@ -67,7 +71,7 @@
         <div class="usajobs-grid-full">
           <div class="usa-width-one-third personnel-needed mobile">
             <div class="usajobs-opop__task-intro">
-              <h4>Personnel needed</h4>
+              <h4><i class="far fa-user"></i> Personnel needed</h4>
               <div>
                 <% if (madlibTags['task-people']) { %>
                   <%= madlibTags['task-people'][0].name %>
@@ -75,7 +79,7 @@
                   None
                 <% } %>
               </div>
-              <h4>Time commitment</h4>
+              <h4><i class="far fa-calendar"></i> Time commitment</h4>
               <div>
                 <% if (madlibTags['task-time-required']) { %>
                   <%= madlibTags['task-time-required'][0].name %>
@@ -92,12 +96,12 @@
                 <% } %>
               </div>
               <% if (model.completedBy) { %>
-              <h4>Target Date</h4>
+              <h4><i class="far fa-clock"></i> Due date</h4>
               <div>
                   <%= moment(model.completedBy).format('ddd, MMM D, YYYY') %>
               </div>
               <% } %>
-              <h4>Duty location</h4>
+              <h4><i class="fas fa-map-marker-alt"></i> Location</h4>
               <div>
                 <% if (madlibTags.location) { %>
                   <% _.each(madlibTags.location, function (s, i) { %>
@@ -111,13 +115,33 @@
           </div>
           <div class="usa-width-two-thirds opportunity-description">
             <div class="usajobs-open-opps-opportunity__desc">
-              <h3>Overview</h3>
+              <h3>Introduction</h3>
               <%= model.descriptionHtml %>
+              <% if (model.details) { %>
+                <h3>What you'll do</h3>
+                <%= model.detailsHtml %>
+              <% } %>
+              <% if (model.outcome) { %>
+                <h3>What you'll learn</h3>
+                <%= model.outcomeHtml %>
+              <% } %>
+              <% if (model.about) { %>
+                <h3>Who we are</h3>
+                <%= model.aboutHtml %>
+              <% } %>
+              <% if (madlibTags['keywords']) { %>
+                <h3>Related keywords</h3>
+                <div class="keywords">
+                <% _.each(madlibTags['keywords'], function (t) { %>
+                  <a class="keyword-label" href="/tasks?search=<%= t.name %>"><%= t.name %></a>
+                <% }) %>
+                </div>
+              <% } %>
             </div>
           </div>
           <div class="usa-width-one-third personnel-needed desktop">
             <div class="usajobs-opop__task-intro">
-              <h4>Personnel needed</h4>
+              <h4><i class="far fa-user"></i> Personnel needed</h4>
               <div>
                 <% if (madlibTags['task-people']) { %>
                   <%= madlibTags['task-people'][0].name %>
@@ -125,7 +149,7 @@
                   None
                 <% } %>
               </div>
-              <h4>Time commitment</h4>
+              <h4><i class="far fa-calendar"></i> Time commitment</h4>
               <div>
                 <% if (madlibTags['task-time-required']) { %>
                   <%= madlibTags['task-time-required'][0].name %>
@@ -142,12 +166,12 @@
                 <% } %>
               </div>
               <% if (model.completedBy) { %>
-              <h4>Target Date</h4>
+              <h4><i class="far fa-clock"></i> Due date</h4>
               <div>
                   <%= moment(model.completedBy).format('ddd, MMM D, YYYY') %>
               </div>
               <% } %>
-              <h4>Duty location</h4>
+              <h4><i class="fas fa-map-marker-alt"></i> Location</h4>
               <div>
                 <% if (madlibTags.location) { %>
                   <% _.each(madlibTags.location, function (s, i) { %>
