@@ -131,9 +131,11 @@
               <% } %>
               <% if (madlibTags['keywords']) { %>
                 <h3>Related keywords</h3>
+                <div class="keywords">
                 <% _.each(madlibTags['keywords'], function (t) { %>
                   <a class="keyword-label" href="/tasks?search=<%= t.name %>"><%= t.name %></a>
                 <% }) %>
+                </div>
               <% } %>
             </div>
           </div>
