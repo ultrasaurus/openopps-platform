@@ -3,17 +3,55 @@
   <div class="usajobs-grid-full">
     <div class="usa-width-one-half">
       <h3>Based on your job title</h3>
-      <ul class="list-unstyled">
+      <ul class="list-unstyled jobtitle">
         <% _.forEach(users.slice(0,10), function (u) { %>
-          <li><a href="/profile/<%= u.id %>"><%= u.name %></a></li>
+          <li>
+            <div class="usajobs-open-opps-opportunity-requestor people">
+              <div class="usajobs-open-opps-opportunity-requestor__figure-body">
+                <div class="usajobs-open-opps-opportunity-requestor__figure">
+                  <div class="usajobs-open-opps-opportunity-requestor__initials">OO</div>
+                </div>
+                <div class="usajobs-open-opps-opportunity-requestor__body">
+                  <p class="usajobs-open-opps-opportunity-requestor__name">
+                      <a href="/profile/<%= u.id %>"><%= u.name %></a>
+                  </p>
+                  <p class="usajobs-open-opps-opportunity-requestor__jobtitle">
+                      Job Title 
+                  </p>
+                  <p class="usajobs-open-opps-opportunity-requestor__company">
+                      Organization 
+                  </p>
+                </div>
+              </div>
+            </div>
+          </li>
         <% }); %>
       </ul>
     </div>
     <div class="usa-width-one-half">
       <h3>Based on your agency</h3>
-        <ul class="list-unstyled">
+        <ul class="list-unstyled agency">
           <% _.forEach(users.slice(0,10), function (u) { %>
-            <li><a href="/profile/<%= u.id %>"><%= u.name %></a></li>
+            <li>
+              <div class="usajobs-open-opps-opportunity-requestor people">
+                <div class="usajobs-open-opps-opportunity-requestor__figure-body">
+                  <div class="usajobs-open-opps-opportunity-requestor__figure">
+                    <div class="usajobs-open-opps-opportunity-requestor__initials">OO</div>
+                  </div>
+                  <div class="usajobs-open-opps-opportunity-requestor__body">
+                    <p class="usajobs-open-opps-opportunity-requestor__name">
+                        <a href="/profile/<%= u.id %>"><%= u.name %></a>
+                    </p>
+                    <p class="usajobs-open-opps-opportunity-requestor__jobtitle">
+                        Job Title 
+                    </p>
+                    <p class="usajobs-open-opps-opportunity-requestor__company">
+                        Organization 
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </li>
           <% }); %>
         </ul>
       </div>
