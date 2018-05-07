@@ -186,6 +186,7 @@ var TaskListView = Backbone.View.extend({
       $('#search-pills-remove-all').attr('title', 'Remove all filters');
       $('#search-pills-remove-all').children('.text').text('Remove all filters');
     }
+    $('#search-tab-bar-filter-count').text(this.appliedFilterCount);
   },
 
   renderList: function (page) {
@@ -303,7 +304,7 @@ var TaskListView = Backbone.View.extend({
     var filterTab = this.$('#search-tab-bar-filter');
     if (filterTab.attr('aria-expanded') === 'true') {
       setTimeout(function () {
-        $('#task-filters').toggleClass('hide', true);
+        $('#task-filters').css('display', 'none');
 
         $(filterTab).attr('aria-expanded', false);
         $('.usajobs-search-tab-bar__filters-default').attr('aria-hidden', 'false');
@@ -328,7 +329,7 @@ var TaskListView = Backbone.View.extend({
         $('.navigation').toggleClass('hide', true);
         $('#main-content').toggleClass('hide', true);
         $('.find-people').toggleClass('hide', true);
-        $('#task-filters').toggleClass('hide', false);
+        $('#task-filters').css('display', 'block');
       }, 250);
     }
   },

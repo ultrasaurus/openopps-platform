@@ -52,12 +52,14 @@ $color-completed: $color-primary-alt;
     width: 100%;
     overflow-x: auto;
     white-space: nowrap;
+    padding-left: $size-default;
 
     @include media($M) {
       overflow-x: inherit;
       overflow-y: auto;
       white-space: inherit;
       max-height: rem(215px);
+      padding-left: 0;
     }
 
     // The max-height decreases as we can show more pills in a row
@@ -79,7 +81,6 @@ $color-completed: $color-primary-alt;
     border-radius: $size-base;
 
     &:nth-child(2) {
-      margin-left: $size-default;
 
       @include media($M) {
         margin-left: 0;
