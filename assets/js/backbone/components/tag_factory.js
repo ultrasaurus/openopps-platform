@@ -108,7 +108,7 @@ var TagFactory = BaseComponent.extend({
         data: function (term) {
           return {
             type: options.type,
-            q: term,
+            q: term.trim(),
           };
         },
         results: function (data) {
@@ -124,7 +124,7 @@ var TagFactory = BaseComponent.extend({
           return (v.value || '').toLowerCase();
         });
 
-        if (values.indexOf(term.toLowerCase()) >= 0)
+        if (values.indexOf(term.trim().toLowerCase()) >= 0)
           return false; //don't prompt to "add new" if it already exists
 
         //unmatched = true is the flag for saving these "new" tags to tagEntity when the opp is saved
