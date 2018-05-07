@@ -133,7 +133,7 @@ global.validatePassword = function (username, password) {
  * Expects an object with currentTarget, eg { currentTarget: '#foo' }
  */
 global.validate = function (e) {
-  var target = e.currentTarget.classList.contains('select2-container') ? e.currentTarget.nextSibling : e.currentTarget;
+  var target = (e.currentTarget.classList && e.currentTarget.classList.contains('select2-container')) ? e.currentTarget.nextSibling : e.currentTarget;
   var opts = String($(target).data('validate')).split(',');
   var val = ($(target).prop('tagName') == 'DIV' ? $(target).text() : $(target).val());
   var parent = $(target).parents('.required-input, .checkbox')[0];
