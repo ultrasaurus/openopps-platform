@@ -1,12 +1,13 @@
 const log = require('log')('app:autocomplete:service');
 const db = require('../../db');
 const dao = require('./dao')(db);
+const _ = require('lodash');
 
 async function tagByType (type, name) {
   var query = dao.query.tagByType;
   query += name ? ' and lower(name) like ?' : '';
   var result = await dao.TagEntity.query(query, type, name ? '%' + name.toLowerCase() + '%' : '');
-  return result.map(tag => {
+  return _.sortBy(result, 'data.sort', 'name').map(tag => {
     tag.field = 'name';
     tag.value = tag.name;
     return tag;
