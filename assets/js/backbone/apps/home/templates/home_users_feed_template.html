@@ -1,6 +1,24 @@
-<h2>See other people like you</h2>
-<ul class="list-unstyled">
-  <% _.forEach(users.slice(0,10), function (u) { %>
-    <li><a href="/profile/<%= u.id %>"><%= u.name %></a> just joined!</li>
-  <% }); %>
-</ul>
+<div class="usajobs-opop-people__body">
+  <h2>See other people like you</h2>
+  <div class="usajobs-grid-full">
+    <div class="usa-width-one-half">
+      <h3>Based on your job title</h3>
+      <ul class="list-unstyled">
+        <% _.forEach(users.slice(0,10), function (u) { %>
+          <li><a href="/profile/<%= u.id %>"><%= u.name %></a></li>
+        <% }); %>
+      </ul>
+    </div>
+    <div class="usa-width-one-half">
+      <h3>Based on your agency</h3>
+        <ul class="list-unstyled">
+          <% _.forEach(users.slice(0,10), function (u) { %>
+            <li><a href="/profile/<%= u.id %>"><%= u.name %></a></li>
+          <% }); %>
+        </ul>
+      </div>
+  </div>
+  <div class="usajobs-grid-full usajobs-opop-people__button">
+      <a href="/profiles" class="usa-button usa-button-secondary">View all people</a>
+  </div>
+</div>

@@ -1,1 +1,38 @@
-<h2>Search opportunities by</h2>
+<div class="usajobs-opop-search__body">
+    <h2>Search opportunities by</h2>
+    <div class="usajobs-grid-full">
+        <div class="usa-width-one-third">
+            <h3>Career field</h3>
+            <ul class="usa-unstyled-list">
+                <% _.forEach(search, function(b) { %>
+                <li class="usajobs-open-opps-search_item">
+                    <a href="/tasks">Acquisition</a>
+                </li>
+                <% }); %>
+            </ul>
+        </div>
+        <div class="usa-width-one-third">
+            <h3>Skill</h3>
+            <ul class="usa-unstyled-list">
+                <% _.forEach(search, function(b) { %>
+                <li class="usajobs-open-opps-search_item">
+                    <a href="/tasks">Acquisition</a>
+                </li>
+                <% }); %>
+            </ul>
+        </div>
+        <div class="usa-width-one-third">
+            <h3>Location</h3>
+            <ul class="usa-unstyled-list">
+                <% _.forEach(search, function(b) { %>
+                <li class="usajobs-open-opps-search_item">
+                    <a href="/tasks">Acquisition</a>
+                </li>
+                <% }); %>
+            </ul>
+        </div>
+    </div>
+    <div class="usajobs-grid-full usajobs-opop-search__button">
+        <a href="/tasks" class="usa-button usa-button-secondary">View all opportunities</a>
+    </div>
+</div>

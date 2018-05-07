@@ -60,70 +60,44 @@
   text-decoration: none;
 }
 
-.usajobs-opop-badges__body {
-  max-width: 60rem;
-  text-align: left;
-  margin-top: 0;
+.usajobs-opop-annoucement__body {
+  margin: $size-M 0;
+}
+
+.usajobs-opop-search__body {
+  margin-bottom: $size-M;
+  .usajobs-opop-search__button {
+    text-align: center;
+    margin: $size-M 0;
+  }
+}
+
+.usajobs-opop-people__body {
+  margin-bottom: $size-M;
+  .usajobs-opop-people__button {
+    text-align: center;
+    margin: $size-M 0;
+  }
+}
+
+// .usajobs-opop-badges__body {
+//   max-width: 60rem;
+//   text-align: left;
+//   margin-top: 0;
+//   padding-top: 1.4rem;
+
+//   @include media($M) {
+//     margin-top: 0.1rem;
+//   }
+// }
+
+.usajobs-opop-achievements__body {
+  margin-top: 0 0 $size-M 0;
   padding-top: 1.4rem;
 
   @include media($M) {
     margin-top: 0.1rem;
-    // padding-top: 0;
   }
-}
-
-.activity-feed--badges {
-  min-height: 6rem;
-  font-size: 1.6rem;
-  margin-bottom: $size-SM;
-  display: flex;
-
-  a {
-    display: inline;
-  }
-}
-
-.activity-feed--badge {
-  float: left;
-  background-position: center;
-  background-size: contain;
-  min-height: 60px;
-  height: 60px;
-  width: 60px;
-  margin-top: -0.5rem;
-  margin-right: $size-default;
-}
-
-.activity-feed--avatars {
-  margin-top: $size-default;
-  margin-bottom: $size-default;
-}
-
-.activity-feed--avatars::after {
-  content: "";
-  clear: both;
-  display: table;
-}
-
-.activity-feed--avatars a {
-  background-position: center;
-  background-size: contain;
-  background-image: url(/images/default-user-icon-profile.png);
-  border-radius: 100%;
-  float: left;
-  margin-right: 1.4rem;
-  margin-bottom: 1.4rem;
-  min-height: 44px;
-  width: 44px;
-}
-
-.activity-feed--avatar {
-  background-position: center;
-  background-size: contain;
-  border-radius: 100%;
-  float: left;
-  min-height: 44px;
-  width: 44px;
 }
 
 .users-feed {

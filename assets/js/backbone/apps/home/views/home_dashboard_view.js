@@ -6,6 +6,7 @@ var $ = require('jquery');
 var ActivityCollection = window.c = require('../../../entities/activities/activities_collection');
 var TaskCollection = require('../../../entities/tasks/tasks_collection');
 var UIConfig = require('../../../config/ui.json');
+var User = require('../../../../utils/user');
 
 // templates
 var TaskListView = require('../../tasks/list/views/task_list_view');
@@ -68,6 +69,7 @@ var DashboardView = Backbone.View.extend({
     var self            = this,
         achievements    = new ActivityCollection({ type: 'badges' }),
         users           = new ActivityCollection({ type: 'users' }),
+        search          = new ActivityCollection({ type: 'search' }),
         tasks           = new TaskCollection();
 
     this.$el.html(templates.main());
@@ -82,9 +84,10 @@ var DashboardView = Backbone.View.extend({
      * @see   /assets/js/backbone/entities/activities/activities_collection.js
      */
     this.listenTo(achievements, 'activity:collection:fetch:success', function  (e) {
-      var bs = e.toJSON().filter(function (b) {
+      var bs = e.toJSON().filter(function (b) {     
         return b.participants.length > 0;
       });
+      
       var achievementsHtml = templates.achievements({ achievements: bs });
       self.setTarget('achievements-feed', achievementsHtml);
     });
@@ -95,24 +98,14 @@ var DashboardView = Backbone.View.extend({
       self.setTarget('users-feed', usersHtml);
     });
 
-    searchHtml = templates.search();
-    self.setTarget('search-feed', searchHtml);
+    this.listenTo(search, 'activity:collection:fetch:success', function (e) {
+      var data = { search: e.toJSON() },
+          searchHtml = templates.search(data);
+      self.setTarget('search-feed', searchHtml);
+    });
     
     annoucementHtml = templates.annoucement();
     self.setTarget('annoucement-feed', annoucementHtml);
-
-    $.ajax({
-      url: '/api/activity/count',
-      data: { where: { state: 'open' }},
-      success: function (d) {
-        self.$('#opportunity-count span')
-          .addClass('loaded')
-          .text(d);
-      },
-      error: function (err) {
-        console.log('err with /api/activity/count\n', err);
-      },
-    });
 
     var collection = this.collection.chain().pluck('attributes').filter(function (item) {
       // filter out tasks that are full time details with other agencies
@@ -146,11 +139,6 @@ var DashboardView = Backbone.View.extend({
       });
       return test.length === _.compact(test).length;
     }).value();
-
-    // this.taskListView = new TaskListView({
-    //   el: '#browse-list',
-    //   collection: collection,
-    // });
 
     this.$el.localize();
     return this;

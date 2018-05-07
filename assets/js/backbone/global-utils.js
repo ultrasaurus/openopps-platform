@@ -7,6 +7,20 @@ Backbone.history.on('all', function (route, router) {
   window.scrollTo(0, 0);
 });
 
+/**
+ * Takes a name and pulls the first letter of first name
+ * and first letter of last name if it exist. If name is 
+ * an empty string it will return an empty string.
+ * 
+ * @param {string} name name to convert to initials [John J Smith]
+ * @returns {string} first and last initial [JS]
+ */
+global.getInitials = function (name) {
+  var initials = name.split(' ').map(function (part) { 
+    return part.charAt(0).toUpperCase();
+  });
+  return initials.length > 2 ? _.first(initials) + _.last(initials) : initials.join('');
+};
 
 /**
  * Helper function to navigate links within backbone
@@ -26,21 +40,6 @@ global.linkBackbone = function (e) {
   if (e.preventDefault) e.preventDefault();
   var href = $(e.currentTarget).attr('href');
   Backbone.history.navigate(href, { trigger: true });
-};
-
-/**
- * Takes a name and pulls the first letter of first name
- * and first letter of last name if it exist. If name is 
- * an empty string it will return an empty string.
- * 
- * @param {string} name name to convert to initials [John J Smith]
- * @returns {string} first and last initial [JS]
- */
-global.getInitials = function (name) {
-  var initials = name.split(' ').map(function (part) { 
-    return part.charAt(0).toUpperCase();
-  });
-  return initials.length > 2 ? _.first(initials) + _.last(initials) : initials.join('');
 };
 
 /**
