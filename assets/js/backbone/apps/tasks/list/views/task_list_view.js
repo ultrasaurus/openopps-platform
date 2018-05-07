@@ -114,7 +114,8 @@ var TaskListView = Backbone.View.extend({
     });
     $('#career').on('change', function (e) {
       if($('#career').select2('data')) {
-        this.filters.career = _.pick(JSON.parse($('#career').select2('data').id), 'type', 'name', 'id');
+        var career = _.findWhere(this.tagTypes['career'], { id: parseInt($('#career').select2('data').id) });
+        this.filters.career = _.pick(career, 'type', 'name', 'id');
       } else {
         this.filters.career = [];
       }

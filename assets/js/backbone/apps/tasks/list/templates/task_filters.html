@@ -51,7 +51,7 @@
         <select id="career" class="dropdown">
             <option></option>
         <% _.each(tagTypes['career'], function (t) { %>
-            <option value=<%- JSON.stringify(t) %> <% if (filters.career && t.id == filters.career.id) { %>selected<% } %>><%- t.name %></option>
+            <option value=<%- t.id %> <% if (filters.career && t.id == filters.career.id) { %>selected<% } %>><%- t.name %></option>
         <% }); %>
         </select>
 
