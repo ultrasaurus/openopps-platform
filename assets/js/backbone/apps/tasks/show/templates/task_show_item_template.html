@@ -98,7 +98,7 @@
               <% if (model.completedBy) { %>
               <h4><i class="far fa-clock"></i> Due date</h4>
               <div>
-                  <%= moment(model.completedBy).format('ddd, MMM D, YYYY') %>
+                  <%= moment(model.completedBy).format('MM/DD/YY') %>
               </div>
               <% } %>
               <h4><i class="fas fa-map-marker-alt"></i> Location</h4>
@@ -168,7 +168,7 @@
               <% if (model.completedBy) { %>
               <h4><i class="far fa-clock"></i> Due date</h4>
               <div>
-                  <%= moment(model.completedBy).format('ddd, MMM D, YYYY') %>
+                  <%= moment(model.completedBy).format('MM/DD/YY') %>
               </div>
               <% } %>
               <h4><i class="fas fa-map-marker-alt"></i> Location</h4>
