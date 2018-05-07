@@ -172,7 +172,8 @@ var TaskListView = Backbone.View.extend({
     });
     $('#usajobs-search-pills').html(compiledTemplate);
     this.initializeSelect2();
-    if(!_.isEmpty(this.filters.career) && this.filters.career.name.toLowerCase() == 'acquisition') {
+    if((!_.isEmpty(this.filters.career) && this.filters.career.name.toLowerCase() == 'acquisition') || 
+      _.find(this.filters.series, { name: '1102 (Contracting)' })) {
       $('.usajobs-open-opps-search__box').addClass('display-acquisition');
       $('#search-pills-remove-all').attr('title', 'Remove all filters to see all opportunities');
       $('#search-pills-remove-all').children('.text').text('Remove all filters to see all opportunities');
