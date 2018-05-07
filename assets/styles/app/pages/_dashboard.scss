@@ -60,19 +60,39 @@
   text-decoration: none;
 }
 
-.usajobs-opop-badges__body {
-  max-width: 60rem;
-  text-align: left;
-  margin-top: 0;
-  padding-top: 1.4rem;
+.usajobs-opop-annoucement__body {
+  margin: $size-M 0;
+}
 
-  @include media($M) {
-    margin-top: 0.1rem;
+.usajobs-opop-search__body {
+  margin-bottom: $size-M;
+  .usajobs-opop-search__button {
+    text-align: center;
+    margin: $size-M 0;
   }
 }
 
+.usajobs-opop-people__body {
+  margin-bottom: $size-M;
+  .usajobs-opop-people__button {
+    text-align: center;
+    margin: $size-M 0;
+  }
+}
+
+// .usajobs-opop-badges__body {
+//   max-width: 60rem;
+//   text-align: left;
+//   margin-top: 0;
+//   padding-top: 1.4rem;
+
+//   @include media($M) {
+//     margin-top: 0.1rem;
+//   }
+// }
+
 .usajobs-opop-achievements__body {
-  margin-top: 0;
+  margin-top: 0 0 $size-M 0;
   padding-top: 1.4rem;
 
   @include media($M) {

@@ -14,6 +14,10 @@ router.get('/api/activity/users', auth, async (ctx, next) => {
   ctx.body = await service.newUsersList();
 });
 
+router.get('/api/activity/search', auth, async (ctx, next) => {
+  ctx.body = await service.newUsersList();
+});
+
 router.get('/api/activity/count', auth, async (ctx, next) => {
   ctx.body = await service.getTaskCount(ctx.query['where[state]']);
 });
