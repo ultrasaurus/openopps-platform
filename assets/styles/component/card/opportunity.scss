@@ -815,7 +815,6 @@
     .project-people-show-div {
       text-align: center;
       padding-top: 8px;
-      display: inline-block;
       float: left;
       width: 85px;
       margin-bottom: $size-M;
@@ -1098,6 +1097,7 @@ ul.achievements {
   input::-webkit-outer-spin-button,
   input::-webkit-inner-spin-button {
       -webkit-appearance: none;
+      appearance: none;
       margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
   }
 }
@@ -1228,6 +1228,11 @@ ul.achievements {
     right: 1.5rem;
     font-size: $small-font-size;
     text-decoration: none;
+    color: $color-primary;
+
+    &:visited {
+      color: $color-primary;
+    }
 }
 
 .usajobs-open-opps-opportunity-requestor__figure img {
