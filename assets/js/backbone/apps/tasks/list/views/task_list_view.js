@@ -166,12 +166,14 @@ var TaskListView = Backbone.View.extend({
       tagTypes: this.tagTypes,
       term: this.term,
       filters: this.filters,
+      agency: this.agency,
       taskFilteredCount: this.taskFilteredCount,
       appliedFilterCount: this.appliedFilterCount,
     });
     $('#task-filters').html(compiledTemplate);
     compiledTemplate = _.template(SearchPills)({
       filters: this.filters,
+      agency: this.agency,
       appliedFilterCount: this.appliedFilterCount,
     });
     $('#usajobs-search-pills').html(compiledTemplate);
