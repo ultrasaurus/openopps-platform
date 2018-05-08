@@ -13,8 +13,14 @@ async function listBadges () {
   return cleaned;
 }
 
-async function newUsersList () {
-  return await dao.User.query(dao.query.user, {}, dao.options.user);
+async function usersList (user) {
+  var agency = _.find(user.tags, (tag) => {
+    return tag.type == 'agency';
+  }) || {};
+  return {
+    title: await dao.User.query(dao.query.userByTitle, user.id, user.title, dao.options.user),
+    agency: await dao.User.query(dao.query.userByAgency, user.id, agency.name, dao.options.user),
+  };
 }
 
 async function getTaskCount (state) {
@@ -22,8 +28,17 @@ async function getTaskCount (state) {
   return result.rows[0].count;
 }
 
+async function getTaskTypeList () {
+  return {
+    careers: (await dao.Task.db.query(dao.query.taskByType, 'career', 3)).rows,
+    skills: (await dao.Task.db.query(dao.query.taskByType, 'skill', 4)).rows,
+    locations: (await dao.Task.db.query(dao.query.taskByType, 'location', 4)).rows,
+  };
+}
+
 module.exports = {
   listBadges: listBadges,
-  newUsersList: newUsersList,
+  usersList: usersList,
   getTaskCount: getTaskCount,
+  getTaskTypeList: getTaskTypeList,
 };
