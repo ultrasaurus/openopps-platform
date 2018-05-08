@@ -3,7 +3,7 @@
     <main class="main-content usajobs-content-well" id="main-content" aria-label="Opportunity">
       <div class="usajobs-open-opps-opportunity usajobs-open-opps-section usajobs-open-opps-profile">
         <h1 class="usajobs-form__title"><% if(data.id) { %>Edit<% } else {%>Create an<% } %> opportunity <span class="usajobs-form__legend">All fields are required unless otherwise noted</span></h1>
-        <form id="task-edit-form" class="usa-form-xl" action="">
+        <form id="task-edit-form" class="usa-form-xl" action="javascript:void(0)">
           <fieldset class="usajobs-fieldset">
             <div class="tips">
               First time creating an opportunity? Read our
@@ -255,9 +255,11 @@
                   <button class="usa-button usa-button-secondary" data-state="draft">Save for later</button>
                 <% } %>
                 <button class="usa-button usa-button-primary" data-state="preview" id="preview">Preview</button>
-                <button class="usa-button usa-button-primary" data-state="submit" id="save" style="display:none">
-                  <% if (_.contains(['draft', 'canceled', 'submitted'], data.state)) { %>Submit<% } else { %>Save<% } %>
-                </button>
+                <% if (_.contains(['draft', 'canceled', 'submitted'], data.state)) { %>
+                  <button class="usa-button usa-button-primary" data-state="submit" id="save" style="display:none">Submit</button>
+                <% } else { %>
+                  <button class="usa-button usa-button-primary" data-state="save" id="save" style="display:none">Save</button>
+                <% } %>
               </div>
             </div>
           </fieldset>
