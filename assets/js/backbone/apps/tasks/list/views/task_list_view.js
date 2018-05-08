@@ -36,10 +36,13 @@ var TaskListView = Backbone.View.extend({
     this.term = this.queryParams.search;
     this.filters = { state: 'open' };
     _.each(_.omit(this.queryParams, 'search'), function (value, key) {
-      var parts = value.split(',');
+      var parts = value.split(';');
       this.filters[key] = _.map(parts, function (part) {
         return { type: key, name: part};
       });
+      if(key == 'location') {
+        this.filters.location.push('in-person');
+      }
     }.bind(this));
     this.userAgency = window.cache.currentUser ? window.cache.currentUser.agency : {};
     this.initAgencyFilter();

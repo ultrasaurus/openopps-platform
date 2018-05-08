@@ -227,3 +227,16 @@
   margin-right: auto;
   padding-bottom: 2.0rem;
 }
+
+.usajobs-opop-people__body {
+  .no-match {
+    font-style: italic;
+    color: #757575;
+    margin: 0;
+    font-weight: bold;
+
+    a:visited {
+      color: #0071bc;
+    }
+  }
+}
