@@ -325,6 +325,11 @@ button.opportunity-options__button {
     @include media($ML) {
       order: 1;
     }
+
+    p, ul, a {
+      max-width: 56rem;
+      word-wrap: break-word;
+    }
   }
 
   .step-3-flex__item.personnel {

@@ -95,12 +95,16 @@
                 <label for="in-person">In person</label>
                 <input type="text" id="location" title="Location" />
             </li>
-            </ul>
+        </ul>
 
         <% if (agencyName) { %>
             <h4 class="usajobs-search-filters__title agency">Agency</h4>
-            <input id="js-restrict-task-filter" class="restrict-participation" type="checkbox" name="restrict" value="restrict"/>
-            <label for="js-restrict-task-filter">Restrict to <%- agencyName %></label>
+            <ul id="agencyFilters" class="usa-unstyled-list">
+                <li>
+                    <input id="js-restrict-task-filter" class="restrict-participation" type="checkbox" name="restrict" value="restrict" <% if (!_.isEmpty(agency.data)) { %>checked<% } %>/>
+                    <label for="js-restrict-task-filter">Restrict to <%- agencyName %></label>
+                </li>
+            </ul>
         <% } %>
     </div>
 </div>
