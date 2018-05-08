@@ -46,45 +46,28 @@ var DashboardView = Backbone.View.extend({
   },
 
   render: function () {
-    var self = this;
-    var achievements = new ActivityCollection({ type: 'badges' });
-    var users = new ActivityCollection({ type: 'users' });
-    var search = new ActivityCollection({ type: 'search' });
-
     this.$el.html(templates.main());
+    
+    _.each(['search', 'users'], function (type) {
+      this.listenTo(new ActivityCollection({ type: type }), 'activity:collection:fetch:success', function (e) {
+        var data = {};
+        data[type] = e.toJSON()[0];
+        var html = templates[type](data);
+        this.setTarget(type + '-feed', html);
+      }.bind(this));
+    }.bind(this));
 
-    /*
-     * Listen for achievements. This callback function uses Backbone's trigger method
-     * to retrieve the achievements information whenever the ActivityCollection is
-     * fetched successfully.
-     * @param ActivityCollection | An activity collection.
-     * @param String             | A Backbone event string to bind to..
-     * @param Function           | A callback function containing the event data.
-     * @see   /assets/js/backbone/entities/activities/activities_collection.js
-     */
-    this.listenTo(search, 'activity:collection:fetch:success', function (e) {
-      var data = { search: e.toJSON()[0] };
-      var searchHtml = templates.search(data);
-      self.setTarget('search-feed', searchHtml);
-    });
-
-    this.listenTo(achievements, 'activity:collection:fetch:success', function  (e) {
+    this.listenTo(new ActivityCollection({ type: 'badges' }), 'activity:collection:fetch:success', function  (e) {
       var bs = e.toJSON().filter(function (b) {     
         return b.participants.length > 0;
       });
       
       var achievementsHtml = templates.achievements({ achievements: bs });
-      self.setTarget('achievements-feed', achievementsHtml);
-    });
-
-    this.listenTo(users, 'activity:collection:fetch:success', function (e) {
-      var data = { users: e.toJSON()[0] };
-      var usersHtml = templates.users(data);
-      self.setTarget('users-feed', usersHtml);
-    });
+      this.setTarget('achievements-feed', achievementsHtml);
+    }.bind(this));
     
     annoucementHtml = templates.annoucement();
-    self.setTarget('annoucement-feed', annoucementHtml);
+    this.setTarget('annoucement-feed', annoucementHtml);
 
     this.$el.localize();
     return this;
