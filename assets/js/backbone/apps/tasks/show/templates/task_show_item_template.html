@@ -75,7 +75,7 @@
         <div class="usajobs-grid-full">
           <div class="usa-width-one-third personnel-needed mobile">
             <div class="usajobs-opop__task-intro">
-              <h4><i class="far fa-user"></i> Personnel needed</h4>
+              <h4>Personnel needed</h4>
               <div>
                 <% if (madlibTags['task-people']) { %>
                   <%= madlibTags['task-people'][0].name %>
@@ -83,7 +83,7 @@
                   None
                 <% } %>
               </div>
-              <h4><i class="far fa-calendar"></i> Time commitment</h4>
+              <h4>Time commitment</h4>
               <div>
                 <% if (madlibTags['task-time-required']) { %>
                   <%= madlibTags['task-time-required'][0].name %>
@@ -100,12 +100,12 @@
                 <% } %>
               </div>
               <% if (model.completedBy) { %>
-              <h4><i class="far fa-clock"></i> Due date</h4>
+              <h4>Due date</h4>
               <div>
                   <%= moment(model.completedBy).format('MM/DD/YY') %>
               </div>
               <% } %>
-              <h4><i class="fas fa-map-marker-alt"></i> Location</h4>
+              <h4>Location</h4>
               <div>
                 <% if (madlibTags.location) { %>
                   <% _.each(madlibTags.location, function (s, i) { %>
@@ -114,7 +114,23 @@
                 <% } else { %>
                   Anywhere
                 <% } %>
-              </div>
+              </div>              
+              <% if (madlibTags.career) { %>
+                <h4>Career field</h4>
+                <div>
+                  <% _.each(madlibTags.career, function (s, i) { %>
+                    <% if (i > 0) { %>, <% } %><%- s.name %>
+                  <% }) %>
+                </div>
+              <% } %>
+              <% if (madlibTags.series) { %>
+                <h4>Series</h4>
+                <div>
+                  <% _.each(madlibTags.series, function (s, i) { %>
+                    <% if (i > 0) { %>, <% } %><%- s.name %>
+                  <% }) %>
+                </div>
+              <% } %>
             </div>
           </div>
           <div class="usa-width-two-thirds opportunity-description">
@@ -145,7 +161,7 @@
           </div>
           <div class="usa-width-one-third personnel-needed desktop">
             <div class="usajobs-opop__task-intro">
-              <h4><i class="far fa-user"></i> Personnel needed</h4>
+              <h4>Personnel needed</h4>
               <div>
                 <% if (madlibTags['task-people']) { %>
                   <%= madlibTags['task-people'][0].name %>
@@ -153,7 +169,7 @@
                   None
                 <% } %>
               </div>
-              <h4><i class="far fa-calendar"></i> Time commitment</h4>
+              <h4>Time commitment</h4>
               <div>
                 <% if (madlibTags['task-time-required']) { %>
                   <%= madlibTags['task-time-required'][0].name %>
@@ -170,12 +186,12 @@
                 <% } %>
               </div>
               <% if (model.completedBy) { %>
-              <h4><i class="far fa-clock"></i> Due date</h4>
+              <h4>Due date</h4>
               <div>
                   <%= moment(model.completedBy).format('MM/DD/YY') %>
               </div>
               <% } %>
-              <h4><i class="fas fa-map-marker-alt"></i> Location</h4>
+              <h4>Location</h4>
               <div>
                 <% if (madlibTags.location) { %>
                   <% _.each(madlibTags.location, function (s, i) { %>
@@ -185,6 +201,22 @@
                   Anywhere
                 <% } %>
               </div>
+              <% if (madlibTags.career) { %>
+                <h4>Career field</h4>
+                <div>
+                  <% _.each(madlibTags.career, function (s, i) { %>
+                    <% if (i > 0) { %>, <% } %><%- s.name %>
+                  <% }) %>
+                </div>
+              <% } %>
+              <% if (madlibTags.series) { %>
+                <h4>Series</h4>
+                <div>
+                  <% _.each(madlibTags.series, function (s, i) { %>
+                    <% if (i > 0) { %>, <% } %><%- s.name %>
+                  <% }) %>
+                </div>
+              <% } %>
             </div>
           </div>
         </div>
