@@ -125,7 +125,7 @@
               <select id="career-field" class="dropdown">
                 <option></option>
                 <% _.each(tagTypes['career'], function (t) { %>
-                  <% var selected = !_.isEmpty(career); %>
+                  <% var selected = (!_.isEmpty(career) && career.id == t.id); %>
                   <option value=<%- t.id %> <% if (selected) { %>selected<% } %>><%- t.name %></option>
                 <% }); %>
               </select>
