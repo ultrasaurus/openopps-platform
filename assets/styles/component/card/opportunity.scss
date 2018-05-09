@@ -102,6 +102,12 @@
     }
   }
 
+  .career-field-card,
+  .series-card {
+    font-size: $small-font-size;
+    margin-bottom: 0.5rem;
+  }
+
   .related-keywords {
     font-size: $small-font-size;
     margin-bottom: $size-L;

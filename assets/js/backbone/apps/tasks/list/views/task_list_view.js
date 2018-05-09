@@ -158,6 +158,9 @@ var TaskListView = Backbone.View.extend({
   },
 
   renderFilters: function () {
+    if(!_.isEmpty(this.filters.career) && _.isArray(this.filters.career)) {
+      this.filters.career = _.findWhere(this.tagTypes.career, { name: this.filters.career[0].name });
+    }
     var compiledTemplate = _.template(TaskFilters)({
       placeholder: '',
       user: window.cache.currentUser,
