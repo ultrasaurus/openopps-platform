@@ -984,7 +984,10 @@ ul.achievements {
   }
 
   &__status {
-    flex: 1;
+
+    @include media($XL) {
+      flex: 1;
+    }
 
     .usajobs-pill--opportunity-status {
       margin: 0 0 0 auto;
@@ -1084,7 +1087,10 @@ ul.achievements {
   }
 
   &__status {
-    flex: 1;
+
+    @include media($XL) {
+      flex: 1;
+    }
 
     .usajobs-pill--opportunity-status {
       margin: 0 0 0 auto;
