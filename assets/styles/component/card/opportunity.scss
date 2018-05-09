@@ -194,7 +194,7 @@
   }
 
   .skill-label {
-    margin: 0 0.5rem 0.8rem 0;
+    margin: 0.5rem;
     display: inline-block;
   }
 
@@ -202,6 +202,16 @@
     text-align: center;
     display: flex;
     justify-content: space-between;
+
+    @include media($ML) {
+      position: absolute;
+      bottom: 3.5rem;
+      right: 3rem;
+
+      div {
+        margin-right: 3rem !important;
+      }
+    }
 
     @include media($SM){
       justify-content: space-around;

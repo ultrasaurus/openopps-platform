@@ -104,7 +104,7 @@ const options = {
     },
     exclude: {
       midas_user: [ 'deletedAt', 'passwordAttempts', 'isAdmin', 'isAgencyAdmin', 'disabled', 'bio',
-        'createdAt', 'photoId', 'title', 'updatedAt' ],
+        'createdAt', 'title', 'updatedAt' ],
       agency: [ 'deletedAt' ],
     },
   },

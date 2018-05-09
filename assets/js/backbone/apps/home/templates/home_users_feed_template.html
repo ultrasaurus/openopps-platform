@@ -10,7 +10,11 @@
               <div class="usajobs-open-opps-opportunity-requestor people">
                 <div class="usajobs-open-opps-opportunity-requestor__figure-body">
                   <div class="usajobs-open-opps-opportunity-requestor__figure">
-                    <div class="usajobs-open-opps-opportunity-requestor__initials"><%- getInitials(u.name) %></div>
+                    <% if (u.photoId) { %>
+                      <img src="/api/user/photo/<%- u.id %>" alt="Profile picture of <%- u.name %>">
+                    <% } else { %>
+                      <div class="usajobs-open-opps-opportunity-requestor__initials"><%- getInitials(u.name) %></div>
+                    <% } %>
                   </div>
                   <div class="usajobs-open-opps-opportunity-requestor__body">
                     <p class="usajobs-open-opps-opportunity-requestor__name">
@@ -44,7 +48,11 @@
                 <div class="usajobs-open-opps-opportunity-requestor people">
                   <div class="usajobs-open-opps-opportunity-requestor__figure-body">
                     <div class="usajobs-open-opps-opportunity-requestor__figure">
-                      <div class="usajobs-open-opps-opportunity-requestor__initials"><%- getInitials(u.name) %></div>
+                      <% if (u.photoId) { %>
+                        <img src="/api/user/photo/<%- u.id %>" alt="Profile picture of <%- u.name %>">
+                      <% } else { %>
+                        <div class="usajobs-open-opps-opportunity-requestor__initials"><%- getInitials(u.name) %></div>
+                      <% } %>
                     </div>
                     <div class="usajobs-open-opps-opportunity-requestor__body">
                       <p class="usajobs-open-opps-opportunity-requestor__name">
