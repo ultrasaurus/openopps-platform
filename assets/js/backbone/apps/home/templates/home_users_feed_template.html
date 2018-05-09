@@ -25,9 +25,11 @@
                           <%- u.title %> 
                       </p>
                     <% } %>
-                    <p class="usajobs-open-opps-opportunity-requestor__company">
-                        <%- u.agency.name.replace(/\(.*\)/,'') %>
-                    </p>
+                    <% if (u.agency) { %>
+                      <p class="usajobs-open-opps-opportunity-requestor__company">
+                          <%- u.agency.name.replace(/\(.*\)/,'') %>
+                      </p>
+                    <% } %>
                   </div>
                 </div>
               </div>
@@ -63,9 +65,11 @@
                             <%- u.title %> 
                         </p>
                       <% } %>
-                      <p class="usajobs-open-opps-opportunity-requestor__company">
-                          <%- u.agency.name.replace(/\(.*\)/,'') %>
-                      </p>
+                      <% if (u.agency) { %>
+                        <p class="usajobs-open-opps-opportunity-requestor__company">
+                            <%- u.agency.name.replace(/\(.*\)/,'') %>
+                        </p>
+                      <% } %>
                     </div>
                   </div>
                 </div>

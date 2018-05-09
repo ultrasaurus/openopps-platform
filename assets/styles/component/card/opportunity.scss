@@ -102,6 +102,12 @@
     }
   }
 
+  .career-field-card,
+  .series-card {
+    font-size: $small-font-size;
+    margin-bottom: 0.5rem;
+  }
+
   .related-keywords {
     font-size: $small-font-size;
     margin-bottom: $size-L;
@@ -203,27 +209,20 @@
     display: flex;
     justify-content: space-between;
 
-    @include media($ML) {
-      position: absolute;
-      bottom: 3.5rem;
-      right: 3rem;
-
-      div {
-        margin-right: 3rem !important;
-      }
-    }
-
     @include media($SM){
       justify-content: space-around;
     }
 
     @include media($ML){
+      position: absolute;
+      bottom: 3.5rem;
+      right: 3rem;
 
       div {
-        margin-right: $size-S;
+        margin-right: $size-M;
 
         &:last-child {
-          margin-right: inherit;
+          margin-right: 0;
         }
       }
     }
@@ -991,7 +990,10 @@ ul.achievements {
   }
 
   &__status {
-    flex: 1;
+
+    @include media($XL) {
+      flex: 1;
+    }
 
     .usajobs-pill--opportunity-status {
       margin: 0 0 0 auto;
@@ -1047,6 +1049,11 @@ ul.achievements {
     justify-content: center;
     align-items: center;
 
+    @include media($M) {
+      width: 6.5rem;
+      height: 6.5rem;
+    }
+
     @include media($L) {
       padding-bottom: 0;
     }
@@ -1054,12 +1061,20 @@ ul.achievements {
 
   &__initials {
     font-weight: bold;
+
+    @include media($M) {
+      font-size: $h3-font-size;
+    }
   }
 
   &__body {
     flex: 1;
     min-width: 0;
     padding: 0 $size-S;
+
+    @include media($M) {
+      padding: 0;
+    }
   }
 
   &__on {
@@ -1067,6 +1082,10 @@ ul.achievements {
     font-size: $small-font-size;
     color: $color-base;
     display: block;
+
+    @include media($M) {
+      text-align: center;
+    }
   }
 
   & &__name {
@@ -1074,7 +1093,10 @@ ul.achievements {
   }
 
   &__status {
-    flex: 1;
+
+    @include media($XL) {
+      flex: 1;
+    }
 
     .usajobs-pill--opportunity-status {
       margin: 0 0 0 auto;

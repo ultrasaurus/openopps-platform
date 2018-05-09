@@ -14,7 +14,7 @@ const userByTitleQuery = 'select @midas_user.*, @agency.* ' +
 'from @midas_user midas_user ' +
 'left join tagentity_users__user_tags user_tags on user_tags.user_tags = midas_user.id ' +
 'left join @tagentity agency on agency.id = user_tags.tagentity_users and agency.type = \'agency\' ' +
-'where midas_user.title = ? ' +
+'where midas_user.id <> ? and midas_user.title = ? ' +
 'limit 2';
 
 const taskQuery = 'select count(*) as count ' +

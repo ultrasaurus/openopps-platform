@@ -130,7 +130,11 @@
 }
 
 .usajobs-open-opps-profile .usajobs-open-opps-opportunity-requestor {
-  align-items: center;
+  align-items: flex-start;
+
+  @include media($M) {
+    align-items: flex-end;
+  }
 }
 
 .profile .usajobs-open-opps-opportunity-requestor, .profile .usajobs-open-opps-opportunity-requestor__figure {
@@ -277,7 +281,6 @@
   }
 
   .profile-badge {
-    display: inline-block;
     text-align: center;
     text-transform: capitalize;
     float: left;
