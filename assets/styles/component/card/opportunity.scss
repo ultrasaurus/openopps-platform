@@ -1057,6 +1057,13 @@ ul.achievements {
     @include media($L) {
       padding-bottom: 0;
     }
+
+    img {
+      @include media($M) {
+        width: 6.5rem;
+        height: 6.5rem;
+      }  
+    }
   }
 
   &__initials {
