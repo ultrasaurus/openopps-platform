@@ -49,16 +49,15 @@
           <a class="career-field" href="/tasks?series=<%- t.name %>"><%- t.name %></a><% if ((index + 1) < list.length) { %>,<% } %>
         <% }); %>
         </p>
-      <% } %>
-    </div>    
-    <% if (!_.isEmpty(tags['keywords'])) { %>
-      <div class="related-keywords">
-        <span>Related keyword:</span>
+      <% } %>    
+      <% if (!_.isEmpty(tags['keywords'])) { %>
+        <p>Related keyword:
         <% _.each(tags['keywords'], function (t, index, list) { %>
           <a class="related-keyword" href="/tasks?keywords=<%- t.name %>"><%- t.name %></a><% if ((index + 1) < list.length) { %>,<% } %>
         <% }); %>
-      </div>
-    <% } %>
+        </p>
+      <% } %>
+    </div>
     <div class="usajobs-open-opps-opportunity-requestor__wrapper">
       <div class="usajobs-open-opps-opportunity-requestor">
         <div class="usajobs-open-opps-opportunity-requestor__figure-body">
