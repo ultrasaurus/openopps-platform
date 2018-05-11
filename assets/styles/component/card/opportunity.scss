@@ -104,8 +104,18 @@
 
   .career-field-card,
   .series-card {
-    font-size: $small-font-size;
-    margin-bottom: 0.5rem;
+    margin-top: 2rem;
+    margin-bottom: 2.5rem;
+
+    @include media($L) {
+      margin-top: 0;
+      margin-bottom: 5rem;
+    }
+
+    p {
+      font-size: $small-font-size;
+      margin: 0;
+    }
   }
 
   .related-keywords {
@@ -910,9 +920,13 @@ ul.achievements {
 
 .usajobs-open-opps-opportunity-requestor {
   display: flex;
-  margin-top: $size-L;
+  margin-top: 2.5rem;
   flex-wrap: wrap;
   flex-direction: column;
+
+  @include media($L) {
+    margin-top: $size-L;
+  }
 
   @include media($XL) {
     align-items: center;

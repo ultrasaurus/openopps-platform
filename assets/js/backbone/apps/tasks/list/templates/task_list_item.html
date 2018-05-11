@@ -35,30 +35,29 @@
         <span class="skill-label clickable-filter"><%- t.name %></span>
       <% }); %>
     </div>
-    <% if (!_.isEmpty(tags['career'])) { %>
-      <div class="career-field-card">
-        <span>Career field:</span>
+    <div class="career-field-card">
+      <% if (!_.isEmpty(tags['career'])) { %>
+        <p>Career field:
         <% _.each(tags['career'], function (t, index, list) { %>
           <a class="career-field" href="/tasks?career=<%- t.name %>"><%- t.name %></a><% if ((index + 1) < list.length) { %>,<% } %>
         <% }); %>
-      </div>
-    <% } %>
-    <% if (!_.isEmpty(tags['series'])) { %>
-      <div class="series-card">
-        <span>Series:</span>
+        </p>
+      <% } %>
+      <% if (!_.isEmpty(tags['series'])) { %>
+        <p>Series:
         <% _.each(tags['series'], function (t, index, list) { %>
           <a class="career-field" href="/tasks?series=<%- t.name %>"><%- t.name %></a><% if ((index + 1) < list.length) { %>,<% } %>
         <% }); %>
-      </div>
-    <% } %>
-    <% if (!_.isEmpty(tags['keywords'])) { %>
-      <div class="related-keywords">
-        <span>Related keyword:</span>
+        </p>
+      <% } %>    
+      <% if (!_.isEmpty(tags['keywords'])) { %>
+        <p>Related keyword:
         <% _.each(tags['keywords'], function (t, index, list) { %>
           <a class="related-keyword" href="/tasks?keywords=<%- t.name %>"><%- t.name %></a><% if ((index + 1) < list.length) { %>,<% } %>
         <% }); %>
-      </div>
-    <% } %>
+        </p>
+      <% } %>
+    </div>
     <div class="usajobs-open-opps-opportunity-requestor__wrapper">
       <div class="usajobs-open-opps-opportunity-requestor">
         <div class="usajobs-open-opps-opportunity-requestor__figure-body">
