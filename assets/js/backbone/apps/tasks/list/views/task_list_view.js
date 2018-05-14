@@ -38,9 +38,13 @@ var TaskListView = Backbone.View.extend({
     _.each(_.omit(this.queryParams, 'search'), function (value, key) {
       var parts = value.split(';');
       this.filters[key] = _.map(parts, function (part) {
-        return { type: key, name: part};
+        if (key == 'location' && value == 'virtual') {
+          return value;
+        } else {
+          return { type: key, name: part};
+        }
       });
-      if(key == 'location') {
+      if(key == 'location' && value != 'virtual') {
         this.filters.location.push('in-person');
       }
     }.bind(this));
