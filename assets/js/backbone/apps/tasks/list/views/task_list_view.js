@@ -36,11 +36,11 @@ var TaskListView = Backbone.View.extend({
     this.term = this.queryParams.search;
     this.filters = { state: 'open' };
     _.each(_.omit(this.queryParams, 'search'), function (value, key) {
-      var parts = value.split(';');
-      this.filters[key] = _.map(parts, function (part) {
-        return { type: key, name: part};
+      var values = value.split(';');
+      this.filters[key] = _.map(values, function (value) {
+        return { type: key, name: value.split(':')[0], id: parseInt(value.split(':')[1] || 0) };
       });
-      if(key == 'location') {
+      if(key == 'location' && value != 'Virtual') {
         this.filters.location.push('in-person');
       }
     }.bind(this));
@@ -104,7 +104,7 @@ var TaskListView = Backbone.View.extend({
             this.filters.location.push('in-person');
           }
         }
-        this.filter(this.term, this.filters, { data: {} });
+        this.filter(this.term, this.filters, this.agency);
       }.bind(this));
     }.bind(this));
     if(!_.contains(this.filters.location, 'in-person')) {
@@ -122,7 +122,7 @@ var TaskListView = Backbone.View.extend({
       } else {
         this.filters.career = [];
       }
-      this.filter(this.term, this.filters, { data: {} });
+      this.filter(this.term, this.filters, this.agency);
     }.bind(this));
   },
 
@@ -131,7 +131,9 @@ var TaskListView = Backbone.View.extend({
     var element = $(event.target).closest('.usajobs-search-pills__item');
     var type = element.data('type');
     var value = element.data('value');
-    if(_.isArray(this.filters[type])) {
+    if(type == 'agency') {
+      this.agency = { data: {} };
+    } else if(_.isArray(this.filters[type])) {
       if(type == 'location' && value == 'in-person') {
         this.filters[type] = _.filter(this.filters[type], function (filter) {
           return _.isEqual(filter, 'virtual'); // only return virtual if it exist
@@ -144,7 +146,7 @@ var TaskListView = Backbone.View.extend({
     } else if (_.isEqual(this.filters[type], value)) {
       this.filters[type] = [];
     }
-    this.filter(this.term, this.filters, { data: {} });
+    this.filter(this.term, this.filters, this.agency);
   },
 
   removeAllFilters: function (event) {
@@ -154,12 +156,13 @@ var TaskListView = Backbone.View.extend({
     } else {
       this.filters = { state: [] };
     }
-    this.filter(this.term, this.filters, { data: {} });
+    this.agency = { data: {} };
+    this.filter(this.term, this.filters, this.agency);
   },
 
   renderFilters: function () {
     if(!_.isEmpty(this.filters.career) && _.isArray(this.filters.career)) {
-      this.filters.career = _.findWhere(this.tagTypes.career, { name: this.filters.career[0].name });
+      this.filters.career = _.pick(_.findWhere(this.tagTypes.career, { name: this.filters.career[0].name }), 'type', 'name', 'id');
     }
     var compiledTemplate = _.template(TaskFilters)({
       placeholder: '',
@@ -349,7 +352,7 @@ var TaskListView = Backbone.View.extend({
       this.term = '';
       $('#search').val('');
     }
-    this.filter(this.term, this.filters, { data: {} });
+    this.filter(this.term, this.filters, this.agency);
   },
 
   toggleStateFilters: function (event) {
@@ -386,7 +389,7 @@ var TaskListView = Backbone.View.extend({
     this.filters.time = _($('#timeFilters input:checked')).pluck('value').map(function (value) {
       return { type: 'task-time-required', name: value };
     });
-    this.filter(this.term, this.filters, { data: {} });
+    this.filter(this.term, this.filters, this.agency);
   },
 
   locationFilter: function (event) {
@@ -405,7 +408,7 @@ var TaskListView = Backbone.View.extend({
     if($('#in-person').is(':checked')) {
       this.filters.location.push('in-person');
     }
-    this.filter(this.term, this.filters, { data: {} });
+    this.filter(this.term, this.filters, this.agency);
   },
 
   agencyFilter: function (event) {

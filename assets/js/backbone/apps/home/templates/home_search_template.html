@@ -9,7 +9,7 @@
                 </li>
                 <% _.forEach(search.careers, function(career) { %>
                 <li class="usajobs-open-opps-search_item">
-                    <a href="/tasks?career=<%- career.name %>"><%- career.name %></a>
+                    <a href="/tasks?career=<%- career.name %>:<%- career.id %>"><%- career.name %></a>
                 </li>
                 <% }); %>
             </ul>
@@ -19,7 +19,7 @@
             <ul class="usa-unstyled-list">
                 <% _.forEach(search.skills, function(skill) { %>
                 <li class="usajobs-open-opps-search_item">
-                    <a href="/tasks?skill=<%- skill.name %>"><%- skill.name %></a>
+                    <a href="/tasks?skill=<%- skill.name %>:<%- skill.id %>"><%- skill.name %></a>
                 </li>
                 <% }); %>
             </ul>
@@ -29,7 +29,7 @@
             <ul class="usa-unstyled-list">
                 <% _.forEach(search.locations, function(location) { %>
                 <li class="usajobs-open-opps-search_item">
-                    <a href="/tasks?location=<%- location.name %>"><%- location.name %></a>
+                    <a href="/tasks?location=<%- location.name %>:<%- location.id %>"><%- location.name %></a>
                 </li>
                 <% }); %>
             </ul>
