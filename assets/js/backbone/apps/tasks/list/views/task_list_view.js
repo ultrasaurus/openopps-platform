@@ -51,7 +51,7 @@ var TaskListView = Backbone.View.extend({
     this.userAgency = window.cache.currentUser ? window.cache.currentUser.agency : {};
     this.initAgencyFilter();
     this.taskFilteredCount = 0;
-    this.appliedFilterCount = getAppliedFiltersCount(this.filters);
+    this.appliedFilterCount = getAppliedFiltersCount(this.filters, this.agency);
   },
 
   render: function () {
@@ -205,7 +205,7 @@ var TaskListView = Backbone.View.extend({
     $('#search-results-loading').hide();
     $('#task-list').html('');
     this.taskFilteredCount = this.tasks.length;
-    this.appliedFilterCount = getAppliedFiltersCount(this.filters);
+    this.appliedFilterCount = getAppliedFiltersCount(this.filters, this.agency);
     $.ajax({
       url: '/api/ac/tag?type=career&list',
       type: 'GET',
@@ -466,12 +466,12 @@ var TaskListView = Backbone.View.extend({
 
 });
 
-function getAppliedFiltersCount (filters) {
+function getAppliedFiltersCount (filters, agency) {
   var count = 0;
   _.each(filters, function ( value, key ) {
     count += (_.isArray(value) ? value.length : 1);
   });
-  return count;
+  return count + (_.isEqual(agency, { data: {} }) ? 0 : 1);
 }
 
 function parseTaskStatus (task) {
