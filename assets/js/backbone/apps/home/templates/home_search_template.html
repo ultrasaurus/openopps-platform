@@ -27,6 +27,9 @@
         <div class="usa-width-one-third">
             <h3>Location</h3>
             <ul class="usa-unstyled-list">
+                <li class="usajobs-open-opps-search_item">
+                    <a href="/tasks?location=virtual">Virtual</a>
+                </li>
                 <% _.forEach(search.locations, function(location) { %>
                 <li class="usajobs-open-opps-search_item">
                     <a href="/tasks?location=<%- location.name %>:<%- location.id %>"><%- location.name %></a>
