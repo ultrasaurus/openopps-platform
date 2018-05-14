@@ -196,6 +196,7 @@ var TaskListView = Backbone.View.extend({
       $('#search-pills-remove-all').children('.text').text('Remove all filters');
     }
     $('#search-tab-bar-filter-count').text(this.appliedFilterCount);
+    $('#footer').addClass('filter-margin');
   },
 
   renderList: function (page) {
@@ -325,6 +326,7 @@ var TaskListView = Backbone.View.extend({
         $('.navigation').toggleClass('hide', false);
         $('#main-content').toggleClass('hide', false);
         $('.find-people').toggleClass('hide', false);
+        $('#footer').toggleClass('hide', false);
       }, 250);
     } else {
       setTimeout(function () {
@@ -338,6 +340,7 @@ var TaskListView = Backbone.View.extend({
         $('.navigation').toggleClass('hide', true);
         $('#main-content').toggleClass('hide', true);
         $('.find-people').toggleClass('hide', true);
+        $('#footer').toggleClass('hide', true);
         $('#task-filters').css('display', 'block');
       }, 250);
     }
