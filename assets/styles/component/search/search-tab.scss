@@ -25,19 +25,27 @@
     display: none;
   }
 
-  #title, .navigation, #footer, #task-filters, .find-people {
+  #title, .navigation, #task-filters, .find-people {
     display: block !important;
+  }
+
+  .filter-margin {
+    margin-bottom: 0px;
   }
 }
 
 /*CUSTOM*/
 @media screen and (max-width: 61.9999em) {
-  #footer, #task-filters {
+  #task-filters {
     display: none;
   }
 
   .edit-view-container {
     display: block !important;
+  }
+
+  .filter-margin {
+    margin-bottom: 6rem;
   }
 }
 
@@ -84,7 +92,7 @@
   text-decoration: none;
 }
 
-.usajobs-search-tab-bar__filters-default > span{
+.usajobs-search-tab-bar__filters-default > span {
   vertical-align: middle;
 }
 
@@ -93,7 +101,8 @@
   text-decoration: none;
 }
 
-.usajobs-search-tab-bar__body .usajobs-search-tab-bar__link[aria-expanded=true], .usajobs-search-tab-bar__body .usajobs-search-tab-bar__link[aria-expanded=true]:visited {
+.usajobs-search-tab-bar__body .usajobs-search-tab-bar__link[aria-expanded=true], 
+.usajobs-search-tab-bar__body .usajobs-search-tab-bar__link[aria-expanded=true]:visited {
   background-color: #d6d7d9;
   color: #212121;
   height: 6.4rem;
