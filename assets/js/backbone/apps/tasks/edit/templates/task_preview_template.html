@@ -44,7 +44,7 @@
           <h4><i class="far fa-user"></i>Personnel needed</h4>
           <p><%- madlibTags['task-people'][0].name.replace(' - ', '-') %></p>
           <h4><i class="far fa-calendar"></i>Time commitment</h4>
-          <p><%- madlibTags['task-time-required'][0].name %>/<%- madlibTags['task-time-estimate'][0].name.replace(' - ', '-') %> 
+          <p><%- madlibTags['task-time-required'][0].name %><% if (madlibTags['task-time-estimate']) { %>/<%- madlibTags['task-time-estimate'][0].name.replace(' - ', '-') %><% } %> 
             <% if (madlibTags['task-length']) { %><%- madlibTags['task-length'][0].name.toLowerCase() %><% } %></p>
         </div>
         <div class="usa-width-one-half">

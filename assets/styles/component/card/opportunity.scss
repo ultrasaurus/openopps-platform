@@ -1184,6 +1184,11 @@ ul.achievements {
   width: 100%;
 }
 
+#task-restrict-agency:disabled + label {
+  color: initial;
+  cursor: not-allowed;
+}
+
 .usajobs-content-gutter.opportunity-gutter {
   max-width: 160rem;
   margin-right: auto;
