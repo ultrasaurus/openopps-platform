@@ -35,7 +35,7 @@
               <label for="opportunity-series">Series <span class="usa-input-optional"></span></label>
               <input type="text" class="fullwidth form-control" id="opportunity-series" name="opportunity-series">
             </div>
-            <div class="form-group checkboxes-horizontal-longtitle">
+            <div class="form-group required-input checkboxes-horizontal-longtitle">
               <label for="CareerField" class="usajobs-profile-question__title">
                 Are you looking for someone in a specific career field? <span class="usa-input-optional"></span>
               </label>
@@ -50,7 +50,8 @@
                 </li>
               </ul>
               <label for="opportunity-career-field" class="sr-only">Career field</label>
-              <select id="opportunity-career-field" class="dropdown">
+              <span class="field-validation-error error-empty" style="display:none;">You must select a career field for this opportunity.</span>
+              <select id="opportunity-career-field" class="dropdown validate" data-validate="empty">
                 <option></option>
                 <% _.each(tagTypes['career'], function (t) { %>
                   <% var selected = madlibTags['career'] && (madlibTags['career'][0].id == t.id); %>
@@ -103,9 +104,10 @@
               <!-- <% } %> -->
             </div>
 
-            <div class="form-group" id="time-options-time-required">
+            <div class="form-group required-input" id="time-options-time-required">
               <label for="time-estimate">How many hours do you need?</label>
-              <select id="time-estimate" class="dropdown">
+              <span class="field-validation-error error-empty" style="display:none;">You must select the number of hours needed for this opportunity.</span>
+              <select id="time-estimate" class="dropdown validate" data-validate="empty">
                 <option></option>
                 <% _.each(tagTypes['task-time-estimate'], function (t) { %>
                   <% var selected = madlibTags['task-time-estimate'] && (madlibTags['task-time-estimate'][0].id == t.id); %>
@@ -132,9 +134,10 @@
               </div>
               <span class="usajobs-form__help-brief" id="dateHint">For example: 03 09 2018</span>
             </div>
-            <div class="form-group" id="time-options-time-frequency">
+            <div class="form-group required-input" id="time-options-time-frequency">
               <label for="js-time-frequency-estimate">How often do you need this time?</label>
-              <select id="js-time-frequency-estimate" class="dropdown">
+              <span class="field-validation-error error-empty" style="display:none;">You must select how often the time is needed for this opportunity.</span>
+              <select id="js-time-frequency-estimate" class="dropdown validate" data-validate="empty">
                 <option></option>
                 <% _.each(tagTypes['task-length'], function (t) { %>
                   <% var selected = madlibTags['task-length'] && (madlibTags['task-length'][0].id == t.id); %>

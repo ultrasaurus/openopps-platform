@@ -60,8 +60,21 @@
   text-decoration: none;
 }
 
-.usajobs-opop-annoucement__body {
-  margin: $size-M $size-M $size-M 0;
+.usajobs-opop-annoucement { 
+  &__body {
+    margin: $size-M $size-M $size-M 0;
+  }
+
+  &__title {
+    color: $color-gray;
+    font-size: $lead-font-size;
+    margin-bottom: $size-S;
+  }
+
+  &__section {
+    margin-top: $size-default;
+    margin-bottom: $size-default;
+  }
 }
 
 .usajobs-opop-search__body {
