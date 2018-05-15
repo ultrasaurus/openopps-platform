@@ -479,30 +479,32 @@ var TaskEditFormView = Backbone.View.extend({
     }
     var target = $('.time-options-time-required.selected')[0] || {};
     $('#' + target.id + '-description').show();
+    $('#time-options-time-required').hide();
+    $('#time-options-completion-date').hide();
+    $('#time-options-time-frequency').hide();
+    $('#time-estimate').removeClass('validate');
+    $('#js-time-frequency-estimate').removeClass('validate');
     switch (target.id) {
       case 'one-time':
         $('#time-options-time-required').show();
+        $('#time-estimate').addClass('validate');
         $('#time-options-completion-date').show();
-        $('#time-options-time-frequency').hide();
         break;
       case 'ongoing':
         $('#time-options-time-required').show();
-        $('#time-options-completion-date').hide();
+        $('#time-estimate').addClass('validate');
         $('#time-options-time-frequency').show();
+        $('#js-time-frequency-estimate').addClass('validate');
         break;
       case 'full-time':
-        $('#time-options-time-required').hide();
-        $('#time-options-completion-date').hide();
-        $('#time-options-time-frequency').hide();
         $('#task-restrict-agency')[0].checked = true;
         break;
-      default:
-        $('#time-options-time-required').hide();
-        $('#time-options-completion-date').hide();
-        $('#time-options-time-frequency').hide();
-        break;
+    }
+    if(target.id != 'full-time' && $('#task-restrict-agency').attr('disabled')) {
+      $('#task-restrict-agency')[0].checked = false;
     }
     $('#task-restrict-agency').attr('disabled', target.id == 'full-time');
+    $('#task-restrict-agency').siblings('label').attr('title', (target.id == 'full-time') ? 'Required for full time detail' : '')
   },
 
   toggleLocationOptions: function (e) {
@@ -525,9 +527,13 @@ var TaskEditFormView = Backbone.View.extend({
   },
 
   toggleCareerField: function (e) {
+    $('#opportunity-career-field').removeClass('validate');
+    $('#opportunity-career-field').parent().removeClass('usa-input-error');
+    $('#opportunity-career-field').siblings('.field-validation-error').hide();
     if(e) {
       if(e.currentTarget.value.toLowerCase() == 'true') {
         $('#s2id_opportunity-career-field').show();
+        $('#opportunity-career-field').addClass('validate');
       } else {
         $('#s2id_opportunity-career-field').hide();
       }
@@ -535,6 +541,7 @@ var TaskEditFormView = Backbone.View.extend({
       if(this.options.madlibTags['career']) {
         $('#career-field-yes').attr('checked', 'checked');
         $('#s2id_opportunity-career-field').show();
+        $('#opportunity-career-field').addClass('validate');
       } else {
         $('#career-field-no').attr('checked', 'checked');
         $('#s2id_opportunity-career-field').hide();
