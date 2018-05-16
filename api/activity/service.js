@@ -32,7 +32,7 @@ async function getTaskTypeList () {
   return {
     careers: _.reject((await dao.Task.db.query(dao.query.taskByType, 'career', 4)).rows, { name: 'Acquisition' }).slice(0, 3),
     skills: (await dao.Task.db.query(dao.query.taskByType, 'skill', 4)).rows,
-    locations: (await dao.Task.db.query(dao.query.taskByType, 'location', 4)).rows,
+    locations: (await dao.Task.db.query(dao.query.taskByType, 'location', 3)).rows,
   };
 }
 
