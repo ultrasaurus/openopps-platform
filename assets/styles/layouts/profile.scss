@@ -137,17 +137,52 @@
   }
 }
 
+.usajobs-open-opps-opportunity-requestor.profile {
+  align-items: center;
+}
+
 .profile .usajobs-open-opps-opportunity-requestor, .profile .usajobs-open-opps-opportunity-requestor__figure {
   &__figure, &__figure img { 
     border-radius: 50%;
-    width: 15rem !important;
-    height: 15rem !important;
+    width: 6.5rem !important;
+    height: 6.5rem !important;
+
+    @include media($L) {
+      width: 15rem !important;
+      height: 15rem !important;
+    }
   }
 
   &__initials {
-    font-size: 4.4rem;
+    font-size: $h3-font-size;
+
+    @include media($L) {
+      font-size: 4.4rem;
+    }
   }
 }
+
+.profile-edit .usajobs-open-opps-opportunity-requestor, .profile .usajobs-open-opps-opportunity-requestor__figure {
+  &__figure, &__figure img { 
+    border-radius: 50%;
+    width: 10rem !important;
+    height: 10rem !important;
+
+    @include media($L) {
+      width: 15rem !important;
+      height: 15rem !important;
+    }
+  }
+
+  &__initials {
+    font-size: 3.4rem;
+
+    @include media($L) {
+      font-size: 4.4rem;
+    }
+  }
+}
+
 
  .default-user-icon-profile__small {
   @extend .default-user-icon-profile;
@@ -181,8 +216,10 @@
       float: none;
       color: #212121;
       margin-top: 0;
+      margin-bottom: $size-default;
       margin-left: $size-default;
       line-height: 1;
+      font-size: $h3-font-size;
 
       @include media($L) {
         display: none;

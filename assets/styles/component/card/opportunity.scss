@@ -1262,6 +1262,8 @@ ul.achievements {
   }
 
   .overview .opportunity-description {
+    overflow-wrap: break-word;
+    hyphens: auto;
 
     @include media($ML-down) {
       width: 100%;
