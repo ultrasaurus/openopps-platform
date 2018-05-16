@@ -23,6 +23,16 @@ global.getInitials = function (name) {
 };
 
 /**
+ * Takes a user id and return an initials color class.
+ * 
+ * @param {number} id user id [42]
+ * @returns {string} initials color class [initials-color-2]
+ */
+global.getInitialsColor = function (id) {
+  return 'initials-color-' + ((id % 5) + 1);
+};
+
+/**
  * Helper function to navigate links within backbone
  * instead of reloading the whole page through a hard link.
  * Typically used with the `events: {}` handler of backbone

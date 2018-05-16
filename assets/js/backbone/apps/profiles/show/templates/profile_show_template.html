@@ -59,7 +59,7 @@
           </div>
           <div id="profile" class="usajobs-opop-profile-title profile usa-width-one-fourth">
             <div class="usajobs-open-opps-opportunity-requestor__figure-body-wrap">
-                <div class="usajobs-open-opps-opportunity-requestor__figure">
+                <div class="usajobs-open-opps-opportunity-requestor__figure <%- getInitialsColor(data.id) %>">
                   <% if (data.photoId) { %>
                     <img src="/api/user/photo/<%- data.id %>" alt="Profile picture of <%- data.name %>">
                   <% } else { %>
