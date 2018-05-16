@@ -87,7 +87,7 @@
           <div class="usajobs-form--narrow center-upload">
             <div class="usajobs-open-opps-opportunity-requestor profile profile-edit">
                 <div class="usajobs-open-opps-opportunity-requestor__figure-body-wrap">
-                    <div class="usajobs-open-opps-opportunity-requestor__figure">
+                    <div class="usajobs-open-opps-opportunity-requestor__figure <%- getInitialsColor(data.id) %>">
                       <% if (data.photoId) { %>
                         <img src="/api/user/photo/<%- data.id %>" alt="Profile picture of <%- data.name %>">
                       <% } else { %>

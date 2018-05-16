@@ -61,7 +61,7 @@
     <div class="usajobs-open-opps-opportunity-requestor__wrapper">
       <div class="usajobs-open-opps-opportunity-requestor">
         <div class="usajobs-open-opps-opportunity-requestor__figure-body">
-          <div class="usajobs-open-opps-opportunity-requestor__figure" <% if (item.owner) { %> data-userid="<%- item.owner.id %>" <% } %>>
+          <div class="usajobs-open-opps-opportunity-requestor__figure <% if (item.owner) { %><%- getInitialsColor(item.owner.id) %><% } %>" <% if (item.owner) { %> data-userid="<%- item.owner.id %>" <% } %>>
             <% if (item.owner.photoId) { %>
               <img src="/api/user/photo/<%- item.owner.id %>" alt="<%- item.owner.name %>">
             <% } else { %>

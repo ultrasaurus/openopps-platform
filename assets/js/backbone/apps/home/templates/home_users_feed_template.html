@@ -9,7 +9,7 @@
             <li>
               <div class="usajobs-open-opps-opportunity-requestor people">
                 <div class="usajobs-open-opps-opportunity-requestor__figure-body">
-                  <div class="usajobs-open-opps-opportunity-requestor__figure">
+                  <div class="usajobs-open-opps-opportunity-requestor__figure <%- getInitialsColor(u.id) %>">
                     <% if (u.photoId) { %>
                       <img src="/api/user/photo/<%- u.id %>" alt="Profile picture of <%- u.name %>">
                     <% } else { %>
@@ -49,7 +49,7 @@
               <li>
                 <div class="usajobs-open-opps-opportunity-requestor people">
                   <div class="usajobs-open-opps-opportunity-requestor__figure-body">
-                    <div class="usajobs-open-opps-opportunity-requestor__figure">
+                    <div class="usajobs-open-opps-opportunity-requestor__figure <%- getInitialsColor(u.id) %>">
                       <% if (u.photoId) { %>
                         <img src="/api/user/photo/<%- u.id %>" alt="Profile picture of <%- u.name %>">
                       <% } else { %>

@@ -821,6 +821,10 @@
     margin-right: 0;
   }
 
+  .usa-accordion-content.project-people__wrapper {
+    padding: 0.5rem 0 0 0;
+  }
+
   .project-people__wrapper {
     margin-top: 15px;
     margin-bottom: $size-default;
@@ -835,6 +839,31 @@
       text-align: center;
       margin-top: $size-L;
       margin-bottom: $size-XXL;
+    }
+
+    .task-complete-check {
+      color: $color-green;
+    }
+
+    .usajobs-open-opps-opportunity-requestor__figure-body {
+      text-align: center;
+      float: left;
+      width: 85px;
+      margin-bottom: 3rem;
+      margin-top: 0;
+      padding-top: 8px;
+      min-height: 11.8rem;
+    }
+    .usajobs-open-opps-opportunity-requestor__figure {
+      position: relative;
+
+      button {
+        position: absolute;
+        top: -1rem;
+        right: -1rem;
+        margin: 0;
+        vertical-align: initial;
+      }
     }
 
     .project-people-show-div {
@@ -1126,33 +1155,48 @@ ul.achievements {
 }
 
 .remove-participant, .confirm-participant, .not-complete-participants {
-  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 
-  .project-people-show-div {
-    text-align: center;
-    padding-top: 8px;
-    display: inline-block;
+  .usajobs-open-opps-opportunity-requestor__figure-wrapper {
+    flex-direction: row;
+    display: flex;
+  }
+
+  .usajobs-open-opps-opportunity-requestor__figure-body {
     width: 85px;
-    position: relative;
+    margin-top: 0;
+    padding-top: 8px;
     min-height: 11.8rem;
+    display: inline-flex;
+    flex-direction: column;
+    text-align: center;
+  }
+  .usajobs-open-opps-opportunity-requestor__figure {
+    margin: 0 auto;
 
-    .project-people {
+    img {
+      border-radius: 50%;
+      width: 4.6rem;
+      height: 4.6rem;
+
+      @include media($M) {
+        width: 6.5rem;
+        height: 6.5rem;
+      }
+    }
+
+    @include media($M) {
       width: 6.5rem;
       height: 6.5rem;
-      border-radius: 50%;
-      display: block;
-      text-align: center;
-      margin: 0 auto 0.5rem auto;
-    }
 
-    .project-people-show-label {
-      line-height: 1;
-      margin: 0 auto;
-      max-width: 85px;
-      max-height: 35px;
-      overflow: hidden;
+      .usajobs-open-opps-opportunity-requestor__initials {
+        font-size: 2.4rem;
+      }
     }
-  }
+  }  
 }
 
 .estimated-completion-date {
@@ -1320,52 +1364,52 @@ ul.achievements {
   height: 4.6rem;
 }
 
-$requestor-background-colors: $color-cool-blue-lightest, $color-gold-lightest, $color-secondary-lightest, $color-primary-alt-lightest, $color-green-lightest;
-$requestor-initial-colors: $color-cool-blue, $color-gray, $color-secondary-darkest, $color-primary-alt-darkest,  $color-gray;
-$repeat: 50;
-$r: 6; //needed to initialize the variable
+// $requestor-background-colors: $color-cool-blue-lightest, $color-gold-lightest, $color-secondary-lightest, $color-primary-alt-lightest, $color-green-lightest;
+// $requestor-initial-colors: $color-cool-blue, $color-gray, $color-secondary-darkest, $color-primary-alt-darkest,  $color-gray;
+// $repeat: 50;
+// $r: 6; //needed to initialize the variable
 
-@for $i from 1 through $repeat {
-  .usajobs-open-opps-opportunity:nth-child(#{length($requestor-initial-colors)}n+#{$i}) {
-    $r: random(length($requestor-initial-colors));
-    .usajobs-open-opps-opportunity-requestor__initials {
-      color: lighten(nth($requestor-initial-colors, $r), 0%);
-    }
-   .usajobs-open-opps-opportunity-requestor__figure {
-      background: lighten(nth($requestor-background-colors, $r), 0%);
-    }
-  }
+// @for $i from 1 through $repeat {
+//   .usajobs-open-opps-opportunity:nth-child(#{length($requestor-initial-colors)}n+#{$i}) {
+//     $r: random(length($requestor-initial-colors));
+//     .usajobs-open-opps-opportunity-requestor__initials {
+//       color: lighten(nth($requestor-initial-colors, $r), 0%);
+//     }
+//    .usajobs-open-opps-opportunity-requestor__figure {
+//       background: lighten(nth($requestor-background-colors, $r), 0%);
+//     }
+//   }
 
-  //Landing page: Latest achievements
-  .usajobs-open-opps-opportunity-requestor__figure-body-wrap a:nth-child(#{length($requestor-initial-colors)}n+#{$i}) {
-    .usajobs-open-opps-opportunity-requestor__initials {
-      color: lighten(nth($requestor-initial-colors, $r), 0%);
-    }
-    .usajobs-open-opps-opportunity-requestor__figure {
-      background: lighten(nth($requestor-background-colors, $r), 0%);
-    }
-  }
+//   //Landing page: Latest achievements
+//   .usajobs-open-opps-opportunity-requestor__figure-body-wrap a:nth-child(#{length($requestor-initial-colors)}n+#{$i}) {
+//     .usajobs-open-opps-opportunity-requestor__initials {
+//       color: lighten(nth($requestor-initial-colors, $r), 0%);
+//     }
+//     .usajobs-open-opps-opportunity-requestor__figure {
+//       background: lighten(nth($requestor-background-colors, $r), 0%);
+//     }
+//   }
 
-  //Landing page: People like you - job title
-  .jobtitle li:nth-child(#{length($requestor-initial-colors)}n+#{$i}) {
-    .usajobs-open-opps-opportunity-requestor__initials {
-      color: lighten(nth($requestor-initial-colors, $r), 0%);
-    }
-    .usajobs-open-opps-opportunity-requestor__figure {
-      background: lighten(nth($requestor-background-colors, $r), 0%);
-    }
-  }
+//   //Landing page: People like you - job title
+//   .jobtitle li:nth-child(#{length($requestor-initial-colors)}n+#{$i}) {
+//     .usajobs-open-opps-opportunity-requestor__initials {
+//       color: lighten(nth($requestor-initial-colors, $r), 0%);
+//     }
+//     .usajobs-open-opps-opportunity-requestor__figure {
+//       background: lighten(nth($requestor-background-colors, $r), 0%);
+//     }
+//   }
 
-  //Landing page: People like you - agency
-  .agency li:nth-child(#{length($requestor-initial-colors)}n+#{$i}) {
-    .usajobs-open-opps-opportunity-requestor__initials {
-      color: lighten(nth($requestor-initial-colors, $r), 0%);
-    }
-    .usajobs-open-opps-opportunity-requestor__figure {
-      background: lighten(nth($requestor-background-colors, $r), 0%);
-    }
-  }
-}
+//   //Landing page: People like you - agency
+//   .agency li:nth-child(#{length($requestor-initial-colors)}n+#{$i}) {
+//     .usajobs-open-opps-opportunity-requestor__initials {
+//       color: lighten(nth($requestor-initial-colors, $r), 0%);
+//     }
+//     .usajobs-open-opps-opportunity-requestor__figure {
+//       background: lighten(nth($requestor-background-colors, $r), 0%);
+//     }
+//   }
+// }
 
 
 
