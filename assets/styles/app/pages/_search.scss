@@ -300,6 +300,8 @@
       position: relative;
       max-height: #{$base-line-height * 4.5}em; // use this to control the number of lines
       overflow: hidden;
+      overflow-wrap: break-word;
+      hyphens: auto;
     }
   }
 }
