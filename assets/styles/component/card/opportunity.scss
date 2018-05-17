@@ -387,17 +387,11 @@
         padding-top: 5px;
       }
 
-      .comment-image {
+      .usajobs-open-opps-opportunity-requestor__figure-body {
+        display: inline;
         float: left;
         vertical-align: top;
-        max-height: 40px;
-        max-width: 40px;
-        height: 40px;
-        width: 40px;
-
-        @include media($M-down) {
-          margin-right: $size-S;
-        }
+        margin: 0;
       }
 
       .comment-inner {
@@ -405,10 +399,10 @@
         // display: table-cell;
         width: 100%;
         vertical-align: top;
-        margin-left: 45px;
+        margin-left: 7rem;
 
         @include media($M-down) {
-          margin-left: 0;
+          margin-left: 5rem;
         }
       }
 
