@@ -1,34 +1,25 @@
 <main class="usajobs-opop" id="main-content" role="main">
-  <div class="usajobs-opop-banner" id="opportunity-count">
+  <div class="usajobs-opop-banner">
     <div class="usajobs-opop-banner__body">
-      <div>
-        There are <span class="opportunity-count--number">many</span> open opportunities right now.
+      <div class="usajobs-opop-banner__section">
+          Participate in opportunities to gain experience, contribute your expertise and 
+          work with others across the Federal Government.
       </div>
       <div>
-        <a href="/tasks">
-          <button class="usa-button usa-button-primary-alt">Find yours</button>
-        </a>
+        <a href="/tasks" class="usa-button usa-button-primary"><span class="fas fa-search fa-fw"></span> Search opportunities</a>
+        <a href="/tasks/new" class="usa-button usa-button-primary"><span class="far fa-file-alt"></span> Create opportunity</a>
       </div>
     </div>
   </div>
   <div class="usajobs-grid usajobs-opop-dashboard">
     <div class="usajobs-opop-dashboard__body">
     <section class="usajobs-content-well">
-      <div class="usajobs-opop-badges__body">
-        <div data-target="badges-feed" class="badges-feed"></div>
-      </div>
+      <div data-target="annoucement-feed" class="annoucement-feed"></div>
+      <div data-target="search-feed" class="search-feed"></div>
+      <div data-target="users-feed" class="users-feed"></div>
     </section>
     <aside class="usajobs-rightrail">
-      <div data-target="users-feed" class="users-feed"></div>
-      <div data-target="network-stats" class="network-stats"></div>
-      <!-- <div class="dashboard__task-list">
-        <h2><%= window.cache.currentUser.agency.abbr  %> opportunities</h2>
-        <div id="task-search-spinner" class="fullwidth text-center">
-          Loading... <i class="fa fa-spinner fa-spin"></i>
-        </div>
-        <div id="task-list" class="dashboard__task-list__item"></div>
-        See more <a class="see-more-tasks" href="/tasks?agency=<%= window.cache.currentUser.agency.abbr %>"><%= window.cache.currentUser.agency.name %></a> opportunities.
-      </div> -->
+      <div data-target="achievements-feed" class="achievements-feed"></div>
     </aside>
   </div>
 </div>

@@ -2,6 +2,11 @@
 <html lang="en" class="flexbox">
   <head>
     <title><%=typeof title == 'undefined' ? 'Open Opportunities' : title%></title>
+
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-94043649-2"></script>
+    <script> window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', 'UA-94043649-2'); </script>
+
     <script type="text/javascript">
     systemName = <%- JSON.stringify(systemName) %>;
     draftAdminOnly = <%- JSON.stringify(draftAdminOnly) %>;
@@ -10,11 +15,11 @@
     <script defer src="/js/fontawesome-all.js"></script>
 
     <!-- Viewport mobile tag for sensible mobile support -->
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
 
     <!-- CSRF token -->
     <meta name="csrf-token" content="">
-    <link rel="stylesheet" href="/styles/main.css">
+    <link rel="stylesheet" href="/styles/main.css?v=<%- cssHash %>">
   </head>
 
   <body>
@@ -36,9 +41,10 @@
             </div>
           </div>
     </header>
+    <div id="site-modal"></div>
+    <div id="login-wrapper"></div>
+    <div class="navigation"></div>
     <section class="usajobs-shell">
-      <div id="site-modal"></div>
-      <div class="navigation"></div>
       <% if (alert) { %>
       <div class="container">
         <div class="usa-alert usajobs-alert usajobs-alert--error server-alert" role="alert" data-object="alert">

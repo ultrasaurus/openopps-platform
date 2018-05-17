@@ -20,26 +20,21 @@
   }
 
   .usajobs-opop-discover__body hr {
-      box-sizing: border-box;
-      height: 2px;
-      width: 100%;
-      border: 1px solid $color-white;
-  }
+    height: 1px;
+    width: 90%;
+    border: 0;
+    background: $color-white;
 
-  // @media screen and (min-width: 48em) {
-  //   .usajobs-landing-hero {
-  //     margin-bottom: -5.4rem;
-  //   }
-  // }
+    @include media($M) {
+      width: 100%;
+    }
+  }
 
   .usajobs-opop-discover__body {
     max-width: 596px;
     margin-left: auto;
     margin-right: auto;
     max-width: 59.6rem;
-    // padding: 0 1.5rem;
-    // padding-top: 1.5rem;
-    // padding-bottom: 1.5rem;
     text-align: center;
     font-size: 2.0rem;
   }
@@ -105,10 +100,12 @@
   margin-left: auto;
   margin-right: auto;
   max-width: 160rem;
-  padding: 0 1.5rem;
-  padding-top: 1.5rem;
-  padding-bottom: 1.5rem;
+  padding: 1.5rem 0;
   font-size: 1.7rem;
+
+  @include media($M) {
+    padding: 1.5rem;
+  }
 }
 
 .usajobs-opop-why__body::after, .usajobs-opop-work__body::after, .usajobs-opop-find__body::after {
@@ -149,14 +146,75 @@
   background-color: #ffffff;
 }
 
-.usajobs-opop-work__title {
-  text-align: center;
-  margin-bottom: 4.2rem;
+.usajobs-opop-help__link a, .usajobs-opop-help__link a:visited  {
+  font-weight: 700;
+  text-decoration: none;
+  color: #0071bc;
 }
 
-.usajobs-grid .usa-width-one-half > .usajobs-opop-work__list {
-  margin-top: 13rem;
-  margin-left: 8rem;
+.usajobs-opop-help__link {
+  margin-bottom: $size-M;
+}
+
+.usajobs-opop-work__title {
+  text-align: center;
+  margin-bottom: $size-M;
+
+  @include media($M) {
+    margin-bottom: 4.2rem;
+  }
+}
+
+.usajobs-opop-work__button {
+  margin-left: 0;
+
+  @include media($M) {
+    margin-left: 0rem;
+  }
+
+  @include media($ML) {
+    margin-left: 3rem;
+  }
+
+  @include media($L) {
+    margin-left: 3rem;
+  }
+
+  @include media($XL) {
+    margin-left: 3rem;
+  }
+}
+
+.usajobs-opop-work__body .center {
+  text-align: center;
+} 
+
+.usajobs-opop-work__body img {
+  max-height: 33.2rem;
+}
+
+.usajobs-grid .usa-width-one-half.usajobs-opop-work__list ul {
+  margin-top: $size-S;
+
+  @include media($M) {
+    margin-top: 0;
+    margin-left: 0;
+  }
+
+  @include media($ML) {
+    margin-top: 0;
+    margin-left: 1.5rem;
+  }
+
+  @include media($L) {
+    margin-top: 5%;
+    margin-left: 1.5rem;
+  }
+
+  @include media($XL) {
+    margin-top: 12%;
+    margin-left: 1.5rem;
+  }
 }
 
 .usajobs-opop-find {
@@ -168,4 +226,17 @@
   margin-left: auto;
   margin-right: auto;
   padding-bottom: 2.0rem;
+}
+
+.usajobs-opop-people__body {
+  .no-match {
+    font-style: italic;
+    color: #757575;
+    margin: 0;
+    font-weight: bold;
+
+    a:visited {
+      color: #0071bc;
+    }
+  }
 }

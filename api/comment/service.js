@@ -17,6 +17,15 @@ async function addComment (attributes, done) {
   return done(null, await dao.Comment.insert(attributes));
 }
 
+async function findById (id) {
+  return await dao.Comment.findOne('id = ?', id).then((comment) => {
+    return comment;
+  }).catch(err => {
+    log.info('Cannot find comment by id ' + id, err);
+    return null;
+  });
+}
+
 async function deleteComment (id) {
   await dao.Comment.delete('id = ?', id).then(async (task) => {
     return id;
@@ -37,11 +46,14 @@ async function sendCommentNotification (user, comment, action) {
       owner: { name: notificationData[0].ownername, username: notificationData[0].ownerusername },
     },
   };
-  notification.createNotification(data);
+  if(!notificationData[0].ownerbounced) {
+    notification.createNotification(data);
+  }
 }
 
 module.exports = {
+  findById: findById,
   addComment: addComment,
   deleteComment: deleteComment,
-  sendCommentNotification: sendCommentNotification, 
+  sendCommentNotification: sendCommentNotification,
 };

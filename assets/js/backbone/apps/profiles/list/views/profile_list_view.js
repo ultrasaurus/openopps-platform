@@ -27,7 +27,8 @@ var PeopleListView = Backbone.View.extend({
       success: function (collection) {
         var peopleToRender = collection.chain().pluck('attributes').value();
         var template = _.template(ProfileListTable)({ people: peopleToRender });
-        self.$('#browse-search-spinner').hide();
+        self.$('#search-results-loading').hide();
+        self.$('.loading-container').hide();
         self.$('.table-responsive').html(template);
       },
     });

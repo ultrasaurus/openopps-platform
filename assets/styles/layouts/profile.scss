@@ -41,9 +41,15 @@
     margin-bottom: 6rem;
 }
 
-.usajobs-open-opps-participated__section {
-    padding-top: 1.5rem;
+.task-activity-wrapper table, .task-createdactivity-wrapper table  {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0;
 }
+
+// .usajobs-open-opps-participated__section {
+//     padding-top: 1.5rem;
+// }
 
 @media screen and (min-width: 62em) {
     .usajobs-opop-profile-title {
@@ -58,6 +64,13 @@
         margin-right: auto;
         width: 63.5231306354%;
     }
+}
+
+@include media($L-down) {
+  .profile-name-role {
+    padding-top: $size-default;
+    padding-bottom: $size-default;
+  }
 }
 
 @media screen and (min-width: 62em) {
@@ -81,13 +94,95 @@
 }
 
 .usajobs-open-opps-opportunity .default-user-icon-profile {
-    height: 15rem;
-    width: 15rem;
-    margin-top: 1rem;
+    width: 6.5rem;
+    height: 6.5rem;
+    margin-top: 0;
     background-position: center;
     background-size: contain;
     border-radius: 100%;
+
+    @include media($L) {
+      width: 12rem;
+      height: 12rem;
+      margin-top: 1rem;
+    }
+
+    @include media($XL) {
+      width: 15rem;
+      height: 15rem;
+      margin-top: 1rem;
+    }
 }
+
+.center-upload .default-user-icon-profile {
+    width: 10rem;
+    height: 10rem;
+
+    @include media($L) {
+      width: 12rem;
+      height: 12rem;
+    }
+
+    @include media($XL) {
+      width: 15rem;
+      height: 15rem;
+    }
+}
+
+.usajobs-open-opps-profile .usajobs-open-opps-opportunity-requestor {
+  align-items: flex-start;
+
+  @include media($M) {
+    align-items: flex-end;
+  }
+}
+
+.usajobs-open-opps-opportunity-requestor.profile {
+  align-items: center;
+}
+
+.profile .usajobs-open-opps-opportunity-requestor, .profile .usajobs-open-opps-opportunity-requestor__figure {
+  &__figure, &__figure img { 
+    border-radius: 50%;
+    width: 6.5rem !important;
+    height: 6.5rem !important;
+
+    @include media($L) {
+      width: 15rem !important;
+      height: 15rem !important;
+    }
+  }
+
+  &__initials {
+    font-size: $h3-font-size;
+
+    @include media($L) {
+      font-size: 4.4rem;
+    }
+  }
+}
+
+.profile-edit .usajobs-open-opps-opportunity-requestor, .profile .usajobs-open-opps-opportunity-requestor__figure {
+  &__figure, &__figure img { 
+    border-radius: 50%;
+    width: 10rem !important;
+    height: 10rem !important;
+
+    @include media($L) {
+      width: 15rem !important;
+      height: 15rem !important;
+    }
+  }
+
+  &__initials {
+    font-size: 3.4rem;
+
+    @include media($L) {
+      font-size: 4.4rem;
+    }
+  }
+}
+
 
  .default-user-icon-profile__small {
   @extend .default-user-icon-profile;
@@ -100,6 +195,36 @@
     float: left;
     color: #212121;
     margin-top: 1.5rem;
+
+    @include media($L-down) {
+      display: none;
+    }
+}
+
+#profile {
+  display: flex;
+  align-items: center;
+  width: 100%;
+
+  @include media($L) {
+    display: block;
+    width: inherit;
+  }
+
+  .usajobs-opop-profile-name {
+      display: block;
+      float: none;
+      color: #212121;
+      margin-top: 0;
+      margin-bottom: $size-default;
+      margin-left: $size-default;
+      line-height: 1;
+      font-size: $h3-font-size;
+
+      @include media($L) {
+        display: none;
+      }
+  }
 }
 
 .role-label {
@@ -108,10 +233,16 @@
     padding: 0 1rem;
     font-weight: normal;
     font-size: 1.6rem;
-    display: block;
-    float: left;
-    margin-top: 1.2rem;
-    margin-left: 1rem;
+    display: inline-block;
+    float: none;
+    margin-left: 0;
+
+    @include media($L) {
+      margin-top: 1.2rem;
+      margin-left: 1rem;
+      margin-bottom: initial;
+      float: left;
+    }
 }
 
 .skill-label {
@@ -120,6 +251,10 @@
     padding: 0.8rem 1rem;
     font-size: 1.4rem;
     font-weight: 600;
+
+    &:visited {
+      color: $color-base;
+    }
 }
 
 .main-content a {
@@ -132,18 +267,27 @@
         padding: $size-default 0;
         text-align: left;
     }
+
+    th, td {
+      padding: 1.5rem 1.5rem 1.5rem 0;
+    }
 }
 
 .open-opps-row.header {
     font-weight: bold;
 }
 
-.open-opps-title, .open-opps-title a,.open-opps-title:visited {
-    width: 2.5rem;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    color: #006FBB;
+.your-status {
+  min-width: 12.5rem;
+}
+
+.open-opps-title {
+    width: 65%;
+    min-width: 13.5rem;
+
+    a, a:visited {
+      color: #006FBB;
+    }
 }
 
 .profile-email {
@@ -174,7 +318,6 @@
   }
 
   .profile-badge {
-    display: inline-block;
     text-align: center;
     text-transform: capitalize;
     float: left;
@@ -546,5 +689,78 @@ form [type=submit], form [type=submit] {
         text-decoration: none;
       }
     }
+  }
+}
+
+.usajobs-content-gutter.profile-gutter {
+  max-width: 160rem;
+  margin-right: auto;
+  margin-left: auto;
+
+  @include media($M-down) {
+    padding: 0;
+  }
+
+  @include media($M) {
+    .main-content, .usajobs-rightrail {
+      margin-top: 3rem;
+    }
+  }
+
+  .usa-form-large {
+    max-width: 46rem;
+  }
+
+  .usajobs-button_bar--slim {
+    @include media($SM-down) {
+      border-top: none;
+    }
+
+    .usajobs-button_bar__body {
+      @include media($SM-down) {
+        border-bottom: 1px solid #d6d7d9;
+      }
+
+      .usa-button-secondary {
+        margin: 0 0 1.5rem 0;
+      }
+    }
+  }
+
+  .usajobs-open-opps-opportunity:last-child {
+    border-bottom: none;
+  }
+
+  .usajobs-open-opps-opportunity.usajobs-open-opps-section {
+    @include media($M-down) {
+      -webkit-box-shadow: inset 0 7px 5px -5px rgba(0,0,0,0.16);
+      -moz-box-shadow: inset 0 7px 5px -5px rgba(0,0,0,0.16);
+      box-shadow: inset 0 7px 5px -5px rgba(0,0,0,0.16);
+    }
+  }
+
+  .usajobs-open-opps-opportunity {
+    position: relative;
+    border-top: none;
+    position: relative;
+    background-color: #ffffff;
+    margin: 0;
+    padding: 1.5rem;
+    box-shadow: none;
+  }
+
+  #rightrail {
+    margin-bottom: 0;
+  }
+
+  .profile-edit#rightrail {
+    @include media($L-down) {
+      display: none;
+    }
+  }
+
+  #rightrail > .usajobs-open-opps-opportunity.usajobs-open-opps-section {
+    box-shadow: none;
+    border: none;
   }
 }

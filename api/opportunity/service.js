@@ -30,7 +30,12 @@ async function findById (id, loggedIn) {
 }
 
 async function list () {
-  return dao.clean.tasks(await dao.Task.query(dao.query.task + ' order by task."createdAt" desc', {}, dao.options.task));
+  var tasks = dao.clean.tasks(await dao.Task.query(dao.query.task + ' order by task."createdAt" desc', {}, dao.options.task));
+  tasks = await Promise.all(tasks.map(async (task) => {
+    task.owner = dao.clean.user((await dao.User.query(dao.query.user, task.userId, dao.options.user))[0]);
+    return task;
+  }));
+  return tasks;
 }
 
 async function commentsByTaskId (id) {
@@ -83,7 +88,7 @@ async function createOpportunity (attributes, done) {
     await processTaskTags(task, tags).then(tags => {
       task.tags = tags;
     });
-    task.owner = attributes.userId;
+    task.owner = dao.clean.user((await dao.User.query(dao.query.user, task.userId, dao.options.user))[0]);
     return done(null, task);
   }).catch(err => {
     return done(true);
@@ -98,7 +103,9 @@ async function sendTaskNotification (user, task, action) {
       user: user,
     },
   };
-  notification.createNotification(data);
+  if(!data.model.user.bounced) {
+    notification.createNotification(data);
+  }
 }
 
 async function canUpdateOpportunity (user, id) {
@@ -132,8 +139,10 @@ async function updateOpportunityState (attributes, done) {
   attributes.publishedAt = attributes.state === 'open' && !origTask.publishedAt ? new Date : origTask.publishedAt;
   attributes.completedAt = attributes.state === 'completed' && !origTask.completedAt ? new Date : origTask.completedAt;
   attributes.canceledAt = attributes.state === 'canceled' && origTask.state !== 'canceled' ? new Date : origTask.canceledAt;
-  await dao.Task.update(attributes).then(async (task) => {
-    return done(await dao.Task.findOne('id = ?', task.id), origTask.state !== task.state);
+  await dao.Task.update(attributes).then(async (t) => {
+    var task = await findById(t.id, true);
+    task.previousState = origTask.state;
+    return done(task, origTask.state !== task.state);
   }).catch (err => {
     return done(null, false, {'message':'Error updating task.'});
   });
@@ -154,6 +163,8 @@ async function updateOpportunity (attributes, done) {
   attributes.updatedAt = new Date();
   await dao.Task.update(attributes).then(async (task) => {
     task.userId = task.userId || origTask.userId; // userId is null if editted by owner
+    task.owner = dao.clean.user((await dao.User.query(dao.query.user, task.userId, dao.options.user))[0]);
+    task.volunteers = (await dao.Task.db.query(dao.query.volunteer, task.id)).rows;
     task.tags = [];
     await dao.TaskTags.db.query(dao.query.deleteTaskTags, task.id)
       .then(async () => {
@@ -170,7 +181,9 @@ async function updateOpportunity (attributes, done) {
 async function publishTask (attributes, done) {
   attributes.publishedAt = new Date();
   attributes.updatedAt = new Date();
-  await dao.Task.update(attributes).then(async (task) => {
+  await dao.Task.update(attributes).then(async (t) => {
+    var task = await findById(t.id, true);
+    sendTaskNotification(task.owner, task, 'task.update.opened');
     return done(true);
   }).catch (err => {
     return done(false);
@@ -200,44 +213,82 @@ function volunteersCompleted (task) {
 function sendTaskStateUpdateNotification (user, task) {
   switch (task.state) {
     case 'in progress':
-      sendTaskAssignedNotification(user, task);
+      _.forEach(task.volunteers, (volunteer) => {
+        sendTaskAssignedNotification(volunteer, task);
+      });
       break;
     case 'completed':
       sendTaskCompletedNotification(user, task);
+      _.forEach(_.filter(task.volunteers, { assigned: true, taskComplete: true }), (volunteer) => {
+        sendTaskCompletedNotificationParticipant(volunteer, task);
+      });
       break;
     case 'open':
       sendTaskNotification(user, task, 'task.update.opened');
       break;
     case 'submitted':
       sendTaskNotification(user, task, 'task.update.submitted');
+      sendTaskSubmittedNotification(user, task, 'task.update.submitted.admin');
+      break;
+    case 'draft':
+      sendTaskNotification(user, task, 'task.create.draft');
+      break;
+    case 'canceled':
+      if (task.previousState == 'open') {
+        _.forEach(task.volunteers, (volunteer) => {
+          sendTaskNotification(volunteer, task, 'task.update.canceled');
+        });
+      } else if (task.previousState == 'in progress') {
+        _.forEach(_.filter(task.volunteers, { assigned: true }), (volunteer) => {
+          sendTaskNotification(volunteer, task, 'task.update.canceled');
+        });
+      }
       break;
   }
 }
 
 async function getNotificationTemplateData (user, task, action) {
-  var volunteers = (await dao.Task.db.query(dao.query.volunteerListQuery, task.id)).rows;
-  if(action == 'task.update.completed') {
-    volunteers = _.filter(volunteers, { 'taskComplete': true });
-  }
   var data = {
     action: action,
     model: {
       task: task,
-      owner: user,
-      volunteers: _.map(volunteers, 'username').join(', '),
+      user: user,
     },
   };
   return data;
 }
 
 async function sendTaskAssignedNotification (user, task) {
-  var data = await getNotificationTemplateData(user, task, 'task.update.assigned');
-  notification.createNotification(data);
+  var template = (user.assigned ? 'task.update.assigned' : 'task.update.not.assigned');
+  var data = await getNotificationTemplateData(user, task, template);
+  if(!data.model.user.bounced) {
+    notification.createNotification(data);
+  }
+}
+
+async function sendTaskSubmittedNotification (user, task) {
+  var baseData = await getNotificationTemplateData(user, task, 'task.update.submitted.admin');
+  _.forEach(await dao.User.find('"isAdmin" = true and disabled = false'), (admin) => {
+    var data = _.cloneDeep(baseData);
+    data.model.admin = admin;
+    if(!data.model.admin.bounced) {
+      notification.createNotification(data);
+    }
+  });
 }
 
 async function sendTaskCompletedNotification (user, task) {
   var data = await getNotificationTemplateData(user, task, 'task.update.completed');
-  notification.createNotification(data);
+  if(!data.model.user.bounced) {
+    notification.createNotification(data);
+  }
+}
+
+async function sendTaskCompletedNotificationParticipant (user, task) {
+  var data = await getNotificationTemplateData(user, task, 'task.update.completed.participant');
+  if(!data.model.user.bounced) {
+    notification.createNotification(data);
+  }
 }
 
 async function copyOpportunity (attributes, user, done) {
@@ -362,6 +413,7 @@ module.exports = {
   volunteersCompleted: volunteersCompleted,
   sendTaskNotification: sendTaskNotification,
   sendTaskStateUpdateNotification: sendTaskStateUpdateNotification,
+  sendTaskAssignedNotification: sendTaskAssignedNotification,
   sendTasksDueNotifications: sendTasksDueNotifications,
   canUpdateOpportunity: canUpdateOpportunity,
   canAdministerTask: canAdministerTask,

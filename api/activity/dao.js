@@ -2,20 +2,38 @@ const _ = require('lodash');
 const dao = require('postgres-gen-dao');
 const badgeDescriptions = require('../../utils').badgeDescriptions;
 
-const userQuery = 'select @m_user.id, @m_user.name ' +
-'from @midas_user m_user ' +
-'order by "createdAt" desc ' +
-'limit 10 ';
+const userByAgencyQuery = 'select @midas_user.*, @agency.* ' +
+'from @midas_user midas_user ' +
+'left join tagentity_users__user_tags user_tags on user_tags.user_tags = midas_user.id ' +
+'left join @tagentity agency on agency.id = user_tags.tagentity_users and agency.type = \'agency\' ' +
+'where midas_user.id <> ? and agency.name = ? ' +
+'order by midas_user."createdAt" desc ' +
+'limit 2';
+
+const userByTitleQuery = 'select @midas_user.*, @agency.* ' +
+'from @midas_user midas_user ' +
+'left join tagentity_users__user_tags user_tags on user_tags.user_tags = midas_user.id ' +
+'left join @tagentity agency on agency.id = user_tags.tagentity_users and agency.type = \'agency\' ' +
+'where midas_user.id <> ? and trim(midas_user.title) = trim(?) ';
 
 const taskQuery = 'select count(*) as count ' +
 'from task ' +
 'where state = ? ';
 
+const taskByTypeQuery = 'select tag.name, tag.id, count(*) ' +
+  'from tagentity tag ' +
+  'join tagentity_tasks__task_tags task_tags on task_tags.tagentity_tasks = tag.id ' +
+  'join task on task.id = task_tags.task_tags ' +
+  'where type = ? and (task.state = \'open\' or (task.state = \'in progress\' and task.accepting_applicants)) ' +
+  'group by tag.name, tag.id ' +
+  'order by count(*) desc ' +
+  'limit ?';
+
 const taskHistoryQuery = 'select @task.* ' +
 'from @task task ' +
 'where state = ? ' +
 'order by task."createdAt" desc ' +
-'limit 30 ';
+'limit 6 ';
 
 const participantsQuery = 'select @m_user.* ' +
 'from @midas_user m_user left join volunteer on m_user.id = volunteer."userId" ' +
@@ -28,8 +46,10 @@ const badgeQuery = 'select badge.*, @user.* ' +
 const options = {
   user: {
     fetch: {
-      id: '',
-      name: '',
+      agency: '',
+    },
+    exclude: {
+      midas_user: [ 'bio', 'completedTasks', 'passwordAttempts', 'createdAt', 'disabled', 'isAdmin', 'isAgencyAdmin', 'updatedAt', 'username' ],
     },
   },
   taskHistory: {
@@ -79,11 +99,13 @@ module.exports = function (db) {
     Badge: dao({ db: db, table: 'badge'}),
     Task: dao({ db: db, table: 'task' }),
     query: {
-      user: userQuery,
+      userByAgency: userByAgencyQuery,
+      userByTitle: userByTitleQuery,
       task: taskQuery,
       taskHistoryQuery: taskHistoryQuery,
       participantsQuery: participantsQuery,
       badgeQuery: badgeQuery,
+      taskByType: taskByTypeQuery,
     },
     options: options,
     clean: clean,

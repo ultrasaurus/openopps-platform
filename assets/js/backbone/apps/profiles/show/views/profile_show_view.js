@@ -22,6 +22,8 @@ var TagFactory = require('../../../../components/tag_factory');
 var ProfileShowTemplate = require('../templates/profile_show_template.html');
 var ProfileEditTemplate = require('../templates/profile_edit_template.html');
 var ShareTemplate = require('../templates/profile_share_template.txt');
+var ProfileCreatedTemplate = require('../templates/profile_created_template.html');
+var ProfileParticipatedTemplate = require('../templates/profile_participated_template.html');
 
 
 var ProfileShowView = Backbone.View.extend({
@@ -45,6 +47,7 @@ var ProfileShowView = Backbone.View.extend({
     var model = this.model.toJSON();
     var currentUser = window.cache.currentUser || {};
     var isAdmin = currentUser.isAdmin;
+    var career = [];
 
     this.options = options;
     this.data = options.data;
@@ -52,25 +55,26 @@ var ProfileShowView = Backbone.View.extend({
     this.data.newItemTags = [];
     this.edit = false;
 
-    if ( this.options.action === 'edit' ) {
+    $.ajax({
+      url: '/api/ac/tag?type=career&list',
+      type: 'GET',
+      async: false,
+      success: function (data) {
+        this.tagTypes = { career: data };
+      }.bind(this),
+    });
 
+    if (this.options.action === 'edit') {
       this.edit = true;
 
       // Check if the user is not an admin and editing another profile other than
       // the current user.
-      if ( model.id !== currentUser.id && !model.canEditProfile ) {
-
+      if (model.id !== currentUser.id && !model.canEditProfile) {
         this.edit = false;
-
-        // Navigate to the proper route replacing the `/edit` route in the user's
-        // history.
-        Backbone.history.navigate(
-          'profile/' + model.id,
-          {
-            trigger: false,
-            replace: true,
-          }
-        );
+        Backbone.history.navigate('profile/' + model.id, {
+          trigger: false,
+          replace: true,
+        });
       }
     }
 
@@ -108,12 +112,13 @@ var ProfileShowView = Backbone.View.extend({
   validateField: function (e) {
     return validate(e);
   },
-  
+
   render: function () {
     var data = {
       login: Login,
       data: this.model.toJSON(),
       tags: this.getTags(['skill', 'topic']),
+      tagTypes: this.tagTypes,
       user: window.cache.currentUser || {},
       edit: false,
       saved: this.saved,
@@ -121,6 +126,8 @@ var ProfileShowView = Backbone.View.extend({
     };
 
     data.email = data.data.username;
+    data.career = this.getTags(['career'])[0];
+    // data.career = _.find(data.data.tags, {'type': 'career'}) != undefined ? _.find(data.data.tags, {'type': 'career'}).name : '-Career field-';
 
     if (data.data.bio) {
       data.data.bioHtml = marked(data.data.bio);
@@ -240,6 +247,7 @@ var ProfileShowView = Backbone.View.extend({
       this.taskView = new ProfileActivityView({
         model: this.model,
         el: '.task-createdactivity-wrapper',
+        template: ProfileCreatedTemplate,
         target: 'task',
         handle: 'task',  // used in css id
         data: data.tasks.created,
@@ -248,13 +256,27 @@ var ProfileShowView = Backbone.View.extend({
       this.volView = new ProfileActivityView({
         model: this.model,
         el: '.task-activity-wrapper',
+        template: ProfileParticipatedTemplate,
         target: 'task',
         handle: 'volTask',  // used in css id
         data: data.tasks.volunteered,
+        getStatus: this.getStatus,
       });
       this.volView.render();
+    }.bind(this));
+  },
 
-    });
+  getStatus: function (task) {
+    switch (task.state) {
+      case 'completed':
+        return (task.assigned ? (task.taskComplete ? 'Complete' : 'Not complete') : 'Not assigned');
+      case 'in progress':
+        return (task.assigned ? (task.taskComplete ? 'Complete' : 'Assigned') : 'Not assigned');
+      case 'canceled':
+        return 'Canceled';
+      default:
+        return (task.assigned ? 'Assigned' : 'Applied');
+    }
   },
 
   updatePhoto: function () {
@@ -298,9 +320,6 @@ var ProfileShowView = Backbone.View.extend({
     this.listenTo(self.model, 'profile:removeAuth:success', function (data, id) {
       self.render();
     });
-    // this.listenTo(self.model, 'profile:input:changed', function (e) {
-    //   $('#profile-save, #submit').button('reset');
-    // });
 
     setTimeout(function () {
       $('.skill-aside .skills').appendTo('#s2id_tag_skill');
@@ -318,6 +337,7 @@ var ProfileShowView = Backbone.View.extend({
       created here (with different HTML IDs than normal,
       to avoid conflicts).
     */
+
     this.tagFactory.createTagDropDown({
       type:        'location',
       selector:    '#location',
@@ -334,6 +354,13 @@ var ProfileShowView = Backbone.View.extend({
       data:        modelJson.agency,
       width:       '100%',
     });
+
+    $('#career-field').select2({
+      placeholder: '-Select-',
+      width: '100%',
+      allowClear: true,
+    });
+
   },
 
   initializeTextArea: function () {
@@ -376,10 +403,10 @@ var ProfileShowView = Backbone.View.extend({
     }
 
     $('#profile-save, #submit').button('loading');
-    // setTimeout(function () { $('#profile-save, #submit').attr('disabled', 'disabled'); }, 0);
 
     var newTags = [].concat(
           $('#company').select2('data'),
+          $('#career-field').select2('data'),
           $('#tag_topic').select2('data'),
           $('#tag_skill').select2('data'),
           $('#location').select2('data')

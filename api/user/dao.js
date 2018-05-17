@@ -18,7 +18,7 @@ const userAgencyQuery = 'select tagentity.name, midas_user."isAdmin" ' +
   'where midas_user.id = ? ' +
   "and tagentity.type = 'agency' ";
 
-const taskCompletedQuery = 'select distinct task.* ' +
+const taskParticipatedQuery = 'select distinct task.*, volunteer.assigned, volunteer."taskComplete" ' +
   'from task inner join volunteer on task.id = volunteer."taskId" ' +
   'where volunteer."userId" = ?';
 
@@ -85,7 +85,7 @@ module.exports = function (db) {
     query: {
       user: userQuery,
       tag: tagQuery,
-      completed: taskCompletedQuery,
+      participated: taskParticipatedQuery,
       userAgencyQuery: userAgencyQuery,
       deleteUserTags: deleteUserTags,
     },

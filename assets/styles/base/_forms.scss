@@ -351,6 +351,12 @@ select[disabled] {
   font-weight: 700;
 }
 
+.usa-input-error {
+  .select2-choice, .select2-choices {
+    border: 3px solid #cd2026;
+  }
+}
+
 .usa-input-error .usa-datefield input {
   width: 100%;
 }
@@ -359,4 +365,13 @@ select[disabled] {
   color: $color-secondary-dark;
   font-size: 1.7rem;
   font-weight: 700;
+}
+
+.usajobs-form__title {
+
+  &::after {
+    clear: both;
+    content: "";
+    display: block;
+  }
 }

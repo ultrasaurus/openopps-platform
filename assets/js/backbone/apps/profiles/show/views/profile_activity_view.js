@@ -8,9 +8,6 @@ var i18nextJquery = require('jquery-i18next');
 // internal dependencies
 var UIConfig = require('../../../../config/ui.json');
 
-// templates
-var ProfileActivityTemplate = require('../templates/profile_activity_template.html');
-
 var ProfileActivityView = Backbone.View.extend({
 
   events: {
@@ -38,6 +35,7 @@ var ProfileActivityView = Backbone.View.extend({
       targetCapitalized: this.options.target.charAt(0).toUpperCase() + this.options.target.slice(1),
       handle: this.options.handle,
       data: results,
+      getStatus: this.options.getStatus,
       count: {},
     };
 
@@ -48,7 +46,7 @@ var ProfileActivityView = Backbone.View.extend({
         data.count[this.options.data[i].state]++;
       }
     }
-    var template = _.template(ProfileActivityTemplate)(data);
+    var template = _.template(this.options.template)(data);
     this.$el.html(template);
     this.$el.localize();
 

@@ -57,12 +57,17 @@ function renderTemplate (template, data, done) {
     bcc: _.template(template.bcc)(data),
     subject: _.template(template.subject)(data),
   };
-  fs.readFile(html, function (err, template) {
+  fs.readFile(html, function (err, htmlTemplate) {
     if (err) {
       log.info(err);
       return done(err);
     }
-    data._content = _.template(template)(data);
+    data._content = _.template(htmlTemplate)(data);
+    if (!_.isEmpty(template.includes)) {
+      data._content += _.map(template.includes, (include) => {
+        return renderIncludes(include, data);
+      });
+    }
     data._logo = '/img/logo/png/open-opportunities-email.png';
     fs.readFile(layout, function (err, layout) {
       if (err) {
@@ -73,6 +78,17 @@ function renderTemplate (template, data, done) {
       return done(err, mailOptions);
     });
   });
+}
+
+function renderIncludes (template, data) {
+  try {
+    var html = __dirname + '/../notification/' + template + '/template.html';
+    var htmlTemplate = fs.readFileSync(html);
+    return _.template(htmlTemplate)(data);
+  } catch (err) {
+    return '';
+  }
+
 }
 
 function sendEmail (mailOptions, done) {
@@ -109,6 +125,59 @@ function insertNotification (action, data) {
   dao.Notification.insert(newNotification);
 }
 
+function processNotification (notification) {
+  switch (notification.notificationType) {
+    case 'Bounce':
+      if(notification.bounce.bounceType == 'Permanent') {
+        _.forEach(notification.bounce.bouncedRecipients, (recipient) => {
+          dao.User.findOne('username = ?', recipient.emailAddress.toLowerCase()).then((user) => {
+            user.bounced = true;
+            user.updatedAt = new Date();
+            dao.User.update(user);
+            insertAWSNotification({
+              type: notification.notificationType,
+              subType: notification.bounce.bounceType,
+              data: notification,
+              userId: user.id,
+              createdAt: new Date(),
+            });
+          }).catch((err) => {
+            log.info('Error processing bounce notification for email ' + recipient.emailAddress);
+          });
+        });
+      }
+      break;
+    case 'Complaint':
+      _.forEach(notification.complaint.complainedRecipients, (recipient) => {
+        dao.User.findOne('username = ?', recipient.emailAddress.toLowerCase()).then((user) => {
+          user.complained = _.indexOf(['abuse', 'fraud'], notification.complaint.complaintFeedbackType);
+          user.updatedAt = new Date();
+          dao.User.update(user);
+          insertAWSNotification({
+            type: notification.notificationType,
+            subType: notification.complaint.complaintFeedbackType,
+            data: notification,
+            userId: user.id,
+            createdAt: new Date(),
+          });
+        }).catch((err) => {
+          log.info('Error processing complaint notification for email ' + recipient.emailAddress);
+        });
+      });
+      break;
+    default:
+      break;
+  }
+}
+
+function insertAWSNotification (notification) {
+  dao.NotificationMonitor.insert(notification).catch(err => {
+    log.info('Error inserting AWS notification ' + notification.type, err);
+  });
+}
+
 module.exports = {
   createNotification: createNotification,
+  processNotification: processNotification,
+  insertAWSNotification: insertAWSNotification,
 };

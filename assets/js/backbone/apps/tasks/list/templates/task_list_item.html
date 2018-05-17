@@ -6,11 +6,11 @@
     <div class="usajobs-open-opps-opportunity__desc">
       <%= item.descriptionHtml %>
     </div>
-    <% if (item.restrict) { %>
+    <!-- <% if (item.restrict) { %>
     <p class="usajobs-open-opps-opportunity__agency-only">
       <%- item.restrict.name %>
     </p>
-    <% } %>
+    <% } %> -->
     <ul class="usajobs-open-opps-opportunity__details">
       <% if (!tags["location"]) { %>
       <li class="usajobs-open-opps-opportunity__detail-item">
@@ -19,12 +19,10 @@
       <% } %>
       <% _.each(tagShow, function (tagType) { %>
       <% if (tags[tagType]) { %>
+        <% _.each(tags[tagType], function (t, i) { %>
+          <% if (t.type !== 'skill') { %>
       <li class="usajobs-open-opps-opportunity__detail-item">
         <span class="fas <%- tagConfig.tags[tagType].icon %> fa-w-16"></span>
-        <% _.each(tags[tagType], function (t, i) { %>
-          <% if (t.type == 'skill') { %>
-          <a href="/tasks?search=<%- t.name %>"><%- t.name %></a><% if (i + 1 < tags[tagType].length) { %>,<% } %>
-          <% } else { %>
             <%- t.name %><% if (i + 1 < tags[tagType].length) { %>,<% } %>
           <% } %>
         <% }); %>
@@ -32,18 +30,52 @@
       <% } %>
       <% }); %>
     </ul>
+    <div class="skills">
+      <% _.each(tags['skill'], function (t) { %>
+        <span class="skill-label clickable-filter"><%- t.name %></span>
+      <% }); %>
+    </div>
+    <div class="career-field-card">
+      <% if (!_.isEmpty(tags['career'])) { %>
+        <p>Career field:
+        <% _.each(tags['career'], function (t, index, list) { %>
+          <a class="career-field" href="/tasks?career=<%- t.name %>"><%- t.name %></a><% if ((index + 1) < list.length) { %>,<% } %>
+        <% }); %>
+        </p>
+      <% } %>
+      <% if (!_.isEmpty(tags['series'])) { %>
+        <p>Series:
+        <% _.each(tags['series'], function (t, index, list) { %>
+          <a class="career-field" href="/tasks?series=<%- t.name %>"><%- t.name %></a><% if ((index + 1) < list.length) { %>,<% } %>
+        <% }); %>
+        </p>
+      <% } %>    
+      <% if (!_.isEmpty(tags['keywords'])) { %>
+        <p>Related keyword:
+        <% _.each(tags['keywords'], function (t, index, list) { %>
+          <a class="related-keyword" href="/tasks?keywords=<%- t.name %>"><%- t.name %></a><% if ((index + 1) < list.length) { %>,<% } %>
+        <% }); %>
+        </p>
+      <% } %>
+    </div>
     <div class="usajobs-open-opps-opportunity-requestor__wrapper">
       <div class="usajobs-open-opps-opportunity-requestor">
-        <div class="usajobs-open-opps-opportunity-requestor__figure" <% if (user) { %> data-userid="<%- item.owner.id %>" <% } %>>
-          <img src="/api/user/photo/<%- item.owner.id %>">
-        </div>
-        <div class="usajobs-open-opps-opportunity-requestor__body">
-          <span class="usajobs-open-opps-opportunity-requestor__by">
-            Requested by
-          </span>
-          <p class="usajobs-open-opps-opportunity-requestor__name">
-            <%- item.owner.name %>
-          </p>
+        <div class="usajobs-open-opps-opportunity-requestor__figure-body">
+          <div class="usajobs-open-opps-opportunity-requestor__figure <% if (item.owner) { %><%- getInitialsColor(item.owner.id) %><% } %>" <% if (item.owner) { %> data-userid="<%- item.owner.id %>" <% } %>>
+            <% if (item.owner.photoId) { %>
+              <img src="/api/user/photo/<%- item.owner.id %>" alt="<%- item.owner.name %>">
+            <% } else { %>
+              <div class="usajobs-open-opps-opportunity-requestor__initials"><%- item.owner.initials %></div>
+            <% } %>
+          </div>
+          <div class="usajobs-open-opps-opportunity-requestor__body">
+            <p class="usajobs-open-opps-opportunity-requestor__name">
+              <%- item.owner.name %> <% if (item.owner.agency && item.owner.agency.data) { %>(<%- item.owner.agency.data.abbr %>)<% } %>
+            </p>
+            <span class="usajobs-open-opps-opportunity-requestor__on">
+               Posted on <%- moment(item.publishedAt).format('MM/DD/YY') %>
+            </span>
+          </div>
         </div>
         <div class="usajobs-open-opps-opportunity-requestor__status">
           <div class="usajobs-pill--opportunity-status status-<%= item.state.toLowerCase().replace(' ', '-') %>">

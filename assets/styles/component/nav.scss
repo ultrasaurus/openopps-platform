@@ -22,6 +22,8 @@ $nav_item_height: 17px + 24px;
 .navigation {
   box-shadow: 0 2px 3px rgba(0, 0, 0, 0.16), 0 -2px 3px rgba(0, 0, 0, 0.16);
   margin-top: 3px;
+  position: relative;
+  z-index: 1;
 }
 
 .usajobs-nav {
@@ -112,7 +114,12 @@ $nav_item_height: 17px + 24px;
   &__menu {
     display: block;
     float: right;
+    padding-right: $size-default;
     // height: rem($logo_height-S);
+
+    @include media($M) {
+      padding-right: initial;
+    }
 
     @include media($L) {
       // height: rem($logo_height-L);
@@ -255,7 +262,7 @@ $nav_item_height: 17px + 24px;
     position: absolute;
     left: 0;
     right: 0;
-    margin: 0;
+    margin: 0 $size-default;
     padding: $size-base 0;
     background-color: $color-gray-lightest;
     @include boxShadow(2);
@@ -265,6 +272,7 @@ $nav_item_height: 17px + 24px;
     @include media($M) {
       left: auto;
       right: auto;
+      margin: 0;
     }
 
     li {
@@ -290,8 +298,12 @@ $nav_item_height: 17px + 24px;
         width: 100%;
         clear: both;
         // padding: $size-S $size-M;
-        padding: $size-S 4.1rem;
+        padding: $size-S $size-default;
         white-space: nowrap;
+
+        @include media($M) {
+          padding: $size-S 4.1rem;
+        }
       }
     }
   }
@@ -616,7 +628,7 @@ $nav_item_height: 17px + 24px;
 
   &__section-link {
     font-size: $small-font-size;
-    padding: 0.8rem $size-S $size-S;
+    padding: 0.8rem $size-base $size-S;
 
     @include media($SM) {
       font-size: $base-font-size;
@@ -626,7 +638,7 @@ $nav_item_height: 17px + 24px;
     @include media($M) {
       display: inline-block;
       padding-top: 2.2rem;
-      padding-bottom: 2.5rem;
+      padding-bottom: 2.6rem;
     }
 
     @include media($ML) {
@@ -642,7 +654,7 @@ $nav_item_height: 17px + 24px;
       }
 
       @include media($M) {
-        padding-top: 2.8rem;
+        padding-top: 2.7rem;
       }
     }
 
@@ -673,7 +685,7 @@ $nav_item_height: 17px + 24px;
     padding-bottom: 0.2rem;
 
     @include media($M) {
-      padding-bottom: 1.6rem;
+      padding-bottom: 1.7rem;
     }
   }
 
@@ -687,15 +699,25 @@ $nav_item_height: 17px + 24px;
   }
 
   &__menu-container[data-state="is-open"] &__section-link.menu-toggle {
-    padding-bottom: 2.5rem;
+    padding-top: 1.3rem;
+    padding-bottom: 1rem;
     background-color: $color-primary-darkest;
     box-shadow: none;
-  }
-
-  &__people {
-    display: none;
 
     @include media($SM) {
+      padding-top: 1.7rem;
+    }
+
+    @include media($M) {
+      padding-top: 2.7rem;
+      padding-bottom: 2.6rem;
+    }
+  }
+
+  &__help {
+    display: none;
+
+    @include media($M) {
       display: inline-block;
     }
 
@@ -706,6 +728,19 @@ $nav_item_height: 17px + 24px;
         transform-origin: inherit;
         padding-right: 1.3rem;
       }
+    }
+  }
+
+  .mobile {
+    @include media($M) {
+      display: none;
+    }
+  }
+
+  .desktop {
+
+    @include media($M-down) {
+      display: none;
     }
   }
 
@@ -975,5 +1010,11 @@ ul.ui-autocomplete {
     @include media($L) {
       display: inherit;
     }
+  }
+}
+
+.svg-inline--fa.fa-fw {
+  @include media($M-down) {
+    margin: 0 auto;
   }
 }

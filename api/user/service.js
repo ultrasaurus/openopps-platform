@@ -43,7 +43,7 @@ async function getActivities (id) {
   return {
     tasks: {
       created: dao.clean.activity(await dao.Task.find('"userId" = ?', id)),
-      volunteered: (await dao.Task.db.query(dao.query.completed, id)).rows,
+      volunteered: (await dao.Task.db.query(dao.query.participated, id)).rows,
     },
   };
 }
@@ -86,6 +86,10 @@ async function updateProfile (attributes, done) {
     return done(errors);
   }
   attributes.updatedAt = new Date();
+  var origUser = await dao.User.findOne('id = ?', attributes.id).catch(() => { return {}; });
+  if(origUser && origUser.username !== attributes.username) {
+    attributes.bounced = false; // email has been updated so we can reset the bounced flag
+  }
   await dao.User.update(attributes).then(async (user) => {
     await dao.UserTags.db.query(dao.query.deleteUserTags, attributes.id)
       .then(async () => {

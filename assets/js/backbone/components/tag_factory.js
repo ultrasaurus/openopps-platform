@@ -19,13 +19,13 @@ var BaseComponent = require('../base/base_component');
 
 
 var TagFactory = BaseComponent.extend({
-  initialize: function(options) {
+  initialize: function (options) {
     this.options = options;
 
     return this;
   },
 
-  addTagEntities: function(tag, context, done) {
+  addTagEntities: function (tag, context, done) {
     //assumes
     //  tag -- array of tag objects to add
     //  tagType -- string specifying type for tagEntity table
@@ -44,15 +44,15 @@ var TagFactory = BaseComponent.extend({
       data: {
         type: tag.tagType,
         name: tag.id,
-        data: tag.data
+        data: tag.data,
       },
-      success: function(data) {
+      success: function (data) {
         if (context.data) {
           context.data.newTag = data;
           context.data.newItemTags.push(data);
         }
         return done(null, data);
-      }
+      },
     });
   },
 
@@ -72,7 +72,7 @@ var TagFactory = BaseComponent.extend({
 
     @returns {jQuery element}                    - The initialized jQuery element selected by options.selector
   */
-  createTagDropDown: function(options) {
+  createTagDropDown: function (options) {
 
     //location tags get special treatment
     var isLocation = (options.type === 'location');
@@ -81,7 +81,7 @@ var TagFactory = BaseComponent.extend({
     options.multiple = (options.multiple !== undefined ? options.multiple : true);
     options.allowCreate = (options.allowCreate !== undefined ? options.allowCreate : true);
 
-    var tagLabel = i18n.t('tag.' + options.type);
+    var tagLabel = options.type;
 
     //construct the settings for this tag type
     var settings = {
@@ -89,42 +89,42 @@ var TagFactory = BaseComponent.extend({
       placeholder: options.placeholder || 'Start typing to select a ' + tagLabel,
       minimumInputLength: (isLocation ? 1 : 2),
       selectOnBlur: !isLocation,
-      width: options.width || '500px',
+      // width: options.width || '500px',
       tokenSeparators: options.tokenSeparators || [],
       multiple: options.multiple,
-
-      formatResult: function(obj, container, query) {
+      maximumSelectionSize: options.maximumSelectionSize,
+      formatResult: function (obj, container, query) {
         //allow the createSearchChoice to contain HTML
         return (obj.unmatched ? obj.name : _.escape(obj.name));
       },
 
-      formatSelection: function(obj, container, query) {
+      formatSelection: function (obj, container, query) {
         return (obj.unmatched ? obj.name : _.escape(obj.name));
       },
 
       ajax: {
         url: '/api/ac/tag',
         dataType: 'json',
-        data: function(term) {
+        data: function (term) {
           return {
             type: options.type,
-            q: term
+            q: term.trim(),
           };
         },
-        results: function(data) {
+        results: function (data) {
           return { results: data };
-        }
-      }
+        },
+      },
     };
 
     //if requested, give users the option to create new
     if (options.allowCreate) {
-      settings.createSearchChoice = function(term, values) {
-        values = values.map(function(v) {
+      settings.createSearchChoice = function (term, values) {
+        values = values.map(function (v) {
           return (v.value || '').toLowerCase();
         });
 
-        if (values.indexOf(term.toLowerCase()) >= 0)
+        if (values.indexOf(term.trim().toLowerCase()) >= 0)
           return false; //don't prompt to "add new" if it already exists
 
         //unmatched = true is the flag for saving these "new" tags to tagEntity when the opp is saved
@@ -136,7 +136,7 @@ var TagFactory = BaseComponent.extend({
           temp: true,
           name: '<b>' + _.escape(term) + '</b> <i>' + (isLocation ?
             'search for this location' :
-            'click to create a new tag with this value') + '</i>'
+            'click to create a new tag with this value') + '</i>',
         };
       };
     }
@@ -159,7 +159,7 @@ var TagFactory = BaseComponent.extend({
                 name: item.name,
                 unmatched: true,
                 tagType: 'location',
-                data: _(item).omit('name')
+                data: _(item).omit('name'),
               };
             });
             this.cache = $sel.select2('data');

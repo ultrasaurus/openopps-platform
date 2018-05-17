@@ -8,6 +8,7 @@ var AdminTaskView = require('./admin_task_view');
 var AdminAgenciesView = require('./admin_agencies_view');
 var AdminParticipantsView = require('./admin_participants_view');
 var AdminDashboardView = require('./admin_dashboard_view');
+var NavSecondaryView = require('./nav_secondary_view');
 
 // templates
 var AdminMainTemplate = require('../templates/admin_main_template.html');
@@ -15,7 +16,9 @@ var AdminMainTemplate = require('../templates/admin_main_template.html');
 var AdminMainView = Backbone.View.extend({
 
   events: {
-    'click .usajobs-nav-secondary__item' : 'link',
+    'click .usajobs-nav-secondary__item'  : 'link',
+    'click #more-menu'                    : 'moreMenuToggle',
+    'click .usajobs-nav-secondary__more-container .usajobs-nav-secondary__item' : 'moreMenuToggle',
   },
 
   initialize: function (options) {
@@ -49,6 +52,7 @@ var AdminMainView = Backbone.View.extend({
     if (!target) {
       target = 'dashboard';
     }
+
     // If agency admin, display My Agency page
     if (!this.isAdmin() && this.isAgencyAdmin()) {
       this.hideDashboardMenu();
@@ -58,10 +62,9 @@ var AdminMainView = Backbone.View.extend({
     var t = $((this.$('[data-target=' + target + ']'))[0]);
     // remove active classes
     $('.usajobs-nav-secondary__item.is-active').removeClass('is-active');
-    //$($(t.parents('ul')[0]).find('li')).removeClass('active');
-    // make the current link active
     t.addClass('is-active');
-    //$(t.parent('li')[0]).addClass('active');
+    
+    this.initializeNavSecondaryView();
 
     if (target == 'users') {
       if (!this.adminUserView) {
@@ -152,7 +155,7 @@ var AdminMainView = Backbone.View.extend({
     this.adminAgenciesView = new AdminAgenciesView({
       el: '#admin-agencies',
       agencyId: this.options.agencyId,
-      adminMainView: this
+      adminMainView: this,
     });
   },
 
@@ -174,11 +177,28 @@ var AdminMainView = Backbone.View.extend({
     });
   },
 
+  initializeNavSecondaryView: function () {
+    if (this.navSecondaryView) {
+      this.navSecondaryView.cleanup();
+    }
+    this.navSecondaryView = new NavSecondaryView ({
+
+    }).render();
+  },
+
+  moreMenuToggle: function (event) {
+    if(event.preventDefault) event.preventDefault();
+    if (this.navSecondaryView) {
+      this.navSecondaryView.menuToggle(event.currentTarget);
+    }
+  },
+
   cleanup: function () {
     if (this.adminUserView) this.adminUserView.cleanup();
     if (this.adminTagView) this.adminTagView.cleanup();
     if (this.adminTaskView) this.adminTaskView.cleanup();
     if (this.adminDashboardView) this.adminDashboardView.cleanup();
+    if (this.navSecondaryView) this.navSecondaryView.cleanup();
     removeView(this);
   },
 });

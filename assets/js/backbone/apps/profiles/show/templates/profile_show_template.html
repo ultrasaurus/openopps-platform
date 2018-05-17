@@ -1,6 +1,5 @@
 <section class="usajobs-canvas">
-    <div class="usajobs-content-gutter">
-
+    <div class="usajobs-content-gutter profile-gutter">
     <% if (user.id !== data.id) { %>
       <% if (user.isAdmin || user.isAgencyAdmin) { %>
         <div class="usa-alert usajobs-alert usajobs-alert--info" role="alert" data-object="alert">
@@ -19,7 +18,6 @@
         </div>
       <% } %>
     <% } %>
-
     <div class="usa-alert usajobs-alert usajobs-alert--warning" role="alert" data-object="alert" style="display:none;">
       <div class="usajobs-alert__figure">
         <div class="usajobs-alert__icon">
@@ -27,11 +25,9 @@
       </div>
       <div class="usajobs-alert__body">
         <p class="usa-alert-text" id="file-upload-alert">
-
         </p>
       </div>
     </div>
-
     <% if (saved) { %>
       <div class="usa-alert usajobs-alert usajobs-alert--success" role="alert" data-object="alert">
         <div class="usajobs-alert__figure">
@@ -45,7 +41,6 @@
         </div>
       </div>
       <% } %>
-
 
     <main class="main-content usajobs-content-well" id="main-content" aria-label="Opportunity">
       <div class="usajobs-open-opps-opportunity usajobs-open-opps-section usajobs-open-opps-profile">
@@ -62,11 +57,17 @@
           <div class="usa-width-one-whole">
             <h1 class="usajobs-opop-intro-hiring-paths__section-title">Profile</h1>
           </div>
-          <div id="profile" class="usajobs-opop-profile-title usa-width-one-fourth">
-              <img class="default-user-icon-profile" src="/api/user/photo/<%- data.id %>">
-              <div id="file-upload-progress-container" style="display: none;" class="progress progress-striped active">
-                <div id="file-upload-progress" class="progress-bar" style="width: 0"></div>
+          <div id="profile" class="usajobs-opop-profile-title profile usa-width-one-fourth">
+            <div class="usajobs-open-opps-opportunity-requestor__figure-body-wrap">
+                <div class="usajobs-open-opps-opportunity-requestor__figure <%- getInitialsColor(data.id) %>">
+                  <% if (data.photoId) { %>
+                    <img src="/api/user/photo/<%- data.id %>" alt="Profile picture of <%- data.name %>">
+                  <% } else { %>
+                    <div class="usajobs-open-opps-opportunity-requestor__initials"><%- getInitials(data.name) %></div>
+                  <% } %>
+                </div>
               </div>
+              <h2 class="usajobs-opop-profile-name"><% if (data.name) { %><%- data.name %><% } else { %><%- data.username %><% } %></h2>
           </div>
           <div class="usajobs-opop-profile-details usa-width-three-fourths">
             <div class="profile-name-role">
@@ -75,7 +76,8 @@
               <span class="role-label"><% if (user.isAgencyAdmin) { %> Agency <% } %> Administrator</span>
               <% } %>
             </div>
-            <div class="profile-jobtitle"><% if (data.title) { %><span class="profile-icon"><i class="fa fa-briefcase"></i></span><span><%- data.title %></span><% } %></div>
+            <div class="profile-jobtitle"><% if (data.title) { %><span><%- data.title %></span><% } %></div>
+            <div class="profile-careerfield"><% if (career) { %><span><%- career.name %></span><% } else { %><span>-Career field-</span><% } %></div>
             <div class="profile-company"><% if (data.agency) { %><span class="profile-icon"><i class="fa fa-university"></i></span><span><%- data.agency.name %></span><% } %></div>
             <div class="profile-location"><% if (data.location) { %><span class="profile-icon"><i class="fa fa-map-marker"></i></span><span><%- data.location.name %></span><% } %></div>
             <div class="profile-email"><% if (email) { %><span class="profile-icon"><i class="far fa-envelope"></i></span><a href='mailto:<%= email %>'><%= email %></a><% } %></div>
@@ -85,12 +87,6 @@
                   <%= data.bioHtml %>
                 <% } %>
             </div>
-
-
-
-
-
-
             <div class="profile-share <% if (data.isOwner || user.isAdmin) { %>border-bottom<% } %>">
                 <a href="#" id="email"><i class="fas fa-share-alt"></i> <span>Share Profile</span></a>
             </div>

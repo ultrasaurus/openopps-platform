@@ -1,6 +1,6 @@
 module.exports = {
-  subject: 'New Opportunity Submission',
-  to: '<%= user.username %>',
+  subject: 'Opportunity has been canceled',
+  to: '<%- user.username %>',
   data: function (model, done) {
     var data = {
       task: model.task,
@@ -9,4 +9,3 @@ module.exports = {
     done(null, data);
   },
 };
-  

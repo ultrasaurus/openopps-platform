@@ -16,8 +16,9 @@ var User = function () {
       this[i] = data[i];
     }
     if (this.name) {
-      var initials = this.name.match(/\b\w/g) || [];
-      this.initials = ((initials.shift() || '') + (initials.pop() || '')).toUpperCase();
+      var name = this.name;
+      var nameSplit = name.split(' ');
+      this.initials = nameSplit[0].charAt(0).toUpperCase() + nameSplit[1].charAt(0).toUpperCase();
     }
   }
 

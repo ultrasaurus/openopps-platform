@@ -1,5 +1,5 @@
 <section class="usajobs-canvas">
-    <div class="usajobs-content-gutter">
+    <div class="usajobs-content-gutter profile-gutter">
 
   <% if (user.isAdmin || user.isAgencyAdmin) { %>
   <div class="usa-alert usajobs-alert usajobs-alert--info" role="alert" data-object="alert">
@@ -85,7 +85,17 @@
           <h1 class="usajobs-opop-intro-hiring-paths__section-title usajobs-form__title">Edit profile
           <span class="usajobs-form__legend">All fields are required unless otherwise noted</span></h1>
           <div class="usajobs-form--narrow center-upload">
-            <img class="usajobs-opop-profile-title default-user-icon-profile" src="/api/user/photo/<%- data.id %>">
+            <div class="usajobs-open-opps-opportunity-requestor profile profile-edit">
+                <div class="usajobs-open-opps-opportunity-requestor__figure-body-wrap">
+                    <div class="usajobs-open-opps-opportunity-requestor__figure <%- getInitialsColor(data.id) %>">
+                      <% if (data.photoId) { %>
+                        <img src="/api/user/photo/<%- data.id %>" alt="Profile picture of <%- data.name %>">
+                      <% } else { %>
+                        <div class="usajobs-open-opps-opportunity-requestor__initials"><%- getInitials(data.name) %></div>
+                      <% } %>
+                    </div>
+                </div>
+              </div>
             <div class="fileinput-button" <% if (!(data.isOwner || data.canEditProfile)) { %>style="display:none;"<% } %>>
               <i class="fa fa-camera" title="Change Cover Photo" id="fileupload-icon"></i> Upload
               <input id="fileupload" type="file" name="files[]" title="Upload Photo">
@@ -105,19 +115,33 @@
               <input type="text" class="validate" id="name" name="name" placeholder="Name" value="<%- data.name ? data.name : '' %>"  data-validate="empty,count60,html" autofocus/>
             </div>
             <div class="required-input">
-              <label for="jobtitle" class="usa-input-optional">Title</label>
+              <label for="jobtitle" class="usa-input-optional">Job title</label>
               <span class="field-validation-error error-count150" style="display:none;">Maximum of 150 characters.</span>
               <span class="field-validation-error error-html" style="display:none;">The special characters '<' or '>' are not allowed.</span>
               <input type="text" class="validate" id="jobtitle" name="jobtitle" placeholder="Title" value="<%- data.title ? data.title : '' %>" data-validate="count150,html"/>
             </div>
             <div class="required-input">
-              <label for="company" data-i18n="tag.Agency"></label>
+              <label for="career-field" class="usa-input-optional">Career field</label>
+              <select id="career-field" class="dropdown">
+                <option></option>
+                <% _.each(tagTypes['career'], function (t) { %>
+                  <% var selected = (!_.isEmpty(career) && career.id == t.id); %>
+                  <option value=<%- t.id %> <% if (selected) { %>selected<% } %>><%- t.name %></option>
+                <% }); %>
+              </select>
+            </div>
+          </fieldset>
+          <fieldset class="usajobs-fieldset">
+            <div class="required-input">
+              <label for="company" class="s2id_company">Agency</label>
               <input type="hidden" id="company" name="company"/>
             </div>
             <div class="required-input">
-              <label for="location">Location</label>
+              <label for="location" class="s2id_location">Location</label>
               <input type="hidden" id="location" name="location"/>
             </div>
+          </fieldset>
+          <fieldset class="usajobs-fieldset">
             <div class="required-input">
               <label for="bio" class="usa-input-optional">Biography</label>
               <span class="field-validation-error error-html" style="display:none;">The special characters '<' or '>' are not allowed.</span>
@@ -126,10 +150,10 @@
           </fieldset>
           <fieldset class="usajobs-fieldset skills-interests">
             <div class="tag-wrapper"></div>
-            <aside class="skill-aside">
+            <div class="skill-aside">&nbsp;
               <p class="skills">List the skills you have and the skills you want to develop.</p>
               <p class="interests">List career areas, agencies, and other topics that interest you.</p>
-            </aside>
+            </div>
           </fieldset>
           <fieldset class="usajobs-fieldset">
             <div class=form-group>
@@ -152,7 +176,7 @@
         </form>
       </div>
     </main>
-    <aside class="usajobs-rightrail" id="rightrail">
+    <aside class="usajobs-rightrail profile-edit" id="rightrail" role="complementary">
       <div class="usajobs-open-opps-opportunity usajobs-open-opps-section usajobs-open-opps-profile">
         <h2>Badges</h2>
         <% if (data.badges.length > 0) { %>

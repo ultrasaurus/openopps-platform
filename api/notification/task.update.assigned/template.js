@@ -1,14 +1,11 @@
 module.exports = {
-  subject: 'You’ve been selected for <%- task.title %>!',
-  to: '<%- volunteers %>',
-  cc: '<%- owner.username %>',
+  subject: 'You’ve been selected for an opportunity!',
+  to: '<%- user.username %>',
   data: function (model, done) {
     var data = {
       task: model.task,
-      owner: model.owner,
-      volunteers: model.volunteers,
+      user: model.user,
     };
     done(null, data);
   },
 };
-  

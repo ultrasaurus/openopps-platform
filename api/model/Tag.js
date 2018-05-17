@@ -1,5 +1,5 @@
 const tagTypes = [
-  'task-people', 
+  'task-people',
   'skill',
   'task-length',
   'location',
@@ -8,6 +8,8 @@ const tagTypes = [
   'task-time-required',
   'task-skills-required',
   'topic',
+  'career',
+  'keywords',
 ];
 
 module.exports = {

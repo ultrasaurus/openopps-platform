@@ -22,9 +22,11 @@ async function addVolunteer (attributes, done) {
 }
 
 async function assignVolunteer (volunteerId, assign, done) {
+  var volunteer = (await dao.Volunteer.db.query(dao.query.assignedVolunteer, volunteerId)).rows[0];
   await dao.Volunteer.update({
     id: volunteerId,
     assigned: assign,
+    assignedVolunteer: volunteer,
     updatedAt: new Date(),
   }).then(async (volunteer) => {
     return done(null, volunteer);
@@ -47,13 +49,23 @@ async function volunteerComplete (volunteerId, complete, done) {
   });
 }
 
-async function deleteVolunteer (vId, taskId, done) {
-  var notificationInfo = (await dao.Volunteer.db.query(dao.query.volunteer, vId)).rows;
-  await dao.Volunteer.delete('id = ? and "taskId" = ?', vId, taskId).catch(err => {
-    log.info('delete: failed to delete volunteeer ', err);
+async function deleteVolunteer (attributes, done) {
+  try {
+    var volunteer = (await dao.Volunteer.db.query(dao.query.lookupVolunteer, attributes.userId, attributes.taskId)).rows[0];
+    if(!volunteer) {
+      return done(null, {'message':'error deleting volunteer'});
+    } else {
+      var notificationInfo = (await dao.Volunteer.db.query(dao.query.volunteer, volunteer.id)).rows;
+      await dao.Volunteer.delete('id = ? and "taskId" = ?', volunteer.id, attributes.taskId).catch(err => {
+        log.info('delete: failed to delete volunteeer ', err);
+        return done(null, {'message':'error deleting volunteer'});
+      });
+      return done(notificationInfo, null);
+    }
+  } catch (err) {
+    log.info('Error deleting volunteer', err);
     return done(null, {'message':'error deleting volunteer'});
-  });
-  return done(notificationInfo, null);
+  }
 }
 
 async function canAddVolunteer (attributes, user) {
@@ -82,23 +94,27 @@ async function sendAddedVolunteerNotification (user, volunteer, action) {
     action: action,
     model: {
       task: { id: notificationInfo[0].id, title: notificationInfo[0].title },
-      owner: { username: notificationInfo[0].ownername },
+      owner: { username: notificationInfo[0].ownerusername },
       user: user,
     },
   };
-  notification.createNotification(data);
+  if(!data.model.user.bounced) {
+    notification.createNotification(data);
+  }
 }
 
 async function sendDeletedVolunteerNotification (notificationInfo, action) {
   var data = {
     action: action,
     model: {
-      task: { title: notificationInfo.title },
-      owner: { username: notificationInfo.ownername },
-      user: { name: notificationInfo.toname, username: notificationInfo.tousername},
+      task: { id: notificationInfo.id, title: notificationInfo.title },
+      owner: { name: notificationInfo.ownername, username: notificationInfo.ownerusername },
+      user: { name: notificationInfo.name, username: notificationInfo.username},
     },
   };
-  notification.createNotification(data);
+  if(!notificationInfo.bounced) {
+    notification.createNotification(data);
+  }
 }
 
 module.exports = {

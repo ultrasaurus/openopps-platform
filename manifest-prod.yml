@@ -4,5 +4,3 @@ no-hostname: true
 domain: openopps.usajobs.gov
 instances: 2
 memory: 1G
-env:
-  THEME: https://github.com/18F/open-opportunities-theme.git

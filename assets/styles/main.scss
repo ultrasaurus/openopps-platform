@@ -41,8 +41,10 @@
 @import 'component/nav-secondary';
 @import 'component/pill';
 @import 'component/search/pagination';
+@import 'component/search/search-tab';
 @import 'component/alert';
 @import 'component/media-object';
+@import 'component/initials';
 
 // Layouts ------------- //
 @import 'layouts/profile';
@@ -64,6 +66,11 @@ h1, h2 {
 
 h3 {
   color: $color-base;
+}
+
+.usa-input-optional:after {
+  font-size: $base-font-size;
+  font-weight: normal;
 }
 
 @media screen and (min-width: 62em) {

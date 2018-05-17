@@ -1,4 +1,3 @@
-
 var _ = require('underscore');
 var Backbone = require('backbone');
 var $ = require('jquery');
@@ -8,16 +7,11 @@ var Popovers = require('../../../../mixins/popovers');
 var CommentCollection = require('../../../../entities/comments/comment_collection');
 var CommentFormView = require('../../new/views/comment_form_view');
 var CommentItemView = require('../views/comment_item_view');
-
 var CommentWrapper = require('../templates/comment_wrapper_template.html');
-
 var marked = require('marked');
-
-
 var popovers = new Popovers();
 
-Comment = Backbone.View.extend({
-
+var Comment = Backbone.View.extend({
   el: '.comment-list-wrapper',
 
   events: {
@@ -203,6 +197,7 @@ Comment = Backbone.View.extend({
 
   renderComment: function (unused, comment, collection, map) {
     var self = this;
+    comment.canEdit = this.options.canEditTask;
 
     var commentIV = new CommentItemView({
       el: '#comment-list',
@@ -233,7 +228,7 @@ Comment = Backbone.View.extend({
     if (e.preventDefault) e.preventDefault();
     var id = $(e.currentTarget).data('commentid') || null;
 
-    if ( window.cache.currentUser && window.cache.currentUser.isAdmin ) {
+    if ( window.cache.currentUser ) {
       $.ajax({
         url: '/api/comment/' + id,
         type: 'DELETE',

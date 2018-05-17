@@ -48,13 +48,15 @@ router.get('/api/comment/findAllBytaskId/:id', async (ctx, next) => {
 router.post('/api/task', auth, async (ctx, next) => {
   ctx.request.body.userId = ctx.state.user.id;
   ctx.request.body.updatedBy = ctx.state.user.id;
-  var opportunity = await service.createOpportunity(ctx.request.body, function (errors, task) {
+  await service.createOpportunity(ctx.request.body, function (errors, task) {
     if (errors) {
       ctx.status = 400;
-      return ctx.body = errors;
+      ctx.body = errors;
+    } else {
+      service.sendTaskStateUpdateNotification(task.owner, task);
+      ctx.status = 200;
+      ctx.body = task;
     }
-    service.sendTaskNotification(ctx.state.user, task, task.state === 'draft' ? 'task.create.draft' : 'task.create.thanks');
-    ctx.body = task;
   });
 });
 
@@ -67,7 +69,7 @@ router.put('/api/task/state/:id', auth, async (ctx, next) => {
         return ctx.body = errors;
       }
       try {
-        checkTaskState(stateChange, ctx.state.user, task);
+        checkTaskState(stateChange, task.owner, task);
       } finally {
         ctx.body = { success: true };
       }
@@ -88,7 +90,7 @@ router.put('/api/task/:id', auth, async (ctx, next) => {
       }
       try {
         awardBadge(task);
-        checkTaskState(stateChange, ctx.state.user, task);
+        checkTaskState(stateChange, task.owner, task);
       } finally {
         ctx.status = 200;
         ctx.body = { success: true };

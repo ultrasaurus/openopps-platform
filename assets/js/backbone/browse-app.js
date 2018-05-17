@@ -11,7 +11,6 @@ var TaskCollection = require('./entities/tasks/tasks_collection');
 var TaskListController = require('./apps/tasks/list/controllers/task_list_controller');
 var TaskShowController = require('./apps/tasks/show/controllers/task_show_controller');
 var TaskEditFormView = require('./apps/tasks/edit/views/task_edit_form_view');
-var TaskCreateFormView = require('./apps/tasks/new/views/task_form_view');
 var AdminMainController = require('./apps/admin/controllers/admin_main_controller');
 var HomeController = require('./apps/home/controllers/home_controller');
 var LoginController = require('./apps/login/controllers/login_controller');
@@ -127,20 +126,17 @@ var BrowseRouter = Backbone.Router.extend({
   },
 
   listProfiles: function (queryStr) {
-    this.cleanupChildren();
-    this.profileListController = new ProfileListController({
-      el: '#container',
-      router: this,
-      queryParams: this.parseQueryParams(queryStr),
-      data: this.data,
-    });
-    // this.browseListController = new BrowseListController({
-    //   target: 'profiles',
-    //   el: '#container',
-    //   router: this,
-    //   queryParams: this.parseQueryParams(queryStr),
-    //   data: this.data,
-    // });
+    if (!window.cache.currentUser) {
+      Backbone.history.navigate('/login?profiles', { trigger: true });
+    } else {
+      this.cleanupChildren();
+      this.profileListController = new ProfileListController({
+        el: '#container',
+        router: this,
+        queryParams: this.parseQueryParams(queryStr),
+        data: this.data,
+      });
+    }
   },
 
   showTask: function (id, action) {
@@ -157,37 +153,46 @@ var BrowseRouter = Backbone.Router.extend({
    * on the collection.
    */
   newTask: function ( /*params*/ ) {
-
+    if (!window.cache.currentUser) {
+      Backbone.history.navigate('/login?tasks/new', { trigger: true });
+      return;
+    }
     var self = this;
-    var tasks = new TaskCollection([{}]);
-
     this.cleanupChildren();
-
-    this.taskCreateController = new TaskCreateFormView({ collection: tasks });
-    this.taskCreateController.render();
-
-    this.listenTo(tasks, 'task:save:success', function (data) {
-
-      Backbone.history.navigate('/tasks/' + data.attributes.id, { trigger: true });
-      setTimeout(function () {
-        $('body').addClass('modal-is-open');
-        
-        this.modal = new Modal({
-          el: '#site-modal',
-          id: 'submit-opp',
-          modalTitle: 'Submitted',
-          modalBody: 'Thanks for submitting the <strong>' + data.attributes.title + '</strong>. We\'ll review it and let you know if it\'s approved or if we need more information.',
-          primary: {
-            text: 'Close',
-            action: function () {
-              this.modal.cleanup();
-            }.bind(this),
-          }
-        }).render();
-      }, 500);
+    var model = new TaskModel();
+    model.tagTypes(function (tagTypes) {
+      this.taskEditFormView = new TaskEditFormView({
+        el: '#container',
+        edit: false,
+        model: model,
+        tags: [],
+        madlibTags: {},
+        tagTypes: tagTypes,
+      }).render();
     });
 
-    this.listenTo(tasks, 'task:save:error', function (model, response, options) {
+    this.listenTo(model, 'task:save:success', function (data) {
+      Backbone.history.navigate('/tasks/' + data.attributes.id, { trigger: true });
+      if(data.attributes.state != 'draft') {
+        setTimeout(function () {
+          $('body').addClass('modal-is-open');
+          this.modal = new Modal({
+            el: '#site-modal',
+            id: 'submit-opp',
+            modalTitle: 'Submitted',
+            modalBody: 'Thanks for submitting the <strong>' + data.attributes.title + '</strong>. We\'ll review it and let you know if it\'s approved or if we need more information.',
+            primary: {
+              text: 'Close',
+              action: function () {
+                this.modal.cleanup();
+              }.bind(this),
+            },
+          }).render();
+        }, 500);
+      }
+    });
+
+    this.listenTo(model, 'task:save:error', function (model, response, options) {
       var error = options.xhr.responseJSON;
       if (error && error.invalidAttributes) {
         for (var item in error.invalidAttributes) {
@@ -227,13 +232,16 @@ var BrowseRouter = Backbone.Router.extend({
   },
 
   showAdmin: function (action, agencyId) {
-    this.cleanupChildren();
-    this.adminMainController = new AdminMainController({
-      el: '#container',
-      action: action,
-      agencyId: agencyId,
-    });
-
+    if (!window.cache.currentUser) {
+      Backbone.history.navigate('/login?admin', { trigger: true });
+    } else {
+      this.cleanupChildren();
+      this.adminMainController = new AdminMainController({
+        el: '#container',
+        action: action,
+        agencyId: agencyId,
+      });
+    }
   },
 
 });

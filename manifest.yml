@@ -1,8 +1,8 @@
 ---
 applications:
 - name: openopps
-  buildpack: https://github.com/cloudfoundry/nodejs-buildpack
-  command: npm run release:run
+  buildpack: https://github.com/cloudfoundry/nodejs-buildpack#v1.6.20
+  command: npm run start
 domain: openopps.usajobs.gov
 services:
 - env-openopps

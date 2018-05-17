@@ -17,6 +17,7 @@ var ProgressTemplate = require('../templates/task_progress_template.html');
 var AlertTemplate = require('../../../../components/alert_template.html');
 var NextStepTemplate = require('../templates/next_step_template.html');
 var RemoveParticipantTemplate = require('../templates/remove_participant_template.html');
+var ConfirmParticipantTemplate = require('../templates/confirm_participant_template.html');
 var NotCompleteTemplate = require('../templates/participants_not_complete_template.html');
 var ParticipateCheckList = require('../templates/participate_check_list.html').toString();
 var ProfileCheckList = require('../templates/profile_check_list.html');
@@ -25,15 +26,17 @@ var ShareTemplate = require('../templates/task_share_template.txt');
 
 var TaskItemView = BaseView.extend({
   events: {
-    'click #accept-toggle'          : 'toggleAccept',
-    'click #apply'                  : 'apply',
-    'click #nextstep'               : 'nextstep',
-    'click #complete'               : 'complete',
-    'click #task-cancel'            : 'cancel',
-    'click .project-people__assign' : 'assignParticipant',
-    'click .project-people__remove' : 'removeParticipant',
-    'click .usa-accordion-button'   : 'toggleAccordion',
-    'click .task-complete'          : 'taskComplete',
+    'click #accept-toggle'            : 'toggleAccept',
+    'click #apply'                    : 'apply',
+    'click #apply-cancel'             : 'cancelApply',
+    'click #nextstep'                 : 'nextstep',
+    'click #complete'                 : 'complete',
+    'click #task-cancel'              : 'cancel',
+    'click .project-people__assign'   : 'assignParticipant',
+    'click .project-people__confirm'  : 'confirmParticipant',
+    'click .project-people__remove'   : 'removeParticipant',
+    'click .usa-accordion-button'     : 'toggleAccordion',
+    'click .task-complete'            : 'taskComplete',
   },
 
   modalOptions: {
@@ -87,7 +90,11 @@ var TaskItemView = BaseView.extend({
     }
 
     self.data['madlibTags'] = organizeTags(self.data.tags);
-    self.data.model.descriptionHtml = marked(self.data.model.description || '');
+    _.each(['description', 'details', 'outcome', 'about'], function (part) {
+      if(self.data.model[part]) {
+        self.data.model[part + 'Html'] = marked(self.data.model[part]);
+      }
+    });
     self.model.trigger('task:tag:data', self.tags, self.data['madlibTags']);
 
     var d = self.data,
@@ -97,10 +104,14 @@ var TaskItemView = BaseView.extend({
     self.data.ui = UIConfig;
     self.data.vol = vol;
     self.data.model.userId = self.data.model.owner.id;
+    self.data.model.owner.initials = getInitials(self.data.model.owner.name);
     var compiledTemplate = _.template(TaskShowTemplate)(self.data);
 
     self.$el.html(compiledTemplate);
     self.$el.localize();
+    if(taskState.toLowerCase() == 'in progress' && self.data.model.acceptingApplicants) {
+      this.updatePill('in progress', true);
+    }
     $('time.timeago').timeago();
     self.updateTaskEmail();
     self.model.trigger('task:show:render:done');
@@ -170,7 +181,7 @@ var TaskItemView = BaseView.extend({
   },
 
   initializeTags: function (self) {
-    var types = ['task-skills-required', 'task-time-required', 'task-people', 'task-length', 'task-time-estimate'];
+    var types = ['task-skills-required', 'task-time-required', 'task-people', 'task-length', 'task-time-estimate', 'career'];
 
     self.tagSources = {};
 
@@ -199,17 +210,18 @@ var TaskItemView = BaseView.extend({
     element.siblings('.usa-accordion-content').attr('aria-hidden', !this.data.accordion.open);
   },
 
-  updatePill: function (state) {
-    var pillElem = $('.status-' + this.data.state.value.replace(' ', '-'));
-    pillElem.removeClass('status-' + this.data.state.value.replace(' ', '-'));
+  updatePill: function (state, toggleOn) {
+    var status = (state == 'in progress' && !toggleOn) ? 'status-open' : 'status-' + this.data.state.value.replace(' ', '-');
+    var pillElem = $('.' + status);
+    pillElem.removeClass(status);
     this.data.state = {
       humanReadable: state.charAt(0).toUpperCase() + state.slice(1),
       value: state,
     };
     this.data.model.state = state;
     this.model.attributes.state = state;
-    pillElem.addClass('status-' + this.data.state.value.replace(' ', '-'));
-    pillElem.html(this.data.state.humanReadable);
+    pillElem.addClass((state == 'in progress' && toggleOn) ? 'status-open' : 'status-' + this.data.state.value.replace(' ', '-'));
+    pillElem.html((state == 'in progress' && toggleOn) ? 'Open' : this.data.state.humanReadable);
   },
 
   toggleAccept: function (e) {
@@ -234,7 +246,7 @@ var TaskItemView = BaseView.extend({
         } else {
           $(e.currentTarget).addClass('toggle-off');
         }
-        this.updatePill(state);
+        this.updatePill(state, toggleOn);
       }.bind(this),
       error: function (err) {
         // display modal alert type error
@@ -313,6 +325,31 @@ var TaskItemView = BaseView.extend({
         // display modal alert type error
       }.bind(this),
     });
+  },
+
+  confirmParticipant: function (e) {
+    if (e.preventDefault) e.preventDefault();
+    if (e.stopPropagation) e.stopPropagation();
+    var volunteerid = $(e.currentTarget).data('volunteerid');
+    var participant = _.findWhere(this.data.model.volunteers, { id: volunteerid });
+    var options = _.extend(_.clone(this.modalOptions), {
+      modalTitle: 'Are you sure you want to assign this participant?',
+      modalBody: _.template(ConfirmParticipantTemplate)(participant),
+      secondary: {
+        text: 'Cancel',
+        action: function () {
+          this.modalComponent.cleanup();
+        }.bind(this),
+      },
+      primary: {
+        text: 'Confirm',
+        action: function () {
+          this.modalComponent.cleanup();
+          this.assignParticipant(e);
+        }.bind(this),
+      },
+    });
+    this.modalComponent = new ModalComponent(options).render();
   },
 
   nextstep: function (e) {
@@ -492,6 +529,31 @@ var TaskItemView = BaseView.extend({
         this.modalComponent = new ModalComponent(options).render();
       }
     }
+  },
+
+  cancelApply: function (e) {
+    if (e.preventDefault) e.preventDefault();
+    $.ajax({
+      url: '/api/volunteer/delete',
+      type: 'POST',
+      data: {
+        taskId: this.model.attributes.id,
+      },
+    }).done(function (data) {
+      this.data.model.volunteers = _.reject(this.data.model.volunteers, { userId: data.userId });
+      this.initializeProgress();
+      var options = _.extend(_.clone(this.modalOptions), {
+        modalTitle: 'Cancel your application',
+        modalBody: 'Your application has been withdrawn.',
+        primary: {
+          text: 'Okay',
+          action: function () {
+            this.modalComponent.cleanup();
+          }.bind(this),
+        },
+      });
+      this.modalComponent = new ModalComponent(options).render();
+    }.bind(this));
   },
 
   completeProfile: function (tags) {

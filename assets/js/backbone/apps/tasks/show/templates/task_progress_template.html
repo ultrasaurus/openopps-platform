@@ -47,7 +47,7 @@
   <% } %>
 
   <div id="participants">
-    <% if (!user || (model.owner.id !== user.id)) { %>
+    <% if (!_.contains(['completed', 'canceled'], state.value) && (!user || (model.owner.id !== user.id))) { %>
       <% if (user && _.findWhere(model.volunteers, { userId: user.id })) { %>
         <% if (_.findWhere(model.volunteers, { userId: user.id }).assigned) { %>
           <div id="assigned">
@@ -58,9 +58,10 @@
           <div id="apply-thanks">
             <h3>Thanks for applying</h3>
             <div>We’ll email you with next steps. You can also check your profile for status updates.</div>
+            <a href="javascript:void(0);" id="apply-cancel">Cancel your application</a>
           </div>
         <% } %>
-      <% } else if (!_.contains(['draft', 'submitted', 'not open'], state.value) && model.acceptingApplicants) { %>
+      <% } else if (!_.contains(['draft', 'submitted', 'not open', 'complete'], state.value) && model.acceptingApplicants) { %>
         <a href="javascript:void(0);" id="apply" class="usa-button-big usa-button-primary"><span class="box-icon-text">Apply</span></a>
       <% } %>
     <% } %>
@@ -73,7 +74,38 @@
         <% } else { %>
           <% if (_.where(model.volunteers, { assigned: true }).length > 0) { %>
             <% _.each(_.where(model.volunteers, { assigned: true }), function (v) { %>
-              <div class="project-people-show-div" data-userid="<%- v.userId %>" data-voluserid="<%- v.userId %>">
+              <div class="usajobs-open-opps-opportunity-requestor__figure-body">
+                <div class="usajobs-open-opps-opportunity-requestor__figure <%- getInitialsColor(v.userId) %>" data-userid="<%- v.userId %>" data-voluserid="<%- v.userId %>">
+                  <% if (v.photoId) { %>
+                    <img src="/api/user/photo/<%- v.userId %>" alt="Profile picture of <%- v.name %>">
+                  <% } else { %>
+                    <div class="usajobs-open-opps-opportunity-requestor__initials"><%- getInitials(v.name) %></div>
+                  <% } %>
+                  <% if (!v.taskComplete && model.state != 'completed' && state.value != 'canceled') { %>
+                    <button class="project-people__remove" data-volunteerid="<%- v.id %>" data-behavior="remove">
+                      <span class="usajobs-assistive-text">Remove participant</span>
+                    </button>
+                  <% } %>
+                </div>
+                <div class="usajobs-open-opps-opportunity-requestor__body">
+                  <div class="usajobs-open-opps-opportunity-requestor__name"><%- v.name %></div>
+                  <% if (model.canEditTask) { %>
+                    <% if (state.value == 'in progress') { %>
+                      <% if (v.taskComplete) { %>
+                        <span class="task-complete-check"><i class="fa fa-check"></i>Task complete</span>
+                        <a href="javascript:void(0);" class="task-complete" data-volunteerid="<%- v.id %>" data-behavior="undo">Undo</a>
+                      <% } else { %>
+                        <a href="javascript:void(0);" class="task-complete" data-volunteerid="<%- v.id %>" data-behavior="complete">Task complete</a>
+                      <% } %>
+                    <% } else if (v.taskComplete) { %>
+                      <span class="task-complete-check"><i class="fa fa-check"></i>Task complete</span>
+                    <% } %>
+                  <% } else if (v.taskComplete) { %>
+                    <span class="task-complete-check"><i class="fa fa-check"></i>Task complete</span>
+                  <% } %>
+                </div>
+              </div>
+              <!-- <div class="project-people-show-div" data-userid="<%- v.userId %>" data-voluserid="<%- v.userId %>">
                 <img src="/api/user/photo/<%- v.userId %>" alt="<%- v.name %>" class="project-people" />
                 <label class="project-people-show-label"><%- v.name %></label>
                 <% if (model.canEditTask) { %>
@@ -92,8 +124,10 @@
                   <% } else if (v.taskComplete) { %>
                     <span class="task-complete-check"><i class="fa fa-check"></i>Task complete</span>
                   <% } %>
+                <% } else if (v.taskComplete) { %>
+                  <span class="task-complete-check"><i class="fa fa-check"></i>Task complete</span>
                 <% } %>
-              </div>
+              </div> -->
             <% }); %>
           <% } else { %>
             <p class="project-people__assign-instruction">
@@ -134,18 +168,28 @@
           <% } else { %>
             <% if (model.volunteers.length > 0) { %>
               <% _.each(_.where(model.volunteers, { assigned: false }), function (v) { %>
-                <div class="project-people-show-div" data-userid="<%- v.userId %>" data-voluserid="<%- v.userId %>">
-                  <img src="/api/user/photo/<%- v.userId %>" alt="<%- v.name %>" class="project-people" />
-                  <label class="project-people-show-label"><%- v.name %></label>
-                  <% if (model.canEditTask && model.state != 'completed' && state.value != 'canceled') { %>
-                    <button class="project-people__assign" data-volunteerid="<%- v.id %>" data-behavior="assign">
-                      <span class="usajobs-assistive-text">Assign participant</span>
-                    </button>
-                  <% } %>
+                <div class="usajobs-open-opps-opportunity-requestor__figure-body">
+                  <div class="usajobs-open-opps-opportunity-requestor__figure <%- getInitialsColor(v.userId) %>" data-userid="<%- v.userId %>" data-voluserid="<%- v.userId %>">
+                    <% if (v.photoId) { %>
+                      <img src="/api/user/photo/<%- v.userId %>" alt="Profile picture of <%- v.name %>">
+                    <% } else { %>
+                      <div class="usajobs-open-opps-opportunity-requestor__initials"><%- getInitials(v.name) %></div>
+                    <% } %>
+                    <% if (model.canEditTask && model.state != 'completed' && state.value != 'canceled') { %>
+                      <button class="project-people__<% if (state.value == 'in progress'){ %>confirm<%} else {%>assign<%}%>" data-volunteerid="<%- v.id %>" data-behavior="assign">
+                        <span class="usajobs-assistive-text">Assign participant</span>
+                      </button>
+                    <% } %>
+                  </div>
+                  <div class="usajobs-open-opps-opportunity-requestor__body">
+                    <div class="usajobs-open-opps-opportunity-requestor__name"><%- v.name %></div>
+                  </div>
                 </div>
               <% }); %>
             <% } else { %>
-              <p class="project-people__not-available">None applied</p>
+              <p class="project-people__search">
+                <a href="/profiles" class="usa-button usa-button-secondary"><i class="fas fa-users"></i> Search people</a>
+              </p>
             <% } %>
           <% } %>
         </div>
