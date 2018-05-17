@@ -68,6 +68,7 @@ var TaskListView = Backbone.View.extend({
     this.$el.html(template);
     this.$el.localize();
     this.fetchData();
+    $('.usajobs-open-opps-search__box').hide();
     return this;
   },
 
@@ -77,6 +78,7 @@ var TaskListView = Backbone.View.extend({
       success: function (collection) {
         self.collection = collection;
         self.filter(self.term, self.filters, self.agency);
+        self.$('.usajobs-open-opps-search__box').show();
       },
     });
   },
