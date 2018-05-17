@@ -115,7 +115,7 @@ const options = {
     exclude: {
       comment: [ 'deletedAt' ],
       user: [
-        'title', 'bio', 'photoId', 'isAdmin', 'disabled', 'passwordAttempts',
+        'title', 'bio', 'isAdmin', 'disabled', 'passwordAttempts',
         'createdAt', 'updatedAt', 'deletedAt', 'completedTasks', 'isAgencyAdmin',
       ],
     },
