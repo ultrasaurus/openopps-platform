@@ -829,6 +829,17 @@
       display: block;
     }
 
+    a {
+      color: $color-primary;
+      text-decoration: none;
+      display: inline-block;
+      margin-bottom: $size-S;
+
+      &:hover {
+        color: $color-primary-darker;
+      }
+    }
+
     .project-people__search {
       text-align: center;
       margin-top: $size-L;
@@ -937,6 +948,7 @@ ul.achievements {
 
     a {
       color: $color-primary;
+      text-decoration: none;
     }
   }
 }
@@ -1024,6 +1036,11 @@ ul.achievements {
 
   & &__name, & &__jobtitle, & &__company {
     margin: 0;
+
+    a {
+      color: $color-primary;
+      text-decoration: none;
+    }
   }
 
   &__status {
@@ -1134,6 +1151,11 @@ ul.achievements {
 
   & &__name {
     margin: 0;
+
+    a {
+      color: $color-primary;
+      text-decoration: none;
+    }
   }
 
   &__status {
