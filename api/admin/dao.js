@@ -1,6 +1,8 @@
 const _ = require('lodash');
 const dao = require('postgres-gen-dao');
 
+const announcementQuery = 'select * from announcement';
+
 const taskQuery = 'select count(*) as count from task ';
 
 const taskStateQuery = 'select state from task ';
@@ -144,6 +146,7 @@ var exportFormat = {
   'bio': {field: 'bio', filter: nullToEmptyString},
   'admin': 'isAdmin',
   'disabled': 'disabled',
+  'announcement': {field: 'content', filter: nullToEmptyString},
 };
 
 function nullToEmptyString (str) {
@@ -213,7 +216,9 @@ module.exports = function (db) {
     Task: dao({ db: db, table: 'task' }),
     Volunteer: dao({ db: db, table: 'volunteer' }),
     TagEntity: dao({ db: db, table: 'tagentity' }),
+    Announcement: dao({ db, table: 'announcement' }),
     query: {
+      announcementQuery: announcementQuery,
       taskQuery: taskQuery,
       taskStateQuery: taskStateQuery,
       volunteerQuery: volunteerQuery,
