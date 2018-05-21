@@ -88,7 +88,7 @@
                   <% } %>
                 </div>
                 <div class="usajobs-open-opps-opportunity-requestor__body">
-                  <div class="usajobs-open-opps-opportunity-requestor__name"><%- v.name %></div>
+                  <div class="usajobs-open-opps-opportunity-requestor__name"><a href="/profile/<%- v.userId %>"><%- v.name %></a></div>
                   <% if (model.canEditTask) { %>
                     <% if (state.value == 'in progress') { %>
                       <% if (v.taskComplete) { %>
@@ -182,7 +182,7 @@
                     <% } %>
                   </div>
                   <div class="usajobs-open-opps-opportunity-requestor__body">
-                    <div class="usajobs-open-opps-opportunity-requestor__name"><%- v.name %></div>
+                    <div class="usajobs-open-opps-opportunity-requestor__name"><a href="/profile/<%- v.userId %>"><%- v.name %></a></div>
                   </div>
                 </div>
               <% }); %>
