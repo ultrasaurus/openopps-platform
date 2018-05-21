@@ -29,8 +29,18 @@ async function findById (id, loggedIn) {
   return task;
 }
 
-async function list () {
-  var tasks = dao.clean.tasks(await dao.Task.query(dao.query.task + ' order by task."createdAt" desc', {}, dao.options.task));
+async function list (user) {
+  var tasks = [];
+  if(user && user.isAdmin) {
+    tasks = dao.clean.tasks(await dao.Task.query(dao.query.task + ' order by task."createdAt" desc', {}, dao.options.task));
+  } else {
+    var where = " where task.restrict = '' or task.restrict is null " +
+    "or task.restrict::json->>'name' = ''";
+    if(user && user.agency && !_.isEmpty(user.agency.data)) {
+      where += " or task.restrict::json->>'abbr' = '" + user.agency.data.abbr + "'";
+    }
+    tasks = dao.clean.tasks(await dao.Task.query(dao.query.task + where + ' order by task."createdAt" desc', {}, dao.options.task));
+  }
   tasks = await Promise.all(tasks.map(async (task) => {
     task.owner = dao.clean.user((await dao.User.query(dao.query.user, task.userId, dao.options.user))[0]);
     return task;

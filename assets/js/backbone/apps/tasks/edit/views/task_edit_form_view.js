@@ -504,7 +504,7 @@ var TaskEditFormView = Backbone.View.extend({
       $('#task-restrict-agency')[0].checked = false;
     }
     $('#task-restrict-agency').attr('disabled', target.id == 'full-time');
-    $('#task-restrict-agency').siblings('label').attr('title', (target.id == 'full-time') ? 'Required for full time detail' : '')
+    $('#task-restrict-agency').siblings('label').attr('title', (target.id == 'full-time') ? 'Required for full time detail' : '');
   },
 
   toggleLocationOptions: function (e) {

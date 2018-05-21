@@ -160,6 +160,8 @@ var BrowseRouter = Backbone.Router.extend({
     var self = this;
     this.cleanupChildren();
     var model = new TaskModel();
+    var restrict = _.pick(window.cache.currentUser.agency, _.keys(model.get('restrict')));
+    model.set('restrict', _.defaults(restrict, model.get('restrict')));
     model.tagTypes(function (tagTypes) {
       this.taskEditFormView = new TaskEditFormView({
         el: '#container',
