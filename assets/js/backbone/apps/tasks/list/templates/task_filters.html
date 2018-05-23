@@ -97,7 +97,7 @@
             </li>
         </ul>
 
-        <% if (userAgency) { %>
+        <% if (!_.isEmpty(userAgency)) { %>
             <h4 class="usajobs-search-filters__title agency">Agency</h4>
             <ul id="agencyFilters" class="usa-unstyled-list">
                 <li>
