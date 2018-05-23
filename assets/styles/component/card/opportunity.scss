@@ -857,7 +857,6 @@
       margin-bottom: 3rem;
       margin-top: 0;
       padding-top: 8px;
-      min-height: 11.8rem;
     }
     .usajobs-open-opps-opportunity-requestor__figure {
       position: relative;
@@ -869,6 +868,12 @@
         margin: 0;
         vertical-align: initial;
       }
+    }
+
+    .usajobs-open-opps-opportunity-requestor__body {
+      display: block;
+      width: 85px;
+      min-height: 8.8rem;
     }
 
     .project-people-show-div {
@@ -912,6 +917,13 @@
         margin: 0;
         vertical-align: initial;
       }
+    }
+  }
+
+  .project-people__wrapper.in-progress {
+
+    .usajobs-open-opps-opportunity-requestor__body {
+      min-height: 11.8rem;
     }
   }
 
