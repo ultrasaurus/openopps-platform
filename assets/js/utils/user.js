@@ -34,7 +34,8 @@ var User = function () {
         id: agencyTag.id,
         name: agencyTag.name,
         abbr: agencyTag.data ? agencyTag.data.abbr : '',
-        domain: agencyTag.data ? agencyTag.data.domain[0] : '',
+        parentAbbr: agencyTag.data ? agencyTag.data.parentAbbr : undefined,
+        domain: agencyTag.data ? _.isArray(agencyTag.data.domain) ? agencyTag.data.domain[0] : agencyTag.data.domain : '',
         slug: agencyTag.data ? agencyTag.data.abbr.toLowerCase() : '',
         allowRestrictAgency: agencyTag.data ? agencyTag.data.allowRestrictAgency : false,
       };
