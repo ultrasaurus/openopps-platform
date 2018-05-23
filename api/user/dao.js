@@ -18,7 +18,7 @@ const userAgencyQuery = 'select tagentity.name, midas_user."isAdmin" ' +
   'where midas_user.id = ? ' +
   "and tagentity.type = 'agency' ";
 
-const taskParticipatedQuery = 'select distinct task.*, volunteer.assigned, volunteer."taskComplete" ' +
+const taskParticipatedQuery = 'select task.*, volunteer.assigned, volunteer."taskComplete" ' +
   'from task inner join volunteer on task.id = volunteer."taskId" ' +
   'where volunteer."userId" = ?';
 
@@ -59,9 +59,6 @@ const clean = {
     return records.map(function (record) {
       var cleaned = _.pickBy(record, _.identity);
       cleaned.owner = cleaned.userId;
-      if(!_.isEmpty(cleaned.restrict)) {
-        cleaned.restrict = JSON.parse(cleaned.restrict);
-      }
       return cleaned;
     });
   },

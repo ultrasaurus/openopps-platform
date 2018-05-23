@@ -190,9 +190,6 @@ const clean = {
   task: function (records) {
     return records.map(function (record) {
       var cleaned = _.pickBy(record, _.identity);
-      if(!_.isEmpty(cleaned.restrict)) {
-        cleaned.restrict = JSON.parse(cleaned.restrict);
-      }
       return cleaned;
     });
   },
