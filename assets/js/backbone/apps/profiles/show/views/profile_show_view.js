@@ -412,7 +412,7 @@ var ProfileShowView = Backbone.View.extend({
           $('#location').select2('data')
         ),
         data = {
-          name:  $('#name').val(),
+          name:  $('#name').val().trim(),
           title: $('#jobtitle').val(),
           bio: $('#bio').val(),
           username: $('#profile-email').val(),

@@ -829,6 +829,17 @@
       display: block;
     }
 
+    a {
+      color: $color-primary;
+      text-decoration: none;
+      display: inline-block;
+      margin-bottom: $size-S;
+
+      &:hover {
+        color: $color-primary-darker;
+      }
+    }
+
     .project-people__search {
       text-align: center;
       margin-top: $size-L;
@@ -846,7 +857,6 @@
       margin-bottom: 3rem;
       margin-top: 0;
       padding-top: 8px;
-      min-height: 11.8rem;
     }
     .usajobs-open-opps-opportunity-requestor__figure {
       position: relative;
@@ -858,6 +868,12 @@
         margin: 0;
         vertical-align: initial;
       }
+    }
+
+    .usajobs-open-opps-opportunity-requestor__body {
+      display: block;
+      width: 85px;
+      min-height: 8.8rem;
     }
 
     .project-people-show-div {
@@ -904,6 +920,13 @@
     }
   }
 
+  .project-people__wrapper.in-progress {
+
+    .usajobs-open-opps-opportunity-requestor__body {
+      min-height: 11.8rem;
+    }
+  }
+
   .usajobs-open-opps-opportunity__cancel {
     display: block;
     width: 100%;
@@ -937,6 +960,7 @@ ul.achievements {
 
     a {
       color: $color-primary;
+      text-decoration: none;
     }
   }
 }
@@ -1024,6 +1048,11 @@ ul.achievements {
 
   & &__name, & &__jobtitle, & &__company {
     margin: 0;
+
+    a {
+      color: $color-primary;
+      text-decoration: none;
+    }
   }
 
   &__status {
@@ -1134,6 +1163,11 @@ ul.achievements {
 
   & &__name {
     margin: 0;
+
+    a {
+      color: $color-primary;
+      text-decoration: none;
+    }
   }
 
   &__status {

@@ -37,7 +37,7 @@
             <div class="usajobs-open-opps-opportunity-requestor__wrapper">
               <div class="usajobs-open-opps-opportunity-requestor">
                 <div class="usajobs-open-opps-opportunity-requestor__figure-body">
-                  <div class="usajobs-open-opps-opportunity-requestor__figure <% if (user) { %><%- getInitialsColor(user.id) %><% } %>" <% if (user) { %> data-userid="<%- model.userId %>" <% } %>>
+                  <div class="usajobs-open-opps-opportunity-requestor__figure <% if (user) { %><%- getInitialsColor(model.owner.id) %><% } %>" <% if (user) { %> data-userid="<%- model.userId %>" <% } %>>
                     <% if (model.owner.photoId) { %>
                       <img src="/api/user/photo/<%- model.owner.id %>" alt="Profile picture of <%- model.owner.name %>">
                     <% } else { %>
@@ -46,7 +46,7 @@
                   </div>
                   <div class="usajobs-open-opps-opportunity-requestor__body">
                     <p class="usajobs-open-opps-opportunity-requestor__name">
-                      <%- model.owner.name %> <% if(model.owner.agency && model.owner.agency.data) { %>(<%- model.owner.agency.data.abbr %>)<% } %>
+                      <a href="/profile/<%- model.owner.id %>"><%- model.owner.name %> <% if(model.owner.agency && model.owner.agency.data) { %>(<%- model.owner.agency.data.abbr %>)<% } %></a>
                     </p>
                     <span class="usajobs-open-opps-opportunity-requestor__on">
                        Posted on
