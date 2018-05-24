@@ -97,8 +97,8 @@ router.get('/api/admin/announcement', auth.isAdmin, async (ctx, next) => {
   ctx.body = await service.getAnnouncement();
 });
 
-router.put('/api/admin/announcement/:id', auth.isAdmin, async (ctx, next) => {
-  await service.updateAnnouncement(ctx.request.body, function (errors, result) {
+router.put('/api/admin/announcement', auth.isAdmin, async (ctx, next) => {
+  await service.updateAnnouncement(ctx.request.body, ctx.state.user.id, function (errors, result) {
     if (errors) {
       ctx.status = 400;
       return ctx.body = errors;
