@@ -1,8 +1,6 @@
 const _ = require('lodash');
 const dao = require('postgres-gen-dao');
 
-const announcementQuery = 'select * from announcement';
-
 const taskQuery = 'select count(*) as count from task ';
 
 const taskStateQuery = 'select state from task ';
@@ -215,7 +213,6 @@ module.exports = function (db) {
     TagEntity: dao({ db: db, table: 'tagentity' }),
     Announcement: dao({ db, table: 'announcement' }),
     query: {
-      announcementQuery: announcementQuery,
       taskQuery: taskQuery,
       taskStateQuery: taskStateQuery,
       volunteerQuery: volunteerQuery,

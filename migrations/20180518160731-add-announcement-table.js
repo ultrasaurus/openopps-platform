@@ -27,7 +27,7 @@ exports.up = function (db, callback) {
   }, callback);
 };
 
-exports.down = function (db) {
-  return null;
+exports.down = function (db, callback) {
+  db.dropTable('announcement', callback);
 };
 

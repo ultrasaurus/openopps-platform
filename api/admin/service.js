@@ -293,16 +293,26 @@ async function updateProfile (user, done) {
 }
 
 async function getAnnouncement () {
-  return await dao.Announcement.db.query(dao.query.announcementQuery);
+  return (await dao.Announcement.find())[0] || {};
 }
 
-async function updateAnnouncement (announcement, done) {
-  announcement.updateAt = new Date();
-  await dao.Announcement.update(announcement).then(async () => {
-    return done(true, null);
-  }).catch (err => {
-    return done(null, err);
-  });
+async function updateAnnouncement (announcement, userId, done) {
+  announcement.userId = userId;
+  announcement.updatedAt = new Date();
+  if(!announcement.id) {
+    announcement.createdAt = new Date();
+    await dao.Announcement.insert(announcement).then(() => {
+      done(null, true);
+    }).catch (err => {
+      done(err);
+    });
+  } else {
+    await dao.Announcement.update(announcement).then(() => {
+      done(null, true);
+    }).catch (err => {
+      done(err);
+    });
+  }
 }
 
 async function getAgency (id) {
@@ -377,4 +387,5 @@ module.exports = {
   getActivities: getActivities,
   canAdministerAccount: canAdministerAccount,
   getAnnouncement: getAnnouncement,
+  updateAnnouncement: updateAnnouncement,
 };
