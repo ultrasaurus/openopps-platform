@@ -205,6 +205,7 @@ var TaskEditFormView = Backbone.View.extend({
       width: '100%',
       tokenSeparators: [','],
       data: this.data['madlibTags'].skill,
+      maximumSelectionSize: 5,
     });
 
     this.tagFactory.createTagDropDown({
@@ -219,6 +220,7 @@ var TaskEditFormView = Backbone.View.extend({
       selector: '#task_tag_keywords',
       width: '100%',
       data: this.data['madlibTags'].keywords,
+      maximumSelectionSize: 5,
     });
 
     $('#opportunity-career-field').select2({
