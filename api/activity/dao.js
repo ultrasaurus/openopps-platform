@@ -78,9 +78,6 @@ const clean = {
       var cleaned = _.pickBy(record, _.identity);
       cleaned.owner = cleaned.userId;
       delete(cleaned.userId);
-      if(!_.isEmpty(cleaned.restrict)) {
-        cleaned.restrict = JSON.parse(cleaned.restrict);
-      }
       return cleaned;
     });
   },

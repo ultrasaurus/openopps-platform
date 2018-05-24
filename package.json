@@ -1,7 +1,7 @@
 {
   "name": "openopps-platform",
   "private": true,
-  "version": "3.1.1",
+  "version": "3.1.2",
   "description": "platform that creates an empowered network through sharing skills and collaborating on projects",
   "keywords": [],
   "dependencies": {
@@ -47,6 +47,7 @@
     "koa-better-body": "^3.0.4",
     "koa-better-flash": "^0.0.3",
     "koa-cache-control": "^2.0.0",
+    "koa-compress": "^3.0.0",
     "koa-csrf": "^3.0.6",
     "koa-ejs": "^4.1.0",
     "koa-generic-session": "^2.0.1",

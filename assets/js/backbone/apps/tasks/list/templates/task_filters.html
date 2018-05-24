@@ -97,12 +97,12 @@
             </li>
         </ul>
 
-        <% if (agencyName) { %>
+        <% if (!_.isEmpty(userAgency)) { %>
             <h4 class="usajobs-search-filters__title agency">Agency</h4>
             <ul id="agencyFilters" class="usa-unstyled-list">
                 <li>
                     <input id="js-restrict-task-filter" class="restrict-participation" type="checkbox" name="restrict" value="restrict" <% if (!_.isEmpty(agency.data)) { %>checked<% } %>/>
-                    <label for="js-restrict-task-filter">Restrict to <%- agencyName %></label>
+                    <label for="js-restrict-task-filter">Participation limited to <%- (userAgency.abbr) ? userAgency.parentAbbr ? userAgency.parentAbbr : userAgency.abbr : userAgency.name %> employees</label>
                 </li>
             </ul>
         <% } %>
