@@ -320,6 +320,9 @@ async function copyOpportunity (attributes, user, done) {
     restrict: getRestrictValues(user),
     state: 'draft',
     description: results.description,
+    details: results.details,
+    outcome: results.outcome,
+    about: results.about,
   };
 
   var newTask = _.extend(_.clone(baseTask), task);
