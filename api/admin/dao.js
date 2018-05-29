@@ -211,7 +211,6 @@ module.exports = function (db) {
     Task: dao({ db: db, table: 'task' }),
     Volunteer: dao({ db: db, table: 'volunteer' }),
     TagEntity: dao({ db: db, table: 'tagentity' }),
-    Announcement: dao({ db, table: 'announcement' }),
     query: {
       taskQuery: taskQuery,
       taskStateQuery: taskStateQuery,

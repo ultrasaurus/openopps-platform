@@ -25,7 +25,7 @@ var AdminAnnouncementView = Backbone.View.extend({
 
     // get meta data for announcement
     $.ajax({
-      url: '/api/admin/announcement',
+      url: '/api/announcement',
       dataType: 'json',
       success: function (announcementInfo) {
         this.announcement = announcementInfo;
@@ -77,7 +77,7 @@ var AdminAnnouncementView = Backbone.View.extend({
     e.preventDefault();
     $('#save-btn').attr('disabled', true);
     $.ajax({
-      url: '/api/admin/announcement',
+      url: '/api/announcement',
       method: 'PUT',
       data: {
         id: this.announcement.id,
