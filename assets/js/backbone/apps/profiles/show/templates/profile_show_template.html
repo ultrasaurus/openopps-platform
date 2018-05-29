@@ -50,7 +50,7 @@
               <% if (login.profile.edit === true) { %>
               <a href="/profile/<%- data.id %>/edit" class="link-backbone"><i class="fas fa-edit"></i> <span>Edit</span></a>
               <% } else if (login.profile.editUrl) { %>
-              <a href="<%- login.profile.editUrl %>" target="_blank"><i class="fas fa-edit"></i> <span>Edit</span></a>
+              <a href="<%- login.profile.editUrl %>" target="_blank"><i class="fas fa-edit"></i> <span>Edit</span><span class="sr-only">Opens in a new window</span></a>
               <% } %>
           </div>
           <% } %>
