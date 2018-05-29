@@ -68,6 +68,7 @@ var TaskListView = Backbone.View.extend({
     this.$el.html(template);
     this.$el.localize();
     this.fetchData();
+    this.initializeKeywordSearch();
     $('.usajobs-open-opps-search__box').hide();
     return this;
   },
@@ -80,6 +81,33 @@ var TaskListView = Backbone.View.extend({
         self.filter(self.term, self.filters, self.agency);
         self.$('.usajobs-open-opps-search__box').show();
       },
+    });
+  },
+
+  initializeKeywordSearch: function () {
+    $('#search').autocomplete({
+      source: function (request, response) {
+        $.ajax({
+          url: '/api/ac/tag',
+          dataType: 'json',
+          data: {
+            type: 'keywords',
+            q: request.term.trim(),
+          },
+          success: function (data) {
+            response(_.reject(data, function (item) {
+              return _.findWhere(this.filters.keywords, _.pick(item, 'type', 'name', 'id'));
+            }.bind(this)));
+          }.bind(this),
+        });
+      }.bind(this),
+      minLength: 3,
+      select: function (event, ui) {
+        event.preventDefault();
+        this.filters['keywords'] = _.union(this.filters['keywords'], [_.pick(ui.item, 'type', 'name', 'id')]);
+        this.filter(this.term, this.filters, this.agency);
+        $('#search').val('');
+      }.bind(this),
     });
   },
 
