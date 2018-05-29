@@ -857,6 +857,12 @@
       margin-bottom: 3rem;
       margin-top: 0;
       padding-top: 8px;
+
+      @include media($M-down) {
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+      }
     }
     .usajobs-open-opps-opportunity-requestor__figure {
       position: relative;
