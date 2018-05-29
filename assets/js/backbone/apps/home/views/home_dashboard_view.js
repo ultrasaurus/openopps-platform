@@ -67,7 +67,7 @@ var DashboardView = Backbone.View.extend({
     }.bind(this));
     
     $.ajax({
-      url: '/api/admin/announcement',
+      url: '/api/announcement',
       dataType: 'json',
       success: function (announcementInfo) {
         announcementHtml = templates.announcement(announcementInfo);

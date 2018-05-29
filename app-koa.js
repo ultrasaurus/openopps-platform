@@ -152,6 +152,7 @@ module.exports = (config) => {
   app.use(feature('activity'));
   app.use(feature('comment'));
   app.use(feature('document'));
+  app.use(feature('announcement'));
 
   app.listen(openopps.port);
   console.log('App running at ' + openopps.hostName + ':' + openopps.port);
