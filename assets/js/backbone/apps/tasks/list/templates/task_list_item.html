@@ -31,9 +31,12 @@
       <% }); %>
     </ul>
     <div class="skills">
-      <% _.each(tags['skill'], function (t) { %>
+      <% _.each(_.first(tags['skill'], 5), function (t) { %>
         <span class="skill-label clickable-filter"><%- t.name %></span>
       <% }); %>
+      <% if (_.size(tags['skill']) > 5) { %>
+        <span class="skill-label">+ <%- _.size(tags['skill']) - 5 %></span>
+      <% } %>
     </div>
     <div class="career-field-card">
       <% if (!_.isEmpty(tags['career'])) { %>
@@ -52,9 +55,12 @@
       <% } %>    
       <% if (!_.isEmpty(tags['keywords'])) { %>
         <p>Related keyword:
-        <% _.each(tags['keywords'], function (t, index, list) { %>
+        <% _.each(_.first(tags['keywords'], 5), function (t, index, list) { %>
           <a class="related-keyword" href="/tasks?keywords=<%- t.name %>"><%- t.name %></a><% if ((index + 1) < list.length) { %>,<% } %>
         <% }); %>
+        <% if (_.size(tags['keywords']) > 5) { %>
+          <span>+ <%- _.size(tags['keywords']) - 5 %></span>
+        <% } %>
         </p>
       <% } %>
     </div>

@@ -66,8 +66,14 @@ var DashboardView = Backbone.View.extend({
       this.setTarget('achievements-feed', achievementsHtml);
     }.bind(this));
     
-    announcementHtml = templates.announcement();
-    this.setTarget('announcement-feed', announcementHtml);
+    $.ajax({
+      url: '/api/announcement',
+      dataType: 'json',
+      success: function (announcementInfo) {
+        announcementHtml = templates.announcement(announcementInfo);
+        this.setTarget('announcement-feed', announcementHtml);
+      }.bind(this),
+    });
 
     this.$el.localize();
     return this;

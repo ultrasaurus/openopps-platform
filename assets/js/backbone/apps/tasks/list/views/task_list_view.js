@@ -174,7 +174,7 @@ var TaskListView = Backbone.View.extend({
       placeholder: '',
       user: window.cache.currentUser,
       ui: UIConfig,
-      agencyName: this.userAgency.name,
+      userAgency: this.userAgency,
       tagTypes: this.tagTypes,
       term: this.term,
       filters: this.filters,
@@ -298,19 +298,7 @@ var TaskListView = Backbone.View.extend({
 
   initAgencyFilter: function () {
     this.agency = { data: {} };
-    if (this.queryParams.agency) {
-      // TODO: ideally we would be able to query the API for agencies
-      // and look up the name via the abbreviation. This is basically
-      // a hack to determine whether the current user's agency matches
-      // the abbreviation passed in the query string.
-      this.agency.data.abbr = this.queryParams.agency;
-      if (this.userAgency.name &&
-          this.userAgency.name.indexOf('(' + this.agency.data.abbr + ')') >= 0) {
-        this.agency.data.name = this.userAgency.name;
-      } else {
-        this.agency.data.name = this.agency.data.abbr;
-      }
-    } else if (this.isAgencyChecked()) {
+    if (this.isAgencyChecked()) {
       this.agency.data = this.userAgency;
     }
   },
@@ -485,16 +473,17 @@ function parseTaskStatus (task) {
 }
 
 function filterTaskByAgency ( agency, task ) {
-  var getAbbr = _.property( 'abbr' );
-
-  if ( _.isEmpty( agency.data ) ) {
-    return task;
+  if (_.isEmpty(agency.data)) {
+    return true;
+  } else if (agency.data.abbr === task.restrict.abbr) {
+    return _.property( 'projectNetwork' )( task.restrict );
+  } else if (agency.data.parentAbbr && _.contains([task.restrict.abbr, task.restrict.parentAbbr], agency.data.parentAbbr)) {
+    return _.property( 'projectNetwork' )( task.restrict );
+  } else if (task.restrict.parentAbbr && _.contains([agency.data.abbr, agency.data.parentAbbr], task.restrict.parentAbbr)) {
+    return _.property( 'projectNetwork' )( task.restrict );
+  } else {
+    return false;
   }
-
-  if ( getAbbr( agency.data ) === getAbbr( task.restrict ) ) {
-    return _.property( 'restrictToAgency' )( task.restrict ) || _.property( 'projectNetwork' )( task.restrict );
-  }
-
 }
 
 function filterTaskByTerm ( term, task ) {

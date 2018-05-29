@@ -292,19 +292,6 @@ async function updateProfile (user, done) {
   });
 }
 
-async function getAnnouncement () {
-  return await dao.Announcement.db.query(dao.query.announcementQuery);
-}
-
-async function updateAnnouncement (announcement, done) {
-  announcement.updateAt = new Date();
-  await dao.Announcement.update(announcement).then(async () => {
-    return done(true, null);
-  }).catch (err => {
-    return done(null, err);
-  });
-}
-
 async function getAgency (id) {
   return await dao.TagEntity.findOne('id = ?', id);
 }
@@ -376,5 +363,4 @@ module.exports = {
   getDashboardTaskMetrics: getDashboardTaskMetrics,
   getActivities: getActivities,
   canAdministerAccount: canAdministerAccount,
-  getAnnouncement: getAnnouncement,
 };

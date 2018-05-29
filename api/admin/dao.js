@@ -1,8 +1,6 @@
 const _ = require('lodash');
 const dao = require('postgres-gen-dao');
 
-const announcementQuery = 'select * from announcement';
-
 const taskQuery = 'select count(*) as count from task ';
 
 const taskStateQuery = 'select state from task ';
@@ -193,9 +191,6 @@ const clean = {
   task: function (records) {
     return records.map(function (record) {
       var cleaned = _.pickBy(record, _.identity);
-      if(!_.isEmpty(cleaned.restrict)) {
-        cleaned.restrict = JSON.parse(cleaned.restrict);
-      }
       return cleaned;
     });
   },
@@ -216,9 +211,7 @@ module.exports = function (db) {
     Task: dao({ db: db, table: 'task' }),
     Volunteer: dao({ db: db, table: 'volunteer' }),
     TagEntity: dao({ db: db, table: 'tagentity' }),
-    Announcement: dao({ db, table: 'announcement' }),
     query: {
-      announcementQuery: announcementQuery,
       taskQuery: taskQuery,
       taskStateQuery: taskStateQuery,
       volunteerQuery: volunteerQuery,

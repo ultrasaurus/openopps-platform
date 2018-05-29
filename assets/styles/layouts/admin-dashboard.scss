@@ -166,6 +166,15 @@
     .delete-task {
       color: #CD2026;
     }
+
+    .task-change-owner:visited {
+      color: $color-primary;
+    }
+  }
+
+  .announcement-description, #announcement-title {
+    width: 100%;
+    max-width: initial;
   }
 
   @media screen and (min-width: 62rem) {

@@ -29,8 +29,25 @@ async function findById (id, loggedIn) {
   return task;
 }
 
-async function list () {
-  var tasks = dao.clean.tasks(await dao.Task.query(dao.query.task + ' order by task."createdAt" desc', {}, dao.options.task));
+async function list (user) {
+  if(user) {
+    user.agency = _.find(user.tags, {type: 'agency' });
+  }
+  var tasks = [];
+  if(user && user.isAdmin) {
+    tasks = dao.clean.tasks(await dao.Task.query(dao.query.task + ' order by task."createdAt" desc', {}, dao.options.task));
+  } else {
+    var where = " where task.restrict->>'projectNetwork' = 'false'";
+    if(user && user.agency && !_.isEmpty(user.agency.data)) {
+      where += " or task.restrict->>'abbr' = '" + user.agency.data.abbr + "'";
+      where += " or task.restrict->>'parentAbbr' = '" + user.agency.data.abbr + "'";
+      if(user.agency.data.parentAbbr) {
+        where += " or task.restrict->>'parentAbbr' = '" + user.agency.data.parentAbbr + "'";
+        where += " or task.restrict->>'abbr' = '" + user.agency.data.parentAbbr + "'";
+      }
+    }
+    tasks = dao.clean.tasks(await dao.Task.query(dao.query.task + where + ' order by task."createdAt" desc', {}, dao.options.task));
+  }
   tasks = await Promise.all(tasks.map(async (task) => {
     task.owner = dao.clean.user((await dao.User.query(dao.query.user, task.userId, dao.options.user))[0]);
     return task;
@@ -303,6 +320,9 @@ async function copyOpportunity (attributes, user, done) {
     restrict: getRestrictValues(user),
     state: 'draft',
     description: results.description,
+    details: results.details,
+    outcome: results.outcome,
+    about: results.about,
   };
 
   var newTask = _.extend(_.clone(baseTask), task);
@@ -322,6 +342,7 @@ function getRestrictValues (user) {
   var restrict = {
     name: record.name,
     abbr: record.data.abbr,
+    parentAbbr: record.data.parentAbbr,
     slug: record.data.slug,
     domain: record.data.domain,
     projectNetwork: false,

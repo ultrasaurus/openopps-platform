@@ -205,6 +205,7 @@ var TaskEditFormView = Backbone.View.extend({
       width: '100%',
       tokenSeparators: [','],
       data: this.data['madlibTags'].skill,
+      maximumSelectionSize: 5,
     });
 
     this.tagFactory.createTagDropDown({
@@ -219,6 +220,7 @@ var TaskEditFormView = Backbone.View.extend({
       selector: '#task_tag_keywords',
       width: '100%',
       data: this.data['madlibTags'].keywords,
+      maximumSelectionSize: 5,
     });
 
     $('#opportunity-career-field').select2({
@@ -500,11 +502,11 @@ var TaskEditFormView = Backbone.View.extend({
         $('#task-restrict-agency')[0].checked = true;
         break;
     }
-    if(target.id != 'full-time' && $('#task-restrict-agency').attr('disabled')) {
+    if(e && target.id != 'full-time' && $('#task-restrict-agency').attr('disabled')) {
       $('#task-restrict-agency')[0].checked = false;
     }
     $('#task-restrict-agency').attr('disabled', target.id == 'full-time');
-    $('#task-restrict-agency').siblings('label').attr('title', (target.id == 'full-time') ? 'Required for full time detail' : '')
+    $('#task-restrict-agency').siblings('label').attr('title', (target.id == 'full-time') ? 'Required for full time detail' : '');
   },
 
   toggleLocationOptions: function (e) {

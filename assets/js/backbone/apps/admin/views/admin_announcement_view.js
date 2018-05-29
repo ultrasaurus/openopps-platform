@@ -3,12 +3,15 @@ var Backbone = require('backbone');
 var $ = require('jquery');
 var MarkdownEditor = require('../../../components/markdown_editor');
 var AdminAnnouncementTemplate = require('../templates/admin_announcement_template.html');
+var Modal = require('../../../components/modal');
 
 var AdminAnnouncementView = Backbone.View.extend({
 
   events: {
-    'click .link'               : 'link',
-    'submit #announcement-form' : 'announcementSubmit',
+    'click .link'   : 'link',
+    'click #save-btn'   : 'save',
+    'click #preview-btn': 'preview',
+    'click #edit-btn'   : 'edit',
   },
 
   initialize: function (options) {
@@ -18,36 +21,20 @@ var AdminAnnouncementView = Backbone.View.extend({
   },
 
   render: function (replace) {
-    var self = this;
     this.$el.show();
 
     // get meta data for announcement
     $.ajax({
-      url: '/api/admin/announcement',
+      url: '/api/announcement',
       dataType: 'json',
       success: function (announcementInfo) {
-        self.announcement = data.rows.content;
-        // var template = _.template(AdminAnnouncementTemplate)(data);
-        // self.$el.html(template);
-        // self.$el.localize();
-
-        // announcementInfo.slug = announcementInfo.data.abbr.toLowerCase();
-        // announcementInfo.data.domain = announcementInfo.data.domain;
-        var template = _.template(AdminAnnouncementTemplate, {
-          variable: 'announcement',
-        })(announcementInfo);
-        self.$el.html(template);
-      },
+        this.announcement = announcementInfo;
+        var template = _.template(AdminAnnouncementTemplate)({ announcement: announcementInfo });
+        this.$el.html(template);
+      }.bind(this),
     });
-
-    // var template = _.template(AdminAnnouncementTemplate)(data);
-    // self.$el.html(template);
-    // self.$el.localize();
     
-    Backbone.history.navigate('/admin/announcement/' + this.data.announcement.slug, { replace: replace });
-    
-    // DOM now exists, begin select2 init
-    this.initializeTextAreaAnnouncement();
+    Backbone.history.navigate('/admin/announcement', { replace: replace });
 
     return this;
   },
@@ -62,16 +49,72 @@ var AdminAnnouncementView = Backbone.View.extend({
       title: 'Announcement',
       rows: 6,
       validate: ['empty','html'],
+      preview: true,
     }).render();
   },
 
-  announcementSubmit: function (e) {
+  preview: function (e) {
     e.preventDefault();
+    $('.usajobs-opop-announcement__title').html($('#announcement-title').val());
+    $('.usajobs-opop-announcement__section').html($('#announcement-description').val());
+    $('.preview').show();
+    $('.edit').hide();
+    $('#preview-btn').hide();
+    $('#edit-btn').show();
+    $('#save-btn').show();
+  },
 
-    $('#submit').button('loading');
+  edit: function (e) {
+    e.preventDefault();
+    $('.preview').hide();
+    $('.edit').show();
+    $('#preview-btn').show();
+    $('#edit-btn').hide();
+    $('#save-btn').hide();
+  },
 
-    //need save function
-
+  save: function (e) {
+    e.preventDefault();
+    $('#save-btn').attr('disabled', true);
+    $.ajax({
+      url: '/api/announcement',
+      method: 'PUT',
+      data: {
+        id: this.announcement.id,
+        title: $('#announcement-title').val(),
+        description: $('#announcement-description').val(),
+      },
+      success: function () {
+        this.modal = new Modal({
+          el: '#site-modal',
+          id: 'save-announcement',
+          modalTitle: 'Changes saved',
+          modalBody: 'Changes to the announcement were made successfully.',
+          primary: {
+            text: 'Close',
+            action: function () {
+              this.modal.cleanup();
+              Backbone.history.navigate('/admin', { trigger: true });
+            }.bind(this),
+          },
+        }).render();
+      },
+      error: function () {
+        this.modal = new Modal({
+          el: '#site-modal',
+          id: 'save-announcement',
+          modalTitle: 'An error occured',
+          modalBody: 'An error occured trying to save the announcement changes.',
+          primary: {
+            text: 'Close',
+            action: function () {
+              this.modal.cleanup();
+              Backbone.history.navigate('/admin', { trigger: true });
+            }.bind(this),
+          },
+        }).render();
+      },
+    });
   },
 
   link: function (e) {

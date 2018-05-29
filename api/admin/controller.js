@@ -93,18 +93,4 @@ router.get('/api/admin/tasks/*', auth.isAdminOrAgencyAdmin, async (ctx, next) =>
   ctx.body = await service.getAgencyTaskStateMetrics(ctx.params[0]);
 });
 
-router.get('/api/admin/announcement', auth.isAdmin, async (ctx, next) => {
-  ctx.body = await service.getAnnouncement();
-});
-
-router.put('/api/admin/announcement/:id', auth.isAdmin, async (ctx, next) => {
-  await service.updateAnnouncement(ctx.request.body, function (errors, result) {
-    if (errors) {
-      ctx.status = 400;
-      return ctx.body = errors;
-    }
-    ctx.body = result;
-  });
-});
-
 module.exports = router.routes();
