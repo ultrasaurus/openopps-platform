@@ -1,7 +1,7 @@
 {
   "name": "openopps-platform",
   "private": true,
-  "version": "3.1.4",
+  "version": "3.1.6",
   "description": "platform that creates an empowered network through sharing skills and collaborating on projects",
   "keywords": [],
   "dependencies": {
@@ -42,6 +42,7 @@
     "i18next-xhr-backend": "^1.5.1",
     "jquery": "^3.3.1",
     "jquery-i18next": "^1.2.1",
+    "jquery-ui-dist": "^1.12.1",
     "json2csv": "^3.11.5",
     "koa": "^2.4.1",
     "koa-better-body": "^3.0.4",
