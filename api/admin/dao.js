@@ -23,6 +23,11 @@ const userListQuery = 'select midas_user.*, count(*) over() as full_count ' +
   'limit 25 ' +
   'offset ((? - 1) * 25) ';
 
+const ownerListQuery = 'select midas_user.id, midas_user.name ' +
+'from midas_user inner join tagentity_users__user_tags tags on midas_user.id = tags.user_tags ' +
+'inner join tagentity tag on tags.tagentity_users = tag.id ' +
+"where tag.type = 'agency' and tag.name = ?";
+
 const userAgencyListQuery = 'select midas_user.*, count(*) over() as full_count ' +
   'from midas_user inner join tagentity_users__user_tags tags on midas_user.id = tags.user_tags ' +
   'inner join tagentity tag on tags.tagentity_users = tag.id ' +
@@ -211,6 +216,7 @@ module.exports = function (db) {
     Task: dao({ db: db, table: 'task' }),
     Volunteer: dao({ db: db, table: 'volunteer' }),
     TagEntity: dao({ db: db, table: 'tagentity' }),
+    AuditLog: dao({ db: db, table: 'audit_log'}),
     query: {
       taskQuery: taskQuery,
       taskStateQuery: taskStateQuery,
@@ -221,6 +227,7 @@ module.exports = function (db) {
       postQuery: postQuery,
       volunteerCountQuery: volunteerCountQuery,
       userListQuery: userListQuery,
+      ownerListQuery: ownerListQuery,
       userAgencyListQuery: userAgencyListQuery,
       userListFilteredQuery: userListFilteredQuery,
       userAgencyListFilteredQuery: userAgencyListFilteredQuery,
