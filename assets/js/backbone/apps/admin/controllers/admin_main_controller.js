@@ -1,4 +1,3 @@
-
 var _ = require('underscore');
 var async = require('async');
 var Backbone = require('backbone');
@@ -117,14 +116,21 @@ Admin.ShowController = BaseController.extend({
     });
   },
 
-  changeOwner: function (e) {
-    if (e.preventDefault) e.preventDefault();
-    var self = this;
+  changeOwner: function (event) {
+    if (event.preventDefault) event.preventDefault();
+    var taskId = $(event.currentTarget).data('task-id');
+    var title = $( event.currentTarget ).data('task-title');
+    $.ajax({
+      url: '/api/admin/changeOwner/' + taskId,
+    }).done(function (data) {
+      this.displayChangeOwnerModal(event, { users: data, taskId: taskId, title: title });
+    }.bind(this));
+  },
 
+  displayChangeOwnerModal: function (event, data) {
+    this.target = $(event.currentTarget).parent();
     if (this.modalComponent) { this.modalComponent.cleanup(); }
-
-    var modalContent = _.template(ChangeOwnerTemplate)({});
-
+    var modalContent = _.template(ChangeOwnerTemplate)(data);
     $('body').addClass('modal-is-open');
 
     this.modalComponent = new ModalComponent({
@@ -142,21 +148,39 @@ Admin.ShowController = BaseController.extend({
       primary: {
         text: 'Change owner',
         action: function () {
-          $.ajax({
-            url: '/api/task/copy',
-            method: 'POST',
-            data: {
-              taskId: self.model.attributes.id,
-              title: $('#task-change-owner').val(),
-            },
-          }).done(function (data) {
-            self.modalComponent.cleanup();
-            self.options.router.navigate('/tasks/' + data.taskId + '/edit',
-              { trigger: true });
-          });
-        },
+          if(!validate( { currentTarget: $('#task-change-owner') } )) { // validate returns true if has validation errors
+            $.ajax({
+              url: '/api/admin/changeOwner',
+              method: 'POST',
+              data: {
+                taskId: $('#task-change-owner').data('taskid'),
+                userId: $('#task-change-owner').select2('data').id,
+              },
+            }).done(function (data) {
+              var newAuthor = '<a href="/profile/' + data.id + '">' + data.name + '</a>';
+              this.target.siblings('.metrics-table__author').html(newAuthor);
+              this.target = undefined;
+              this.modalComponent.cleanup();
+            }.bind(this));
+          }
+        }.bind(this),
       },
     }).render();
+    setTimeout(() => {
+      this.initializeChangeOwnerOptions();
+    }, 100);
+  },
+
+  initializeChangeOwnerOptions: function () {
+    $('#task-change-owner').select2({
+      placeholder: 'Select a new owner',
+      width: '100%',
+      allowClear: true,
+    });
+    $('#task-change-owner').on('change', function (e) {
+      validate({ currentTarget: $('#task-change-owner') });
+    }.bind(this));
+    $('.select2-drop')[0].style['z-index'] = 1061;
   },
 
 

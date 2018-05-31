@@ -4,6 +4,7 @@ const db = require('../../db');
 const dao = require('./dao')(db);
 const json2csv = require('json2csv');
 const TaskMetrics = require('./taskmetrics');
+const Audit = require('../model/Audit');
 
 async function getMetrics () {
   var tasks = await getTaskMetrics();
@@ -347,6 +348,52 @@ async function getDashboardTaskMetrics (group, filter) {
   return generator.metrics;
 }
 
+async function canChangeOwner (user, taskId) {
+  var task = await dao.Task.findOne('id = ?', taskId).catch((err) => { 
+    return undefined;
+  });
+  var agency = _.find(user.tags, { type: 'agency' });
+  return task && (task.restrict.name == agency.name);
+}
+
+async function getOwnerOptions (taskId, done) {
+  var task = await dao.Task.findOne('id = ?', taskId).catch((err) => { 
+    return undefined;
+  });
+  if (task) {
+    done(await dao.User.query(dao.query.ownerListQuery, task.restrict.name));
+  } else {
+    done(undefined, 'Unable to locate specified task');
+  }
+}
+
+async function changeOwner (user, data, done) {
+  var task = await dao.Task.findOne('id = ?', data.taskId).catch((err) => { 
+    return undefined;
+  });
+  if (task) {
+    var originalOwner = _.pick(await dao.User.findOne('id = ?', task.userId), 'id', 'name', 'username');
+    task.userId = data.userId;
+    task.updatedAt = new Date();
+    await dao.Task.update(task).then(async () => {
+      var audit = Audit.createAudit('TASK_CHANGE_OWNER', user, {
+        taskId: task.id, 
+        originalOwner: originalOwner,
+        newOwner: _.pick(await dao.User.findOne('id = ?', data.userId), 'id', 'name', 'username'),
+      });
+      await dao.AuditLog.insert(audit).then(() => {
+        done(audit.data.newOwner);
+      }).catch((err) => {
+        done(audit.data.newOwner);
+      });
+    }).catch((err) => {
+      done(undefined, 'An error occured trying to change the owner of this task.');
+    });
+  } else {
+    done(undefined, 'Unable to locate specified task');
+  }
+}
+
 module.exports = {
   getMetrics: getMetrics,
   getInteractions: getInteractions,
@@ -363,4 +410,7 @@ module.exports = {
   getDashboardTaskMetrics: getDashboardTaskMetrics,
   getActivities: getActivities,
   canAdministerAccount: canAdministerAccount,
+  canChangeOwner: canChangeOwner,
+  getOwnerOptions: getOwnerOptions,
+  changeOwner: changeOwner,
 };
