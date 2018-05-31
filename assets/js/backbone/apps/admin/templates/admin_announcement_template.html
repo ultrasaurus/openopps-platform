@@ -18,7 +18,8 @@
       <span class="field-validation-error error-count100" style="display:none;">The title must be no more than 100 characters.</span>
       <span class="field-validation-error error-html" style="display:none;">The special characters '
         < ' or '>' are not allowed</span>
-      <input type="text" id="announcement-title" class="fullwidth form-control validate" value="<%- announcement.title %>" data-validate="empty,count100,html" />
+      <!-- <input type="text" id="announcement-title" class="fullwidth form-control validate" value="<%- announcement.title %>" data-validate="empty,count100,html" /> -->
+      <textarea id="announcement-title" class="fullwidth form-control validate" data-validate="empty,count100,html"><%- announcement.title %></textarea>
       <p class="usajobs-form__help-brief">Maximum of 100 characters</p>
     </div>
     <div class="required-input">
