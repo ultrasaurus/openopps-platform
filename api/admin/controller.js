@@ -125,4 +125,16 @@ router.post('/api/admin/changeOwner', auth.isAdminOrAgencyAdmin, async (ctx, nex
   }
 });
 
+router.post('/api/admin/assign', auth.isAdmin, async (ctx, next) => {
+  await service.assignParticipant(ctx.state.user, ctx.request.body, function (result, err) {
+    if (err) {
+      ctx.status = 400;
+      ctx.body = err;
+    } else {
+      ctx.status = 200;
+      ctx.body = result;
+    }
+  });
+});
+
 module.exports = router.routes();

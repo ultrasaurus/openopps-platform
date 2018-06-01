@@ -167,7 +167,11 @@
       color: #CD2026;
     }
 
-    .task-change-owner:visited {
+    .task-change-owner {
+      margin-right: $size-default;
+    }
+
+    .task-change-owner:visited, .task-add-participant:visited {
       color: $color-primary;
     }
   }

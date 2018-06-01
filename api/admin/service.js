@@ -5,6 +5,7 @@ const dao = require('./dao')(db);
 const json2csv = require('json2csv');
 const TaskMetrics = require('./taskmetrics');
 const Audit = require('../model/Audit');
+const volunteerService = require('../volunteer/service');
 
 async function getMetrics () {
   var tasks = await getTaskMetrics();
@@ -396,6 +397,35 @@ async function changeOwner (user, data, done) {
   }
 }
 
+async function assignParticipant (user, data, done) {
+  var volunteer = await dao.Volunteer.find('"taskId" = ? and "userId" = ?', data.taskId, data.userId);
+  if (volunteer.length > 0) {
+    done(undefined, 'Participant already has been added.');
+  } else {
+    await dao.Volunteer.insert({
+      taskId: data.taskId,
+      userId: data.userId,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      silent: false,
+      assigned: false,
+      taskComplete: false,
+    }).then(async (volunteer) => {
+      var audit = Audit.createAudit('TASK_ADD_PARTICIPANT', user, {
+        taskId: data.taskId,
+        participant: _.pick(await dao.User.findOne('id = ?', volunteer.userId), 'id', 'name', 'username'),
+      });
+      await dao.AuditLog.insert(audit).catch((err) => {
+        // TODO: Log audit errors
+      });
+      volunteerService.sendAddedVolunteerNotification(await dao.User.findOne('id = ?', volunteer.userId), volunteer, 'volunteer.create.thanks');
+      done(audit.data.participant);
+    }).catch((err) => {
+      done(undefined, 'Error assigning new participant');
+    });
+  }
+}
+
 module.exports = {
   getMetrics: getMetrics,
   getInteractions: getInteractions,
@@ -415,4 +445,5 @@ module.exports = {
   canChangeOwner: canChangeOwner,
   getOwnerOptions: getOwnerOptions,
   changeOwner: changeOwner,
+  assignParticipant: assignParticipant,
 };

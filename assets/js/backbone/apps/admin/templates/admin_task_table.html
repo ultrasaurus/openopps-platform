@@ -25,7 +25,7 @@
         <td class="metrics-table__title">
           <a href="/tasks/<%- task.id %>"><%- task.title %></a>
           <% if ( task.volunteers.length ) { %>
-          <div>Sign-ups:
+          <div class="sign-ups">Sign-ups:
              <% _( task.volunteers ).forEach( function( vol ) { %>
                <a href="/profile/<%- vol.id %>"><%-vol.name || 'Unnamed'%></a><%-(vol == task.volunteers[task.volunteers.length-1]) ? '' : ', ' %>
              <% } ); %>
@@ -66,7 +66,17 @@
               title="Change Owner">
               <i class="fas fa-user-cog"></i>
             </a>
-          <% } %>
+            <% if (window.cache.currentUser && window.cache.currentUser.isAdmin) { %>
+            <a href="#add-participant/<%- task.id %>"
+              data-task-id="<%- task.id %>"
+              data-task-title="<%- task.title %>"
+              class="task-add-participant"
+              alt="Add participant"
+              title="Add participant">
+              <i class="fas fa-user-plus"></i>
+            </a>
+            <% } %>
+          <% } %>    
         </td>
       </tr>
     <% }); %>
