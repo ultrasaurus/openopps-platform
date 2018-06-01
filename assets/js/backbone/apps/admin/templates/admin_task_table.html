@@ -66,6 +66,7 @@
               title="Change Owner">
               <i class="fas fa-user-cog"></i>
             </a>
+            <% if (window.cache.currentUser && window.cache.currentUser.isAdmin) { %>
             <a href="#add-participant/<%- task.id %>"
               data-task-id="<%- task.id %>"
               data-task-title="<%- task.title %>"
@@ -74,6 +75,7 @@
               title="Add participant">
               <i class="fas fa-user-plus"></i>
             </a>
+            <% } %>
           <% } %>    
         </td>
       </tr>
