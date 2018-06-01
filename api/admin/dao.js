@@ -31,7 +31,7 @@ const ownerListQuery = 'select midas_user.id, midas_user.name ' +
 const userAgencyListQuery = 'select midas_user.*, count(*) over() as full_count ' +
   'from midas_user inner join tagentity_users__user_tags tags on midas_user.id = tags.user_tags ' +
   'inner join tagentity tag on tags.tagentity_users = tag.id ' +
-  "where tag.type = 'agency' and lower(data->>'abbr') = ? " +
+  "where tag.type = 'agency' and lower(tag.name) = ? " +
   'order by "createdAt" desc ' +
   'limit 25 ' +
   'offset ((? - 1) * 25) ';
@@ -81,9 +81,7 @@ const taskAgencyStateUserQuery = 'select @task.*, @owner.*, @volunteers.* ' +
   'from @task task inner join @midas_user owner on task."userId" = owner.id ' +
   'left join volunteer on volunteer."taskId" = task.id ' +
   'left join @midas_user volunteers on volunteers.id = volunteer."userId" ' +
-  'left join tagentity_users__user_tags tags on owner.id = tags.user_tags ' +
-  'left join tagentity tag on tags.tagentity_users = tag.id ' +
-  "where task.state = ? and lower(data->>'abbr') = ? ";
+  "where task.state = ? and lower(restrict->>'name') = ? ";
 
 const activityQuery = 'select comment."createdAt", comment.id, ' + "'comment' as type " + '' +
   'from midas_user ' +

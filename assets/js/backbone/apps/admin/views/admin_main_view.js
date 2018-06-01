@@ -45,7 +45,7 @@ var AdminMainView = Backbone.View.extend({
   userAgencyId: function () {
     return (window.cache.currentUser
               && window.cache.currentUser.agency
-              && window.cache.currentUser.agency.slug);
+              && window.cache.currentUser.agency.id);
   },
 
   routeTarget: function (target, agencyId, replace) {
