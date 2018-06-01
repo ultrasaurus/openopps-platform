@@ -52,12 +52,14 @@ Admin.ShowController = BaseController.extend({
       secondary: {
         text: 'Cancel',
         action: function () {
+          $('#task-change-owner').select2('destroy');
           this.modalComponent.cleanup();
         }.bind(this),
       },
       primary: {
         text: 'Change owner',
         action: function () {
+          $('#task-change-owner').select2('close');
           if(!validate( { currentTarget: $('#task-change-owner') } )) { // validate returns true if has validation errors
             $.ajax({
               url: '/api/admin/changeOwner',
@@ -70,6 +72,7 @@ Admin.ShowController = BaseController.extend({
               var newAuthor = '<a href="/profile/' + data.id + '">' + data.name + '</a>';
               this.target.siblings('.metrics-table__author').html(newAuthor);
               this.target = undefined;
+              $('#task-change-owner').select2('destroy');
               this.modalComponent.cleanup();
             }.bind(this));
           }
@@ -86,11 +89,11 @@ Admin.ShowController = BaseController.extend({
       placeholder: 'Select a new owner',
       width: '100%',
       allowClear: true,
+      dropdownCssClass: 'select2-drop-modal',
     });
     $('#task-change-owner').on('change', function (e) {
       validate({ currentTarget: $('#task-change-owner') });
     }.bind(this));
-    $('.select2-drop')[0].style['z-index'] = 1061;
   },
 
   // Cleanup controller and views
