@@ -94,7 +94,7 @@ Admin.ShowController = BaseController.extend({
       },
     }).render();
 
-    setTimeout(() => {
+    setTimeout(function () {
       this.initializeAddParticipantSearch();
     }, 100);
   },
@@ -183,7 +183,7 @@ Admin.ShowController = BaseController.extend({
         $('#task-add-participant').select2('destroy');
       },
     }).render();
-    setTimeout(() => {
+    setTimeout(function () {
       this.initializeChangeOwnerOptions();
     }, 100);
   },
