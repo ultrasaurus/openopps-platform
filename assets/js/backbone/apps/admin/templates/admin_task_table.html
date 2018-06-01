@@ -25,7 +25,7 @@
         <td class="metrics-table__title">
           <a href="/tasks/<%- task.id %>"><%- task.title %></a>
           <% if ( task.volunteers.length ) { %>
-          <div>Sign-ups:
+          <div class="sign-ups">Sign-ups:
              <% _( task.volunteers ).forEach( function( vol ) { %>
                <a href="/profile/<%- vol.id %>"><%-vol.name || 'Unnamed'%></a><%-(vol == task.volunteers[task.volunteers.length-1]) ? '' : ', ' %>
              <% } ); %>

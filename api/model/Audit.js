@@ -6,6 +6,11 @@ const AuditTypes = {
     description: 'Ownership of a task is transferred from one user to another user.',
     data: ['taskId', 'originalOwner', 'newOwner'],
   },
+  'TASK_ADD_PARTICIPANT': {
+    action: 'TASK_ADD_PARTICIPANT',
+    description: 'A new user is added to the applicant pool for an opportunity.',
+    data: ['taskId', 'participant'],
+  },
 };
 
 function getRole (user) {

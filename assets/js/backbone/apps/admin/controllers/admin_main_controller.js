@@ -20,8 +20,7 @@ Admin.ShowController = BaseController.extend({
 
   // Initialize the admin view
   initialize: function (options) {
-    this.options    = options;
-    this.data       = {};   
+    this.options    = options; 
 
     this.adminMainView = new AdminMainView({
       action: options.action,
@@ -30,18 +29,14 @@ Admin.ShowController = BaseController.extend({
     }).render();
   },
 
-  addParticipant: function (e) {
+  addParticipant: function (event) {
     if (event.preventDefault) event.preventDefault();
     var taskId = $(event.currentTarget).data('task-id');
     var title = $( event.currentTarget ).data('task-title');
-    $.ajax({
-      url: '/api/admin/changeOwner/' + taskId,
-    }).done(function (data) {
-      this.displayAddParticipantModal(event, { users: data, taskId: taskId, title: title });
-    }.bind(this));
+    this.displayAddParticipantModal(event, { taskId: taskId, title: title });
   },
 
-  displayAddParticipantModal: function (e, data) {
+  displayAddParticipantModal: function (event, data) {
     this.target = $(event.currentTarget).parent();
     if (this.modalComponent) { this.modalComponent.cleanup(); }
 
@@ -58,16 +53,45 @@ Admin.ShowController = BaseController.extend({
       secondary: {
         text: 'Cancel',
         action: function () {
+          $('#task-add-participant').select2('destroy');
           this.modalComponent.cleanup();
         }.bind(this),
       },
       primary: {
         text: 'Add participant',
         action: function () {
-          // this.modalComponent.cleanup();
-          this.assignParticipant(e);
+          $('#task-add-participant').select2('close');
+          if(!validate( { currentTarget: $('#task-add-participant') } )) {
+            var data = {
+              taskId: $('#task-add-participant').data('taskid'),
+              userId: $('#task-add-participant').select2('data').id,
+            };
+            $.ajax({
+              url: '/api/admin/assign',
+              type: 'POST',
+              data: data,
+              success: function (data) {
+                var newSignUp = '<a href="/profile/' + data.id + '">' + data.name + '</a>';
+                var signUps = this.target.siblings('.metrics-table__title').children('.sign-ups');
+                if(signUps.html()) {
+                  signUps.html(signUps.html().trim() + ', ' + newSignUp);
+                } else {
+                  this.target.siblings('.metrics-table__title').append('<div class="sign-ups">Sign-ups: ' + newSignUp + '</div>');
+                }
+                this.target = undefined;
+                $('#task-add-participant').select2('destroy');
+                this.modalComponent.cleanup();
+              }.bind(this),
+              error: function (err) {
+                // display modal alert type error
+              }.bind(this),
+            });
+          }
         }.bind(this),
-      },  
+      },
+      cleanup: function () {
+        $('#task-add-participant').select2('destroy');
+      },
     }).render();
 
     setTimeout(() => {
@@ -76,7 +100,7 @@ Admin.ShowController = BaseController.extend({
   },
 
   initializeAddParticipantSearch: function () {
-    this.$('#task-add-participant').select2({
+    $('#task-add-participant').select2({
       placeholder: 'Search for a participant',
       minimumInputLength: 3,
       ajax: {
@@ -89,31 +113,18 @@ Admin.ShowController = BaseController.extend({
           return { results: data };
         },
       },
-      // formatResult: repoFormatResult,
-    });
-    $('.select2-drop')[0].style['z-index'] = 1061;
-  },
-
-  assignParticipant: function (e) {
-    if (e.preventDefault) e.preventDefault();
-    // if (e.stopPropagation) e.stopPropagation();
-    var assign = $(e.currentTarget).data('behavior') == 'assign';
-    $.ajax({
-      url: '/api/volunteer/assign',
-      type: 'POST',
-      data: {
-        taskId: $('#task-add-participant').data('taskid'),
-        volunteerId: $('#task-add-participant').select2('data').id,
-        assign: assign,
+      dropdownCssClass: 'select2-drop-modal',
+      formatResult: function (obj, container, query) {
+        return (obj.unmatched ? obj.name : _.escape(obj.name));
       },
-      success: function (data) {
-        _.findWhere(this.data.model.volunteers, { id: data.id }).assigned = assign;
-        this.initializeProgress();
-      }.bind(this),
-      error: function (err) {
-        // display modal alert type error
-      }.bind(this),
+      formatSelection: function (obj, container, query) {
+        return (obj.unmatched ? obj.name : _.escape(obj.name));
+      },
+      formatNoMatches: 'No user found by that name',
     });
+    $('#task-add-participant').on('change', function (e) {
+      validate({ currentTarget: $('#task-add-participant') });
+    }.bind(this));
   },
 
   changeOwner: function (event) {
@@ -164,6 +175,9 @@ Admin.ShowController = BaseController.extend({
             }.bind(this));
           }
         }.bind(this),
+      },
+      cleanup: function () {
+        $('#task-add-participant').select2('destroy');
       },
     }).render();
     setTimeout(() => {

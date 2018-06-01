@@ -18,7 +18,8 @@
  *    primary: { // primary button
  *      text: [button text],
  *      action: [function]
- *    }
+ *    },
+ *    cleanup: [function] // additional clean up to preform
  * }
  *
  * var modal = new Modal({ el: '#site-modal' ... }).render();
@@ -73,6 +74,9 @@ var Modal = BaseComponent.extend({
   },
 
   cleanup: function () {
+    if(this.options.cleanup) {
+      this.options.cleanup();
+    }
     $('.usajobs-modal__canvas-blackout').remove();
     $('.modal-is-open').removeClass();
     removeView(this);
