@@ -25,14 +25,15 @@ async function getTaskStateMetrics () {
   return states;
 }
 
-async function getAgencyTaskStateMetrics (agency) {
+async function getAgencyTaskStateMetrics (agencyId) {
   var states = {};
-  states.inProgress = dao.clean.task(await dao.Task.query(dao.query.taskAgencyStateUserQuery, 'in progress', agency.toLowerCase(), dao.options.task));
-  states.completed = dao.clean.task(await dao.Task.query(dao.query.taskAgencyStateUserQuery, 'completed', agency.toLowerCase(), dao.options.task));
-  states.draft = dao.clean.task(await dao.Task.query(dao.query.taskAgencyStateUserQuery, 'draft', agency.toLowerCase(), dao.options.task));
-  states.open = dao.clean.task(await dao.Task.query(dao.query.taskAgencyStateUserQuery, 'open', agency.toLowerCase(), dao.options.task));
-  states.notOpen = dao.clean.task(await dao.Task.query(dao.query.taskAgencyStateUserQuery, 'not open', agency.toLowerCase(), dao.options.task));
-  states.submitted = dao.clean.task(await dao.Task.query(dao.query.taskAgencyStateUserQuery, 'submitted', agency.toLowerCase(), dao.options.task));
+  var agency = (await dao.TagEntity.find("type = 'agency' and id = ?", agencyId))[0];
+  states.inProgress = dao.clean.task(await dao.Task.query(dao.query.taskAgencyStateUserQuery, 'in progress', agency.name.toLowerCase(), dao.options.task));
+  states.completed = dao.clean.task(await dao.Task.query(dao.query.taskAgencyStateUserQuery, 'completed', agency.name.toLowerCase(), dao.options.task));
+  states.draft = dao.clean.task(await dao.Task.query(dao.query.taskAgencyStateUserQuery, 'draft', agency.name.toLowerCase(), dao.options.task));
+  states.open = dao.clean.task(await dao.Task.query(dao.query.taskAgencyStateUserQuery, 'open', agency.name.toLowerCase(), dao.options.task));
+  states.notOpen = dao.clean.task(await dao.Task.query(dao.query.taskAgencyStateUserQuery, 'not open', agency.name.toLowerCase(), dao.options.task));
+  states.submitted = dao.clean.task(await dao.Task.query(dao.query.taskAgencyStateUserQuery, 'submitted', agency.name.toLowerCase(), dao.options.task));
 
   return states;
 }
@@ -156,11 +157,12 @@ async function getUsers (page, limit) {
   return result;
 }
 
-async function getUsersForAgency (page, limit, agency) {
+async function getUsersForAgency (page, limit, agencyId) {
+  var agency = (await dao.TagEntity.find("type = 'agency' and id = ?", agencyId))[0];
   var result = {};
   result.limit = typeof limit !== 'undefined' ? limit : 25;
   result.page = +page;
-  result.users = (await dao.User.db.query(await dao.query.userAgencyListQuery, agency, page)).rows;
+  result.users = (await dao.User.db.query(await dao.query.userAgencyListQuery, agency.name.toLowerCase(), page)).rows;
   result.count = result.users.length > 0 ? +result.users[0].full_count : 0;
   result = await getUserTaskMetrics (result);
   return result;
