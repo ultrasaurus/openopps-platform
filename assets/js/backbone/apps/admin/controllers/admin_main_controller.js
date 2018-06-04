@@ -96,7 +96,7 @@ Admin.ShowController = BaseController.extend({
 
     setTimeout(function () {
       this.initializeAddParticipantSearch();
-    }, 100);
+    }.bind(this), 100);
   },
 
   initializeAddParticipantSearch: function () {
@@ -185,7 +185,7 @@ Admin.ShowController = BaseController.extend({
     }).render();
     setTimeout(function () {
       this.initializeChangeOwnerOptions();
-    }, 100);
+    }.bind(this), 100);
   },
 
   initializeChangeOwnerOptions: function () {
