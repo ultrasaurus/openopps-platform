@@ -74,6 +74,8 @@ async function resetPassword (token, password, done) {
     passport.password = await bcrypt.hash(password, 10);
     passport.accessToken = crypto.randomBytes(48).toString('base64');
     passport.updatedAt = new Date();
+    passport.createdAt = passport.createdAt || new Date();
+    passport.protocol = passport.protocol || 'local';
     await dao.Passport.upsert(passport).then(async () => {
       await dao.User.update(user).then(async () => {
         await dao.UserPasswordReset.update(token).then(() => {
