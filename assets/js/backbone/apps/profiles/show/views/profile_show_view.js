@@ -118,6 +118,8 @@ var ProfileShowView = Backbone.View.extend({
       login: Login,
       data: this.model.toJSON(),
       tags: this.getTags(['skill', 'topic']),
+      skillsTags: this.getTags(['skill']),
+      interestsTags: this.getTags(['topic']),
       tagTypes: this.tagTypes,
       user: window.cache.currentUser || {},
       edit: false,
