@@ -32,6 +32,10 @@
 
   <% if (model.canEditTask && _.contains(['open', 'not open', 'in progress'], state.value)) { %>
   <div class="continue-accepting-applicants">
+      <a href="https://usajobs.github.io/openopps-help/opportunity/accept-applications/" class="usajobs-opop-section__help" target="_blank">
+        <span class="fas fa-question-circle" title="Help"></span> Help
+        <span class="sr-only">Opens in a new window</span>
+      </a>
     <div class="continue-accepting-applicants__toggle">
       <span class="continue-accepting-applicants__label">Continue accepting applicants</span>
       <div id="accept-toggle" class="continue-accepting-applicants__toggle-container <% if (!model.acceptingApplicants) { %>toggle-off<% } %>">

@@ -616,11 +616,13 @@
   }
 
   .continue-accepting-applicants {
-    background-color: $color-primary-alt-lightest;
     margin-top: $size-default;
     margin-bottom: $size-M;
+    padding-top: 5rem;
+    position: relative;
 
     .continue-accepting-applicants__toggle {
+      background-color: $color-primary-alt-lightest;
       color: #000;
       text-decoration: none;
       display: flex;
@@ -664,6 +666,10 @@
           font-weight: normal;
         }
       }
+    }
+
+    .usajobs-opop-section__help {
+      right: 0.2rem;
     }
   }
 
