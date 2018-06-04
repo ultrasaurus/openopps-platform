@@ -256,7 +256,7 @@ var TaskListView = Backbone.View.extend({
       $('#task-page').hide();
     } else {
       $('#search-tab-bar-filter-count').text(this.appliedFilterCount);
-      var pageSize = 20;
+      var pageSize = 10;
       var start = (page - 1) * pageSize;
       var stop = page * pageSize;
       $('#task-list').append(this.tasks.slice(start, stop).map(function (task) {
