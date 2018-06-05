@@ -26,7 +26,7 @@ const userListQuery = 'select midas_user.*, count(*) over() as full_count ' +
 const ownerListQuery = 'select midas_user.id, midas_user.name ' +
 'from midas_user inner join tagentity_users__user_tags tags on midas_user.id = tags.user_tags ' +
 'inner join tagentity tag on tags.tagentity_users = tag.id ' +
-"where tag.type = 'agency' and tag.name = ?";
+"where midas_user.disabled = false and tag.type = 'agency' and tag.name = ?";
 
 const userAgencyListQuery = 'select midas_user.*, count(*) over() as full_count ' +
   'from midas_user inner join tagentity_users__user_tags tags on midas_user.id = tags.user_tags ' +

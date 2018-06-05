@@ -149,45 +149,6 @@ var TaskEditFormView = Backbone.View.extend({
       return formatted;
     };
 
-    this.$('#owner').select2({
-      placeholder: 'task owner',
-      multiple: false,
-      formatResult: formatResult,
-      formatSelection: formatResult,
-      allowClear: false,
-      ajax: {
-        url: '/api/ac/user',
-        dataType: 'json',
-        data: function (term) {
-          return { q: term };
-        },
-        results: function (data) {
-          return { results: data };
-        },
-      },
-    });
-    if (this.data.data.owner) {
-      this.$('#owner').select2('data', this.data.data.owner);
-    }
-
-    this.$('#participant').select2({
-      placeholder: 'Add participant',
-      multiple: false,
-      formatResult: formatResult,
-      formatSelection: formatResult,
-      allowClear: false,
-      ajax: {
-        url: '/api/ac/user',
-        dataType: 'json',
-        data: function (term) {
-          return { q: term };
-        },
-        results: function (data) {
-          return { results: data };
-        },
-      },
-    });
-
     this.tagFactory.createTagDropDown({
       type: 'series',
       placeholder: 'Start typing to select a series',
