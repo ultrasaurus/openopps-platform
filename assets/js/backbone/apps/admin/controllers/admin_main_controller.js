@@ -181,7 +181,7 @@ Admin.ShowController = BaseController.extend({
         }.bind(this),
       },
       cleanup: function () {
-        $('#task-add-participant').select2('destroy');
+        $('#task-change-owner').select2('destroy');
       },
     }).render();
     setTimeout(function () {

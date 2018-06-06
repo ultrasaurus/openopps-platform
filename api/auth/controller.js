@@ -40,7 +40,7 @@ router.post('/api/auth/local', async (ctx, next) => {
 });
 
 router.post('/api/auth/local/register', async (ctx, next) => {
-  log.info('Register user', _.omit(ctx.request.body, 'password'));
+  log.info('Register user', ctx.request.body);
 
   delete(ctx.request.body.isAdmin);
   delete(ctx.request.body.isAgencyAdmin);
@@ -50,15 +50,8 @@ router.post('/api/auth/local/register', async (ctx, next) => {
     return ctx.body = { message: 'No username was entered.' };
   }
 
-  if (!ctx.request.body.password) {
-    ctx.flash('error', 'Error.Passport.Password.Missing');
-    ctx.status = 400;
-    return ctx.body = { message: 'No password was entered.' };
-  }
-
   await service.register(ctx.request.body, function (err, user) {
     if (err) {
-      ctx.flash('error', 'Error.Passport.Registration.Failed');
       ctx.status = 400;
       return ctx.body = { message: err.message || 'Registration failed.' };
     }
@@ -67,7 +60,6 @@ router.post('/api/auth/local/register', async (ctx, next) => {
     } finally {
       ctx.body = { success: true };
     }
-    return ctx.login(user);
   });
 });
 

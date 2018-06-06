@@ -27,7 +27,7 @@ router.get('/api/user/:id', auth, async (ctx, next) => {
 });
 
 router.get('/api/user/username/:username', async (ctx, next) => {
-  if (!ctx.params.username || !validator.isEmail(ctx.params.username)) {
+  if (!ctx.params.username || !validator.isEmail(ctx.params.username) || !validGovtEmail(ctx.params.username)) {
     return ctx.body = true;
   }
   log.info('looking up username', ctx.params.username);
