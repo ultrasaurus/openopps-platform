@@ -1405,6 +1405,10 @@ ul.achievements {
 
 #results-count {
   margin-bottom: $size-default;
+
+  @include media($L-down) {
+    margin-left: $size-default;
+  }
 }
 
 // $requestor-background-colors: $color-cool-blue-lightest, $color-gold-lightest, $color-secondary-lightest, $color-primary-alt-lightest, $color-green-lightest;
