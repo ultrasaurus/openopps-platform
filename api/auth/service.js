@@ -26,28 +26,26 @@ const basePassport = {
 };
 
 async function register (attributes, done) {
-  if (!attributes.password || attributes.password === '') {
-    return done(new Error('password may not be blank'));
-  }
   attributes.username = attributes.username.toLowerCase().trim();
   await dao.User.insert(_.extend(_.clone(baseUser), attributes)).then(async (user) => {
-    log.info('created user', _.omit(user, 'password'));
+    log.info('created user', user);
 
     var tags = attributes.tags || attributes['tags[]'] || [];
     await userService.processUserTags(user, tags).then(tags => {
       user.tags = tags;
     });
-    var passport = {
-      user: user.id,
-      password: await bcrypt.hash(attributes.password, 10),
-      accessToken: crypto.randomBytes(48).toString('base64'),
+    var passwordReset = {
+      userId: user.id,
+      token: uuid.v4(),
+      createdAt: new Date(),
+      updatedAt: new Date,
     };
-    await dao.Passport.insert(_.extend(_.clone(basePassport), passport)).then(passport => {
-      log.info('created passport', _.omit(passport, ['password', 'accessToken']));
-    }).catch(err => {
-      log.info('register: failed to create passport ', attributes.username, err);
+    await dao.UserPasswordReset.insert(passwordReset).then((obj) => {
+      return done(null, _.extend(user, { token: obj.token }));
+    }).catch((err) => {
+      log.info('Error creating password reset record', err);
+      return done(true);
     });
-    return done(null, user);
   }).catch(err => {
     log.info('register: failed to create user ', attributes.username, err);
     return done(true);
@@ -60,6 +58,7 @@ async function sendUserCreateNotification (user, action) {
     model: {
       name: user.name,
       username: user.username,
+      token: user.token,
     },
   };
   notification.createNotification(data);
