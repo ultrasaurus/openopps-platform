@@ -253,7 +253,8 @@ var TaskListView = Backbone.View.extend({
       };
       compiledTemplate = _.template(NoListItem)(settings);
       $('#task-list').append(compiledTemplate);
-      $('#task-page').hide();
+      $('#task-page').hide();      
+      $('#results-count').hide();
     } else {
       $('#search-tab-bar-filter-count').text(this.appliedFilterCount);
       var pageSize = 10;
@@ -268,6 +269,12 @@ var TaskListView = Backbone.View.extend({
         numberOfPages: Math.ceil(this.tasks.length/pageSize),
         pages: [],
       });
+      if (this.tasks.length <= pageSize) {
+        $('#results-count').text('Viewing ' +  (start + 1) + ' - ' + this.tasks.length + ' of ' + this.tasks.length + ' opportunities');
+      } else {
+        $('#results-count').text('Viewing ' +  (start + 1) + ' - ' + (this.tasks.length > pageSize ? this.tasks.length : stop) + ' of ' + this.tasks.length + ' opportunities');
+      }
+      $('#results-count').show();
     }
   },
 
