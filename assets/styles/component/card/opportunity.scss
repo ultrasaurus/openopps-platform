@@ -388,7 +388,6 @@
       }
 
       .usajobs-open-opps-opportunity-requestor__figure-body {
-        display: inline;
         float: left;
         vertical-align: top;
         margin: 0;
@@ -1402,6 +1401,10 @@ ul.achievements {
   border-radius: 50%;
   width: 4.6rem;
   height: 4.6rem;
+}
+
+#results-count {
+  margin-bottom: $size-default;
 }
 
 // $requestor-background-colors: $color-cool-blue-lightest, $color-gold-lightest, $color-secondary-lightest, $color-primary-alt-lightest, $color-green-lightest;

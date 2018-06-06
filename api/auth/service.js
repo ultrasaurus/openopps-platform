@@ -15,19 +15,18 @@ const baseUser = {
   disabled: false,
   passwordAttempts: 0,
   completedTasks: 0,
-  createdAt: new Date(),
-  updatedAt: new Date(),
 };
 
 const basePassport = {
   protocol: 'local',
-  createdAt: new Date(),
-  updatedAt: new Date(),
 };
 
 async function register (attributes, done) {
   attributes.username = attributes.username.toLowerCase().trim();
-  await dao.User.insert(_.extend(_.clone(baseUser), attributes)).then(async (user) => {
+  var newUser = _.extend(_.clone(baseUser), attributes);
+  newUser.createdAt = new Date();
+  newUser.updatedAt = new Date();
+  await dao.User.insert(newUser).then(async (user) => {
     log.info('created user', user);
 
     var tags = attributes.tags || attributes['tags[]'] || [];
@@ -73,6 +72,8 @@ async function resetPassword (token, password, done) {
     passport.password = await bcrypt.hash(password, 10);
     passport.accessToken = crypto.randomBytes(48).toString('base64');
     passport.updatedAt = new Date();
+    passport.createdAt = passport.createdAt || new Date();
+    passport.protocol = passport.protocol || 'local';
     await dao.Passport.upsert(passport).then(async () => {
       await dao.User.update(user).then(async () => {
         await dao.UserPasswordReset.update(token).then(() => {
