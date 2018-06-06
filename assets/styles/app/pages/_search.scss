@@ -212,6 +212,10 @@
   float: left;
   height: 4.3rem;
   margin-bottom: 0;
+
+  &[placeholder] { text-overflow: ellipsis; }
+  ::-moz-placeholder { text-overflow: ellipsis; } /* firefox 19+ */
+  &:-moz-placeholder { text-overflow: ellipsis; }
 }
 
 .usa-button.usajobs-open-opps-search-button {
