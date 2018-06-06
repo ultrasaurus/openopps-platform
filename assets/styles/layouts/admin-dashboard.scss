@@ -189,6 +189,12 @@
     }
   }
 
+  @include media($SM-down) {
+    .usa-button-secondary {
+      margin: 0 0 1.5rem 0;
+    }
+  }
+
   @media screen and (min-width: 62rem) {
     .usa-width-three-fourths.type {
       text-align: right;
