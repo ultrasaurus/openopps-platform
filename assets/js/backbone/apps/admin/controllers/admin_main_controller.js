@@ -47,7 +47,7 @@ Admin.ShowController = BaseController.extend({
     this.modalComponent = new ModalComponent({
       el: '#site-modal',
       id: 'add-participant',
-      modalTitle: 'Add participant to this opportunity',
+      modalTitle: 'Add an applicant to this opportunity',
       modalBody: modalContent,
       validateBeforeSubmit: true,
       secondary: {
@@ -58,7 +58,7 @@ Admin.ShowController = BaseController.extend({
         }.bind(this),
       },
       primary: {
-        text: 'Add participant',
+        text: 'Add applicant',
         action: function () {
           $('#task-add-participant').select2('close');
           if(!validate( { currentTarget: $('#task-add-participant') } )) {
@@ -101,7 +101,7 @@ Admin.ShowController = BaseController.extend({
 
   initializeAddParticipantSearch: function () {
     $('#task-add-participant').select2({
-      placeholder: 'Search for a participant',
+      placeholder: 'Search for a user',
       minimumInputLength: 3,
       ajax: {
         url: '/api/ac/user',
@@ -125,6 +125,7 @@ Admin.ShowController = BaseController.extend({
     $('#task-add-participant').on('change', function (e) {
       validate({ currentTarget: $('#task-add-participant') });
     }.bind(this));
+    $('#task-add-participant').focus();
   },
 
   changeOwner: function (event) {
@@ -198,6 +199,7 @@ Admin.ShowController = BaseController.extend({
     $('#task-change-owner').on('change', function (e) {
       validate({ currentTarget: $('#task-change-owner') });
     }.bind(this));
+    $('#task-change-owner').focus();
   },
 
 
