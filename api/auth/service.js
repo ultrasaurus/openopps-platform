@@ -23,32 +23,36 @@ const basePassport = {
 
 async function register (attributes, done) {
   attributes.username = attributes.username.toLowerCase().trim();
-  var newUser = _.extend(_.clone(baseUser), attributes);
-  newUser.createdAt = new Date();
-  newUser.updatedAt = new Date();
-  await dao.User.insert(newUser).then(async (user) => {
-    log.info('created user', user);
+  if((await dao.User.find('lower(username) = ?', attributes.username)).length > 0) {
+    done({ message: 'The email address provided is not a valid government email address or is already in use.' });
+  } else {
+    var newUser = _.extend(_.clone(baseUser), attributes);
+    newUser.createdAt = new Date();
+    newUser.updatedAt = new Date();
+    await dao.User.insert(newUser).then(async (user) => {
+      log.info('created user', user);
 
-    var tags = attributes.tags || attributes['tags[]'] || [];
-    await userService.processUserTags(user, tags).then(tags => {
-      user.tags = tags;
-    });
-    var passwordReset = {
-      userId: user.id,
-      token: uuid.v4(),
-      createdAt: new Date(),
-      updatedAt: new Date,
-    };
-    await dao.UserPasswordReset.insert(passwordReset).then((obj) => {
-      return done(null, _.extend(user, { token: obj.token }));
-    }).catch((err) => {
-      log.info('Error creating password reset record', err);
+      var tags = attributes.tags || attributes['tags[]'] || [];
+      await userService.processUserTags(user, tags).then(tags => {
+        user.tags = tags;
+      });
+      var passwordReset = {
+        userId: user.id,
+        token: uuid.v4(),
+        createdAt: new Date(),
+        updatedAt: new Date,
+      };
+      await dao.UserPasswordReset.insert(passwordReset).then((obj) => {
+        return done(null, _.extend(user, { token: obj.token }));
+      }).catch((err) => {
+        log.info('Error creating password reset record', err);
+        return done(true);
+      });
+    }).catch(err => {
+      log.info('register: failed to create user ', attributes.username, err);
       return done(true);
     });
-  }).catch(err => {
-    log.info('register: failed to create user ', attributes.username, err);
-    return done(true);
-  });
+  }
 }
 
 async function sendUserCreateNotification (user, action) {

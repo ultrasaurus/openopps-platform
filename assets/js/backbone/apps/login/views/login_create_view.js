@@ -141,20 +141,19 @@ var LoginCreateView = Backbone.View.extend({
       });
     }).fail(function (error) {
       var d = JSON.parse(error.responseText);
-      self.$('#registration-error-text').html(d.message);
-      self.$('#registration-error').show();
+      $('#registration-error-text').html(d.message);
+      $('#registration-error').show();
+      $('#registration-error')[0].scrollIntoView();
     });
   },
 
   checkUsername: function (e) {
-    if(e && e.keyCode == 9) {
-      return; // ignore tab key
-    }
     var username = $('#rusername').val();
     if(_.isEmpty(username)) {
       $('#rusername').closest('.required-input').addClass('usa-input-error');
       $('#rusername').closest('.required-input').find('.field-validation-error.error-empty').show();
       $('#rusername').closest('.required-input').find('.field-validation-error.error-email').hide();
+      return true;
     } else {
       $('#rusername').closest('.required-input').find('.field-validation-error.error-empty').hide();
       $.ajax({
@@ -164,10 +163,12 @@ var LoginCreateView = Backbone.View.extend({
           // username is taken
           $('#rusername').closest('.required-input').addClass('usa-input-error');
           $('#rusername').closest('.required-input').find('.field-validation-error.error-email').show();
+          return true;
         } else {
           // username is available
           $('#rusername').closest('.required-input').removeClass('usa-input-error');
           $('#rusername').closest('.required-input').find('.field-validation-error.error-email').hide();
+          return false;
         }
       });
     }

@@ -4,6 +4,7 @@ const _ = require('lodash');
 const service = require('./service');
 const passport = require('koa-passport');
 const utils = require('../../utils');
+const validGovtEmail = require('../model').ValidGovtEmail;
 
 const router = new Router();
 
@@ -47,7 +48,10 @@ router.post('/api/auth/local/register', async (ctx, next) => {
   if (!ctx.request.body.username) {
     ctx.flash('error', 'Error.Passport.Username.Missing');
     ctx.status = 400;
-    return ctx.body = { message: 'No username was entered.' };
+    return ctx.body = { message: 'The email address is required.' };
+  } else if (!validGovtEmail(ctx.request.body.username)) {
+    ctx.status = 400;
+    return ctx.body = { message: 'The email address provided is not a valid government email address.' };
   }
 
   await service.register(ctx.request.body, function (err, user) {
