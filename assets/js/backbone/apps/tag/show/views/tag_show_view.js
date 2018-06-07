@@ -67,16 +67,20 @@ var TagShowView = Backbone.View.extend({
 
     self.tagFactory.createTagDropDown({
       type:'skill',
+      placeholder: 'Start typing to select your experience',
       selector:'#tag_skill',
       width: '100%',
       tokenSeparators: [','],
+      maximumInputLength: 35,
     });
 
     self.tagFactory.createTagDropDown({
       type:'topic',
+      placeholder: 'Start typing to select development goals',
       selector:'#tag_topic',
       width: '100%',
       tokenSeparators: [','],
+      maximumInputLength: 35,
     });
 
     self.tagFactory.createTagDropDown({
