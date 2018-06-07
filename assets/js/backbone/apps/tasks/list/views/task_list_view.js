@@ -248,34 +248,49 @@ var TaskListView = Backbone.View.extend({
     });
 
     if (this.tasks.length === 0) {
-      var settings = {
-        ui: UIConfig,
-      };
-      compiledTemplate = _.template(NoListItem)(settings);
-      $('#task-list').append(compiledTemplate);
-      $('#task-page').hide();      
-      $('#results-count').hide();
+      this.renderNoResults();
     } else {
       $('#search-tab-bar-filter-count').text(this.appliedFilterCount);
       var pageSize = 10;
-      var start = (page - 1) * pageSize;
-      var stop = page * pageSize;
-      $('#task-list').append(this.tasks.slice(start, stop).map(function (task) {
-        task.owner.initials = getInitials(task.owner.name);
-        return this.renderItem(task);
-      }.bind(this)));
+      this.renderPage(page, pageSize);
       this.renderPagination({
         page: page,
         numberOfPages: Math.ceil(this.tasks.length/pageSize),
         pages: [],
       });
-      if (this.tasks.length <= pageSize) {
-        $('#results-count').text('Viewing ' +  (start + 1) + ' - ' + this.tasks.length + ' of ' + this.tasks.length + ' opportunities');
-      } else {
-        $('#results-count').text('Viewing ' +  (start + 1) + ' - ' + (this.tasks.length > pageSize ? this.tasks.length : stop) + ' of ' + this.tasks.length + ' opportunities');
-      }
-      $('#results-count').show();
     }
+  },
+
+  renderNoResults: function () {
+    var settings = {
+      ui: UIConfig,
+    };
+    compiledTemplate = _.template(NoListItem)(settings);
+    $('#task-list').append(compiledTemplate);
+    $('#task-page').hide();      
+    $('#results-count').hide();
+  },
+
+  renderPage: function (page, pageSize) {
+    var start = (page - 1) * pageSize;
+    var stop = page * pageSize;
+    $('#task-list').append(this.tasks.slice(start, stop).map(function (task) {
+      task.owner.initials = getInitials(task.owner.name);
+      return this.renderItem(task);
+    }.bind(this)));
+    this.renderResultsCount(start, stop, pageSize);
+  },
+
+  renderResultsCount: function (start, stop, pageSize) {
+    var tasksToDisplay = this.tasks.slice(start, stop);
+    if (this.tasks.length <= pageSize) {
+      $('#results-count').text('Viewing ' +  (start + 1) + ' - ' + this.tasks.length + ' of ' + this.tasks.length + ' opportunities');
+    } else if (tasksToDisplay.length < pageSize) {
+      $('#results-count').text('Viewing ' +  (start + 1) + ' - ' + (start + tasksToDisplay.length) + ' of ' + this.tasks.length + ' opportunities');
+    } else {
+      $('#results-count').text('Viewing ' +  (start + 1) + ' - ' + stop + ' of ' + this.tasks.length + ' opportunities');
+    }
+    $('#results-count').show();
   },
 
   renderItem: function (task) {
