@@ -149,45 +149,6 @@ var TaskEditFormView = Backbone.View.extend({
       return formatted;
     };
 
-    this.$('#owner').select2({
-      placeholder: 'task owner',
-      multiple: false,
-      formatResult: formatResult,
-      formatSelection: formatResult,
-      allowClear: false,
-      ajax: {
-        url: '/api/ac/user',
-        dataType: 'json',
-        data: function (term) {
-          return { q: term };
-        },
-        results: function (data) {
-          return { results: data };
-        },
-      },
-    });
-    if (this.data.data.owner) {
-      this.$('#owner').select2('data', this.data.data.owner);
-    }
-
-    this.$('#participant').select2({
-      placeholder: 'Add participant',
-      multiple: false,
-      formatResult: formatResult,
-      formatSelection: formatResult,
-      allowClear: false,
-      ajax: {
-        url: '/api/ac/user',
-        dataType: 'json',
-        data: function (term) {
-          return { q: term };
-        },
-        results: function (data) {
-          return { results: data };
-        },
-      },
-    });
-
     this.tagFactory.createTagDropDown({
       type: 'series',
       placeholder: 'Start typing to select a series',
@@ -206,6 +167,7 @@ var TaskEditFormView = Backbone.View.extend({
       tokenSeparators: [','],
       data: this.data['madlibTags'].skill,
       maximumSelectionSize: 5,
+      maximumInputLength: 35,
     });
 
     this.tagFactory.createTagDropDown({
@@ -218,9 +180,11 @@ var TaskEditFormView = Backbone.View.extend({
     this.tagFactory.createTagDropDown({
       type: 'keywords',
       selector: '#task_tag_keywords',
+      placeholder: 'Start typing to select a keyword',
       width: '100%',
       data: this.data['madlibTags'].keywords,
       maximumSelectionSize: 5,
+      maximumInputLength: 35,
     });
 
     $('#opportunity-career-field').select2({

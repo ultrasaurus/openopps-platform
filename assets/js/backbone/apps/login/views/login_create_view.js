@@ -1,29 +1,21 @@
 var $ = require('jquery');
 var _ = require('underscore');
 var Backbone = require('backbone');
-var LoginPasswordView = require('./login_password_view');
 var TagFactory = require('../../../components/tag_factory');
 var User = require('../../../../utils/user');
 
 var LoginCreateTemplate = require('../templates/login_create_template.html');
-
 
 var LoginCreateView = Backbone.View.extend({
   el: '#container',
 
   events: {
     'click .oauth-link' : 'link',
-    'keyup .validate'   : 'validateField',
     'change .validate'  : 'validateField',
     'blur .validate'    : 'validateField',
-    'keyup #rusername'  : 'checkUsername',
     'blur #rusername'  : 'checkUsername',
     'change #rusername' : 'checkUsername',
     'click #rusername-button'     : 'clickUsername',
-    'keyup #rpassword'            : 'checkPassword',
-    'blur #rpassword'             : 'checkPassword',
-    'keyup #rpassword-confirm'    : 'checkPasswordConfirm',
-    'blur #rpassword-confirm'     : 'checkPasswordConfirm',
     'blur .select2-container'     : 'checkSelect2',
     'change #ragency'             : 'checkSelect2',
     'change #rlocation'           : 'checkSelect2',
@@ -44,33 +36,23 @@ var LoginCreateView = Backbone.View.extend({
     var template = _.template(LoginCreateTemplate)(data);
     this.$el.html(template);
     this.$el.localize();
-    this.loginPasswordView = new LoginPasswordView({
-      el: this.$('.password-view'),
-    }).render();
+    
+    var agencyTags = this.tagFactory.createTagDropDown({
+      type: 'agency',
+      selector: '#ragency',
+      width: '100%',
+      multiple: false,
+      allowCreate: false,
+      blurOnChange: true,
+    });
 
-    if (data.login.agency.enabled === true || data.login.agency.enabled === true) {
-
-      if (data.login.agency.enabled === true) {
-        var agencyTags = this.tagFactory.createTagDropDown({
-          type: 'agency',
-          selector: '#ragency',
-          width: '100%',
-          multiple: false,
-          allowCreate: false,
-          blurOnChange: true,
-        });
-      }
-
-      if (data.login.location.enabled === true) {
-        var locationTags = this.tagFactory.createTagDropDown({
-          type: 'location',
-          selector: '#rlocation',
-          width: '100%',
-          multiple: false,
-          blurOnChange: true,
-        });
-      }
-    }
+    var locationTags = this.tagFactory.createTagDropDown({
+      type: 'location',
+      selector: '#rlocation',
+      width: '100%',
+      multiple: false,
+      blurOnChange: true,
+    });
 
     setTimeout(function () {
       self.$('#rname').focus();
@@ -107,32 +89,12 @@ var LoginCreateView = Backbone.View.extend({
     if (e.preventDefault) e.preventDefault();
 
     // validate input fields
-    var validateIds = ['#rname', '#rusername', '#rpassword', '#rterms', '#ragency', '#rlocation'];
+    var validateIds = ['#rname', '#rusername', '#rterms', '#ragency', '#rlocation'];
 
     var abort = false;
     for (var i in validateIds) {
       var iAbort = validate({ currentTarget: validateIds[i] });
       abort = abort || iAbort;
-    }
-
-    var passwordSuccess = this.checkPassword();
-    var parent = $(this.$('#rpassword').parents('.required-input')[0]);
-    abort = abort || !(passwordSuccess);
-    if (passwordSuccess !== true) {
-      parent.addClass('usa-input-error');
-      $(parent.find('.error-password')[0]).show();
-    } else {
-      $(parent.find('.error-password')[0]).hide();
-    }
-
-    var passwordConfirmSuccess = this.checkPasswordConfirm();
-    abort = abort || !(passwordConfirmSuccess);
-    var passwordConfirmParent = $(this.$('#rpassword-confirm').parents('.required-input')[0]);
-    if (passwordConfirmSuccess !== true) {
-      passwordConfirmParent.addClass('usa-input-error');
-      $(passwordConfirmParent.find('.error-password')[0]).show();
-    } else {
-      $(passwordConfirmParent.find('.error-password')[0]).hide();
     }
 
     // if error, show them and return without submitting data
@@ -142,7 +104,6 @@ var LoginCreateView = Backbone.View.extend({
     var data = {
       name: this.$('#rname').val(),
       username: this.$('#rusername').val(),
-      password: this.$('#rpassword').val(),
       terms: (this.$('#rterms').val() === 'on'),
       tags: [
         this.$('#ragency').select2('data'),
@@ -175,28 +136,25 @@ var LoginCreateView = Backbone.View.extend({
         url: '/api/user',
         dataType: 'json',
       }).done(function (data) {
-        // Set the user object and trigger the user login event
-        var user = new User(data);
-        console.log('registered', user);
-        window.cache.currentUser = user;
-        window.cache.userEvents.trigger('user:login:success', user);
+        $('#registration-error').hide();
+        self.$('#main-content').hide();
+        self.$('#registration-complete').show();
       });
     }).fail(function (error) {
       var d = JSON.parse(error.responseText);
-      self.$('#registration-error-text').html(d.message);
-      self.$('#registration-error').show();
+      $('#registration-error-text').html(d.message);
+      $('#registration-error').show();
+      $('#registration-error')[0].scrollIntoView();
     });
   },
 
   checkUsername: function (e) {
-    if(e && e.keyCode == 9) {
-      return; // ignore tab key
-    }
     var username = $('#rusername').val();
     if(_.isEmpty(username)) {
       $('#rusername').closest('.required-input').addClass('usa-input-error');
       $('#rusername').closest('.required-input').find('.field-validation-error.error-empty').show();
       $('#rusername').closest('.required-input').find('.field-validation-error.error-email').hide();
+      return true;
     } else {
       $('#rusername').closest('.required-input').find('.field-validation-error.error-empty').hide();
       $.ajax({
@@ -206,10 +164,12 @@ var LoginCreateView = Backbone.View.extend({
           // username is taken
           $('#rusername').closest('.required-input').addClass('usa-input-error');
           $('#rusername').closest('.required-input').find('.field-validation-error.error-email').show();
+          return true;
         } else {
           // username is available
           $('#rusername').closest('.required-input').removeClass('usa-input-error');
           $('#rusername').closest('.required-input').find('.field-validation-error.error-email').hide();
+          return false;
         }
       });
     }
