@@ -136,8 +136,9 @@ var LoginCreateView = Backbone.View.extend({
         url: '/api/user',
         dataType: 'json',
       }).done(function (data) {
-        self.$('#registration-complete').show();
+        $('#registration-error').hide();
         self.$('#main-content').hide();
+        self.$('#registration-complete').show();
       });
     }).fail(function (error) {
       var d = JSON.parse(error.responseText);
