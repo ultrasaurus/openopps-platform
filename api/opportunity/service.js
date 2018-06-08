@@ -283,6 +283,14 @@ async function sendTaskAssignedNotification (user, task) {
   }
 }
 
+async function sendTaskAppliedNotification (user, task) {
+  var template = ('task.update.applied');
+  var data = await getNotificationTemplateData(user, task, template);
+  if(!data.model.user.bounced) {
+    notification.createNotification(data);
+  }
+}
+
 async function sendTaskSubmittedNotification (user, task) {
   var baseData = await getNotificationTemplateData(user, task, 'task.update.submitted.admin');
   _.forEach(await dao.User.find('"isAdmin" = true and disabled = false'), (admin) => {
@@ -435,6 +443,7 @@ module.exports = {
   sendTaskNotification: sendTaskNotification,
   sendTaskStateUpdateNotification: sendTaskStateUpdateNotification,
   sendTaskAssignedNotification: sendTaskAssignedNotification,
+  sendTaskAppliedNotification: sendTaskAppliedNotification,
   sendTasksDueNotifications: sendTasksDueNotifications,
   canUpdateOpportunity: canUpdateOpportunity,
   canAdministerTask: canAdministerTask,
