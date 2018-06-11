@@ -6,6 +6,7 @@ const json2csv = require('json2csv');
 const TaskMetrics = require('./taskmetrics');
 const Audit = require('../model/Audit');
 const volunteerService = require('../volunteer/service');
+const opportunityService = require('../opportunity/service');
 
 async function getMetrics () {
   var tasks = await getTaskMetrics();
@@ -418,7 +419,10 @@ async function assignParticipant (user, data, done) {
       await dao.AuditLog.insert(audit).catch((err) => {
         // TODO: Log audit errors
       });
-      volunteerService.sendAddedVolunteerNotification(await dao.User.findOne('id = ?', volunteer.userId), volunteer, 'volunteer.create.thanks');
+      var addedVolunteer = await dao.User.findOne('id = ?', volunteer.userId);
+      var task = await opportunityService.findById(data.taskId);
+      volunteerService.sendAddedVolunteerNotification(addedVolunteer, volunteer, 'volunteer.create.thanks');
+      opportunityService.sendTaskAppliedNotification(addedVolunteer, task);
       done(audit.data.participant);
     }).catch((err) => {
       done(undefined, 'Error assigning new participant');
