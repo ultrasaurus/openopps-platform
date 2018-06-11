@@ -297,6 +297,10 @@
       margin-right: 0;
     }
 
+    a {
+      color: initial;
+    }
+
     // Fade the description in search results.
     // Ideally we'd truncate on the way out of the server or
     // ask the user to enter a brief description that would not be truncated.
@@ -306,6 +310,7 @@
       overflow: hidden;
       overflow-wrap: break-word;
       hyphens: auto;
+      color: initial;
     }
   }
 }

@@ -1,8 +1,9 @@
 <div class="usajobs-open-opps-opportunity" data-id="<%- item.id %>">
+<a href="/tasks/<%- item.id %>">  
   <div class="usajobs-open-opps-opportunity__body">
-    <a href="/tasks/<%- item.id %>" class="usajobs-open-opps-opportunity__title" itemprop="title">
+    <span class="usajobs-open-opps-opportunity__title" itemprop="title">
       <%- item.title %>
-    </a>
+    </span>
     <div class="usajobs-open-opps-opportunity__desc">
       <%= item.descriptionHtml %>
     </div>
@@ -42,21 +43,21 @@
       <% if (!_.isEmpty(tags['career'])) { %>
         <p>Career field:
         <% _.each(tags['career'], function (t, index, list) { %>
-          <a class="career-field" href="/tasks?career=<%- t.name %>"><%- t.name %></a><% if ((index + 1) < list.length) { %>,<% } %>
+          <%- t.name %>
         <% }); %>
         </p>
       <% } %>
       <% if (!_.isEmpty(tags['series'])) { %>
         <p>Series:
         <% _.each(tags['series'], function (t, index, list) { %>
-          <a class="career-field" href="/tasks?series=<%- t.name %>"><%- t.name %></a><% if ((index + 1) < list.length) { %>,<% } %>
+          <%- t.name %>
         <% }); %>
         </p>
       <% } %>    
       <% if (!_.isEmpty(tags['keywords'])) { %>
         <p>Related keyword:
         <% _.each(_.first(tags['keywords'], 5), function (t, index, list) { %>
-          <a class="related-keyword" href="/tasks?keywords=<%- t.name %>"><%- t.name %></a><% if ((index + 1) < list.length) { %>,<% } %>
+          <%- t.name %>
         <% }); %>
         <% if (_.size(tags['keywords']) > 5) { %>
           <span>+ <%- _.size(tags['keywords']) - 5 %></span>
@@ -91,4 +92,5 @@
       </div>
     </div>
   </div>
+</a>
 </div>
