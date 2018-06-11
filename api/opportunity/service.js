@@ -286,7 +286,7 @@ async function sendTaskAssignedNotification (user, task) {
 async function sendTaskAppliedNotification (user, task) {
   var template = ('task.update.applied');
   var data = await getNotificationTemplateData(user, task, template);
-  if(!data.model.user.bounced) {
+  if(!data.model.task.owner.bounced) {
     notification.createNotification(data);
   }
 }
