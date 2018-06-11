@@ -308,7 +308,7 @@ var TaskListView = Backbone.View.extend({
       item.tags = [];
     }
     if (task.description) {
-      item.item.descriptionHtml = marked(task.description);
+      item.item.descriptionHtml = marked(task.description).replace(/<\/?a(|\s+[^>]+)>/g, '');
     }
     return _.template(TaskListItem)(item);
   },
