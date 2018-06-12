@@ -175,49 +175,6 @@ var LoginCreateView = Backbone.View.extend({
     }
   },
 
-  checkPassword: function (e) {
-    if(e && e.keyCode == 9) {
-      return; // ignore tabs
-    }
-    var rules = validatePassword($('#rusername').val(), $('#rpassword').val());
-    var valuesArray = _.values(rules);
-    var validRules = _.every(valuesArray);
-    var success = true;
-    if (validRules === true) {
-      $('#rpassword').closest('.required-input').removeClass('usa-input-error');
-      $('#rpassword').closest('.required-input').find('.field-validation-error').hide();
-    } else {
-      $('#rpassword').closest('.required-input').addClass('usa-input-error');
-      $('#rpassword').closest('.required-input').find('.field-validation-error.error-password').show();
-    }
-    _.each(rules, function (value, key) {
-      if (value === true) {
-        $('.password-rules .success.rule-' + key).show();
-        $('.password-rules .error.rule-' + key).hide();
-      } else {
-        $('.password-rules .success.rule-' + key).hide();
-        $('.password-rules .error.rule-' + key).show();
-      }
-      success = success && value;
-    });
-    return success;
-  },
-
-  checkPasswordConfirm: function (e) {
-    var success = true;
-    var password = this.$('#rpassword').val();
-    var confirm = this.$('#rpassword-confirm').val();
-    if (password === confirm) {
-      $('#rpassword-confirm').closest('.required-input').removeClass('usa-input-error');
-      $('#rpassword-confirm').closest('.required-input').find('.field-validation-error').hide();
-    } else {
-      $('#rpassword-confirm').closest('.required-input').addClass('usa-input-error');
-      $('#rpassword-confirm').closest('.required-input').find('.field-validation-error').show();
-      success = false;
-    }
-    return success;
-  },
-
   clickUsername: function (e) {
     e.preventDefault();
   },
