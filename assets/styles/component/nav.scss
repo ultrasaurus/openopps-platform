@@ -114,16 +114,6 @@ $nav_item_height: 17px + 24px;
   &__menu {
     display: block;
     float: right;
-    /*padding-right: $size-default;
-    // height: rem($logo_height-S);
-
-    @include media($M) {
-      padding-right: initial;
-    }
-
-    @include media($L) {
-      // height: rem($logo_height-L);
-    }  */
 
     ul {
       margin: 0;
@@ -139,7 +129,6 @@ $nav_item_height: 17px + 24px;
       display: inherit;
       max-width: rem(140px);
       text-overflow: ellipsis;
-      // overflow: hidden;
     }
   }
 
@@ -171,8 +160,6 @@ $nav_item_height: 17px + 24px;
       @include transition(all $duration-fast linear);
 
       .usajobs-nav__section-link {
-        // color: $color-white;
-        // background-color: $color-primary-darker;
         color: $color-primary;
         @include boxShadow(2);
       }
@@ -613,7 +600,6 @@ $nav_item_height: 17px + 24px;
 
   &__section-link.is-active &__section-active {
     border-bottom: 0.7rem solid $color-primary-darker;
-    // padding-bottom: 0.2rem;
 
     @include media($M) {
       padding-bottom: 1.9rem;
@@ -640,11 +626,7 @@ $nav_item_height: 17px + 24px;
 
 .usajobs-nav--openopps {
   &__brand {
-    padding: $size-default 0 1.4rem $size-default;
-
-    @include media($SM) {
-      padding-bottom: $size-S;
-    }
+    padding: 1.2rem 0 1.1rem $size-default;
 
     @include media($ML) {
       padding-left: $size-M;
@@ -655,7 +637,7 @@ $nav_item_height: 17px + 24px;
       height: auto;
 
       @include media($SM) {
-        width: 25rem;
+        width: 23rem;
       }
     }
   }
@@ -733,7 +715,7 @@ $nav_item_height: 17px + 24px;
     padding-bottom: 0.2rem;
 
     @include media($M) {
-      padding-bottom: 1.4rem;
+      padding-bottom: 1.2rem;
     }
   }
 

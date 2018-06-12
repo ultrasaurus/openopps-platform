@@ -35,7 +35,6 @@ var ProfileShowView = Backbone.View.extend({
     'click #profile-save'        : 'profileSave',
     'click .link-backbone'       : linkBackbone,
     'click #profile-cancel'      : 'profileCancel',
-    'click #like-button'         : 'like',
     'keyup .form-control'        : 'fieldModified',
     'change .form-control'       : 'fieldModified',
     'blur .form-control'         : 'fieldModified',
@@ -129,7 +128,6 @@ var ProfileShowView = Backbone.View.extend({
 
     data.email = data.data.username;
     data.career = this.getTags(['career'])[0];
-    // data.career = _.find(data.data.tags, {'type': 'career'}) != undefined ? _.find(data.data.tags, {'type': 'career'}).name : '-Career field-';
 
     if (data.data.bio) {
       data.data.bioHtml = marked(data.data.bio);
@@ -204,26 +202,6 @@ var ProfileShowView = Backbone.View.extend({
 
   },
 
-  updateProfileEmail: function (){
-    var subject = 'Take A Look At This Profile',
-        data = {
-          profileTitle: this.model.get('title'),
-          profileLink: window.location.protocol +
-            '//' + window.location.host + '' + window.location.pathname,
-          profileName: this.model.get('name'),
-          profileLocation: this.model.get('location') ?
-            this.model.get('location').name : '',
-          profileAgency: this.model.get('agency') ?
-            this.model.get('agency').name : '',
-          i18n: i18n,
-        },
-        body = _.template(ShareTemplate)(data),
-        link = 'mailto:?subject=' + encodeURIComponent(subject) +
-          '&body=' + encodeURIComponent(body);
-
-    this.$('#email').attr('href', link);
-  },
-
   initializeTags: function () {
     var showTags = true;
     if (this.tagView) { this.tagView.cleanup(); }
@@ -268,33 +246,6 @@ var ProfileShowView = Backbone.View.extend({
     }.bind(this));
   },
 
-  getStatus: function (task) {
-    switch (task.state) {
-      case 'completed':
-        return (task.assigned ? (task.taskComplete ? 'Complete' : 'Not complete') : 'Not assigned');
-      case 'in progress':
-        return (task.assigned ? (task.taskComplete ? 'Complete' : 'Assigned') : 'Not assigned');
-      case 'canceled':
-        return 'Canceled';
-      default:
-        return (task.assigned ? 'Assigned' : 'Applied');
-    }
-  },
-
-  updatePhoto: function () {
-    var self = this;
-    this.model.on('profile:updatedPhoto', function (data) {
-      //added timestamp to URL to force FF to reload image from server
-      var url = '/api/user/photo/' + data.attributes.id + '?' + new Date().getTime();
-      $('#project-header').css('background-image', "url('" + url + "')");
-      $('#file-upload-progress-container').hide();
-      // notify listeners of the new user image, but only for the current user
-      if (self.model.toJSON().id == window.cache.currentUser.id) {
-        window.cache.userEvents.trigger('user:profile:photo:save', url);
-      }
-    });
-  },
-
   initializeForm: function () {
     var self = this;
 
@@ -313,7 +264,6 @@ var ProfileShowView = Backbone.View.extend({
       $('#profile-save, #submit').addClass('btn-success');
       self.data.saved = true;
       Backbone.history.navigate('profile/' + self.model.toJSON().id, { trigger: true });
-
     });
 
     this.listenTo(self.model, 'profile:save:fail', function (data) {
@@ -386,6 +336,53 @@ var ProfileShowView = Backbone.View.extend({
     }
   },
 
+  updateProfileEmail: function (){
+    var subject = 'Take A Look At This Profile',
+        data = {
+          profileTitle: this.model.get('title'),
+          profileLink: window.location.protocol +
+            '//' + window.location.host + '' + window.location.pathname,
+          profileName: this.model.get('name'),
+          profileLocation: this.model.get('location') ?
+            this.model.get('location').name : '',
+          profileAgency: this.model.get('agency') ?
+            this.model.get('agency').name : '',
+          i18n: i18n,
+        },
+        body = _.template(ShareTemplate)(data),
+        link = 'mailto:?subject=' + encodeURIComponent(subject) +
+          '&body=' + encodeURIComponent(body);
+
+    this.$('#email').attr('href', link);
+  },
+
+  getStatus: function (task) {
+    switch (task.state) {
+      case 'completed':
+        return (task.assigned ? (task.taskComplete ? 'Complete' : 'Not complete') : 'Not assigned');
+      case 'in progress':
+        return (task.assigned ? (task.taskComplete ? 'Complete' : 'Assigned') : 'Not assigned');
+      case 'canceled':
+        return 'Canceled';
+      default:
+        return (task.assigned ? 'Assigned' : 'Applied');
+    }
+  },
+
+  updatePhoto: function () {
+    var self = this;
+    this.model.on('profile:updatedPhoto', function (data) {
+      //added timestamp to URL to force FF to reload image from server
+      var url = '/api/user/photo/' + data.attributes.id + '?' + new Date().getTime();
+      $('#project-header').css('background-image', "url('" + url + "')");
+      $('#file-upload-progress-container').hide();
+      // notify listeners of the new user image, but only for the current user
+      if (self.model.toJSON().id == window.cache.currentUser.id) {
+        window.cache.userEvents.trigger('user:profile:photo:save', url);
+      }
+    });
+  },
+
   profileCancel: function (e) {
     e.preventDefault();
     Backbone.history.navigate('profile/' + this.model.toJSON().id, { trigger: true });
@@ -444,47 +441,6 @@ var ProfileShowView = Backbone.View.extend({
     this.model.trigger('profile:removeAuth', node.data('service'));
   },
 
-  like: function (e) {
-    e.preventDefault();
-    var self = this;
-    var child = $(e.currentTarget).children('#like-button-icon');
-    var likenumber = $('#like-number');
-    // Not yet liked, initiate like
-    if (child.hasClass('fa-star-o')) {
-      child.removeClass('fa-star-o');
-      child.addClass('fa fa-star');
-      likenumber.text(parseInt(likenumber.text()) + 1);
-      if (parseInt(likenumber.text()) === 1) {
-        $('#like-text').text($('#like-text').data('singular'));
-      } else {
-        $('#like-text').text($('#like-text').data('plural'));
-      }
-      $.ajax({
-        url: '/api/like/likeu/' + self.model.attributes.id,
-      }).done( function (data) {
-        // liked!
-        // response should be the like object
-        // console.log(data.id);
-      });
-    }
-    // Liked, initiate unlike
-    else {
-      child.removeClass('fa-star');
-      child.addClass('fa-star-o');
-      likenumber.text(parseInt(likenumber.text()) - 1);
-      if (parseInt(likenumber.text()) === 1) {
-        $('#like-text').text($('#like-text').data('singular'));
-      } else {
-        $('#like-text').text($('#like-text').data('plural'));
-      }
-      $.ajax({
-        url: '/api/like/unlikeu/' + self.model.attributes.id,
-      }).done( function (data) {
-        // un-liked!
-        // response should be null (empty)
-      });
-    }
-  },
   cleanup: function () {
     if (this.md) { this.md.cleanup(); }
     if (this.tagView) { this.tagView.cleanup(); }
