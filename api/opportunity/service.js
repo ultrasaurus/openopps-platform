@@ -66,6 +66,10 @@ function processTaskTags (task, tags) {
       return await createTaskTag(tag, task);
     } else {
       _.extend(tag, { 'createdAt': new Date(), 'updatedAt': new Date() });
+      if (tag.type == 'location' && !tag.id) {
+        tag.id = ((await dao.TagEntity.find('type = ? and name = ?', 'location', tag.name))[0] || {}).id;
+      }
+      tag = _.pickBy(tag, _.identity);
       if (tag.id) {
         return await createTaskTag(tag.id, task);
       }
