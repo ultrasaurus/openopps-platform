@@ -9,6 +9,7 @@ var LoginPasswordView = require('../../../login/views/login_password_view');
 
 // templates
 var ProfileResetTemplate = require('../templates/profile_reset_template.html');
+var ProfileRegistrationTemplate = require('../templates/profile_registration_template.html');
 
 var ProfileResetView = Backbone.View.extend({
   events: {
@@ -24,7 +25,10 @@ var ProfileResetView = Backbone.View.extend({
     var data = {
       user: window.cache.currentUser || {},
     };
-    var template = _.template(ProfileResetTemplate)(data);
+    var template = _.template((this.options.routeId == 'reset') 
+      ? ProfileResetTemplate
+      : ProfileRegistrationTemplate
+    )(data);
     this.$el.html(template);
     this.loginPasswordView = new LoginPasswordView({
       el: this.$('.password-view'),
