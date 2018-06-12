@@ -54,10 +54,15 @@ function processUserTags (user, tags) {
       return await createUserTag(tag, user);
     } else {
       _.extend(tag, { 'createdAt': new Date(), 'updatedAt': new Date() });
+      if (tag.type == 'location' && !tag.id) {
+        tag.id = ((await dao.TagEntity.find('type = ? and name = ?', 'location', tag.name))[0] || {}).id;
+      }
+      tag = _.pickBy(tag, _.identity);
       if (tag.id) {
         return await createUserTag(tag.id, user);
+      } else {
+        return await createNewUserTag(tag, user);
       }
-      return await createNewUserTag(tag, user);
     }
   }));
 }
