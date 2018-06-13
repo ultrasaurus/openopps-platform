@@ -3,7 +3,6 @@ jobs:
   build:
     working_directory: ~/openopps/openopps-platform
     parallelism: 4
-    shell: /bin/bash --login
     environment:
       CIRCLE_ARTIFACTS: /tmp/circleci-artifacts
       CIRCLE_TEST_REPORTS: /tmp/circleci-test-results
@@ -15,7 +14,6 @@ jobs:
       - image: circleci/node:8.6.0
     steps:
       - checkout
-      - run: nvm install 8.6.0 && nvm alias default 8.6.0
       - run: if [[ `npm -v` != 5* ]]; then npm i -g npm@5.4.2; fi
       - run: rm -rvf node_modules
       - run: npm install
