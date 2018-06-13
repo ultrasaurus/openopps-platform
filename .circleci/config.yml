@@ -15,9 +15,7 @@ jobs:
       - image: circleci/build-image:ubuntu-14.04-XXL-upstart-1189-5614f37
     steps:
       - checkout
-      - run:
-        working_directory: ~/openopps/openopps-platform
-        command: nvm install 8.6.0 && nvm alias default 8.6.0
+      - run: nvm install 8.6.0 && nvm alias default 8.6.0
       - run: if [[ `npm -v` != 5* ]]; then npm i -g npm@5.4.2; fi
       - run: rm -rvf node_modules
       - run: npm install
