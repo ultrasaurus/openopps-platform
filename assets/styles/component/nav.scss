@@ -708,10 +708,9 @@ $nav_item_height: 17px + 24px;
     }
   }
 
-
   &__section-link.is-active &__section-active,
   &__menu-container[data-state="is-open"] &__first-name {
-    border-bottom: 0.7rem solid $color-primary;
+    border-bottom: 0.7rem solid $color-primary-darker;
     padding-bottom: 0.2rem;
 
     @include media($M) {
@@ -720,8 +719,6 @@ $nav_item_height: 17px + 24px;
   }
 
   &__menu-container[data-state="is-open"] &__section-link.menu-toggle {
-    // padding-bottom: 0;
-    // background-color: $color-primary-darkest;
     box-shadow: none;
   }
 
