@@ -7,7 +7,7 @@ describe('User Service', () => {
   before(function (done) {
     // Wait for the service and data
     //  connection to fully initialize
-    setTimeout(done, 100);
+    setTimeout(done, 500);
   });
 
   describe('.list', () => {
