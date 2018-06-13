@@ -12,10 +12,11 @@ jobs:
       DB_PASSWORD: midas
       VCAP_APPLICATION: '{ "uris": [ "openopps-test.opm.gov" ] }'
     docker:
-      - image: circleci/build-image:ubuntu-14.04-XXL-upstart-1189-5614f37
+      - image: circleci/node:8.6.0
     steps:
       - checkout
       - run: nvm install 8.6.0 && nvm alias default 8.6.0
       - run: if [[ `npm -v` != 5* ]]; then npm i -g npm@5.4.2; fi
       - run: rm -rvf node_modules
       - run: npm install
+      - run: npm test
