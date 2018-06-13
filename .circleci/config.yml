@@ -4,8 +4,7 @@ jobs:
     working_directory: ~/openopps/openopps-platform
     parallelism: 4
     environment:
-      CIRCLE_ARTIFACTS: /tmp/circleci-artifacts
-      CIRCLE_TEST_REPORTS: /tmp/circleci-test-results
+      CC_TEST_REPORTER_ID: 42b393f57b62cc7ac9c7306746e82672ac4ffe1d5a82995fc28f442cf274be28
       DB_OWNER: ubuntu
       DB_USER: midas
       DB_PASSWORD: midas
@@ -17,4 +16,10 @@ jobs:
       - run: if [[ `npm -v` != 5* ]]; then npm i -g npm@5.4.2; fi
       - run: rm -rvf node_modules
       - run: npm install
-      - run: npm test
+      - run: curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+      - run: chmod +x ./cc-test-reporter
+      - run: ./cc-test-reporter before-build
+      - run: 
+          name: Runnning tests
+          command: npm run cover:unit
+      - run: ./cc-test-reporter after-build --exit-code $?
