@@ -26,4 +26,6 @@ jobs:
           command: npm run cover:unit
       - run: ./cc-test-reporter after-build --exit-code $?
       - store_artifacts:
+          path: /tmp/artifacts
+      - store_test_results:
           path: /tmp/test-results
