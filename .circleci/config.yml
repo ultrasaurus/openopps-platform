@@ -5,8 +5,8 @@ jobs:
     parallelism: 4
     environment:
       CC_TEST_REPORTER_ID: 42b393f57b62cc7ac9c7306746e82672ac4ffe1d5a82995fc28f442cf274be28
-      CIRCLE_ARTIFACTS: /tmp/artifacts
-      CIRCLE_TEST_REPORTS: /tmp/test-results
+      CIRCLE_ARTIFACTS: ./.circleci/artifacts
+      CIRCLE_TEST_REPORTS: ./.circleci/test-results
       DB_OWNER: ubuntu
       DB_USER: midas
       DB_PASSWORD: midas
@@ -21,11 +21,12 @@ jobs:
       - run: curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
       - run: chmod +x ./cc-test-reporter
       - run: ./cc-test-reporter before-build
+      - run: mkdir ./.circleci/artifacts ./.circleci/test-results
       - run: 
           name: Runnning tests
           command: npm run cover:unit
       - run: ./cc-test-reporter after-build --exit-code $?
       - store_artifacts:
-          path: /tmp/artifacts
+          path: ./.circleci/artifacts
       - store_test_results:
-          path: /tmp/test-results
+          path: ./.circleci/test-results
