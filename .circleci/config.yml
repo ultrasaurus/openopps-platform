@@ -13,56 +13,11 @@ jobs:
       VCAP_APPLICATION: '{ "uris": [ "openopps-test.opm.gov" ] }'
     docker:
       - image: circleci/build-image:ubuntu-14.04-XXL-upstart-1189-5614f37
-      command: /sbin/init
     steps:
       - checkout
-      - run: mkdir -p $CIRCLE_ARTIFACTS $CIRCLE_TEST_REPORTS
       - run:
         working_directory: ~/openopps/openopps-platform
         command: nvm install 8.6.0 && nvm alias default 8.6.0
-      - restore_cache:
-        keys:
-          # This branch if available
-          - v1-dep-{{ .Branch }}-
-          # Default branch if not
-          - v1-dep-dev-
-          # Any branch if there are none on the default branch - this should be unnecessary if you have your default branch configured correctly
-          - v1-dep-
       - run: if [[ `npm -v` != 5* ]]; then npm i -g npm@5.4.2; fi
       - run: rm -rvf node_modules
-      # This is based on your 1.0 configuration file or project settings
       - run: npm install
-      # Save dependency cache
-      - save_cache:
-          key: v1-dep-{{ .Branch }}-{{ epoch }}
-          paths:
-            # This is a broad list of cache paths to include many possible development environments
-            # You can probably delete some of these entries
-            - vendor/bundle
-            - ~/virtualenvs
-            - ~/.m2
-            - ~/.ivy2
-            - ~/.bundle
-            - ~/.go_workspace
-            - ~/.gradle
-            - ~/.cache/bower
-            - ./node_modules
-      # Test
-      #   This would typically be a build job when using workflows, possibly combined with build
-      # The following line was run implicitly in your 1.0 builds based on what CircleCI inferred about the structure of your project. In 2.0 you need to be explicit about which commands should be run. In some cases you can discard inferred commands if they are not relevant to your project.
-      - run: npm test
-      # Teardown
-      #   If you break your build into multiple jobs with workflows, you will probably want to do the parts of this that are relevant in each
-      # Save test results
-      - store_test_results:
-          path: /tmp/circleci-test-results
-      # Save artifacts
-      - store_artifacts:
-          path: /tmp/circleci-artifacts
-      - store_artifacts:
-          path: /tmp/circleci-test-results
-workflows:
-  version: 2
-  build:
-    jobs:
-      - build
