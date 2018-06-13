@@ -293,7 +293,7 @@ var TaskEditFormView = Backbone.View.extend({
         modelData.state = 'submitted';
         modelData.acceptingApplicants = true;
       }
-
+      this.cleanup();
       this.options.model.trigger( modelData.id ? 'task:update' : 'task:save', modelData );
     });
   },
