@@ -1,3 +1,5 @@
+var fs = require('fs');
+
 // Include gulp
 var gulp = require('gulp');
 
@@ -146,6 +148,10 @@ gulp.task('publish', ['create-release'], function () {
       };
       simpleCreateRelease(releaseParams).then((release) => {
         console.log('Octopus release created:', release);
+        // Update current version in README
+        var readme = fs.readFileSync('README.md');
+        fs.writeFileSync('README.md', readme.toString().replace(/v\d+\.\d+.\d+/, package.version));
+        // Commit the new version
         git.exec({ args: 'add --all', maxBuffer: Infinity }, (err) => {
           if(err) { throw(err); }
           var commitMsg = 'commit -m "Create release package ' + package.version + '"';
