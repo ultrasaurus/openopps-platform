@@ -150,7 +150,8 @@ var ProfileShowView = Backbone.View.extend({
     // Force reloading of image (in case it was changed recently)
     if (data.user.id === data.data.id) {
       var url = '/api/user/photo/' + data.user.id + '?' + new Date().getTime();
-      $('#project-header').css('background-image', "url('" + url + "')");
+      $('#profile-picture').attr('src', url);
+      //$('#project-header').css('background-image', "url('" + url + "')");
     }
     return this;
   },
@@ -190,7 +191,7 @@ var ProfileShowView = Backbone.View.extend({
       },
       fail: function (e, data) {
         // notify the user that the upload failed
-        var message = data.errorThrown;
+        var message = data.jqXHR.responseText || data.errorThrown;
         self.$('#file-upload-progress-container').hide();
         if (data.jqXHR.status == 413) {
           message = 'The uploaded file exceeds the maximum file size.';
@@ -374,7 +375,8 @@ var ProfileShowView = Backbone.View.extend({
     this.model.on('profile:updatedPhoto', function (data) {
       //added timestamp to URL to force FF to reload image from server
       var url = '/api/user/photo/' + data.attributes.id + '?' + new Date().getTime();
-      $('#project-header').css('background-image', "url('" + url + "')");
+      $('#profile-picture').attr('src', url);
+      //$('#project-header').css('background-image', "url('" + url + "')");
       $('#file-upload-progress-container').hide();
       // notify listeners of the new user image, but only for the current user
       if (self.model.toJSON().id == window.cache.currentUser.id) {
